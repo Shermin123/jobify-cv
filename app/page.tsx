@@ -468,49 +468,48 @@ const filteredRoles = roleSuggestions.filter((r) =>
 
       {/* ================= AI LOGOS (FIXED OPENAI) ================= */}
       {/* ================= TRUSTED BY / AI PARTNERS ================= */}
-<div className="bg-white border-b py-3">
-  <div className="max-w-6xl mx-auto flex items-center justify-center gap-10 flex-wrap">
+{/* ================= TRUSTED AI PARTNERS ================= */}
+<div className="bg-white border-b py-4">
+  <div className="max-w-6xl mx-auto px-4">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
 
-    {/* OpenAI */}
-    <div className="flex items-center gap-2">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
-        className="h-5"
-        alt="OpenAI"
-      />
-      <span className="text-sm text-gray-600 font-medium">OpenAI</span>
+      <div className="bg-white border rounded-2xl px-4 py-3 flex items-center justify-center gap-2 shadow-sm">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
+          className="h-6 w-6"
+          alt="OpenAI"
+        />
+        <span className="text-sm font-medium text-gray-700">OpenAI</span>
+      </div>
+
+      <div className="bg-white border rounded-2xl px-4 py-3 flex items-center justify-center gap-2 shadow-sm">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+          className="h-6"
+          alt="Microsoft"
+        />
+        <span className="text-sm font-medium text-gray-700">Microsoft</span>
+      </div>
+
+      <div className="bg-white border rounded-2xl px-4 py-3 flex items-center justify-center gap-2 shadow-sm">
+        <img
+          src="https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg"
+          className="h-6 w-6"
+          alt="Google Cloud"
+        />
+        <span className="text-sm font-medium text-gray-700">Google Cloud</span>
+      </div>
+
+      <div className="bg-white border rounded-2xl px-4 py-3 flex items-center justify-center gap-2 shadow-sm">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
+          className="h-6"
+          alt="AWS"
+        />
+        <span className="text-sm font-medium text-gray-700">AWS</span>
+      </div>
+
     </div>
-
-    {/* Microsoft */}
-    <div className="flex items-center gap-2">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-        className="h-5"
-        alt="Microsoft"
-      />
-      <span className="text-sm text-gray-600 font-medium">Microsoft</span>
-    </div>
-
-    {/* Google Cloud */}
-    <div className="flex items-center gap-2">
-      <img
-  src="https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg"
-  className="h-5"
-  alt="Google Cloud"
-/>
-      <span className="text-sm text-gray-600 font-medium">Google Cloud</span>
-    </div>
-
-    {/* AWS */}
-    <div className="flex items-center gap-2">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
-        className="h-5"
-        alt="AWS"
-      />
-      <span className="text-sm text-gray-600 font-medium">AWS</span>
-    </div>
-
   </div>
 </div>
 
@@ -529,28 +528,25 @@ const filteredRoles = roleSuggestions.filter((r) =>
       Check your CV score, improve ATS keywords, and generate a better CV in minutes.
     </p>
 
-    <div className="mt-5 flex flex-col sm:flex-row gap-2 md:gap-3 justify-center lg:justify-start">
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="bg-black text-white px-6 md:px-8 py-3rounded-full hover:scale-105 transition shadow-lg"
-      >
-        Build My CV
-      </button>
+    <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start w-full max-w-md mx-auto lg:mx-0">
+  <button
+    type="button"
+    onClick={() => setOpen(true)}
+    className="w-full sm:w-auto bg-black text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:scale-[1.02] hover:bg-gray-900 transition"
+  >
+    🚀 Build My CV
+  </button>
 
-      <button
-  type="button"
-  onClick={() =>
-    document.getElementById("cv-score")?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    })
-  }
-  className="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 hover:scale-105 transition shadow-lg"
->
-  Check Your CV for Free
-</button>
-    </div>
+  <button
+    type="button"
+    onClick={() =>
+      document.getElementById("cv-score")?.scrollIntoView({ behavior: "smooth" })
+    }
+    className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:scale-[1.02] transition"
+  >
+    Check Your CV for Free
+  </button>
+</div>
 
     <div className="mt-5 grid grid-cols-3 gap-3 text-center max-w-md mx-auto lg:mx-0">
       <div className="bg-white border rounded-2xl p-3 shadow-sm">
