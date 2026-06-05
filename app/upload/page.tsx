@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
+import { supabase } from "@/lib/supabase";
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -38,6 +39,8 @@ export default function UploadPage() {
     if (savedCountry) setCountry(savedCountry);
     if (savedRole) setJobRole(savedRole);
 
+    const checkSubscription = async () => {
+  if (!session?.user?.email) {
     const subscription = localStorage.getItem("jobify_subscription");
 
     if (subscription) {
@@ -48,7 +51,26 @@ export default function UploadPage() {
         setIsUnlocked(false);
       }
     }
-  }, []);
+
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select("status")
+    .eq("user_email", session.user.email)
+    .single();
+
+  if (!error && data?.status === "active") {
+    setIsUnlocked(true);
+    return;
+  }
+
+  setIsUnlocked(false);
+};
+
+checkSubscription();
+  }, [session]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -242,7 +264,30 @@ export default function UploadPage() {
 
   const generateAll = async () => {
   const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  const saveGeneratedDocument = async (
+  finalCv: string,
+  finalCoverLetter: string,
+  finalKeywords: string[],
+  finalAtsScore: number
+) => {
+  if (!session?.user?.email) return;
 
+  const { error } = await supabase.from("generated_documents").insert({
+    user_email: session.user.email,
+    job_role: jobRole,
+    country,
+    original_cv: text,
+    job_description: jobDescription,
+    optimized_cv: finalCv,
+    cover_letter: finalCoverLetter,
+    keywords: finalKeywords,
+    ats_score: finalAtsScore,
+  });
+
+  if (error) {
+    console.error("Supabase save error:", error.message);
+  }
+};
   if (!text) return alert("Please paste your CV first");
 
   if (wordCount < 80) {
@@ -307,12 +352,22 @@ Preparing your cover letter preview...`;
         data.coverLetter ||
         "Your personalised cover letter has been generated successfully.";
 
-      setCv(finalCv);
-      setCoverLetter(finalCoverLetter);
-      setKeywords(data.keywords || []);
-      setAtsScore(data.atsScore || 94);
+      const finalKeywords = data.keywords || [];
+const finalAtsScore = data.atsScore || 94;
 
-      typeDocuments(finalCv, finalCoverLetter);
+setCv(finalCv);
+setCoverLetter(finalCoverLetter);
+setKeywords(finalKeywords);
+setAtsScore(finalAtsScore);
+
+await saveGeneratedDocument(
+  finalCv,
+  finalCoverLetter,
+  finalKeywords,
+  finalAtsScore
+);
+
+typeDocuments(finalCv, finalCoverLetter);
     } catch (err: any) {
       alert(err.message);
       setGenerated(false);

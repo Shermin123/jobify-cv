@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 
 function CheckoutContent() {
   const params = useSearchParams();
@@ -46,23 +47,45 @@ function CheckoutContent() {
 
   const selectedPlan = planDetails[plan] || planDetails.basic;
 
-  const handlePayment = () => {
-    if (!session) {
-      router.push("/login");
-      return;
-    }
+  const handlePayment = async () => {
+  if (!session?.user?.email) {
+    router.push("/login");
+    return;
+  }
 
-    const subscription = {
+  const subscription = {
+    user_email: session.user.email,
+    plan,
+    status: "active",
+    demo: true,
+    started_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .upsert(subscription, {
+      onConflict: "user_email",
+    });
+
+  if (error) {
+    alert("Could not activate subscription: " + error.message);
+    return;
+  }
+
+  localStorage.setItem(
+    "jobify_subscription",
+    JSON.stringify({
       plan,
       planName: selectedPlan.name,
       status: "active",
       demo: true,
       startedAt: new Date().toISOString(),
-    };
+    })
+  );
 
-    localStorage.setItem("jobify_subscription", JSON.stringify(subscription));
-    router.push("/upload?unlocked=true");
-  };
+  router.push("/upload?unlocked=true");
+};
 
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900 overflow-hidden">
