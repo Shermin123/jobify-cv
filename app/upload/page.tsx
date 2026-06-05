@@ -366,7 +366,7 @@ Preparing your cover letter preview...`;
       {/* HEADER */}
       <section className="max-w-6xl mx-auto px-4 pt-6 pb-4">
         <div className="bg-white/85 backdrop-blur-xl border rounded-3xl p-6 shadow-sm text-center">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight">
             🚀 AI CV Studio
           </h1>
 
@@ -387,7 +387,7 @@ Preparing your cover letter preview...`;
         {generated && (
           <section ref={resultRef} className="space-y-5">
             {/* PREMIUM STATUS BAR */}
-            <div className="rounded-3xl bg-slate-950 text-white p-6 shadow-2xl overflow-hidden relative">
+            <div className="rounded-3xl bg-slate-950 text-white p-4 md:p-6 shadow-2xl overflow-hidden relative">
               <div className="absolute right-6 top-5 text-6xl opacity-10">
                 {typing ? "✍️" : isUnlocked ? "✅" : "🔒"}
               </div>
@@ -473,7 +473,7 @@ Preparing your cover letter preview...`;
               <div className="group relative overflow-hidden rounded-3xl border bg-white shadow-xl">
                 <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-blue-600 to-cyan-400" />
 
-                <div className="p-5">
+                <div className="p-4 md:p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <div className="h-11 w-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md">
@@ -493,9 +493,9 @@ Preparing your cover letter preview...`;
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[260px] overflow-hidden">
+                  <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[210px] md:h-[260px] overflow-hidden">
                     <div
-                      className={`text-sm text-gray-700 whitespace-pre-line leading-6 transition ${
+                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6transition ${
                         isUnlocked ? "" : "blur-sm select-none"
                       }`}
                     >
@@ -537,7 +537,7 @@ Preparing your cover letter preview...`;
               <div className="group relative overflow-hidden rounded-3xl border bg-white shadow-xl">
                 <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-purple-600 to-pink-500" />
 
-                <div className="p-5">
+                <div className="p-4 md:p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <div className="h-11 w-11 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl shadow-md">
@@ -557,9 +557,9 @@ Preparing your cover letter preview...`;
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[260px] overflow-hidden">
+                  <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[210px] md:h-[260px] overflow-hidden">
                     <div
-                      className={`text-sm text-gray-700 whitespace-pre-line leading-6 transition ${
+                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6transition ${
                         isUnlocked ? "" : "blur-sm select-none"
                       }`}
                     >
@@ -680,7 +680,7 @@ Preparing your cover letter preview...`;
   <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-blue-100 blur-3xl opacity-70" />
   <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-purple-100 blur-3xl opacity-70" />
 
-  <div className="relative p-5 md:p-7 space-y-6">
+  <div className="relative p-4 md:p-7 space-y-5 md:space-y-6">
 
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
@@ -688,7 +688,7 @@ Preparing your cover letter preview...`;
           ✨ AI CV Builder
         </div>
 
-        <h2 className="mt-3 text-2xl font-black text-slate-900">
+        <h2 className="mt-3 text-xl md:text-2xl font-black text-slate-900">
           Create your tailored application
         </h2>
 
@@ -771,7 +771,7 @@ Preparing your cover letter preview...`;
         </div>
 
         <textarea
-          className="w-full border border-blue-100 bg-white p-4 rounded-2xl h-64 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none shadow-inner text-sm leading-6"
+          className="w-full border border-blue-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none shadow-inner text-sm leading-6"
           placeholder="Paste your CV here...
 
 Example:
@@ -818,7 +818,7 @@ Projects"
         </div>
 
         <textarea
-          className="w-full border border-purple-100 bg-white p-4 rounded-2xl h-64 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none shadow-inner text-sm leading-6"
+          className="w-full border border-purple-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none shadow-inner text-sm leading-6"
           placeholder="Paste the job description here...
 
 Example:

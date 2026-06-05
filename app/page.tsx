@@ -515,13 +515,13 @@ const filteredRoles = roleSuggestions.filter((r) =>
 </div>
 
       {/* ================= HERO ================= */}
-      <section className="relative z-10 px-4 sm:px-6 pt-6 pb-8">
+      <section className="relative z-10 px-4 sm:px-6 pt-4 md:pt-6 pb-6 md:pb-8">
 
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
 
   {/* LEFT HERO */}
   <div className="text-center lg:text-left">
-    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
       Build a <span className="text-blue-600">Keyword-Highlighted CV</span> with AI
     </h1>
 
@@ -529,11 +529,11 @@ const filteredRoles = roleSuggestions.filter((r) =>
       Check your CV score, improve ATS keywords, and generate a better CV in minutes.
     </p>
 
-    <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+    <div className="mt-5 flex flex-col sm:flex-row gap-2 md:gap-3 justify-center lg:justify-start">
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="bg-black text-white px-8 py-3 rounded-full hover:scale-105 transition shadow-lg"
+        className="bg-black text-white px-6 md:px-8 py-3rounded-full hover:scale-105 transition shadow-lg"
       >
         Build My CV
       </button>
@@ -572,15 +572,15 @@ const filteredRoles = roleSuggestions.filter((r) =>
         {/* ================= CV SCORE ================= */}
         {/* ================= CV SCORE ================= */}
         {/* ================= CV SCORE ================= */}
-<div id="cv-score" className="bg-white border rounded-3xl p-5 text-left shadow-xl">
+<div id="cv-score" className="bg-white border rounded-3xl p-4 md:p-5 text-left shadow-xl">
 
-  <h2 className="text-2xl font-bold">Free CV Score Checker</h2>
+  <h2 className="text-xl md:text-2xl font-bold">Free CV Score Checker</h2>
   <p className="text-sm text-gray-500 mt-1">
     Paste your CV below. Jobify will estimate how ready it is for ATS screening.
   </p>
 
   <textarea
-    className="w-full border p-4 rounded-2xl h-32 mt-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    className="w-full border p-3 md:p-4 rounded-2xl h-28 md:h-32 mt-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
     placeholder="Paste your CV here..."
     value={cvText}
     onChange={(e) => setCvText(e.target.value)}
@@ -590,7 +590,7 @@ const filteredRoles = roleSuggestions.filter((r) =>
 
     <div>
       <p className="text-sm text-gray-500">Your CV Score</p>
-      <p className={`text-6xl font-bold ${getColor()}`}>
+      <p className={`text-4xl md:text-6xl font-bold ${getColor()}`}>
         {score}/100
       </p>
       <p className="text-sm text-gray-600 mt-1">{getLabel()}</p>
@@ -699,7 +699,7 @@ const filteredRoles = roleSuggestions.filter((r) =>
           <div className="text-center mt-8">
             <button
               onClick={() => setOpen(true)}
-              className="bg-black text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 hover:scale-105 transition shadow-lg"
+              className="bg-black text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-gray-800 hover:scale-105 transition shadow-lg"
             >
               Start Building My CV
             </button>
