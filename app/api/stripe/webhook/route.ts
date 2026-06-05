@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE_SECRET_KEY is missing");
+}
+
+const stripe = new Stripe(stripeSecretKey);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -14,7 +20,10 @@ export async function POST(req: Request) {
   const signature = req.headers.get("stripe-signature");
 
   if (!signature) {
-    return NextResponse.json({ error: "Missing Stripe signature" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing Stripe signature" },
+      { status: 400 }
+    );
   }
 
   let event: Stripe.Event;
@@ -33,14 +42,14 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+    const checkoutSession = event.data.object as Stripe.Checkout.Session;
 
     const email =
-      session.customer_email ||
-      session.metadata?.user_email ||
+      checkoutSession.customer_email ||
+      checkoutSession.metadata?.user_email ||
       "";
 
-    const plan = session.metadata?.plan || "basic";
+    const plan = checkoutSession.metadata?.plan || "basic";
 
     if (email) {
       await supabase.from("subscriptions").upsert(
@@ -56,6 +65,32 @@ export async function POST(req: Request) {
           onConflict: "user_email",
         }
       );
+    }
+  }
+
+  if (
+    event.type === "customer.subscription.deleted" ||
+    event.type === "customer.subscription.updated"
+  ) {
+    const subscription = event.data.object as Stripe.Subscription;
+
+    const customerId = subscription.customer as string;
+    const customer = await stripe.customers.retrieve(customerId);
+
+    if (!customer.deleted && customer.email) {
+      const status =
+        subscription.status === "active" || subscription.status === "trialing"
+          ? "active"
+          : "cancelled";
+
+      await supabase
+        .from("subscriptions")
+        .update({
+          status,
+          demo: false,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_email", customer.email);
     }
   }
 
