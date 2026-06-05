@@ -78,10 +78,11 @@ export async function POST(req: Request) {
     const customer = await stripe.customers.retrieve(customerId);
 
     if (!customer.deleted && customer.email) {
-      const status =
-        subscription.status === "active" || subscription.status === "trialing"
-          ? "active"
-          : "cancelled";
+      const status = subscription.cancel_at_period_end
+        ? "cancelling"
+        : subscription.status === "active" || subscription.status === "trialing"
+        ? "active"
+        : "cancelled";
 
       await supabase
         .from("subscriptions")
