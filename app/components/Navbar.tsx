@@ -14,6 +14,7 @@ export default function Navbar() {
     ? [
         { name: "Dashboard", href: "/dashboard" },
         { name: "AI CV Studio", href: "/upload" },
+        { name: "My Documents", href: "/my-documents" },
         { name: "Pricing", href: "/pricing" },
       ]
     : [
@@ -25,32 +26,53 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6">
-        <div className="h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="min-h-16 py-3 flex flex-col gap-3 md:h-16 md:py-0 md:flex-row md:items-center md:justify-between">
 
-          {/* LOGO */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black shadow-sm">
-              J
+          {/* TOP ROW MOBILE / LOGO */}
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black shadow-sm">
+                J
+              </div>
+
+              <div className="leading-tight">
+                <p className="font-black text-gray-900 tracking-tight">
+                  Jobify.cv
+                </p>
+                <p className="text-[11px] text-gray-500">
+                  AI CV Builder
+                </p>
+              </div>
+            </Link>
+
+            {/* MOBILE RIGHT ACTION */}
+            <div className="md:hidden">
+              {!isLoggedIn ? (
+                <Link
+                  href="/login"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm"
+                >
+                  Login
+                </Link>
+              ) : (
+                <button
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="rounded-full border border-gray-300 px-3 py-2 text-xs font-bold text-gray-700"
+                >
+                  Logout
+                </button>
+              )}
             </div>
+          </div>
 
-            <div className="leading-tight">
-              <p className="font-black text-gray-900 tracking-tight">
-                Jobify.cv
-              </p>
-              <p className="text-[11px] text-gray-500">
-                AI CV Builder
-              </p>
-            </div>
-          </Link>
-
-          {/* CENTER NAV */}
-          <nav className="hidden md:flex items-center gap-1 bg-gray-100/80 p-1 rounded-full border border-gray-200">
+          {/* NAV LINKS */}
+          <nav className="flex items-center gap-2 overflow-x-auto rounded-full bg-gray-100/80 p-1 border border-gray-200 md:overflow-visible">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 text-sm rounded-full transition font-medium ${
+                className={`whitespace-nowrap px-4 py-2 text-sm rounded-full transition font-semibold ${
                   isActive(link.href)
                     ? "bg-white text-blue-700 shadow-sm"
                     : "text-gray-600 hover:text-blue-700"
@@ -61,14 +83,13 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* RIGHT SIDE */}
-          <div className="flex items-center gap-3">
-
+          {/* RIGHT SIDE DESKTOP */}
+          <div className="hidden md:flex items-center gap-3">
             {!isLoggedIn ? (
               <>
                 <Link
                   href="/login"
-                  className="hidden sm:inline-flex text-sm font-medium text-gray-600 hover:text-blue-700 transition"
+                  className="text-sm font-medium text-gray-600 hover:text-blue-700 transition"
                 >
                   Login
                 </Link>
@@ -93,7 +114,7 @@ export default function Navbar() {
 
                 <Link
                   href="/upload"
-                  className="hidden sm:inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
                 >
                   Create CV
                 </Link>
@@ -106,8 +127,8 @@ export default function Navbar() {
                 </button>
               </>
             )}
-
           </div>
+
         </div>
       </div>
     </header>
