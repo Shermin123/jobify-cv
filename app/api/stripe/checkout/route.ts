@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecretKey) {
+  throw new Error("STRIPE_SECRET_KEY is missing");
+}
+
+const stripe = new Stripe(stripeSecretKey);
 
 export async function POST(req: Request) {
   try {
@@ -14,8 +20,10 @@ export async function POST(req: Request) {
       );
     }
 
+    const selectedPlan = plan === "pro" ? "pro" : "basic";
+
     const priceId =
-      plan === "pro"
+      selectedPlan === "pro"
         ? process.env.STRIPE_PRO_PRICE_ID
         : process.env.STRIPE_BASIC_PRICE_ID;
 
@@ -38,8 +46,14 @@ export async function POST(req: Request) {
         },
       ],
       metadata: {
-        plan,
+        plan: selectedPlan,
         user_email: email,
+      },
+      subscription_data: {
+        metadata: {
+          plan: selectedPlan,
+          user_email: email,
+        },
       },
       success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/pricing`,

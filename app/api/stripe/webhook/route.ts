@@ -15,6 +15,30 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 );
 
+const getPlanFromPriceId = (priceId?: string | null) => {
+  if (priceId === process.env.STRIPE_PRO_PRICE_ID) return "pro";
+  if (priceId === process.env.STRIPE_BASIC_PRICE_ID) return "basic";
+  return "basic";
+};
+
+const getSubscriptionStatus = (subscription: Stripe.Subscription) => {
+  if (subscription.cancel_at_period_end) return "cancelling";
+
+  if (subscription.status === "active" || subscription.status === "trialing") {
+    return "active";
+  }
+
+  if (
+    subscription.status === "canceled" ||
+    subscription.status === "unpaid" ||
+    subscription.status === "incomplete_expired"
+  ) {
+    return "cancelled";
+  }
+
+  return subscription.status;
+};
+
 export async function POST(req: Request) {
   const body = await req.text();
   const signature = req.headers.get("stripe-signature");
@@ -85,30 +109,28 @@ export async function POST(req: Request) {
       const priceId = subscription.items.data[0]?.price?.id;
 
       const plan =
-        priceId === process.env.STRIPE_PRO_PRICE_ID
-          ? "pro"
-          : priceId === process.env.STRIPE_BASIC_PRICE_ID
-          ? "basic"
-          : "basic";
+        subscription.metadata?.plan || getPlanFromPriceId(priceId);
 
-      const status = subscription.cancel_at_period_end
-        ? "cancelling"
-        : subscription.status === "active" || subscription.status === "trialing"
-        ? "active"
-        : "cancelled";
+      const status =
+        event.type === "customer.subscription.deleted"
+          ? "cancelled"
+          : getSubscriptionStatus(subscription);
 
-      const { error } = await supabase
-        .from("subscriptions")
-        .update({
+      const { error } = await supabase.from("subscriptions").upsert(
+        {
+          user_email: customer.email,
           plan,
           status,
           demo: false,
           updated_at: new Date().toISOString(),
-        })
-        .eq("user_email", customer.email);
+        },
+        {
+          onConflict: "user_email",
+        }
+      );
 
       if (error) {
-        console.error("Supabase subscription update error:", error.message);
+        console.error("Supabase subscription upsert error:", error.message);
       }
     }
   }
