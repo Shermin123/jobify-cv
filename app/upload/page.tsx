@@ -495,7 +495,7 @@ Preparing your cover letter preview...`;
 
                   <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[210px] md:h-[260px] overflow-hidden">
                     <div
-                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6transition ${
+                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition ${
                         isUnlocked ? "" : "blur-sm select-none"
                       }`}
                     >
@@ -559,7 +559,7 @@ Preparing your cover letter preview...`;
 
                   <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[210px] md:h-[260px] overflow-hidden">
                     <div
-                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6transition ${
+                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition ${
                         isUnlocked ? "" : "blur-sm select-none"
                       }`}
                     >
