@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     const plan = checkoutSession.metadata?.plan || "basic";
 
     if (email) {
-      await supabase.from("subscriptions").upsert(
+      const { error } = await supabase.from("subscriptions").upsert(
         {
           user_email: email,
           plan,
@@ -65,12 +65,16 @@ export async function POST(req: Request) {
           onConflict: "user_email",
         }
       );
+
+      if (error) {
+        console.error("Supabase checkout upsert error:", error.message);
+      }
     }
   }
 
   if (
-    event.type === "customer.subscription.deleted" ||
-    event.type === "customer.subscription.updated"
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.deleted"
   ) {
     const subscription = event.data.object as Stripe.Subscription;
 
@@ -78,20 +82,34 @@ export async function POST(req: Request) {
     const customer = await stripe.customers.retrieve(customerId);
 
     if (!customer.deleted && customer.email) {
+      const priceId = subscription.items.data[0]?.price?.id;
+
+      const plan =
+        priceId === process.env.STRIPE_PRO_PRICE_ID
+          ? "pro"
+          : priceId === process.env.STRIPE_BASIC_PRICE_ID
+          ? "basic"
+          : "basic";
+
       const status = subscription.cancel_at_period_end
         ? "cancelling"
         : subscription.status === "active" || subscription.status === "trialing"
         ? "active"
         : "cancelled";
 
-      await supabase
+      const { error } = await supabase
         .from("subscriptions")
         .update({
+          plan,
           status,
           demo: false,
           updated_at: new Date().toISOString(),
         })
         .eq("user_email", customer.email);
+
+      if (error) {
+        console.error("Supabase subscription update error:", error.message);
+      }
     }
   }
 
