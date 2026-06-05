@@ -17,9 +17,9 @@ export default function LoginPage() {
   useEffect(() => {
     if (status === "authenticated") {
       const redirectTo =
-  sessionStorage.getItem("redirect_after_login") || "/upload";
+        sessionStorage.getItem("redirect_after_login") || "/upload";
 
-router.push(redirectTo);
+      router.push(redirectTo);
     }
   }, [status, router]);
 
@@ -42,7 +42,7 @@ router.push(redirectTo);
 
       if (res?.error) {
         setError("Invalid email or password");
-      } 
+      }
     } catch {
       setError("Something went wrong");
     }
@@ -60,25 +60,34 @@ router.push(redirectTo);
 
   return (
     <main className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden">
-
-      {/* ================= BACKGROUND ================= */}
+      {/* BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient" />
 
       <div className="absolute top-[-120px] left-[-120px] w-[320px] h-[320px] bg-blue-400 blur-3xl opacity-30 rounded-full animate-pulse" />
       <div className="absolute bottom-[-140px] right-[-140px] w-[360px] h-[360px] bg-pink-300 blur-3xl opacity-30 rounded-full animate-pulse" />
 
-      {/* ================= CONTAINER ================= */}
-      <div className="relative w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      {/* FLOATING EMOJIS */}
+      <div className="absolute top-10 left-10 text-3xl opacity-10">🚀</div>
+      <div className="absolute top-20 right-20 text-2xl opacity-10">💼</div>
+      <div className="absolute top-40 left-1/4 text-3xl opacity-10">📄</div>
+      <div className="absolute top-52 right-1/3 text-2xl opacity-10">✨</div>
+      <div className="absolute top-72 left-16 text-3xl opacity-10">🎯</div>
+      <div className="absolute top-96 right-12 text-2xl opacity-10">🤖</div>
+      <div className="absolute bottom-32 left-12 text-3xl opacity-10">🌍</div>
+      <div className="absolute bottom-24 right-20 text-2xl opacity-10">💻</div>
+      <div className="absolute bottom-16 left-1/3 text-3xl opacity-10">📋</div>
+      <div className="absolute bottom-10 right-1/2 text-2xl opacity-10">⭐</div>
 
-        {/* ================= LEFT: LANDING SECTION ================= */}
-        <div className="text-white text-center md:text-left space-y-6">
-
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+      {/* CONTAINER */}
+      <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
+        {/* LEFT */}
+        <div className="text-white text-center md:text-left space-y-5 md:space-y-6">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight">
             Build a CV that gets you
             <span className="block text-yellow-300">HIRED faster 🚀</span>
           </h1>
 
-          <p className="text-white/80 text-lg md:text-xl max-w-md">
+          <p className="text-white/80 text-base md:text-xl max-w-md mx-auto md:mx-0">
             Jobify.cv uses AI to optimize your CV for ATS systems, keywords,
             and recruiter matching — instantly.
           </p>
@@ -100,15 +109,11 @@ router.push(redirectTo);
           </p>
         </div>
 
-        {/* ================= RIGHT: LOGIN CARD ================= */}
+        {/* RIGHT */}
         <div className="w-full max-w-md mx-auto">
-
-          <div className="bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-6 sm:p-8 space-y-5">
-
+          <div className="bg-white/95 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-6 sm:p-8 space-y-5">
             <div className="text-center space-y-1">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Login
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900">Login</h2>
               <p className="text-sm text-gray-500">
                 Access your Jobify dashboard
               </p>
@@ -121,7 +126,7 @@ router.push(redirectTo);
             )}
 
             <input
-              className="w-full border border-gray-300 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+              className="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -130,7 +135,7 @@ router.push(redirectTo);
 
             <div className="relative">
               <input
-                className="w-full border border-gray-300 p-3 rounded-xl pr-20 focus:ring-2 focus:ring-purple-500 outline-none"
+                className="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 p-3 rounded-xl pr-20 focus:ring-2 focus:ring-purple-500 outline-none"
                 placeholder="Password"
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -141,7 +146,7 @@ router.push(redirectTo);
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-sm text-gray-600"
+                className="absolute right-3 top-3 text-sm font-medium text-gray-600"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -156,15 +161,20 @@ router.push(redirectTo);
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-300"></div>
+              <div className="flex-1 h-px bg-gray-300" />
               <span className="text-xs text-gray-500">OR</span>
-              <div className="flex-1 h-px bg-gray-300"></div>
+              <div className="flex-1 h-px bg-gray-300" />
             </div>
 
             <button
               onClick={handleGoogleLogin}
-              className="w-full border border-gray-300 py-3 rounded-xl hover:bg-white/70 transition"
+              className="w-full border border-gray-300 bg-white text-gray-900 py-3 rounded-xl hover:bg-gray-50 transition flex items-center justify-center gap-2 font-semibold"
             >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                className="h-5"
+                alt="Google"
+              />
               Continue with Google
             </button>
 
@@ -174,34 +184,7 @@ router.push(redirectTo);
           </div>
         </div>
       </div>
-{/* Small Floating Emojis */}
 
-<div className="absolute top-10 left-10 text-3xl opacity-10">🚀</div>
-<div className="absolute top-20 right-20 text-2xl opacity-10">💼</div>
-<div className="absolute top-40 left-1/4 text-3xl opacity-10">📄</div>
-<div className="absolute top-52 right-1/3 text-2xl opacity-10">✨</div>
-<div className="absolute top-72 left-16 text-3xl opacity-10">🎯</div>
-<div className="absolute top-96 right-12 text-2xl opacity-10">🤖</div>
-
-<div className="absolute top-[20%] left-[60%] text-3xl opacity-10">💡</div>
-<div className="absolute top-[25%] left-[80%] text-2xl opacity-10">🔥</div>
-<div className="absolute top-[35%] left-[10%] text-3xl opacity-10">📈</div>
-<div className="absolute top-[45%] left-[75%] text-2xl opacity-10">⚡</div>
-
-<div className="absolute top-[50%] left-[20%] text-3xl opacity-10">🌟</div>
-<div className="absolute top-[55%] left-[50%] text-2xl opacity-10">🏆</div>
-<div className="absolute top-[60%] right-[15%] text-3xl opacity-10">💰</div>
-
-<div className="absolute top-[70%] left-[5%] text-2xl opacity-10">🧠</div>
-<div className="absolute top-[72%] left-[40%] text-3xl opacity-10">📊</div>
-<div className="absolute top-[78%] right-[30%] text-2xl opacity-10">🎓</div>
-
-<div className="absolute bottom-32 left-12 text-3xl opacity-10">🌍</div>
-<div className="absolute bottom-24 right-20 text-2xl opacity-10">💻</div>
-<div className="absolute bottom-16 left-1/3 text-3xl opacity-10">📋</div>
-<div className="absolute bottom-10 right-1/2 text-2xl opacity-10">⭐</div>
-
-      {/* ================= ANIMATION ================= */}
       <style jsx>{`
         .animate-gradient {
           background-size: 400% 400%;
@@ -219,22 +202,7 @@ router.push(redirectTo);
             background-position: 0% 50%;
           }
         }
-        @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-out;
-}    
       `}</style>
-
     </main>
   );
 }
