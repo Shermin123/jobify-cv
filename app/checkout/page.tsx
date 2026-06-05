@@ -1,9 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const params = useSearchParams();
   const router = useRouter();
   const { data: session } = useSession();
@@ -60,13 +61,11 @@ export default function CheckoutPage() {
     };
 
     localStorage.setItem("jobify_subscription", JSON.stringify(subscription));
-
     router.push("/upload?unlocked=true");
   };
 
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900 overflow-hidden">
-
       {/* BACKGROUND */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[-160px] left-[-120px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />
@@ -81,7 +80,6 @@ export default function CheckoutPage() {
 
       <section className="min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-5xl grid lg:grid-cols-[1fr_0.9fr] gap-6 items-center">
-
           {/* TRUST SIDE */}
           <div className="bg-black text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute right-8 top-8 text-8xl opacity-10">
@@ -133,7 +131,6 @@ export default function CheckoutPage() {
 
           {/* CHECKOUT CARD */}
           <div className="bg-white border rounded-3xl p-7 shadow-xl">
-
             <div className="text-center">
               <div className="inline-flex bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-xs font-bold">
                 {selectedPlan.badge}
@@ -193,10 +190,23 @@ export default function CheckoutPage() {
             >
               Back to plans
             </button>
-
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen flex items-center justify-center text-gray-500">
+          Loading checkout...
+        </main>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
   );
 }
