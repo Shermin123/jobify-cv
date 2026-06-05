@@ -70,7 +70,7 @@ export default function UploadPage() {
 };
 
 checkSubscription();
-  }, [session]);
+  }, [session?.user?.email]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
