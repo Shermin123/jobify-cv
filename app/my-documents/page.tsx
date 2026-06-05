@@ -21,30 +21,32 @@ export default function MyDocumentsPage() {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (status === "loading") return;
+   useEffect(() => {
+  if (status === "loading") return;
 
-    if (!session?.user?.email) {
-      router.push("/login");
-      return;
+  const userEmail = session?.user?.email;
+
+  if (!userEmail) {
+    router.push("/login");
+    return;
+  }
+
+  const fetchDocuments = async () => {
+    const { data, error } = await supabase
+      .from("generated_documents")
+      .select("id, job_role, ats_score, created_at, optimized_cv, cover_letter")
+      .eq("user_email", userEmail)
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setDocuments(data);
     }
 
-    const fetchDocuments = async () => {
-      const { data, error } = await supabase
-        .from("generated_documents")
-        .select("id, job_role, ats_score, created_at, optimized_cv, cover_letter")
-        .eq("user_email", session.user.email)
-        .order("created_at", { ascending: false });
+    setLoading(false);
+  };
 
-      if (!error && data) {
-        setDocuments(data);
-      }
-
-      setLoading(false);
-    };
-
-    fetchDocuments();
-  }, [session?.user?.email, status, router]);
+  fetchDocuments();
+}, [session?.user?.email, status, router]);
 
   if (loading || status === "loading") {
     return (
