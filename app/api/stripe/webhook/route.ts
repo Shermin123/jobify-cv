@@ -22,7 +22,9 @@ const getPlanFromPriceId = (priceId?: string | null) => {
 };
 
 const getSubscriptionStatus = (subscription: Stripe.Subscription) => {
-  if (subscription.cancel_at_period_end) return "cancelling";
+  if (subscription.cancel_at || subscription.cancel_at_period_end) {
+    return "cancelling";
+  }
 
   if (subscription.status === "active" || subscription.status === "trialing") {
     return "active";
@@ -108,8 +110,7 @@ export async function POST(req: Request) {
     if (!customer.deleted && customer.email) {
       const priceId = subscription.items.data[0]?.price?.id;
 
-      const plan =
-        subscription.metadata?.plan || getPlanFromPriceId(priceId);
+      const plan = subscription.metadata?.plan || getPlanFromPriceId(priceId);
 
       const status =
         event.type === "customer.subscription.deleted"
