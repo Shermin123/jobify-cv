@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
 import { supabase } from "@/lib/supabase";
-
+import { checkSubscription } from "@/lib/checkSubscription";
 export default function UploadPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -33,44 +33,24 @@ export default function UploadPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
-    const savedCountry = sessionStorage.getItem("jobify_country");
-    const savedRole = sessionStorage.getItem("jobify_role");
+  const savedCountry = sessionStorage.getItem("jobify_country");
+  const savedRole = sessionStorage.getItem("jobify_role");
 
-    if (savedCountry) setCountry(savedCountry);
-    if (savedRole) setJobRole(savedRole);
+  if (savedCountry) setCountry(savedCountry);
+  if (savedRole) setJobRole(savedRole);
 
-    const checkSubscription = async () => {
-  if (!session?.user?.email) {
-    const subscription = localStorage.getItem("jobify_subscription");
-
-    if (subscription) {
-      try {
-        const parsed = JSON.parse(subscription);
-        if (parsed?.status === "active") setIsUnlocked(true);
-      } catch {
-        setIsUnlocked(false);
-      }
+  const checkAccessStatus = async () => {
+    if (!session?.user?.email) {
+      setIsUnlocked(false);
+      return;
     }
 
-    return;
-  }
+    const hasAccess = await checkSubscription(session.user.email);
+    setIsUnlocked(hasAccess);
+  };
 
-  const { data, error } = await supabase
-    .from("subscriptions")
-    .select("status")
-    .eq("user_email", session.user.email)
-    .single();
-
-  if (!error && data?.status === "active") {
-    setIsUnlocked(true);
-    return;
-  }
-
-  setIsUnlocked(false);
-};
-
-checkSubscription();
-  }, [session?.user?.email]);
+  checkAccessStatus();
+}, [session?.user?.email]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -290,9 +270,9 @@ checkSubscription();
 };
   if (!text) return alert("Please paste your CV first");
 
-  if (wordCount < 80) {
-    return alert("Please paste at least 80 words from your CV for better AI results.");
-  }
+if (wordCount < 80) {
+  return alert("Please paste at least 80 words from your CV for better AI results.");
+}
 
     setLoading(true);
     setGenerated(true);
