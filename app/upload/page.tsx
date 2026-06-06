@@ -34,10 +34,12 @@ export default function UploadPage() {
 
   useEffect(() => {
   const savedCountry = sessionStorage.getItem("jobify_country");
-  const savedRole = sessionStorage.getItem("jobify_role");
+const savedRole = sessionStorage.getItem("jobify_role");
+const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
 
-  if (savedCountry) setCountry(savedCountry);
-  if (savedRole) setJobRole(savedRole);
+if (savedCountry) setCountry(savedCountry);
+if (savedRole) setJobRole(savedRole);
+if (savedFreeCvText) setText(savedFreeCvText);
 
   const checkAccessStatus = async () => {
     if (!session?.user?.email) {
@@ -503,137 +505,141 @@ typeDocuments(finalCv, finalCoverLetter);
             </div>
 
             {/* DOCUMENT PREVIEW CARDS */}
-            <div className="grid lg:grid-cols-2 gap-5">
-              {/* CV CARD */}
-              <div className="group relative overflow-hidden rounded-3xl border bg-white shadow-xl">
-                <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-blue-600 to-cyan-400" />
+<div className="grid lg:grid-cols-2 gap-6">
+  {/* CV CARD */}
+  <div className="group relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
+    <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
+    <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-blue-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
 
-                <div className="p-4 md:p-5">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-11 w-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md">
-                        📄
-                      </div>
+    <div className="relative p-5">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
+            📄
+          </div>
 
-                      <div>
-                        <h3 className="font-black text-lg">Generated CV</h3>
-                        <p className="text-xs text-gray-500">
-                          ATS-ready resume preview
-                        </p>
-                      </div>
-                    </div>
+          <div>
+            <h3 className="font-black text-lg">Generated CV</h3>
+            <p className="text-xs text-gray-500">ATS-ready resume preview</p>
+          </div>
+        </div>
 
-                    <span className="rounded-full bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 text-xs font-black">
-                      {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
-                    </span>
-                  </div>
+        <span className="rounded-full bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 text-xs font-black animate-softPulse">
+          {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
+        </span>
+      </div>
 
-                  <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[210px] md:h-[260px] overflow-hidden">
-                    <div
-                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition ${
-                        isUnlocked ? "" : "blur-sm select-none"
-                      }`}
-                    >
-                      {highlightKeywords(displayCv, "blue")}
-{typing && (
-  <span className="animate-pulse font-bold text-blue-600">
-    |
-  </span>
-)}
-                    </div>
+      <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
+        {typing && (
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
+        )}
 
-                    {!isUnlocked && showUnlock && (
-                      <div className="absolute inset-0 bg-white/70 backdrop-blur-[3px] flex items-center justify-center">
-                        <div className="text-center px-5">
-                          <div className="text-4xl mb-2">🔒</div>
-                          <h4 className="font-black text-lg">
-                            Unlock full CV
-                          </h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            View, copy and download your full CV.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+        <div
+          className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
+            isUnlocked ? "" : "blur-sm select-none"
+          }`}
+        >
+          {highlightKeywords(displayCv, "blue")}
+          {typing && (
+            <span className="animate-pulse font-black text-blue-600">|</span>
+          )}
+        </div>
 
-                  {showUnlock && (
-                    <button
-                      onClick={handleUnlockClick}
-                      className="mt-4 w-full bg-blue-600 text-white py-3 rounded-2xl font-bold hover:bg-blue-700 transition"
-                    >
-                      {isUnlocked ? "View Full CV" : "Subscribe to Unlock CV"}
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* COVER LETTER CARD */}
-              <div className="group relative overflow-hidden rounded-3xl border bg-white shadow-xl">
-                <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-purple-600 to-pink-500" />
-
-                <div className="p-4 md:p-5">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-11 w-11 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl shadow-md">
-                        ✉️
-                      </div>
-
-                      <div>
-                        <h3 className="font-black text-lg">Cover Letter</h3>
-                        <p className="text-xs text-gray-500">
-                          Personalised application letter
-                        </p>
-                      </div>
-                    </div>
-
-                    <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-100 px-3 py-1 text-xs font-black">
-                      {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
-                    </span>
-                  </div>
-
-                  <div className="relative mt-5 rounded-2xl bg-slate-50 border p-4 h-[210px] md:h-[260px] overflow-hidden">
-                    <div
-                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition ${
-                        isUnlocked ? "" : "blur-sm select-none"
-                      }`}
-                    >
-                      {highlightKeywords(displayCoverLetter, "purple")}
-{typing && (
-  <span className="animate-pulse font-bold text-purple-600">
-    |
-  </span>
-)}
-                    </div>
-
-                    {!isUnlocked && showUnlock && (
-                      <div className="absolute inset-0 bg-white/70 backdrop-blur-[3px] flex items-center justify-center">
-                        <div className="text-center px-5">
-                          <div className="text-4xl mb-2">🔒</div>
-                          <h4 className="font-black text-lg">
-                            Unlock cover letter
-                          </h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Copy and send your personalised letter.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {showUnlock && (
-                    <button
-                      onClick={handleUnlockClick}
-                      className="mt-4 w-full bg-purple-600 text-white py-3 rounded-2xl font-bold hover:bg-purple-700 transition"
-                    >
-                      {isUnlocked
-                        ? "View Cover Letter"
-                        : "Subscribe to Unlock Letter"}
-                    </button>
-                  )}
-                </div>
-              </div>
+        {!isUnlocked && showUnlock && (
+          <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
+            <div className="text-center px-5">
+              <div className="text-5xl mb-3 animate-bounce">🔒</div>
+              <h4 className="font-black text-lg">Unlock full CV</h4>
+              <p className="text-xs text-gray-500 mt-1">
+                View, copy and download your full CV.
+              </p>
             </div>
+          </div>
+        )}
+      </div>
+
+      {showUnlock && (
+        <button
+  onClick={() =>
+    isUnlocked
+      ? downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
+      : handleUnlockClick()
+  }
+  className="mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
+>
+  {isUnlocked ? "Download CV PDF" : "Subscribe to Unlock CV"}
+</button>
+      )}
+    </div>
+  </div>
+
+  {/* COVER LETTER CARD */}
+  <div className="group relative overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
+    <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
+    <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-purple-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
+
+    <div className="relative p-5">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
+            ✉️
+          </div>
+
+          <div>
+            <h3 className="font-black text-lg">Cover Letter</h3>
+            <p className="text-xs text-gray-500">Personalised application letter</p>
+          </div>
+        </div>
+
+        <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-100 px-3 py-1 text-xs font-black animate-softPulse">
+          {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
+        </span>
+      </div>
+
+      <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
+        {typing && (
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
+        )}
+
+        <div
+          className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
+            isUnlocked ? "" : "blur-sm select-none"
+          }`}
+        >
+          {highlightKeywords(displayCoverLetter, "purple")}
+          {typing && (
+            <span className="animate-pulse font-black text-purple-600">|</span>
+          )}
+        </div>
+
+        {!isUnlocked && showUnlock && (
+          <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
+            <div className="text-center px-5">
+              <div className="text-5xl mb-3 animate-bounce">🔒</div>
+              <h4 className="font-black text-lg">Unlock cover letter</h4>
+              <p className="text-xs text-gray-500 mt-1">
+                Copy and send your personalised letter.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {showUnlock && (
+        <button
+  onClick={() =>
+    isUnlocked
+      ? downloadPDF("Cover Letter", coverLetter, "jobify-cover-letter.pdf")
+      : handleUnlockClick()
+  }
+  className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
+>
+  {isUnlocked ? "Download Cover Letter PDF" : "Subscribe to Unlock Letter"}
+</button>
+      )}
+    </div>
+  </div>
+</div>
 
             {/* COPY BUTTONS */}
             {isUnlocked && showUnlock && (
@@ -659,40 +665,6 @@ typeDocuments(finalCv, finalCoverLetter);
       Copy Keywords
     </button>
 
-    <button
-      onClick={() =>
-        downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
-      }
-      className="bg-black text-white py-3 rounded-2xl font-bold hover:bg-gray-800 shadow-lg"
-    >
-      Download CV PDF
-    </button>
-
-    <button
-      onClick={() =>
-        downloadPDF(
-          "Cover Letter",
-          coverLetter,
-          "jobify-cover-letter.pdf"
-        )
-      }
-      className="bg-black text-white py-3 rounded-2xl font-bold hover:bg-gray-800 shadow-lg"
-    >
-      Download Letter PDF
-    </button>
-
-    <button
-      onClick={() =>
-        downloadPDF(
-          "ATS Keywords",
-          keywords.join(", "),
-          "jobify-ats-keywords.pdf"
-        )
-      }
-      className="bg-black text-white py-3 rounded-2xl font-bold hover:bg-gray-800 shadow-lg"
-    >
-      Download Keywords PDF
-    </button>
   </div>
 )}
 
@@ -918,6 +890,60 @@ Company requirements"
           </div>
         )}
       </section>
+      <style jsx>{`
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes softPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.04);
+      opacity: 0.85;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.4s infinite;
+  }
+
+  .animate-gradientMove {
+    animation: gradientMove 3s linear infinite;
+  }
+
+  .animate-fadeUp {
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  .animate-softPulse {
+    animation: softPulse 1.6s ease-in-out infinite;
+  }
+`}</style>
     </main>
   );
 }

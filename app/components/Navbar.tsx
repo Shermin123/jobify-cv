@@ -14,11 +14,13 @@ export default function Navbar() {
     ? [
         { name: "Dashboard", href: "/dashboard" },
         { name: "AI CV Studio", href: "/upload" },
+        
         { name: "My Documents", href: "/my-documents" },
         { name: "Pricing", href: "/pricing" },
       ]
     : [
         { name: "Home", href: "/" },
+        
         { name: "Pricing", href: "/pricing" },
       ];
 
@@ -28,7 +30,6 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="min-h-16 py-3 flex flex-col gap-3 md:h-16 md:py-0 md:flex-row md:items-center md:justify-between">
-
           {/* TOP ROW MOBILE / LOGO */}
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
@@ -37,12 +38,13 @@ export default function Navbar() {
               </div>
 
               <div className="leading-tight">
-                <p className="font-black text-gray-900 tracking-tight">
-                  Jobify.cv
+                <p className="font-black tracking-tight text-lg">
+                  <span className="text-black">Job</span>
+                  <span className="text-blue-600">ify</span>
+                  <span className="text-gray-500">.cv</span>
                 </p>
-                <p className="text-[11px] text-gray-500">
-                  AI CV Builder
-                </p>
+
+                <p className="text-[11px] text-gray-500">AI CV Builder</p>
               </div>
             </Link>
 
@@ -104,9 +106,7 @@ export default function Navbar() {
             ) : (
               <>
                 <div className="hidden lg:flex flex-col items-end leading-tight">
-                  <span className="text-xs text-gray-500">
-                    Signed in as
-                  </span>
+                  <span className="text-xs text-gray-500">Signed in as</span>
                   <span className="text-xs font-medium text-gray-700 max-w-[180px] truncate">
                     {session.user?.email}
                   </span>
@@ -128,7 +128,6 @@ export default function Navbar() {
               </>
             )}
           </div>
-
         </div>
       </div>
     </header>
