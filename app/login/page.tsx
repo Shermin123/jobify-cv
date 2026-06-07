@@ -196,7 +196,7 @@ const handleAppleLogin = async () => {
       <div className="space-y-3 text-center">
   <button
     type="button"
-    onClick={() => alert("Password reset coming soon")}
+    onClick={() => router.push("/forgot-password")}
     className="text-sm font-semibold text-purple-600 hover:text-purple-700"
   >
     Forgot password?
