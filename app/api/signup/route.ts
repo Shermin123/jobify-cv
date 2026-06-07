@@ -4,11 +4,20 @@ import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const {
+      name,
+      email,
+      password,
+      phone,
+      country,
+      targetRole,
+      experienceLevel,
+      jobType,
+    } = await req.json();
 
-    if (!email || !password) {
+    if (!name || !email || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Name, email and password are required" },
         { status: 400 }
       );
     }
@@ -38,17 +47,19 @@ export async function POST(req: Request) {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const { error } = await supabase.from("users").insert({
-      name: name || null,
+      name,
       email: cleanEmail,
       password_hash: passwordHash,
+      phone: phone || null,
+      country: country || null,
+      target_role: targetRole || null,
+      experience_level: experienceLevel || null,
+      job_type: jobType || null,
       provider: "credentials",
     });
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({
