@@ -2,8 +2,8 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 export default function LoginPage() {
   const { status } = useSession();
   const router = useRouter();
@@ -41,8 +41,11 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        setError("Invalid email or password");
-      }
+  setError("Invalid email or password");
+} else {
+  const redirectTo = sessionStorage.getItem("redirect_after_login") || "/upload";
+  router.push(redirectTo);
+}
     } catch {
       setError("Something went wrong");
     }
@@ -51,8 +54,14 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
-    await signIn("google", { callbackUrl: "/upload" });
-  };
+  const redirectTo = sessionStorage.getItem("redirect_after_login") || "/upload";
+  await signIn("google", { callbackUrl: redirectTo });
+};
+
+const handleAppleLogin = async () => {
+  const redirectTo = sessionStorage.getItem("redirect_after_login") || "/upload";
+  await signIn("apple", { callbackUrl: redirectTo });
+};
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleLogin();
@@ -177,10 +186,33 @@ export default function LoginPage() {
               />
               Continue with Google
             </button>
+            <button
+  onClick={handleAppleLogin}
+  className="w-full border border-gray-900 bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition flex items-center justify-center gap-2 font-semibold"
+>
+  <span className="text-lg"></span>
+  Continue with Apple
+</button>
+      <div className="space-y-3 text-center">
+  <button
+    type="button"
+    onClick={() => alert("Password reset coming soon")}
+    className="text-sm font-semibold text-purple-600 hover:text-purple-700"
+  >
+    Forgot password?
+  </button>
 
-            <p className="text-xs text-center text-gray-600">
-              Demo: test@jobify.cv / 123456
-            </p>
+  <p className="text-sm text-gray-600">
+    New to Jobify?{" "}
+    <Link
+      href="/pricing"
+      className="font-black text-blue-600 hover:text-blue-700"
+    >
+      Start free for 7 days
+    </Link>
+  </p>
+</div>
+
           </div>
         </div>
       </div>
