@@ -1035,9 +1035,9 @@ const previousSetupStep = () => {
 
               {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
                 <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
-                  {filteredRoles.slice(0, 8).map((r) => (
-                    <button
-                      key={r}
+                  {filteredRoles.slice(0, 8).map((r, index) => (
+  <button
+    key={`${r}-${index}`}
                       type="button"
                       onClick={() => {
   setJobRole(r);

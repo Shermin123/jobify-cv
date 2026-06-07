@@ -58,11 +58,6 @@ export default function LoginPage() {
   await signIn("google", { callbackUrl: redirectTo });
 };
 
-const handleAppleLogin = async () => {
-  const redirectTo = sessionStorage.getItem("redirect_after_login") || "/upload";
-  await signIn("apple", { callbackUrl: redirectTo });
-};
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleLogin();
   };
@@ -186,13 +181,7 @@ const handleAppleLogin = async () => {
               />
               Continue with Google
             </button>
-            <button
-  onClick={handleAppleLogin}
-  className="w-full border border-gray-900 bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition flex items-center justify-center gap-2 font-semibold"
->
-  <span className="text-lg"></span>
-  Continue with Apple
-</button>
+            
       <div className="space-y-3 text-center">
   <button
     type="button"
