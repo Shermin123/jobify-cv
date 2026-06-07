@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { Resend } from "resend";
 import { supabase } from "@/lib/supabase";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
 
 export async function POST(req: Request) {
   try {
@@ -49,6 +49,14 @@ export async function POST(req: Request) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const resetLink = `${appUrl}/reset-password?token=${token}`;
+    if (!resendApiKey) {
+  return NextResponse.json(
+    { error: "Missing RESEND_API_KEY" },
+    { status: 500 }
+  );
+}
+
+const resend = new Resend(resendApiKey);
 
     await resend.emails.send({
       from: "Jobify <onboarding@resend.dev>",
