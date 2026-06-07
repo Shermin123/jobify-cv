@@ -934,7 +934,7 @@ const previousSetupStep = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
      {showSetupPopup && (
-  <div className="fixed left-0 right-0 top-0 bottom-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 pt-6 pb-10 backdrop-blur-2xl">
+  <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 py-6 backdrop-blur-2xl md:items-center">
     <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
