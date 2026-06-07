@@ -68,7 +68,7 @@ const handleAppleLogin = async () => {
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden">
+    <main className="relative min-h-screen flex items-start md:items-center justify-center px-4 pt-6 pb-10 md:py-10 overflow-hidden">
       {/* BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient" />
 
