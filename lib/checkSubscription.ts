@@ -11,5 +11,9 @@ export async function checkSubscription(userEmail: string) {
     return false;
   }
 
-  return data.status === "active" || data.status === "cancelling";
+  return (
+    data.status === "active" ||
+    data.status === "trialing" ||
+    data.status === "cancelling"
+  );
 }
