@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 export default function Home() {
   
@@ -133,7 +134,8 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   `;
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-b from-white to-slate-50 text-gray-900 overflow-x-hidden">
+    <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+      <EmojiBackground />
       {showScorePopup && (
   <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/75 px-4 backdrop-blur-xl">
     <div className="relative w-full max-w-sm overflow-hidden rounded-[2rem] bg-white p-6 text-center shadow-2xl animate-cinemaIn">
@@ -194,6 +196,7 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
 )}
 {/* FLOATING BACKGROUND ELEMENTS */}
 <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+  
 {/* Small Floating Emojis */}
 
 <div className="absolute top-10 left-10 text-3xl opacity-10">🚀</div>

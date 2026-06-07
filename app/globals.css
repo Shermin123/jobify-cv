@@ -2,19 +2,9 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-:root {
-  --background: #ffffff;
   --foreground: #111111;
   --font-sans: ui-sans-serif, system-ui;
   --font-mono: ui-monospace, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -23,7 +13,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ✅ ADD THIS BELOW */
+/* Marquee animation */
 @keyframes marquee {
   0% {
     transform: translateX(100%);
@@ -37,4 +27,18 @@ body {
   display: inline-block;
   white-space: nowrap;
   animation: marquee 18s linear infinite;
+}
+
+/* Floating background emoji animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 2.8s ease-in-out infinite;
 }

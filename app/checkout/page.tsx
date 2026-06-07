@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 function CheckoutContent() {
   const params = useSearchParams();
@@ -91,6 +92,7 @@ function CheckoutContent() {
 
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900 overflow-hidden">
+      <EmojiBackground />
       {/* BACKGROUND */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[-160px] left-[-120px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />

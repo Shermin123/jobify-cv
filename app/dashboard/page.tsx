@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -38,6 +39,7 @@ export default function Dashboard() {
   if (status === "loading") {
     return (
       <main className="min-h-screen flex items-center justify-center text-gray-500">
+        <EmojiBackground />
         Loading...
       </main>
     );
@@ -68,7 +70,10 @@ export default function Dashboard() {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
-              onClick={() => router.push("/upload")}
+              onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
               className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-blue-700 transition"
             >
               Create CV
@@ -113,7 +118,10 @@ export default function Dashboard() {
 
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
                   <button
-                    onClick={() => router.push("/upload")}
+                    onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
                     className="rounded-2xl bg-white px-6 py-4 font-black text-slate-950 hover:scale-[1.02] transition"
                   >
                     🚀 Generate New CV
@@ -175,7 +183,10 @@ export default function Dashboard() {
               Paste your CV and job description. Jobify creates an ATS-ready CV and cover letter.
             </p>
             <button
-              onClick={() => router.push("/upload")}
+              onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
               className="mt-5 w-full rounded-2xl bg-blue-600 py-3 font-black text-white hover:bg-blue-700 transition"
             >
               Start Generating
@@ -353,7 +364,10 @@ export default function Dashboard() {
 
           <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
             <button
-              onClick={() => router.push("/upload")}
+              onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
               className="rounded-2xl bg-white px-8 py-4 font-black text-blue-600 hover:scale-[1.03] transition"
             >
               Generate CV Now →

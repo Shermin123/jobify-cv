@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 function ResetPasswordContent() {
   const router = useRouter();

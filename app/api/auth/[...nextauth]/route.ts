@@ -60,6 +60,30 @@ const handler = NextAuth({
     }),
   ],
 
+  callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user?.email) {
+        const cleanEmail = user.email.toLowerCase().trim();
+
+        const { data: existingUser } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", cleanEmail)
+          .maybeSingle();
+
+        if (!existingUser) {
+          await supabase.from("users").insert({
+            email: cleanEmail,
+            name: user.name || "Google User",
+            provider: "google",
+          });
+        }
+      }
+
+      return true;
+    },
+  },
+
   session: {
     strategy: "jwt",
   },

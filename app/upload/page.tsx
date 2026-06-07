@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
 import { supabase } from "@/lib/supabase";
 import { checkSubscription } from "@/lib/checkSubscription";
+import { Document, Packer, Paragraph, TextRun } from "docx";
+import { saveAs } from "file-saver";
+import EmojiBackground from "@/app/components/EmojiBackground";
+import HiredAtBox from "@/app/components/HiredAtBox";
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -39,7 +43,8 @@ const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
   const [displayCoverLetter, setDisplayCoverLetter] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [generated, setGenerated] = useState(false);
+const [rephrasing, setRephrasing] = useState<"cv" | "cover" | null>(null);
+const [generated, setGenerated] = useState(false);
   const [typing, setTyping] = useState(false);
   const [showUnlock, setShowUnlock] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -157,6 +162,50 @@ useEffect(() => {
     await navigator.clipboard.writeText(value);
     alert(`${label} copied!`);
   };
+  const rephraseDocument = async (type: "cv" | "cover") => {
+  const content = type === "cv" ? cv : coverLetter;
+
+  if (!content) {
+    alert(type === "cv" ? "CV is empty" : "Cover letter is empty");
+    return;
+  }
+
+  
+
+  setRephrasing(type);
+
+  try {
+    const res = await fetch("/api/rephrase", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content,
+        type,
+        jobRole,
+        country,
+        jobDescription,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Rephrase failed");
+    }
+
+    if (type === "cv") {
+      setCv(data.rephrased);
+      setDisplayCv(data.rephrased.substring(0, 900));
+    } else {
+      setCoverLetter(data.rephrased);
+      setDisplayCoverLetter(data.rephrased.substring(0, 800));
+    }
+  } catch (err: any) {
+    alert(err.message || "Could not rephrase");
+  } finally {
+    setRephrasing(null);
+  }
+};
 
   const downloadPDF = (title: string, content: string, fileName: string) => {
     if (!content) {
@@ -230,16 +279,21 @@ useEffect(() => {
             (keyword) => keyword.toLowerCase() === part.toLowerCase()
           );
 
-          if (isKeyword) {
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(37, 99, 235);
-          } else {
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(55, 65, 81);
-          }
+          const textWidth = doc.getTextWidth(part);
 
-          doc.text(part, x, y);
-          x += doc.getTextWidth(part);
+if (isKeyword) {
+  doc.setFillColor(219, 234, 254);
+  doc.roundedRect(x - 0.7, y - 4.2, textWidth + 1.4, 5.4, 1, 1, "F");
+
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(29, 78, 216);
+} else {
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(55, 65, 81);
+}
+
+doc.text(part, x, y);
+x += textWidth;
         });
 
         y += lineHeight;
@@ -250,6 +304,90 @@ useEffect(() => {
 
     doc.save(fileName);
   };
+  const downloadDOCX = async (
+  title: string,
+  content: string,
+  fileName: string
+) => {
+  if (!content) {
+    alert(`${title} is empty`);
+    return;
+  }
+
+  const keywordList = keywords
+    .filter(Boolean)
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  const escapeRegex = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const keywordRegex =
+    keywordList.length > 0
+      ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
+      : null;
+
+  const makeRuns = (line: string) => {
+    if (!keywordRegex) {
+      return [
+        new TextRun({
+          text: line || " ",
+          size: 22,
+        }),
+      ];
+    }
+
+    return line.split(keywordRegex).filter(Boolean).map((part) => {
+      const isKeyword = keywordList.some(
+        (keyword) => keyword.toLowerCase() === part.toLowerCase()
+      );
+
+      return new TextRun({
+        text: part,
+        size: 22,
+        bold: isKeyword,
+        color: isKeyword ? "1D4ED8" : "374151",
+        highlight: isKeyword ? "yellow" : undefined,
+      });
+    });
+  };
+
+  const paragraphs = content.split("\n").map(
+    (line) =>
+      new Paragraph({
+        children: makeRuns(line),
+        spacing: {
+          after: 160,
+        },
+      })
+  );
+
+  const doc = new Document({
+    sections: [
+      {
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: title,
+                bold: true,
+                size: 34,
+                color: "0F172A",
+              }),
+            ],
+            spacing: {
+              after: 320,
+            },
+          }),
+          ...paragraphs,
+        ],
+      },
+    ],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, fileName);
+};
 
   const highlightKeywords = (
     content: string,
@@ -371,16 +509,17 @@ Preparing your cover letter preview...`;
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          cvText: text,
-          jobRole,
-          country,
-          jobDescription,
-          experienceLevel,
-          jobType,
-          industry,
-          cvGoal,
-          urgency,
-        }),
+  cvText: text,
+  jobRole,
+  country,
+  jobDescription,
+  userEmail: session?.user?.email,
+  experienceLevel,
+  jobType,
+  industry,
+  cvGoal,
+  urgency,
+}),
       });
 
       const data = await res.json();
@@ -941,7 +1080,7 @@ const previousSetupStep = () => {
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
         <div className="absolute -left-20 -bottom-20 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
       </div>
-
+      
       <div className="relative p-5">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
@@ -1181,34 +1320,64 @@ const previousSetupStep = () => {
     </div>
   </div>
 )}
-      {/* BACKGROUND */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-100" />
 
-        <div className="absolute top-[-160px] left-[-160px] w-[520px] h-[520px] bg-blue-200 rounded-full blur-[150px] opacity-35" />
-        <div className="absolute bottom-[-180px] right-[-150px] w-[620px] h-[620px] bg-purple-200 rounded-full blur-[180px] opacity-30" />
-        <div className="absolute top-[35%] left-[45%] w-[360px] h-[360px] bg-cyan-100 rounded-full blur-[130px] opacity-25" />
+{(loading || rephrasing) && (
+  <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-white/80 px-4 backdrop-blur-xl">
+    <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
+        {loading ? "👨‍🍳" : "✨"}
       </div>
+
+      <h3 className="mt-5 text-2xl font-black text-slate-950">
+        {loading
+          ? "Cooking your CV"
+          : rephrasing === "cv"
+          ? "Polishing your CV"
+          : "Polishing your letter"}
+      </h3>
+
+      <p className="mt-2 text-sm leading-6 text-slate-500">
+        {loading
+          ? "Adding ATS keywords, stronger wording, and recruiter-friendly structure."
+          : "Making it smoother, sharper, and more professional."}
+      </p>
+
+      <div className="mt-6 flex justify-center gap-2">
+        <span className="h-3 w-3 rounded-full bg-blue-600 animate-cookDotOne" />
+        <span className="h-3 w-3 rounded-full bg-indigo-600 animate-cookDotTwo" />
+        <span className="h-3 w-3 rounded-full bg-purple-600 animate-cookDotThree" />
+      </div>
+
+      <div className="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
+        <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 animate-cookBar" />
+      </div>
+    </div>
+  </div>
+)}
+
+{/* BACKGROUND */}
+<EmojiBackground />
 
       {/* HEADER */}
       <section className="max-w-6xl mx-auto px-4 pt-6 pb-4">
-        <div className="bg-white/85 backdrop-blur-xl border rounded-3xl p-6 shadow-sm text-center">
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight">
-            🚀 AI CV Studio
-          </h1>
+  <div className="bg-white/85 backdrop-blur-xl border rounded-3xl p-6 shadow-sm text-center">
+    <h1 className="text-3xl md:text-5xl font-black tracking-tight">
+      🚀 AI CV Studio
+    </h1>
 
-          <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-            Paste your CV and job description. Jobify creates an ATS-friendly CV
-            and cover letter in seconds.
-          </p>
+    <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+      Paste your CV and job description. Jobify creates an ATS-friendly CV
+      and cover letter in seconds.
+    </p>
 
-          {isUnlocked && (
-            <div className="inline-flex mt-4 bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-sm font-bold">
-              ✅ Subscription active — full access unlocked
-            </div>
-          )}
-        </div>
-      </section>
+    {isUnlocked && (
+      <div className="inline-flex mt-4 bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-sm font-bold">
+        ✅ Subscription active — full access unlocked
+      </div>
+    )}
+
+  </div>
+</section>
 
       <section className="max-w-6xl mx-auto px-4 pb-10 space-y-6">
         {/* RESULTS */}
@@ -1353,23 +1522,38 @@ const previousSetupStep = () => {
                   </div>
 
                   {showUnlock && (
-                    <button
-                      onClick={() =>
-                        isUnlocked
-                          ? downloadPDF(
-                              "Optimised CV",
-                              cv,
-                              "jobify-optimised-cv.pdf"
-                            )
-                          : handleUnlockClick()
-                      }
-                      className="mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
-                    >
-                      {isUnlocked
-                        ? "Download CV PDF"
-                        : "Subscribe to Unlock CV"}
-                    </button>
-                  )}
+  <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <button
+      onClick={() =>
+        isUnlocked
+          ? downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
+          : handleUnlockClick()
+      }
+      className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
+    >
+      {isUnlocked ? "Download CV PDF" : "Subscribe to Unlock CV"}
+    </button>
+    <button
+  onClick={() =>
+    isUnlocked
+      ? downloadDOCX("Optimised CV", cv, "jobify-optimised-cv.docx")
+      : handleUnlockClick()
+  }
+  className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
+>
+  {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
+</button>
+    
+
+    <button
+      onClick={() => rephraseDocument("cv")}
+      disabled={rephrasing === "cv" || typing}
+      className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
+    >
+      {rephrasing === "cv" ? "Rephrasing..." : "✨ Rephrase CV"}
+    </button>
+  </div>
+)}
                 </div>
               </div>
 
@@ -1432,23 +1616,46 @@ const previousSetupStep = () => {
                   </div>
 
                   {showUnlock && (
-                    <button
-                      onClick={() =>
-                        isUnlocked
-                          ? downloadPDF(
-                              "Cover Letter",
-                              coverLetter,
-                              "jobify-cover-letter.pdf"
-                            )
-                          : handleUnlockClick()
-                      }
-                      className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
-                    >
-                      {isUnlocked
-                        ? "Download Cover Letter PDF"
-                        : "Subscribe to Unlock Letter"}
-                    </button>
-                  )}
+  <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <button
+      onClick={() =>
+        isUnlocked
+          ? downloadPDF(
+              "Cover Letter",
+              coverLetter,
+              "jobify-cover-letter.pdf"
+            )
+          : handleUnlockClick()
+      }
+      className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
+    >
+      {isUnlocked ? "Download PDF" : "Subscribe"}
+    </button>
+
+    <button
+      onClick={() =>
+        isUnlocked
+          ? downloadDOCX(
+              "Cover Letter",
+              coverLetter,
+              "jobify-cover-letter.docx"
+            )
+          : handleUnlockClick()
+      }
+      className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
+    >
+      {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
+    </button>
+
+    <button
+      onClick={() => rephraseDocument("cover")}
+      disabled={rephrasing === "cover" || typing}
+      className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50 disabled:opacity-50"
+    >
+      {rephrasing === "cover" ? "Rephrasing..." : "✨ Rephrase"}
+    </button>
+  </div>
+)}
                 </div>
               </div>
             </div>
@@ -1734,14 +1941,7 @@ Company requirements"
               </p>
             )}
 
-            {loading && (
-              <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4 text-center">
-                <p className="text-sm font-semibold text-blue-700 animate-pulse">
-                  Analysing CV, extracting keywords, and matching your
-                  experience to the job...
-                </p>
-              </div>
-            )}
+            
           </div>
         </div>
 
@@ -1755,6 +1955,7 @@ Company requirements"
             </p>
           </div>
         )}
+        <HiredAtBox />
       </section>
 
       <style jsx>{`
@@ -1874,6 +2075,141 @@ Company requirements"
         .animate-softPulse {
           animation: softPulse 1.6s ease-in-out infinite;
         }
+        @keyframes jobifyPop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes jobifyFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes dotBounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+.animate-jobifyPop {
+  animation: jobifyPop 0.35s ease-out;
+}
+
+.animate-jobifyFloat {
+  animation: jobifyFloat 1.8s ease-in-out infinite;
+}
+
+.animate-dotOne {
+  animation: dotBounce 0.9s ease-in-out infinite;
+}
+
+.animate-dotTwo {
+  animation: dotBounce 0.9s ease-in-out infinite 0.15s;
+}
+
+.animate-dotThree {
+  animation: dotBounce 0.9s ease-in-out infinite 0.3s;
+}  
+  @keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(160%);
+  }
+}
+
+.animate-loadingBar {
+  animation: loadingBar 1.15s ease-in-out infinite;
+}
+
+    
+}
+    
+      @keyframes cookIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cookPot {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(0) rotate(3deg);
+  }
+  75% {
+    transform: translateY(-3px) rotate(-2deg);
+  }
+}
+
+@keyframes cookDot {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-7px);
+    opacity: 1;
+  }
+}
+
+@keyframes cookBar {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.animate-cookIn {
+  animation: cookIn 0.35s ease-out;
+}
+
+.animate-cookPot {
+  animation: cookPot 1.4s ease-in-out infinite;
+}
+
+.animate-cookDotOne {
+  animation: cookDot 0.9s ease-in-out infinite;
+}
+
+.animate-cookDotTwo {
+  animation: cookDot 0.9s ease-in-out infinite 0.15s;
+}
+
+.animate-cookDotThree {
+  animation: cookDot 0.9s ease-in-out infinite 0.3s;
+}
+
+.animate-cookBar {
+  animation: cookBar 1.15s ease-in-out infinite;
+}
       `}</style>
     </main>
   );

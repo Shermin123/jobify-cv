@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -17,63 +18,75 @@ export default function PricingPage() {
   };
 
   const plans = [
-    {
-      id: "trial",
-      name: "7-Day Trial",
-      label: "FREE FOR 7 DAYS",
-      price: "£0",
-      sub: "today",
-      description: "Use Jobify free for 7 days. Cancel anytime before billing starts.",
-      button: "Use Free for 7 Days",
-      highlight: true,
-      trial: true,
-      features: [
-        "Full CV generator access",
-        "Cover letter generator",
-        "ATS keyword suggestions",
-        "PDF download",
-        "£0 today",
-        "Cancel anytime before trial ends",
-      ],
-    },
-    {
-      id: "basic",
-      name: "Basic",
-      label: "Student friendly",
-      price: "£9.99",
-      sub: "per month",
-      description: "Perfect for students and active job seekers.",
-      button: "Choose Basic",
-      highlight: false,
-      trial: false,
-      features: [
-        "30 CV generations/month",
-        "30 cover letters/month",
-        "ATS optimisation",
-        "PDF export",
-        "Role-based tailoring",
-      ],
-    },
-    {
-      id: "pro",
-      name: "Pro",
-      label: "Best value",
-      price: "£19.99",
-      sub: "per month",
-      description: "For serious job seekers applying to multiple roles.",
-      button: "Go Pro",
-      highlight: true,
-      trial: false,
-      features: [
-        "Unlimited CV generations",
-        "Unlimited cover letters",
-        "Advanced ATS scoring",
-        "Priority AI processing",
-        "Job description matching",
-        "Better role tailoring",
-      ],
-    },
-  ];
+  {
+    id: "trial",
+    name: "7-Day Trial",
+    label: "FREE FOR 7 DAYS",
+    price: "£0",
+    sub: "today",
+    description:
+      "Try Jobify with full access before paying. Perfect for testing your first CV and cover letter.",
+    button: "Use Free for 7 Days",
+    highlight: true,
+    trial: true,
+    features: [
+      "Full CV generator access",
+      "Generate tailored cover letters",
+      "ATS keyword suggestions included",
+      "CV score checker included",
+      "Download your CV as PDF",
+      "Try before paying",
+      "£0 today",
+      "Cancel anytime before trial ends",
+    ],
+  },
+  {
+    id: "basic",
+    name: "Basic",
+    label: "Student friendly",
+    price: "£9.99",
+    sub: "per month",
+    description:
+      "Best for students and job seekers applying to a few roles each month.",
+    button: "Choose Basic",
+    highlight: false,
+    trial: false,
+    features: [
+      "30 CV generations per month",
+      "30 cover letters per month",
+      "ATS optimisation for each CV",
+      "Keyword suggestions for job descriptions",
+      "CV score checker access",
+      "PDF export included",
+      "Role-based CV tailoring",
+      "Good for part-time, graduate, and entry-level jobs",
+    ],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    label: "Best value",
+    price: "£19.99",
+    sub: "per month",
+    description:
+      "For serious job seekers who want to apply faster with stronger, tailored applications.",
+    button: "Go Pro",
+    highlight: true,
+    trial: false,
+    features: [
+      "Unlimited CV generations",
+      "Unlimited cover letters",
+      "Advanced ATS scoring",
+      "Tailor your CV for every job description",
+      "Priority AI processing",
+      "Better role-specific keyword matching",
+      "Create multiple versions for different roles",
+      "Best for active job seekers applying weekly",
+      "Save time rewriting applications manually",
+      "Improve weak CV wording into stronger bullet points",
+    ],
+  },
+];
 
   const companies = [
     {
@@ -100,7 +113,7 @@ export default function PricingPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900">
-      {/* BACKGROUND */}
+      <EmojiBackground />
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[-180px] left-[-130px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />
         <div className="absolute bottom-[-180px] right-[-120px] h-[520px] w-[520px] rounded-full bg-purple-200 blur-[160px] opacity-35" />

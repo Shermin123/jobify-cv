@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -45,7 +46,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-slate-50 to-white px-4 py-10 text-slate-900">
+    <main className="relative min-h-screen flex items-start md:items-center justify-center bg-gradient-to-b from-white via-slate-50 to-white px-4 pt-6 pb-10 md:py-10 text-slate-900">
+        <EmojiBackground />
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-100 blur-3xl opacity-80" />
         <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-indigo-100 blur-3xl opacity-80" />

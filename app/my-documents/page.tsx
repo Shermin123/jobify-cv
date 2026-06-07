@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import EmojiBackground from "@/app/components/EmojiBackground";
 
 type DocumentItem = {
   id: string;
@@ -51,6 +52,7 @@ export default function MyDocumentsPage() {
   if (loading || status === "loading") {
     return (
       <main className="min-h-screen flex items-center justify-center text-gray-500">
+        <EmojiBackground />
         Loading your documents...
       </main>
     );

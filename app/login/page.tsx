@@ -4,6 +4,8 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import EmojiBackground from "@/app/components/EmojiBackground";
+
 export default function LoginPage() {
   const { status } = useSession();
   const router = useRouter();
@@ -64,7 +66,7 @@ export default function LoginPage() {
 
   return (
     <main className="relative min-h-screen flex items-start md:items-center justify-center px-4 pt-6 pb-10 md:py-10 overflow-hidden">
-      {/* BACKGROUND */}
+      <EmojiBackground />
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient" />
 
       <div className="absolute top-[-120px] left-[-120px] w-[320px] h-[320px] bg-blue-400 blur-3xl opacity-30 rounded-full animate-pulse" />
