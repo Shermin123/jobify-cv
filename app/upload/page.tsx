@@ -45,33 +45,51 @@ const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
-    const savedCountry = sessionStorage.getItem("jobify_country");
-    const savedRole = sessionStorage.getItem("jobify_role");
-    const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
+  const savedCountry = sessionStorage.getItem("jobify_country");
+  const savedRole = sessionStorage.getItem("jobify_role");
+  const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
 
-    const savedExperienceLevel = sessionStorage.getItem(
-      "jobify_experience_level"
-    );
-    const savedJobType = sessionStorage.getItem("jobify_job_type");
-    const savedIndustry = sessionStorage.getItem("jobify_industry");
-    const savedCvGoal = sessionStorage.getItem("jobify_cv_goal");
-    const savedUrgency = sessionStorage.getItem("jobify_urgency");
+  const savedExperienceLevel = sessionStorage.getItem("jobify_experience_level");
+  const savedJobType = sessionStorage.getItem("jobify_job_type");
+  const savedIndustry = sessionStorage.getItem("jobify_industry");
+  const savedCvGoal = sessionStorage.getItem("jobify_cv_goal");
+  const savedUrgency = sessionStorage.getItem("jobify_urgency");
 
-   if (savedCountry) setCountry(savedCountry);
-if (savedRole) setJobRole(savedRole);
-if (savedFreeCvText) setText(savedFreeCvText);
+  if (savedCountry) setCountry(savedCountry);
+  if (savedRole) setJobRole(savedRole);
+  if (savedFreeCvText) setText(savedFreeCvText);
 
-const setupCompleted = sessionStorage.getItem("jobify_setup_completed");
+  if (savedExperienceLevel) setExperienceLevel(savedExperienceLevel);
+  if (savedJobType) setJobType(savedJobType);
+  if (savedIndustry) setIndustry(savedIndustry);
+  if (savedCvGoal) setCvGoal(savedCvGoal);
+  if (savedUrgency) setUrgency(savedUrgency);
 
-if (!setupCompleted) {
-  setSetupStep(0);
-  setShowSetupPopup(true);
-}
-  useEffect(() => {
+  const setupCompleted = sessionStorage.getItem("jobify_setup_completed");
+
+  if (!setupCompleted) {
+    setSetupStep(0);
+    setShowSetupPopup(true);
+  }
+
+  const checkAccessStatus = async () => {
+    if (!session?.user?.email) {
+      setIsUnlocked(false);
+      return;
+    }
+
+    const hasAccess = await checkSubscription(session.user.email);
+    setIsUnlocked(hasAccess);
+  };
+
+  checkAccessStatus();
+}, [session?.user?.email]);
+
+useEffect(() => {
   if (showSetupPopup) {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     document.body.style.overflow = "hidden";
   } else {
     document.body.style.overflow = "";
@@ -81,24 +99,6 @@ if (!setupCompleted) {
     document.body.style.overflow = "";
   };
 }, [showSetupPopup]);
-    if (savedExperienceLevel) setExperienceLevel(savedExperienceLevel);
-    if (savedJobType) setJobType(savedJobType);
-    if (savedIndustry) setIndustry(savedIndustry);
-    if (savedCvGoal) setCvGoal(savedCvGoal);
-    if (savedUrgency) setUrgency(savedUrgency);
-
-    const checkAccessStatus = async () => {
-      if (!session?.user?.email) {
-        setIsUnlocked(false);
-        return;
-      }
-
-      const hasAccess = await checkSubscription(session.user.email);
-      setIsUnlocked(hasAccess);
-    };
-
-    checkAccessStatus();
-  }, [session?.user?.email]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
