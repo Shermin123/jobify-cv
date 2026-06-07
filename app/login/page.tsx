@@ -205,11 +205,11 @@ const handleAppleLogin = async () => {
   <p className="text-sm text-gray-600">
     New to Jobify?{" "}
     <Link
-      href="/pricing"
-      className="font-black text-blue-600 hover:text-blue-700"
-    >
-      Start free for 7 days
-    </Link>
+  href="/signup"
+  className="font-black text-blue-600 hover:text-blue-700"
+>
+  Create account
+</Link>
   </p>
 </div>
 

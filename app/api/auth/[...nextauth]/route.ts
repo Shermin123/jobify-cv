@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
+import { supabase } from "@/lib/supabase";
 
 const handler = NextAuth({
   providers: [
@@ -19,18 +21,36 @@ const handler = NextAuth({
       },
 
       async authorize(credentials) {
-        if (
-          credentials?.email === "test@jobify.cv" &&
-          credentials?.password === "123456"
-        ) {
-          return {
-            id: "1",
-            name: "Jobify User",
-            email: credentials.email,
-          };
+        if (!credentials?.email || !credentials?.password) {
+          return null;
         }
 
-        return null;
+        const cleanEmail = credentials.email.toLowerCase().trim();
+
+        const { data: user, error } = await supabase
+          .from("users")
+          .select("id, name, email, password_hash")
+          .eq("email", cleanEmail)
+          .maybeSingle();
+
+        if (error || !user?.password_hash) {
+          return null;
+        }
+
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password_hash
+        );
+
+        if (!isPasswordValid) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name || "Jobify User",
+          email: user.email,
+        };
       },
     }),
 
