@@ -17,10 +17,12 @@ export default function Navbar() {
         { name: "Documents", href: "/my-documents" },
         { name: "Pricing", href: "/pricing" },
       ]
-    : [
-        { name: "Home", href: "/" },
-        { name: "Pricing", href: "/pricing" },
-      ];
+
+      : [
+    { name: "Home", href: "/" },
+    { name: "CV Score", href: "/#cv-score" },
+    { name: "Pricing", href: "/pricing" },
+  ];
 
   const isActive = (href: string) => pathname === href;
 
@@ -52,12 +54,21 @@ export default function Navbar() {
             {/* MOBILE ACTION */}
             <div className="md:hidden">
               {!isLoggedIn ? (
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center rounded-full bg-slate-950 px-4 py-2 text-xs font-black text-white shadow-sm"
-                >
-                  Login
-                </Link>
+                <div className="flex items-center gap-2">
+  <Link
+    href="/login"
+    className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 shadow-sm"
+  >
+    Login
+  </Link>
+
+  <Link
+    href="/upload"
+    className="rounded-full bg-blue-600 px-3 py-2 text-xs font-black text-white shadow-sm"
+  >
+    Start
+  </Link>
+</div>
               ) : (
                 <button
                   onClick={() => signOut({ callbackUrl: "/login" })}
@@ -91,18 +102,18 @@ export default function Navbar() {
             {!isLoggedIn ? (
               <>
                 <Link
-                  href="/login"
-                  className="text-sm font-bold text-slate-500 transition hover:text-slate-950"
-                >
-                  Login
-                </Link>
+  href="/login"
+  className="rounded-full px-4 py-2 text-sm font-bold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+>
+  Login
+</Link>
 
-                <Link
-                  href="/upload"
-                  className="inline-flex items-center justify-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-600"
-                >
-                  Start Free
-                </Link>
+<Link
+  href="/upload"
+  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:shadow-xl"
+>
+  Start Free →
+</Link>
               </>
             ) : (
               <>
