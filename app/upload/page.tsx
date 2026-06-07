@@ -45,6 +45,8 @@ const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
     const savedCountry = sessionStorage.getItem("jobify_country");
     const savedRole = sessionStorage.getItem("jobify_role");
     const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
@@ -67,7 +69,18 @@ if (!setupCompleted) {
   setSetupStep(0);
   setShowSetupPopup(true);
 }
+  useEffect(() => {
+  if (showSetupPopup) {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
 
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [showSetupPopup]);
     if (savedExperienceLevel) setExperienceLevel(savedExperienceLevel);
     if (savedJobType) setJobType(savedJobType);
     if (savedIndustry) setIndustry(savedIndustry);
@@ -921,8 +934,8 @@ const previousSetupStep = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
      {showSetupPopup && (
-  <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 py-6 backdrop-blur-2xl md:items-center">
-    <div className="relative w-full max-w-md max-h-[88dvh] overflow-y-auto rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
+  <div className="fixed left-0 right-0 top-0 bottom-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 pt-6 pb-10 backdrop-blur-2xl">
+    <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
