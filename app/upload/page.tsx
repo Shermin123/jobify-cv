@@ -57,15 +57,16 @@ const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
     const savedCvGoal = sessionStorage.getItem("jobify_cv_goal");
     const savedUrgency = sessionStorage.getItem("jobify_urgency");
 
-    const shouldAskSetup = true;
+   if (savedCountry) setCountry(savedCountry);
+if (savedRole) setJobRole(savedRole);
+if (savedFreeCvText) setText(savedFreeCvText);
 
-if (!shouldAskSetup) {
-  if (savedCountry) setCountry(savedCountry);
-  if (savedRole) setJobRole(savedRole);
+const setupCompleted = sessionStorage.getItem("jobify_setup_completed");
+
+if (!setupCompleted) {
+  setSetupStep(0);
+  setShowSetupPopup(true);
 }
-    if (savedFreeCvText) setText(savedFreeCvText);
-    setSetupStep(0);
-setShowSetupPopup(true);
 
     if (savedExperienceLevel) setExperienceLevel(savedExperienceLevel);
     if (savedJobType) setJobType(savedJobType);
@@ -920,8 +921,8 @@ const previousSetupStep = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
      {showSetupPopup && (
-  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-2xl">
-    <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
+  <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 py-6 backdrop-blur-2xl md:items-center">
+    <div className="relative w-full max-w-md max-h-[88dvh] overflow-y-auto rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
@@ -1187,35 +1188,6 @@ const previousSetupStep = () => {
             Paste your CV and job description. Jobify creates an ATS-friendly CV
             and cover letter in seconds.
           </p>
-          <div className="mt-6 rounded-3xl border bg-white p-5 shadow-sm">
-  <p className="text-xs font-black uppercase tracking-widest text-slate-400">
-    Our customers are hired by these companies
-  </p>
-
-  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-    {[
-      { name: "Google", color: "text-blue-600" },
-      { name: "Amazon", color: "text-orange-500" },
-      { name: "Microsoft", color: "text-blue-700" },
-      { name: "Deloitte", color: "text-emerald-600" },
-      { name: "NHS", color: "text-blue-800" },
-      { name: "Tesco", color: "text-red-600" },
-    ].map((company) => (
-      <div
-        key={company.name}
-        className="group rounded-2xl border bg-slate-50 px-3 py-4 text-center shadow-sm hover:-translate-y-1 hover:shadow-lg transition"
-      >
-        <p className={`text-base font-black ${company.color}`}>
-          {company.name}
-        </p>
-      </div>
-    ))}
-  </div>
-
-  <p className="mt-4 text-xs text-slate-500">
-    Jobify helps applicants create stronger, keyword-focused CVs for competitive roles.
-  </p>
-</div>
 
           {isUnlocked && (
             <div className="inline-flex mt-4 bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-sm font-bold">
