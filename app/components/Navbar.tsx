@@ -14,53 +14,54 @@ export default function Navbar() {
     ? [
         { name: "Dashboard", href: "/dashboard" },
         { name: "AI CV Studio", href: "/upload" },
-        
-        { name: "My Documents", href: "/my-documents" },
+        { name: "Documents", href: "/my-documents" },
         { name: "Pricing", href: "/pricing" },
       ]
     : [
         { name: "Home", href: "/" },
-        
         { name: "Pricing", href: "/pricing" },
       ];
 
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="min-h-16 py-3 flex flex-col gap-3 md:h-16 md:py-0 md:flex-row md:items-center md:justify-between">
-          {/* TOP ROW MOBILE / LOGO */}
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-2xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex min-h-16 flex-col gap-3 py-3 md:h-16 md:flex-row md:items-center md:justify-between md:py-0">
+          {/* LOGO */}
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black shadow-sm">
-                J
+            <Link href="/" className="group flex items-center gap-3">
+              <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-slate-950 text-white shadow-lg">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-slate-950 opacity-90 transition group-hover:scale-110" />
+                <span className="relative text-base font-black">J</span>
               </div>
 
               <div className="leading-tight">
-                <p className="font-black tracking-tight text-lg">
-                  <span className="text-black">Job</span>
+                <p className="text-lg font-black tracking-tight">
+                  <span className="text-slate-950">Job</span>
                   <span className="text-blue-600">ify</span>
-                  <span className="text-gray-500">.cv</span>
+                  <span className="text-slate-400">.cv</span>
                 </p>
 
-                <p className="text-[11px] text-gray-500">AI CV Builder</p>
+                <p className="text-[11px] font-medium text-slate-400">
+                  AI CV Builder
+                </p>
               </div>
             </Link>
 
-            {/* MOBILE RIGHT ACTION */}
+            {/* MOBILE ACTION */}
             <div className="md:hidden">
               {!isLoggedIn ? (
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-sm"
+                  className="inline-flex items-center justify-center rounded-full bg-slate-950 px-4 py-2 text-xs font-black text-white shadow-sm"
                 >
                   Login
                 </Link>
               ) : (
                 <button
                   onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="rounded-full border border-gray-300 px-3 py-2 text-xs font-bold text-gray-700"
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 shadow-sm"
                 >
                   Logout
                 </button>
@@ -69,15 +70,15 @@ export default function Navbar() {
           </div>
 
           {/* NAV LINKS */}
-          <nav className="flex items-center gap-2 overflow-x-auto rounded-full bg-gray-100/80 p-1 border border-gray-200 md:overflow-visible">
+          <nav className="flex items-center gap-1 overflow-x-auto rounded-full border border-slate-200 bg-slate-100/80 p-1 md:overflow-visible">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`whitespace-nowrap px-4 py-2 text-sm rounded-full transition font-semibold ${
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
                   isActive(link.href)
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "text-gray-600 hover:text-blue-700"
+                    ? "bg-white text-slate-950 shadow-sm"
+                    : "text-slate-500 hover:bg-white/70 hover:text-slate-950"
                 }`}
               >
                 {link.name}
@@ -85,43 +86,45 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* RIGHT SIDE DESKTOP */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* DESKTOP RIGHT */}
+          <div className="hidden items-center gap-3 md:flex">
             {!isLoggedIn ? (
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-medium text-gray-600 hover:text-blue-700 transition"
+                  className="text-sm font-bold text-slate-500 transition hover:text-slate-950"
                 >
                   Login
                 </Link>
 
                 <Link
                   href="/upload"
-                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
+                  className="inline-flex items-center justify-center rounded-full bg-slate-950 px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-600"
                 >
                   Start Free
                 </Link>
               </>
             ) : (
               <>
-                <div className="hidden lg:flex flex-col items-end leading-tight">
-                  <span className="text-xs text-gray-500">Signed in as</span>
-                  <span className="text-xs font-medium text-gray-700 max-w-[180px] truncate">
+                <div className="hidden lg:block max-w-[190px] text-right leading-tight">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                    Signed in
+                  </p>
+                  <p className="truncate text-xs font-semibold text-slate-600">
                     {session.user?.email}
-                  </span>
+                  </p>
                 </div>
 
                 <Link
                   href="/upload"
-                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-700"
                 >
                   Create CV
                 </Link>
 
                 <button
                   onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="rounded-full border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:border-blue-600 hover:text-blue-700 transition"
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
                 >
                   Logout
                 </button>
