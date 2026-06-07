@@ -81,21 +81,21 @@ export default function Navbar() {
           </div>
 
           {/* NAV LINKS */}
-          <nav className="flex items-center gap-1 overflow-x-auto rounded-full border border-slate-200 bg-slate-100/80 p-1 md:overflow-visible">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
-                  isActive(link.href)
-                    ? "bg-white text-slate-950 shadow-sm"
-                    : "text-slate-500 hover:bg-white/70 hover:text-slate-950"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+          <nav className="mx-auto flex w-fit max-w-full items-center justify-center gap-1 overflow-x-auto rounded-full border border-slate-200 bg-slate-100/80 p-1 md:mx-0 md:overflow-visible">
+  {links.map((link) => (
+    <Link
+      key={link.href}
+      href={link.href}
+      className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
+        isActive(link.href)
+          ? "bg-white text-slate-950 shadow-sm"
+          : "text-slate-500 hover:bg-white/70 hover:text-slate-950"
+      }`}
+    >
+      {link.name}
+    </Link>
+  ))}
+</nav>
 
           {/* DESKTOP RIGHT */}
           <div className="hidden items-center gap-3 md:flex">
