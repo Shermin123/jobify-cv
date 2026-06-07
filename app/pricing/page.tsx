@@ -62,7 +62,7 @@ export default function PricingPage() {
       sub: "per month",
       description: "For serious job seekers applying to multiple roles.",
       button: "Go Pro",
-      highlight: false,
+      highlight: true,
       trial: false,
       features: [
         "Unlimited CV generations",
@@ -75,12 +75,34 @@ export default function PricingPage() {
     },
   ];
 
+  const companies = [
+    {
+      name: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    },
+    {
+      name: "Amazon",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    },
+    {
+      name: "Microsoft",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+    },
+    {
+      name: "NHS",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d3/National_Health_Service_%28England%29_logo.svg",
+    },
+    {
+      name: "Tesco",
+      logo: "https://upload.wikimedia.org/wikipedia/en/b/b0/Tesco_Logo.svg",
+    },
+  ];
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900">
-
       {/* BACKGROUND */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[-160px] left-[-120px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />
+        <div className="absolute top-[-180px] left-[-130px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />
         <div className="absolute bottom-[-180px] right-[-120px] h-[520px] w-[520px] rounded-full bg-purple-200 blur-[160px] opacity-35" />
 
         <div className="absolute top-16 left-10 text-3xl opacity-10">🚀</div>
@@ -91,134 +113,202 @@ export default function PricingPage() {
       </div>
 
       {/* HEADER */}
-      <section className="max-w-5xl mx-auto text-center pt-12 px-6">
-        <div className="inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2 text-sm shadow-sm">
+      <section className="max-w-6xl mx-auto text-center pt-6 px-6">
+        <div className="inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2 text-xs md:text-sm shadow-sm">
           <span>🎁</span>
-          <span className="text-green-700 font-semibold">
+          <span className="text-green-700 font-bold">
             Free for 7 days • £0 today • Cancel anytime
           </span>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-black mt-6 tracking-tight">
+        <h1 className="text-3xl md:text-5xl font-black mt-4 tracking-tight">
           Unlock your full CV package
         </h1>
 
-        <p className="text-gray-500 mt-4 max-w-2xl mx-auto text-lg">
-          Start free today and access your ATS-optimised CV, personalised cover letter, keyword list, and PDF download.
+        <p className="text-gray-500 mt-3 max-w-2xl mx-auto text-sm md:text-base">
+          Start free today and access your ATS-optimised CV, personalised cover letter,
+          keyword list, and PDF download.
         </p>
 
-        <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
+        <div className="mt-5 flex flex-col sm:flex-row justify-center gap-3">
           <button
             onClick={() => startCheckout("trial")}
-            className="bg-black text-white px-8 py-3 rounded-2xl font-semibold hover:bg-gray-800 transition shadow-lg"
+            className="bg-black text-white px-7 py-3 rounded-2xl font-bold hover:bg-gray-800 transition shadow-lg"
           >
             Use Free for Now
           </button>
 
           <button
-            onClick={() => document.getElementById("plans")?.scrollIntoView({ behavior: "smooth" })}
-            className="bg-white border px-8 py-3 rounded-2xl font-semibold hover:shadow-md transition"
+            onClick={() =>
+              document.getElementById("plans")?.scrollIntoView({
+                behavior: "smooth",
+              })
+            }
+            className="bg-white border px-7 py-3 rounded-2xl font-bold hover:shadow-md transition"
           >
             See All Plans
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 mt-3">
+        <p className="text-xs text-gray-400 mt-2">
           Card required for trial. You will not be charged today.
         </p>
+      </section>
 
-        <div className="mt-6 flex justify-center gap-3 flex-wrap text-sm">
-          <span className="bg-blue-50 text-blue-700 border border-blue-100 px-4 py-2 rounded-full">
-            📄 Full CV access
-          </span>
-          <span className="bg-purple-50 text-purple-700 border border-purple-100 px-4 py-2 rounded-full">
-            ✉️ Cover letter
-          </span>
-          <span className="bg-green-50 text-green-700 border border-green-100 px-4 py-2 rounded-full">
-            🎯 ATS keywords
-          </span>
+      {/* COMPACT COMPANY LOGOS */}
+      <section className="max-w-5xl mx-auto px-6 mt-5">
+        <div className="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div className="text-center md:text-left">
+              <p className="text-xs md:text-sm font-black text-slate-900">
+                Our customers are hired and working here
+              </p>
+              <p className="text-[11px] text-slate-500">
+                Stronger CVs for competitive roles.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center md:justify-end gap-2">
+              {companies.map((company) => (
+                <div
+                  key={company.name}
+                  className="group flex h-9 w-24 items-center justify-center rounded-xl border border-slate-100 bg-white px-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <img
+                    src={company.logo}
+                    alt={`${company.name} logo`}
+                    className="max-h-4 max-w-[74px] object-contain transition duration-300 group-hover:scale-105"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* PRICING CARDS */}
-      <section
-        id="plans"
-        className="max-w-6xl mx-auto px-6 mt-12 grid md:grid-cols-3 gap-6"
+<section
+  id="plans"
+  className="max-w-6xl mx-auto px-6 mt-7 grid md:grid-cols-3 gap-5"
+>
+  {plans.map((plan) => (
+    <div
+      key={plan.id}
+      className={`relative rounded-3xl p-5 transition ${
+  plan.id === "pro"
+    ? "bg-slate-950 text-white border-2 border-blue-500 shadow-2xl md:scale-[1.03]"
+    : plan.highlight
+    ? "bg-white border-2 border-green-500 shadow-2xl md:scale-[1.02]"
+    : "bg-white border shadow-sm hover:shadow-xl"
+}`}
+    >
+      {plan.trial && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg">
+          FREE FOR 7 DAYS
+        </div>
+      )}
+
+      <div
+        className={`inline-flex text-xs px-3 py-1 rounded-full font-bold ${
+          plan.trial
+            ? "bg-green-50 text-green-700 border border-green-200"
+            : "bg-gray-100 text-gray-700"
+        }`}
       >
-        {plans.map((plan) => (
-          <div
-            key={plan.id}
-            className={`relative rounded-3xl p-6 transition ${
-              plan.highlight
-                ? "bg-white border-2 border-green-500 shadow-2xl scale-[1.03]"
-                : "bg-white border shadow-sm hover:shadow-xl"
-            }`}
-          >
-            {plan.trial && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg">
-                FREE FOR 7 DAYS
-              </div>
-            )}
+        {plan.label}
+      </div>
 
-            <div
-              className={`inline-flex text-xs px-3 py-1 rounded-full font-semibold ${
-                plan.trial
-                  ? "bg-green-50 text-green-700 border border-green-200"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {plan.label}
-            </div>
+      <h2 className="text-2xl font-black mt-4">{plan.name}</h2>
 
-            <h2 className="text-2xl font-bold mt-4">{plan.name}</h2>
+      <p
+  className={`mt-2 text-sm ${
+    plan.id === "pro" ? "text-white/60" : "text-gray-500"
+  }`}
+>
+  {plan.description}
+</p>
 
-            <p className="mt-2 text-sm text-gray-500">
-              {plan.description}
-            </p>
+<div
+  className={`mt-4 rounded-2xl border p-3 ${
+    plan.id === "pro"
+      ? "bg-white/10 border-white/10"
+      : "bg-slate-50 border-slate-100"
+  }`}
+>
+  <p
+    className={`text-xs font-black ${
+      plan.id === "pro" ? "text-blue-300" : "text-slate-900"
+    }`}
+  >
+    {plan.id === "trial"
+      ? "Try the full CV builder before paying."
+      : plan.id === "basic"
+      ? "Best if you are applying to a few jobs each month."
+      : "Best if you are actively applying to multiple jobs."}
+  </p>
 
-            <div className="mt-6 flex items-end gap-2">
-              <span className="text-4xl font-black">{plan.price}</span>
-              <span className="text-sm mb-1 text-gray-500">
-                {plan.sub}
-              </span>
-            </div>
+  <p
+    className={`mt-1 text-xs leading-5 ${
+      plan.id === "pro" ? "text-white/60" : "text-slate-500"
+    }`}
+  >
+    {plan.id === "trial"
+      ? "Generate your CV, cover letter, keywords, and PDF during the trial. Cancel before 7 days and pay £0."
+      : plan.id === "basic"
+      ? "Create stronger applications without rewriting your CV manually for every role."
+      : "Generate unlimited tailored CVs and cover letters so every application matches the job description better."}
+  </p>
+</div>
 
-            {plan.trial && (
-              <div className="mt-4 rounded-2xl bg-green-50 border border-green-200 p-4">
-                <p className="text-sm font-semibold text-green-700">
-                  Free for 7 days
-                </p>
-                <p className="text-xs text-green-700 mt-1">
-                  Pay £0 today. After 7 days, it continues at £9.99/month unless cancelled.
-                </p>
-              </div>
-            )}
+      <div className="mt-5 flex items-end gap-2">
+        <span className="text-4xl font-black">{plan.price}</span>
+        <span className="text-sm mb-1 text-gray-500">
+          {plan.sub}
+        </span>
+      </div>
 
-            <ul className="mt-6 space-y-3 text-sm text-gray-600">
-              {plan.features.map((feature) => (
-                <li key={feature} className="flex gap-2">
-                  <span className="text-green-600">✓</span>
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+      {plan.trial && (
+        <div className="mt-4 rounded-2xl bg-green-50 border border-green-200 p-3">
+          <p className="text-sm font-bold text-green-700">
+            Free for 7 days
+          </p>
+          <p className="text-xs text-green-700 mt-1">
+            Pay £0 today. Then £9.99/month unless cancelled.
+          </p>
+        </div>
+      )}
 
-            <button
-              onClick={() => startCheckout(plan.id)}
-              className={`w-full mt-7 py-3 rounded-2xl font-semibold transition ${
-                plan.trial
-                  ? "bg-green-600 text-white hover:bg-green-700 shadow-lg"
-                  : "bg-black text-white hover:bg-gray-800"
-              }`}
-            >
-              {plan.button}
-            </button>
-          </div>
+      <ul
+  className={`mt-5 space-y-2 text-sm ${
+    plan.id === "pro" ? "text-white/75" : "text-gray-600"
+  }`}
+>
+        {plan.features.map((feature) => (
+          <li key={feature} className="flex gap-2">
+            <span className="text-green-600 font-black">✓</span>
+            <span>{feature}</span>
+          </li>
         ))}
-      </section>
+      </ul>
+
+      <button
+        onClick={() => startCheckout(plan.id)}
+        className={`w-full mt-6 py-3 rounded-2xl font-bold transition ${
+  plan.id === "pro"
+    ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
+    : plan.trial
+    ? "bg-green-600 text-white hover:bg-green-700 shadow-lg"
+    : "bg-black text-white hover:bg-gray-800"
+}`}
+      >
+        {plan.button}
+      </button>
+    </div>
+  ))}
+</section>
 
       {/* TRUST SECTION */}
-      <section className="max-w-5xl mx-auto px-6 mt-12 grid md:grid-cols-3 gap-4">
+      <section className="max-w-5xl mx-auto px-6 mt-10 grid md:grid-cols-3 gap-4">
         <div className="bg-white border rounded-2xl p-5 text-center shadow-sm">
           <p className="text-2xl">🔐</p>
           <h3 className="font-bold mt-2">Secure checkout</h3>
@@ -245,7 +335,7 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="max-w-3xl mx-auto px-6 mt-12 pb-16">
+      <section className="max-w-3xl mx-auto px-6 mt-10 pb-16">
         <div className="bg-white border rounded-3xl p-6 shadow-sm">
           <h2 className="text-xl font-bold">Common questions</h2>
 
@@ -280,7 +370,6 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
-
     </main>
   );
 }

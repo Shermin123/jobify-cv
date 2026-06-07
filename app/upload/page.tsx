@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
 import { supabase } from "@/lib/supabase";
 import { checkSubscription } from "@/lib/checkSubscription";
+
 export default function UploadPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -17,6 +18,17 @@ export default function UploadPage() {
   const [jobRole, setJobRole] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [country, setCountry] = useState("");
+  const [showSetupPopup, setShowSetupPopup] = useState(false);
+const [setupStep, setSetupStep] = useState(0);
+const [showCountrySuggestions, setShowCountrySuggestions] = useState(false);
+const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
+  
+
+  const [experienceLevel, setExperienceLevel] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [cvGoal, setCvGoal] = useState("");
+  const [urgency, setUrgency] = useState("");
 
   const [cv, setCv] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
@@ -33,26 +45,46 @@ export default function UploadPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
-  const savedCountry = sessionStorage.getItem("jobify_country");
-const savedRole = sessionStorage.getItem("jobify_role");
-const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
+    const savedCountry = sessionStorage.getItem("jobify_country");
+    const savedRole = sessionStorage.getItem("jobify_role");
+    const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
 
-if (savedCountry) setCountry(savedCountry);
-if (savedRole) setJobRole(savedRole);
-if (savedFreeCvText) setText(savedFreeCvText);
+    const savedExperienceLevel = sessionStorage.getItem(
+      "jobify_experience_level"
+    );
+    const savedJobType = sessionStorage.getItem("jobify_job_type");
+    const savedIndustry = sessionStorage.getItem("jobify_industry");
+    const savedCvGoal = sessionStorage.getItem("jobify_cv_goal");
+    const savedUrgency = sessionStorage.getItem("jobify_urgency");
 
-  const checkAccessStatus = async () => {
-    if (!session?.user?.email) {
-      setIsUnlocked(false);
-      return;
-    }
+    const shouldAskSetup = true;
 
-    const hasAccess = await checkSubscription(session.user.email);
-    setIsUnlocked(hasAccess);
-  };
+if (!shouldAskSetup) {
+  if (savedCountry) setCountry(savedCountry);
+  if (savedRole) setJobRole(savedRole);
+}
+    if (savedFreeCvText) setText(savedFreeCvText);
+    setSetupStep(0);
+setShowSetupPopup(true);
 
-  checkAccessStatus();
-}, [session?.user?.email]);
+    if (savedExperienceLevel) setExperienceLevel(savedExperienceLevel);
+    if (savedJobType) setJobType(savedJobType);
+    if (savedIndustry) setIndustry(savedIndustry);
+    if (savedCvGoal) setCvGoal(savedCvGoal);
+    if (savedUrgency) setUrgency(savedUrgency);
+
+    const checkAccessStatus = async () => {
+      if (!session?.user?.email) {
+        setIsUnlocked(false);
+        return;
+      }
+
+      const hasAccess = await checkSubscription(session.user.email);
+      setIsUnlocked(hasAccess);
+    };
+
+    checkAccessStatus();
+  }, [session?.user?.email]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -111,170 +143,179 @@ if (savedFreeCvText) setText(savedFreeCvText);
     await navigator.clipboard.writeText(value);
     alert(`${label} copied!`);
   };
+
   const downloadPDF = (title: string, content: string, fileName: string) => {
-  if (!content) {
-    alert(`${title} is empty`);
-    return;
-  }
-
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4",
-  });
-
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-
-  const margin = 15;
-  const maxWidth = pageWidth - margin * 2;
-  const lineHeight = 6;
-
-  let y = 20;
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.setTextColor(15, 23, 42);
-  doc.text(title, margin, y);
-
-  y += 12;
-
-  doc.setFontSize(11);
-
-  const keywordList = keywords
-    .filter(Boolean)
-    .map((k) => k.trim())
-    .filter(Boolean);
-
-  const escapeRegex = (value: string) =>
-    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-  const keywordRegex =
-    keywordList.length > 0
-      ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
-      : null;
-
-  const paragraphs = content.split("\n");
-
-  paragraphs.forEach((paragraph) => {
-    const wrappedLines = doc.splitTextToSize(paragraph || " ", maxWidth);
-
-    wrappedLines.forEach((line: string) => {
-      if (y > pageHeight - 20) {
-        doc.addPage();
-        y = 20;
-      }
-
-      if (!keywordRegex) {
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(55, 65, 81);
-        doc.text(line, margin, y);
-        y += lineHeight;
-        return;
-      }
-
-      const parts = line.split(keywordRegex);
-      let x = margin;
-
-      parts.forEach((part: string) => {
-        if (!part) return;
-
-        const isKeyword = keywordList.some(
-          (keyword) => keyword.toLowerCase() === part.toLowerCase()
-        );
-
-        if (isKeyword) {
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(37, 99, 235);
-        } else {
-          doc.setFont("helvetica", "normal");
-          doc.setTextColor(55, 65, 81);
-        }
-
-        doc.text(part, x, y);
-        x += doc.getTextWidth(part);
-      });
-
-      y += lineHeight;
-    });
-
-    y += 2;
-  });
-
-  doc.save(fileName);
-};
-  const highlightKeywords = (content: string, highlightColor: "blue" | "purple") => {
-  if (!content) return null;
-
-  if (!keywords.length) {
-    return content;
-  }
-
-  const escapedKeywords = keywords
-    .filter(Boolean)
-    .map((keyword) => keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-
-  if (!escapedKeywords.length) {
-    return content;
-  }
-
-  const regex = new RegExp(`(${escapedKeywords.join("|")})`, "gi");
-
-  return content.split(regex).map((part, index) => {
-    const isKeyword = keywords.some(
-      (keyword) => keyword.toLowerCase() === part.toLowerCase()
-    );
-
-    if (!isKeyword) {
-      return <span key={index}>{part}</span>;
+    if (!content) {
+      alert(`${title} is empty`);
+      return;
     }
 
-    return (
-      <strong
-        key={index}
-        className={
-          highlightColor === "blue"
-            ? "font-black text-blue-700 bg-blue-100 px-1 rounded"
-            : "font-black text-purple-700 bg-purple-100 px-1 rounded"
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    const margin = 15;
+    const maxWidth = pageWidth - margin * 2;
+    const lineHeight = 6;
+
+    let y = 20;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(15, 23, 42);
+    doc.text(title, margin, y);
+
+    y += 12;
+
+    doc.setFontSize(11);
+
+    const keywordList = keywords
+      .filter(Boolean)
+      .map((k) => k.trim())
+      .filter(Boolean);
+
+    const escapeRegex = (value: string) =>
+      value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const keywordRegex =
+      keywordList.length > 0
+        ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
+        : null;
+
+    const paragraphs = content.split("\n");
+
+    paragraphs.forEach((paragraph) => {
+      const wrappedLines = doc.splitTextToSize(paragraph || " ", maxWidth);
+
+      wrappedLines.forEach((line: string) => {
+        if (y > pageHeight - 20) {
+          doc.addPage();
+          y = 20;
         }
-      >
-        {part}
-      </strong>
-    );
-  });
-};
+
+        if (!keywordRegex) {
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(55, 65, 81);
+          doc.text(line, margin, y);
+          y += lineHeight;
+          return;
+        }
+
+        const parts = line.split(keywordRegex);
+        let x = margin;
+
+        parts.forEach((part: string) => {
+          if (!part) return;
+
+          const isKeyword = keywordList.some(
+            (keyword) => keyword.toLowerCase() === part.toLowerCase()
+          );
+
+          if (isKeyword) {
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(37, 99, 235);
+          } else {
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(55, 65, 81);
+          }
+
+          doc.text(part, x, y);
+          x += doc.getTextWidth(part);
+        });
+
+        y += lineHeight;
+      });
+
+      y += 2;
+    });
+
+    doc.save(fileName);
+  };
+
+  const highlightKeywords = (
+    content: string,
+    highlightColor: "blue" | "purple"
+  ) => {
+    if (!content) return null;
+
+    if (!keywords.length) {
+      return content;
+    }
+
+    const escapedKeywords = keywords
+      .filter(Boolean)
+      .map((keyword) => keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+
+    if (!escapedKeywords.length) {
+      return content;
+    }
+
+    const regex = new RegExp(`(${escapedKeywords.join("|")})`, "gi");
+
+    return content.split(regex).map((part, index) => {
+      const isKeyword = keywords.some(
+        (keyword) => keyword.toLowerCase() === part.toLowerCase()
+      );
+
+      if (!isKeyword) {
+        return <span key={index}>{part}</span>;
+      }
+
+      return (
+        <strong
+          key={index}
+          className={
+            highlightColor === "blue"
+              ? "font-black text-blue-700 bg-blue-100 px-1 rounded"
+              : "font-black text-purple-700 bg-purple-100 px-1 rounded"
+          }
+        >
+          {part}
+        </strong>
+      );
+    });
+  };
 
   const generateAll = async () => {
-  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-  const saveGeneratedDocument = async (
-  finalCv: string,
-  finalCoverLetter: string,
-  finalKeywords: string[],
-  finalAtsScore: number
-) => {
-  if (!session?.user?.email) return;
+    const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
 
-  const { error } = await supabase.from("generated_documents").insert({
-    user_email: session.user.email,
-    job_role: jobRole,
-    country,
-    original_cv: text,
-    job_description: jobDescription,
-    optimized_cv: finalCv,
-    cover_letter: finalCoverLetter,
-    keywords: finalKeywords,
-    ats_score: finalAtsScore,
-  });
+    const saveGeneratedDocument = async (
+      finalCv: string,
+      finalCoverLetter: string,
+      finalKeywords: string[],
+      finalAtsScore: number
+    ) => {
+      if (!session?.user?.email) return;
 
-  if (error) {
-    console.error("Supabase save error:", error.message);
-  }
-};
-  if (!text) return alert("Please paste your CV first");
+      const { error } = await supabase.from("generated_documents").insert({
+        user_email: session.user.email,
+        job_role: jobRole,
+        country,
+        original_cv: text,
+        job_description: jobDescription,
+        optimized_cv: finalCv,
+        cover_letter: finalCoverLetter,
+        keywords: finalKeywords,
+        ats_score: finalAtsScore,
+      });
 
-if (wordCount < 80) {
-  return alert("Please paste at least 80 words from your CV for better AI results.");
-}
+      if (error) {
+        console.error("Supabase save error:", error.message);
+      }
+    };
+
+    if (!text) return alert("Please paste your CV first");
+
+    if (wordCount < 80) {
+      return alert(
+        "Please paste at least 80 words from your CV for better AI results."
+      );
+    }
 
     setLoading(true);
     setGenerated(true);
@@ -296,6 +337,7 @@ if (wordCount < 80) {
 
     const fakeCvTyping = `Reading your CV...
 Finding your strongest achievements...
+Checking your AI setup answers...
 Improving your professional summary...
 Adding ATS keywords...
 Rewriting your CV for recruiters...
@@ -303,6 +345,7 @@ Preparing your tailored CV preview...`;
 
     const fakeCoverTyping = `Reading the job description...
 Matching your experience to the role...
+Using your country, industry and job type...
 Writing a personalised opening...
 Improving professional tone...
 Preparing your cover letter preview...`;
@@ -318,6 +361,11 @@ Preparing your cover letter preview...`;
           jobRole,
           country,
           jobDescription,
+          experienceLevel,
+          jobType,
+          industry,
+          cvGoal,
+          urgency,
         }),
       });
 
@@ -335,21 +383,21 @@ Preparing your cover letter preview...`;
         "Your personalised cover letter has been generated successfully.";
 
       const finalKeywords = data.keywords || [];
-const finalAtsScore = data.atsScore || 94;
+      const finalAtsScore = data.atsScore || 94;
 
-setCv(finalCv);
-setCoverLetter(finalCoverLetter);
-setKeywords(finalKeywords);
-setAtsScore(finalAtsScore);
+      setCv(finalCv);
+      setCoverLetter(finalCoverLetter);
+      setKeywords(finalKeywords);
+      setAtsScore(finalAtsScore);
 
-await saveGeneratedDocument(
-  finalCv,
-  finalCoverLetter,
-  finalKeywords,
-  finalAtsScore
-);
+      await saveGeneratedDocument(
+        finalCv,
+        finalCoverLetter,
+        finalKeywords,
+        finalAtsScore
+      );
 
-typeDocuments(finalCv, finalCoverLetter);
+      typeDocuments(finalCv, finalCoverLetter);
     } catch (err: any) {
       alert(err.message);
       setGenerated(false);
@@ -373,7 +421,494 @@ typeDocuments(finalCv, finalCoverLetter);
 
     alert("Full access is active.");
   };
+  const countrySuggestions = [
+  "Afghanistan",
+  "Albania",
+  "Algeria",
+  "Andorra",
+  "Angola",
+  "Antigua and Barbuda",
+  "Argentina",
+  "Armenia",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belarus",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bhutan",
+  "Bolivia",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Brazil",
+  "Brunei",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cambodia",
+  "Cameroon",
+  "Canada",
+  "Cape Verde",
+  "Central African Republic",
+  "Chad",
+  "Chile",
+  "China",
+  "Colombia",
+  "Comoros",
+  "Congo",
+  "Costa Rica",
+  "Croatia",
+  "Cuba",
+  "Cyprus",
+  "Czech Republic",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Dominican Republic",
+  "Ecuador",
+  "Egypt",
+  "El Salvador",
+  "Equatorial Guinea",
+  "Eritrea",
+  "Estonia",
+  "Eswatini",
+  "Ethiopia",
+  "Fiji",
+  "Finland",
+  "France",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Germany",
+  "Ghana",
+  "Greece",
+  "Grenada",
+  "Guatemala",
+  "Guinea",
+  "Guinea-Bissau",
+  "Guyana",
+  "Haiti",
+  "Honduras",
+  "Hungary",
+  "Iceland",
+  "India",
+  "Indonesia",
+  "Iran",
+  "Iraq",
+  "Ireland",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kiribati",
+  "Kuwait",
+  "Kyrgyzstan",
+  "Laos",
+  "Latvia",
+  "Lebanon",
+  "Lesotho",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "Madagascar",
+  "Malawi",
+  "Malaysia",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Marshall Islands",
+  "Mauritania",
+  "Mauritius",
+  "Mexico",
+  "Micronesia",
+  "Moldova",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Morocco",
+  "Mozambique",
+  "Myanmar",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "New Zealand",
+  "Nicaragua",
+  "Niger",
+  "Nigeria",
+  "North Korea",
+  "North Macedonia",
+  "Norway",
+  "Oman",
+  "Pakistan",
+  "Palau",
+  "Palestine",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Poland",
+  "Portugal",
+  "Qatar",
+  "Romania",
+  "Russia",
+  "Rwanda",
+  "Saint Kitts and Nevis",
+  "Saint Lucia",
+  "Saint Vincent and the Grenadines",
+  "Samoa",
+  "San Marino",
+  "Sao Tome and Principe",
+  "Saudi Arabia",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Slovakia",
+  "Slovenia",
+  "Solomon Islands",
+  "Somalia",
+  "South Africa",
+  "South Korea",
+  "South Sudan",
+  "Spain",
+  "Sri Lanka",
+  "Sudan",
+  "Suriname",
+  "Sweden",
+  "Switzerland",
+  "Syria",
+  "Taiwan",
+  "Tajikistan",
+  "Tanzania",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkey",
+  "Turkmenistan",
+  "Tuvalu",
+  "Uganda",
+  "Ukraine",
+  "United Arab Emirates",
+  "United Kingdom",
+  "United States",
+  "Uruguay",
+  "Uzbekistan",
+  "Vanuatu",
+  "Vatican City",
+  "Venezuela",
+  "Vietnam",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe",
+];
 
+const roleSuggestions = [
+  "Software Engineer",
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Developer",
+  "Web Developer",
+  "Mobile App Developer",
+  "Flutter Developer",
+  "React Developer",
+  "Next.js Developer",
+  "Java Developer",
+  "Python Developer",
+  "Node.js Developer",
+  "PHP Developer",
+  "Laravel Developer",
+  "WordPress Developer",
+  "iOS Developer",
+  "Android Developer",
+  "Game Developer",
+  "Embedded Systems Engineer",
+  "Firmware Engineer",
+  "Blockchain Developer",
+  "Smart Contract Developer",
+
+  "Data Analyst",
+  "Data Scientist",
+  "Machine Learning Engineer",
+  "AI Engineer",
+  "Data Engineer",
+  "BI Analyst",
+  "Power BI Developer",
+  "Tableau Developer",
+  "NLP Engineer",
+  "Computer Vision Engineer",
+  "Research Assistant",
+  "AI Researcher",
+
+  "Cyber Security Analyst",
+  "Security Engineer",
+  "Penetration Tester",
+  "SOC Analyst",
+  "Information Security Manager",
+  "Network Security Engineer",
+  "Cloud Security Engineer",
+
+  "DevOps Engineer",
+  "Cloud Engineer",
+  "AWS Engineer",
+  "Azure Engineer",
+  "GCP Engineer",
+  "Site Reliability Engineer",
+  "Linux Administrator",
+  "System Administrator",
+  "Network Engineer",
+
+  "UI Designer",
+  "UX Designer",
+  "UI/UX Designer",
+  "Product Designer",
+  "Graphic Designer",
+  "Motion Designer",
+  "3D Artist",
+  "Interior Designer",
+  "Video Editor",
+  "Animator",
+
+  "Product Manager",
+  "Project Manager",
+  "Program Manager",
+  "Scrum Master",
+  "Business Analyst",
+  "Operations Manager",
+  "Operations Coordinator",
+  "Office Manager",
+
+  "Business Development Manager",
+  "Business Development Executive",
+  "Strategy Analyst",
+  "Consultant",
+  "Management Consultant",
+  "Entrepreneur",
+  "Founder",
+
+  "Accountant",
+  "Accounts Assistant",
+  "Bookkeeper",
+  "Financial Analyst",
+  "Investment Banker",
+  "Auditor",
+  "Risk Analyst",
+  "Tax Consultant",
+  "Bank Teller",
+  "Loan Officer",
+  "Payroll Officer",
+  "Finance Assistant",
+
+  "Marketing Manager",
+  "Digital Marketing Specialist",
+  "SEO Specialist",
+  "Content Writer",
+  "Copywriter",
+  "Social Media Manager",
+  "Brand Manager",
+  "Public Relations Officer",
+  "Email Marketing Specialist",
+  "Performance Marketing Specialist",
+
+  "Sales Executive",
+  "Sales Manager",
+  "Account Manager",
+  "Business Development Executive",
+  "Retail Sales Associate",
+  "Sales Assistant",
+  "Customer Advisor",
+  "Store Assistant",
+  "Store Manager",
+  "Cashier",
+
+  "HR Manager",
+  "HR Executive",
+  "Recruiter",
+  "Talent Acquisition Specialist",
+  "Training Coordinator",
+  "HR Assistant",
+  "People Operations Assistant",
+
+  "Doctor",
+  "Nurse",
+  "Healthcare Assistant",
+  "Care Assistant",
+  "Support Worker",
+  "Pharmacist",
+  "Dentist",
+  "Radiologist",
+  "Physiotherapist",
+  "Medical Lab Technician",
+  "Clinical Assistant",
+
+  "Teacher",
+  "Lecturer",
+  "Professor",
+  "Teaching Assistant",
+  "School Principal",
+  "Tutor",
+  "Academic Advisor",
+
+  "Civil Engineer",
+  "Mechanical Engineer",
+  "Electrical Engineer",
+  "Electronics Engineer",
+  "Automotive Engineer",
+  "Aerospace Engineer",
+  "Chemical Engineer",
+  "Structural Engineer",
+  "Site Engineer",
+  "Quality Engineer",
+
+  "Logistics Manager",
+  "Supply Chain Analyst",
+  "Warehouse Manager",
+  "Warehouse Operative",
+  "Picker Packer",
+  "Delivery Driver",
+  "Truck Driver",
+  "Courier Driver",
+  "Operations Coordinator",
+  "Inventory Assistant",
+
+  "Customer Support Agent",
+  "Call Center Agent",
+  "Customer Success Manager",
+  "Help Desk Technician",
+  "Technical Support Specialist",
+  "Live Chat Support Agent",
+
+  "Police Officer",
+  "Security Officer",
+  "Administrative Officer",
+  "Civil Servant",
+  "Government Clerk",
+  "Admin Assistant",
+  "Office Assistant",
+  "Data Entry Clerk",
+
+  "Lawyer",
+  "Legal Assistant",
+  "Paralegal",
+  "Legal Advisor",
+  "Compliance Officer",
+
+  "Hotel Manager",
+  "Receptionist",
+  "Front Desk Agent",
+  "Chef",
+  "Commis Chef",
+  "Kitchen Assistant",
+  "Waiter",
+  "Waitress",
+  "Barista",
+  "Bartender",
+  "Housekeeping Staff",
+  "Cleaner",
+  "Restaurant Manager",
+
+  "Architect",
+  "Electrician",
+  "Plumber",
+  "Carpenter",
+  "Construction Worker",
+  "Painter",
+  "Maintenance Technician",
+  "HVAC Technician",
+
+  "Photographer",
+  "Videographer",
+  "Film Editor",
+  "Actor",
+  "Music Producer",
+  "Content Creator",
+  "Influencer",
+  "Journalist",
+
+  "Research Scientist",
+  "Lab Technician",
+  "Biologist",
+  "Chemist",
+  "Physicist",
+  "Environmental Scientist",
+
+  "Intern",
+  "Trainee",
+  "Graduate Trainee",
+  "Fresher",
+  "Apprentice",
+  "Part-time Worker",
+  "Temporary Worker",
+];
+
+const filteredCountries = countrySuggestions
+  .filter((c) => c.toLowerCase().includes(country.toLowerCase().trim()))
+  .slice(0, 10);
+
+const filteredRoles = roleSuggestions
+  .filter((r) => r.toLowerCase().includes(jobRole.toLowerCase().trim()))
+  .slice(0, 10);
+
+const setupAnswers = [
+  country,
+  jobRole,
+  experienceLevel,
+  jobType,
+  industry,
+  cvGoal,
+  urgency,
+];
+
+const canGoNext = Boolean(setupAnswers[setupStep]);
+
+const saveSetupAndContinue = () => {
+  sessionStorage.setItem("jobify_country", country);
+  sessionStorage.setItem("jobify_role", jobRole);
+  sessionStorage.setItem("jobify_experience_level", experienceLevel);
+  sessionStorage.setItem("jobify_job_type", jobType);
+  sessionStorage.setItem("jobify_industry", industry);
+  sessionStorage.setItem("jobify_cv_goal", cvGoal);
+  sessionStorage.setItem("jobify_urgency", urgency);
+  sessionStorage.setItem("jobify_setup_completed", "true");
+
+  setShowSetupPopup(false);
+
+  setTimeout(() => {
+    document
+      .getElementById("ai-setup-summary")
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 150);
+};
+
+const nextSetupStep = () => {
+  if (setupStep < 6) {
+    setSetupStep((prev) => prev + 1);
+    return;
+  }
+
+  saveSetupAndContinue();
+};
+
+const previousSetupStep = () => {
+  if (setupStep > 0) {
+    setSetupStep((prev) => prev - 1);
+  }
+};
   if (status === "loading") {
     return (
       <div className="h-screen flex items-center justify-center text-gray-500">
@@ -384,6 +919,254 @@ typeDocuments(finalCv, finalCoverLetter);
 
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+     {showSetupPopup && (
+  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur-2xl">
+    <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
+        <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
+        <div className="absolute -left-20 -bottom-20 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
+      </div>
+
+      <div className="relative p-5">
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            AI Setup
+          </div>
+
+          <p className="text-xs font-black text-slate-400">
+            {setupStep + 1}/7
+          </p>
+        </div>
+
+        <div className="mt-5 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-2xl text-white shadow-xl animate-float">
+            ✦
+          </div>
+
+          <h2 className="mt-4 text-2xl font-black tracking-tight text-slate-950">
+            Personalise your CV
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Answer a few quick questions for better AI results.
+          </p>
+        </div>
+
+        <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-700 ease-out"
+            style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
+          />
+        </div>
+
+        <div
+          key={setupStep}
+          className="mt-5 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionCut"
+        >
+          {setupStep === 0 && (
+            <div className="relative">
+              <h3 className="text-lg font-black text-slate-950">
+                🌍 Applying in which country?
+              </h3>
+
+              <input
+  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+  placeholder="Type country, e.g. United Kingdom"
+  value={country}
+  onFocus={() => setShowCountrySuggestions(true)}
+  onChange={(e) => {
+    setCountry(e.target.value);
+    setShowCountrySuggestions(true);
+  }}
+/>
+
+              {showCountrySuggestions && country && filteredCountries.length > 0 && (
+                <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
+                  {filteredCountries.slice(0, 8).map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => {
+  setCountry(c);
+  setShowCountrySuggestions(false);
+}}
+                      className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {setupStep === 1 && (
+            <div className="relative">
+              <h3 className="text-lg font-black text-slate-950">
+                🎯 Target job role?
+              </h3>
+
+              <input
+  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+  placeholder="Type role, e.g. Software Engineer"
+  value={jobRole}
+  onFocus={() => setShowRoleSuggestions(true)}
+  onChange={(e) => {
+    setJobRole(e.target.value);
+    setShowRoleSuggestions(true);
+  }}
+/>
+
+              {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
+                <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
+                  {filteredRoles.slice(0, 8).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => {
+  setJobRole(r);
+  setShowRoleSuggestions(false);
+}}
+                      className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {setupStep === 2 && (
+            <QuestionButtons
+              title="📈 Experience level?"
+              value={experienceLevel}
+              setValue={setExperienceLevel}
+              options={[
+                "Student / Fresher",
+                "0-1 years",
+                "1-3 years",
+                "3-5 years",
+                "5+ years",
+                "No experience",
+                "Internship experience",
+                "Freelance experience",
+              ]}
+            />
+          )}
+
+          {setupStep === 3 && (
+            <QuestionButtons
+              title="💼 Job type?"
+              value={jobType}
+              setValue={setJobType}
+              options={[
+                "Full-time",
+                "Part-time",
+                "Internship",
+                "Graduate role",
+                "Remote job",
+                "Career switch",
+                "Contract",
+                "Temporary",
+                "Night shift",
+                "Weekend job",
+              ]}
+            />
+          )}
+
+          {setupStep === 4 && (
+            <QuestionButtons
+              title="🏢 Industry?"
+              value={industry}
+              setValue={setIndustry}
+              options={[
+                "Technology",
+                "Retail",
+                "Hospitality",
+                "Healthcare",
+                "Finance",
+                "Education",
+                "Customer Service",
+                "Warehouse",
+                "Construction",
+                "Marketing",
+                "Data / AI",
+                "Software",
+                "Administration",
+              ]}
+            />
+          )}
+
+          {setupStep === 5 && (
+            <QuestionButtons
+              title="✨ Improve what most?"
+              value={cvGoal}
+              setValue={setCvGoal}
+              options={[
+                "ATS keywords",
+                "Professional wording",
+                "Achievements",
+                "Career switch",
+                "CV structure",
+                "Grammar",
+                "Shorten my CV",
+                "Make it sound confident",
+                "Improve bullet points",
+                "Highlight transferable skills",
+              ]}
+            />
+          )}
+
+          {setupStep === 6 && (
+            <QuestionButtons
+              title="⏳ Applying when?"
+              value={urgency}
+              setValue={setUrgency}
+              options={[
+                "Today",
+                "This week",
+                "This month",
+                "Just preparing",
+                "Urgent application",
+                "Interview tomorrow",
+                "Applying after improving CV",
+              ]}
+            />
+          )}
+        </div>
+
+        <div className="mt-5 flex gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              if (setupStep === 0) {
+                setShowSetupPopup(false);
+                return;
+              }
+
+              previousSetupStep();
+            }}
+            className="w-1/2 rounded-2xl border border-slate-200 py-3 text-sm font-black text-slate-600 transition hover:bg-slate-50"
+          >
+            {setupStep === 0 ? "Cancel" : "Back"}
+          </button>
+
+          <button
+            type="button"
+            onClick={nextSetupStep}
+            disabled={!canGoNext}
+            className="w-1/2 rounded-2xl bg-slate-950 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-blue-700 disabled:opacity-40 disabled:hover:scale-100"
+          >
+            {setupStep === 6 ? "Start →" : "Next →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       {/* BACKGROUND */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-100" />
@@ -391,13 +1174,6 @@ typeDocuments(finalCv, finalCoverLetter);
         <div className="absolute top-[-160px] left-[-160px] w-[520px] h-[520px] bg-blue-200 rounded-full blur-[150px] opacity-35" />
         <div className="absolute bottom-[-180px] right-[-150px] w-[620px] h-[620px] bg-purple-200 rounded-full blur-[180px] opacity-30" />
         <div className="absolute top-[35%] left-[45%] w-[360px] h-[360px] bg-cyan-100 rounded-full blur-[130px] opacity-25" />
-
-        <div className="absolute top-16 left-10 text-3xl opacity-10 animate-pulse">🚀</div>
-        <div className="absolute top-28 right-20 text-3xl opacity-10">💼</div>
-        <div className="absolute top-52 left-[20%] text-3xl opacity-10">📄</div>
-        <div className="absolute top-72 right-[22%] text-3xl opacity-10">🎯</div>
-        <div className="absolute bottom-28 left-14 text-3xl opacity-10">🌍</div>
-        <div className="absolute bottom-20 right-20 text-3xl opacity-10">⭐</div>
       </div>
 
       {/* HEADER */}
@@ -408,8 +1184,38 @@ typeDocuments(finalCv, finalCoverLetter);
           </h1>
 
           <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-            Paste your CV and job description. Jobify creates an ATS-friendly CV and cover letter in seconds.
+            Paste your CV and job description. Jobify creates an ATS-friendly CV
+            and cover letter in seconds.
           </p>
+          <div className="mt-6 rounded-3xl border bg-white p-5 shadow-sm">
+  <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+    Our customers are hired by these companies
+  </p>
+
+  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+    {[
+      { name: "Google", color: "text-blue-600" },
+      { name: "Amazon", color: "text-orange-500" },
+      { name: "Microsoft", color: "text-blue-700" },
+      { name: "Deloitte", color: "text-emerald-600" },
+      { name: "NHS", color: "text-blue-800" },
+      { name: "Tesco", color: "text-red-600" },
+    ].map((company) => (
+      <div
+        key={company.name}
+        className="group rounded-2xl border bg-slate-50 px-3 py-4 text-center shadow-sm hover:-translate-y-1 hover:shadow-lg transition"
+      >
+        <p className={`text-base font-black ${company.color}`}>
+          {company.name}
+        </p>
+      </div>
+    ))}
+  </div>
+
+  <p className="mt-4 text-xs text-slate-500">
+    Jobify helps applicants create stronger, keyword-focused CVs for competitive roles.
+  </p>
+</div>
 
           {isUnlocked && (
             <div className="inline-flex mt-4 bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-sm font-bold">
@@ -423,7 +1229,6 @@ typeDocuments(finalCv, finalCoverLetter);
         {/* RESULTS */}
         {generated && (
           <section ref={resultRef} className="space-y-5">
-            {/* PREMIUM STATUS BAR */}
             <div className="rounded-3xl bg-slate-950 text-white p-4 md:p-6 shadow-2xl overflow-hidden relative">
               <div className="absolute right-6 top-5 text-6xl opacity-10">
                 {typing ? "✍️" : isUnlocked ? "✅" : "🔒"}
@@ -489,12 +1294,12 @@ typeDocuments(finalCv, finalCoverLetter);
                 {keywords.length > 0 ? (
                   keywords.map((k, i) => (
                     <span
-                  key={i}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-black shadow-md"
-            >
-            <span>✓</span>
-                <strong>{k}</strong>
-                </span>
+                      key={i}
+                      className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-black shadow-md"
+                    >
+                      <span>✓</span>
+                      <strong>{k}</strong>
+                    </span>
                   ))
                 ) : (
                   <p className="text-sm text-gray-500">
@@ -505,168 +1310,189 @@ typeDocuments(finalCv, finalCoverLetter);
             </div>
 
             {/* DOCUMENT PREVIEW CARDS */}
-<div className="grid lg:grid-cols-2 gap-6">
-  {/* CV CARD */}
-  <div className="group relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
-    <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
-    <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-blue-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* CV CARD */}
+              <div className="group relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
+                <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
+                <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-blue-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
 
-    <div className="relative p-5">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
-            📄
-          </div>
+                <div className="relative p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
+                        📄
+                      </div>
 
-          <div>
-            <h3 className="font-black text-lg">Generated CV</h3>
-            <p className="text-xs text-gray-500">ATS-ready resume preview</p>
-          </div>
-        </div>
+                      <div>
+                        <h3 className="font-black text-lg">Generated CV</h3>
+                        <p className="text-xs text-gray-500">
+                          ATS-ready resume preview
+                        </p>
+                      </div>
+                    </div>
 
-        <span className="rounded-full bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 text-xs font-black animate-softPulse">
-          {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
-        </span>
-      </div>
+                    <span className="rounded-full bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 text-xs font-black animate-softPulse">
+                      {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
+                    </span>
+                  </div>
 
-      <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
-        {typing && (
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
-        )}
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
+                    {typing && (
+                      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
+                    )}
 
-        <div
-          className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-            isUnlocked ? "" : "blur-sm select-none"
-          }`}
-        >
-          {highlightKeywords(displayCv, "blue")}
-          {typing && (
-            <span className="animate-pulse font-black text-blue-600">|</span>
-          )}
-        </div>
+                    <div
+                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
+                        isUnlocked ? "" : "blur-sm select-none"
+                      }`}
+                    >
+                      {highlightKeywords(displayCv, "blue")}
+                      {typing && (
+                        <span className="animate-pulse font-black text-blue-600">
+                          |
+                        </span>
+                      )}
+                    </div>
 
-        {!isUnlocked && showUnlock && (
-          <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
-            <div className="text-center px-5">
-              <div className="text-5xl mb-3 animate-bounce">🔒</div>
-              <h4 className="font-black text-lg">Unlock full CV</h4>
-              <p className="text-xs text-gray-500 mt-1">
-                View, copy and download your full CV.
-              </p>
+                    {!isUnlocked && showUnlock && (
+                      <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
+                        <div className="text-center px-5">
+                          <div className="text-5xl mb-3 animate-bounce">🔒</div>
+                          <h4 className="font-black text-lg">Unlock full CV</h4>
+                          <p className="text-xs text-gray-500 mt-1">
+                            View, copy and download your full CV.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {showUnlock && (
+                    <button
+                      onClick={() =>
+                        isUnlocked
+                          ? downloadPDF(
+                              "Optimised CV",
+                              cv,
+                              "jobify-optimised-cv.pdf"
+                            )
+                          : handleUnlockClick()
+                      }
+                      className="mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
+                    >
+                      {isUnlocked
+                        ? "Download CV PDF"
+                        : "Subscribe to Unlock CV"}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* COVER LETTER CARD */}
+              <div className="group relative overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
+                <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
+                <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-purple-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
+
+                <div className="relative p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
+                        ✉️
+                      </div>
+
+                      <div>
+                        <h3 className="font-black text-lg">Cover Letter</h3>
+                        <p className="text-xs text-gray-500">
+                          Personalised application letter
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-100 px-3 py-1 text-xs font-black animate-softPulse">
+                      {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
+                    </span>
+                  </div>
+
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
+                    {typing && (
+                      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
+                    )}
+
+                    <div
+                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
+                        isUnlocked ? "" : "blur-sm select-none"
+                      }`}
+                    >
+                      {highlightKeywords(displayCoverLetter, "purple")}
+                      {typing && (
+                        <span className="animate-pulse font-black text-purple-600">
+                          |
+                        </span>
+                      )}
+                    </div>
+
+                    {!isUnlocked && showUnlock && (
+                      <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
+                        <div className="text-center px-5">
+                          <div className="text-5xl mb-3 animate-bounce">🔒</div>
+                          <h4 className="font-black text-lg">
+                            Unlock cover letter
+                          </h4>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Copy and send your personalised letter.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {showUnlock && (
+                    <button
+                      onClick={() =>
+                        isUnlocked
+                          ? downloadPDF(
+                              "Cover Letter",
+                              coverLetter,
+                              "jobify-cover-letter.pdf"
+                            )
+                          : handleUnlockClick()
+                      }
+                      className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
+                    >
+                      {isUnlocked
+                        ? "Download Cover Letter PDF"
+                        : "Subscribe to Unlock Letter"}
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-
-      {showUnlock && (
-        <button
-  onClick={() =>
-    isUnlocked
-      ? downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
-      : handleUnlockClick()
-  }
-  className="mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
->
-  {isUnlocked ? "Download CV PDF" : "Subscribe to Unlock CV"}
-</button>
-      )}
-    </div>
-  </div>
-
-  {/* COVER LETTER CARD */}
-  <div className="group relative overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
-    <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
-    <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-purple-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
-
-    <div className="relative p-5">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
-            ✉️
-          </div>
-
-          <div>
-            <h3 className="font-black text-lg">Cover Letter</h3>
-            <p className="text-xs text-gray-500">Personalised application letter</p>
-          </div>
-        </div>
-
-        <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-100 px-3 py-1 text-xs font-black animate-softPulse">
-          {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
-        </span>
-      </div>
-
-      <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
-        {typing && (
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
-        )}
-
-        <div
-          className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-            isUnlocked ? "" : "blur-sm select-none"
-          }`}
-        >
-          {highlightKeywords(displayCoverLetter, "purple")}
-          {typing && (
-            <span className="animate-pulse font-black text-purple-600">|</span>
-          )}
-        </div>
-
-        {!isUnlocked && showUnlock && (
-          <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
-            <div className="text-center px-5">
-              <div className="text-5xl mb-3 animate-bounce">🔒</div>
-              <h4 className="font-black text-lg">Unlock cover letter</h4>
-              <p className="text-xs text-gray-500 mt-1">
-                Copy and send your personalised letter.
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {showUnlock && (
-        <button
-  onClick={() =>
-    isUnlocked
-      ? downloadPDF("Cover Letter", coverLetter, "jobify-cover-letter.pdf")
-      : handleUnlockClick()
-  }
-  className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
->
-  {isUnlocked ? "Download Cover Letter PDF" : "Subscribe to Unlock Letter"}
-</button>
-      )}
-    </div>
-  </div>
-</div>
 
             {/* COPY BUTTONS */}
             {isUnlocked && showUnlock && (
-  <div className="grid md:grid-cols-3 gap-3">
-    <button
-      onClick={() => copyText(cv, "CV")}
-      className="bg-blue-600 text-white py-3 rounded-2xl font-bold hover:bg-blue-700 shadow-lg"
-    >
-      Copy CV
-    </button>
+              <div className="grid md:grid-cols-3 gap-3">
+                <button
+                  onClick={() => copyText(cv, "CV")}
+                  className="bg-blue-600 text-white py-3 rounded-2xl font-bold hover:bg-blue-700 shadow-lg"
+                >
+                  Copy CV
+                </button>
 
-    <button
-      onClick={() => copyText(coverLetter, "Cover letter")}
-      className="bg-purple-600 text-white py-3 rounded-2xl font-bold hover:bg-purple-700 shadow-lg"
-    >
-      Copy Cover Letter
-    </button>
+                <button
+                  onClick={() => copyText(coverLetter, "Cover letter")}
+                  className="bg-purple-600 text-white py-3 rounded-2xl font-bold hover:bg-purple-700 shadow-lg"
+                >
+                  Copy Cover Letter
+                </button>
 
-    <button
-      onClick={() => copyText(keywords.join(", "), "Keywords")}
-      className="bg-emerald-600 text-white py-3 rounded-2xl font-bold hover:bg-emerald-700 shadow-lg"
-    >
-      Copy Keywords
-    </button>
-
-  </div>
-)}
+                <button
+                  onClick={() => copyText(keywords.join(", "), "Keywords")}
+                  className="bg-emerald-600 text-white py-3 rounded-2xl font-bold hover:bg-emerald-700 shadow-lg"
+                >
+                  Copy Keywords
+                </button>
+              </div>
+            )}
 
             {!isUnlocked && showUnlock && (
               <button
@@ -680,106 +1506,160 @@ typeDocuments(finalCv, finalCoverLetter);
         )}
 
         {/* INPUT FORM */}
-<div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white/90 backdrop-blur-xl shadow-2xl">
+        <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white/90 backdrop-blur-xl shadow-2xl">
+          <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500" />
 
-  <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500" />
+          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-blue-100 blur-3xl opacity-70" />
+          <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-purple-100 blur-3xl opacity-70" />
 
-  <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-blue-100 blur-3xl opacity-70" />
-  <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-purple-100 blur-3xl opacity-70" />
+          <div className="relative p-4 md:p-7 space-y-5 md:space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
+                  ✨ AI CV Builder
+                </div>
 
-  <div className="relative p-4 md:p-7 space-y-5 md:space-y-6">
+                <h2 className="mt-3 text-xl md:text-2xl font-black text-slate-900">
+                  Create your tailored application
+                </h2>
 
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
-          ✨ AI CV Builder
-        </div>
+                <p className="text-sm text-slate-500 mt-1">
+                  Paste your CV and job description. Jobify will rewrite your CV
+                  and cover letter for the role.
+                </p>
+              </div>
 
-        <h2 className="mt-3 text-xl md:text-2xl font-black text-slate-900">
-          Create your tailored application
-        </h2>
+              <div className="bg-slate-50 border rounded-2xl p-3 min-w-[260px]">
+                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide text-center mb-2">
+                  Powered by AI workflow
+                </p>
 
-        <p className="text-sm text-slate-500 mt-1">
-          Paste your CV and job description. Jobify will rewrite your CV and cover letter for the role.
-        </p>
-      </div>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
+                      className="h-5"
+                      alt="OpenAI"
+                    />
+                    <span className="text-xs font-semibold text-slate-700">
+                      OpenAI
+                    </span>
+                  </div>
 
-      <div className="bg-slate-50 border rounded-2xl p-3 min-w-[260px]">
-        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide text-center mb-2">
-          Powered by AI workflow
-        </p>
+                  <div className="flex items-center gap-2">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
+                      className="h-5"
+                      alt="AI"
+                    />
+                    <span className="text-xs font-semibold text-slate-700">
+                      ATS AI
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <div className="flex items-center justify-center gap-4">
-          <div className="flex items-center gap-2">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
-              className="h-5"
-              alt="OpenAI"
-            />
-            <span className="text-xs font-semibold text-slate-700">
-              OpenAI
-            </span>
-          </div>
+            {(experienceLevel || jobType || industry || cvGoal || urgency) && (
+              <div
+  id="ai-setup-summary"
+  className="rounded-3xl border border-blue-100 bg-blue-50 p-4"
+>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+  <p className="text-sm font-black text-blue-700">
+    🤖 AI setup loaded from your answers
+  </p>
 
-          <div className="flex items-center gap-2">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
-              className="h-5"
-              alt="AI"
-            />
-            <span className="text-xs font-semibold text-slate-700">
-              ATS AI
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <button
+    type="button"
+    onClick={() => {
+      setSetupStep(0);
+      setShowSetupPopup(true);
+    }}
+    className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white hover:bg-blue-700 transition"
+  >
+    Edit answers
+  </button>
+</div>
 
-    <div>
-      <label className="flex items-center justify-between mb-2">
-        <span className="text-sm font-bold text-slate-800">
-          Target Job Role
-        </span>
-        <span className="text-xs text-slate-400">
-          Optional but recommended
-        </span>
-      </label>
+                <div className="mt-3 grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+                  {experienceLevel && (
+                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+                      Level: {experienceLevel}
+                    </span>
+                  )}
 
-      <div className="relative">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">
-          🎯
-        </span>
+                  {jobType && (
+                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+                      Type: {jobType}
+                    </span>
+                  )}
 
-        <input
-          className="w-full border border-slate-200 bg-slate-50/70 p-4 pl-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
-          placeholder="e.g. Software Engineer, Data Analyst, AI Engineer"
-          value={jobRole}
-          onChange={(e) => setJobRole(e.target.value)}
-        />
-      </div>
-    </div>
+                  {industry && (
+                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+                      Industry: {industry}
+                    </span>
+                  )}
 
-    <div className="grid lg:grid-cols-2 gap-5">
+                  {cvGoal && (
+                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+                      Focus: {cvGoal}
+                    </span>
+                  )}
 
-      <div className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-4 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <label className="text-sm font-black text-slate-900">
-              📄 Paste Your CV
-            </label>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Minimum 80 words required for better results.
-            </p>
-          </div>
+                  {urgency && (
+                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+                      Applying: {urgency}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
 
-          <span className="rounded-full bg-blue-600 text-white px-3 py-1 text-[10px] font-black">
-            REQUIRED
-          </span>
-        </div>
+            <div>
+              <label className="flex items-center justify-between mb-2">
+                <span className="text-sm font-bold text-slate-800">
+                  Target Job Role
+                </span>
+                <span className="text-xs text-slate-400">
+                  Optional but recommended
+                </span>
+              </label>
 
-        <textarea
-          className="w-full border border-blue-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none shadow-inner text-sm leading-6"
-          placeholder="Paste your CV here...
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">
+                  🎯
+                </span>
+
+                <input
+                  className="w-full border border-slate-200 bg-slate-50/70 p-4 pl-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition"
+                  placeholder="e.g. Software Engineer, Data Analyst, AI Engineer"
+                  value={jobRole}
+                  onChange={(e) => setJobRole(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-5">
+              <div className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <label className="text-sm font-black text-slate-900">
+                      📄 Paste Your CV
+                    </label>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Minimum 80 words required for better results.
+                    </p>
+                  </div>
+
+                  <span className="rounded-full bg-blue-600 text-white px-3 py-1 text-[10px] font-black">
+                    REQUIRED
+                  </span>
+                </div>
+
+                <textarea
+                  className="w-full border border-blue-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none shadow-inner text-sm leading-6"
+                  placeholder="Paste your CV here...
 
 Example:
 Professional Summary
@@ -787,163 +1667,284 @@ Work Experience
 Skills
 Education
 Projects"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                />
 
-        <div className="mt-3 flex items-center justify-between text-xs">
-          <span
-            className={
-              text.trim().split(/\s+/).filter(Boolean).length < 80
-                ? "text-red-500 font-semibold"
-                : "text-green-600 font-semibold"
-            }
-          >
-            {text.trim().split(/\s+/).filter(Boolean).length} / 80 words
-          </span>
+                <div className="mt-3 flex items-center justify-between text-xs">
+                  <span
+                    className={
+                      text.trim().split(/\s+/).filter(Boolean).length < 80
+                        ? "text-red-500 font-semibold"
+                        : "text-green-600 font-semibold"
+                    }
+                  >
+                    {text.trim().split(/\s+/).filter(Boolean).length} / 80 words
+                  </span>
 
-          <span className="text-slate-500">
-            Best result: 150+ words
-          </span>
-        </div>
-      </div>
+                  <span className="text-slate-500">Best result: 150+ words</span>
+                </div>
+              </div>
 
-      <div className="rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <label className="text-sm font-black text-slate-900">
-              💼 Paste Job Description
-            </label>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Add the job advert for stronger keyword matching.
-            </p>
-          </div>
+              <div className="rounded-3xl border border-purple-100 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <label className="text-sm font-black text-slate-900">
+                      💼 Paste Job Description
+                    </label>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Add the job advert for stronger keyword matching.
+                    </p>
+                  </div>
 
-          <span className="rounded-full bg-purple-600 text-white px-3 py-1 text-[10px] font-black">
-            RECOMMENDED
-          </span>
-        </div>
+                  <span className="rounded-full bg-purple-600 text-white px-3 py-1 text-[10px] font-black">
+                    RECOMMENDED
+                  </span>
+                </div>
 
-        <textarea
-          className="w-full border border-purple-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none shadow-inner text-sm leading-6"
-          placeholder="Paste the job description here...
+                <textarea
+                  className="w-full border border-purple-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none shadow-inner text-sm leading-6"
+                  placeholder="Paste the job description here...
 
 Example:
 Responsibilities
 Required skills
 Experience needed
 Company requirements"
-          value={jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
-        />
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                />
 
-        <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-          <span>
-            {jobDescription.trim().split(/\s+/).filter(Boolean).length} words
-          </span>
-          <span>Improves ATS keyword match</span>
+                <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
+                  <span>
+                    {jobDescription.trim().split(/\s+/).filter(Boolean).length}{" "}
+                    words
+                  </span>
+                  <span>Improves ATS keyword match</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={generateAll}
+              disabled={
+                loading ||
+                !text ||
+                text.trim().split(/\s+/).filter(Boolean).length < 80
+              }
+              className="group relative w-full overflow-hidden rounded-2xl bg-black py-4 font-black text-white shadow-xl transition hover:bg-slate-900 disabled:opacity-50"
+            >
+              <span className="relative z-10">
+                {loading
+                  ? "Generating documents..."
+                  : "🚀 Generate Tailored CV & Cover Letter"}
+              </span>
+
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:translate-x-full transition duration-700" />
+            </button>
+
+            {text && text.trim().split(/\s+/).filter(Boolean).length < 80 && (
+              <p className="text-center text-sm font-semibold text-red-500">
+                Please add at least 80 words from your CV to continue.
+              </p>
+            )}
+
+            {loading && (
+              <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4 text-center">
+                <p className="text-sm font-semibold text-blue-700 animate-pulse">
+                  Analysing CV, extracting keywords, and matching your
+                  experience to the job...
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-
-    </div>
-
-    <button
-      onClick={generateAll}
-      disabled={
-        loading ||
-        !text ||
-        text.trim().split(/\s+/).filter(Boolean).length < 80
-      }
-      className="group relative w-full overflow-hidden rounded-2xl bg-black py-4 font-black text-white shadow-xl transition hover:bg-slate-900 disabled:opacity-50"
-    >
-      <span className="relative z-10">
-        {loading ? "Generating documents..." : "🚀 Generate Tailored CV & Cover Letter"}
-      </span>
-
-      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:translate-x-full transition duration-700" />
-    </button>
-
-    {text && text.trim().split(/\s+/).filter(Boolean).length < 80 && (
-      <p className="text-center text-sm font-semibold text-red-500">
-        Please add at least 80 words from your CV to continue.
-      </p>
-    )}
-
-    {loading && (
-      <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4 text-center">
-        <p className="text-sm font-semibold text-blue-700 animate-pulse">
-          Analysing CV, extracting keywords, and matching your experience to the job...
-        </p>
-      </div>
-    )}
-
-  </div>
-</div>
 
         {!generated && (
           <div className="bg-white/90 backdrop-blur-xl border rounded-3xl p-6 shadow-sm">
             <h2 className="text-xl font-black">Your results will appear here</h2>
 
             <p className="text-sm text-gray-500 mt-2">
-              Keywords and ATS score are visible after generation. CV and cover letter unlock after subscription.
+              Keywords and ATS score are visible after generation. CV and cover
+              letter unlock after subscription.
             </p>
           </div>
         )}
       </section>
+
       <style jsx>{`
-  @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
+        @keyframes shimmer {
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        @keyframes cinemaIn {
+  0% {
+    opacity: 0;
+    transform: perspective(900px) rotateX(8deg) scale(0.92) translateY(24px);
+    filter: blur(10px);
   }
+  60% {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0deg) scale(1.02) translateY(0);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0deg) scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
 
-  @keyframes gradientMove {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 200% 50%;
-    }
+@keyframes questionCut {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    filter: blur(8px);
   }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
 
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-40%) rotate(-8deg);
   }
+  100% {
+    transform: translateX(40%) rotate(-8deg);
+  }
+}
 
-  @keyframes softPulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.04);
-      opacity: 0.85;
-    }
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
+  50% {
+    transform: translateY(-6px);
+  }
+}
 
-  .animate-shimmer {
-    animation: shimmer 1.4s infinite;
-  }
+.animate-cinemaIn {
+  animation: cinemaIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  .animate-gradientMove {
-    animation: gradientMove 3s linear infinite;
-  }
+.animate-questionCut {
+  animation: questionCut 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  .animate-fadeUp {
-    animation: fadeUp 0.5s ease-out;
-  }
+.animate-lightSweep {
+  animation: lightSweep 2.8s ease-in-out infinite alternate;
+}
 
-  .animate-softPulse {
-    animation: softPulse 1.6s ease-in-out infinite;
-  }
-`}</style>
+.animate-float {
+  animation: float 2.6s ease-in-out infinite;
+}
+        @keyframes gradientMove {
+          0% {
+            background-position: 0% 50%;
+          }
+          100% {
+            background-position: 200% 50%;
+          }
+        }
+
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes softPulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.04);
+            opacity: 0.85;
+          }
+        }
+
+        .animate-shimmer {
+          animation: shimmer 1.4s infinite;
+        }
+
+        .animate-gradientMove {
+          animation: gradientMove 3s linear infinite;
+        }
+
+        .animate-fadeUp {
+          animation: fadeUp 0.5s ease-out;
+        }
+
+        .animate-softPulse {
+          animation: softPulse 1.6s ease-in-out infinite;
+        }
+      `}</style>
     </main>
+  );
+}
+function QuestionButtons({
+  title,
+  value,
+  setValue,
+  options,
+}: {
+  title: string;
+  value: string;
+  setValue: (value: string) => void;
+  options: string[];
+}) {
+  const filteredOptions = options.filter((option) =>
+    option.toLowerCase().includes(value.toLowerCase().trim())
+  );
+
+  const visibleOptions = value ? filteredOptions : options;
+
+  return (
+    <div>
+      <h3 className="text-lg font-black text-slate-950">{title}</h3>
+
+      <input
+        className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Type your answer or choose below..."
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+
+      <div className="mt-3 max-h-44 overflow-y-auto rounded-2xl border border-slate-100 bg-slate-50/70 p-2">
+        <div className="flex flex-wrap gap-2">
+          {visibleOptions.length > 0 ? (
+            visibleOptions.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setValue(option)}
+                className={`rounded-full border px-3 py-2 text-xs font-black transition ${
+                  value === option
+                    ? "border-blue-600 bg-blue-600 text-white shadow-md"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-blue-400 hover:bg-blue-50"
+                }`}
+              >
+                {option}
+              </button>
+            ))
+          ) : (
+            <p className="px-2 py-3 text-xs font-bold text-slate-400">
+              No suggestions found. You can type your own answer.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

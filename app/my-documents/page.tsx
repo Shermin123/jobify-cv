@@ -74,7 +74,10 @@ export default function MyDocumentsPage() {
             </p>
 
             <button
-              onClick={() => router.push("/upload")}
+              onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
               className="mt-5 bg-black text-white px-6 py-3 rounded-2xl font-bold"
             >
               Generate CV

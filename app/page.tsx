@@ -6,25 +6,20 @@ import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
-  const [country, setCountry] = useState("");
-  const [role, setRole] = useState("");
+  
+  
+  
   const [cvText, setCvText] = useState("");
+  
   const [freeChecksUsed, setFreeChecksUsed] = useState(0);
   const [analyzedScore, setAnalyzedScore] = useState<number | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [showScorePopup, setShowScorePopup] = useState(false);
 
   const router = useRouter();
   const { data: session } = useSession();
 const [isUnlocked, setIsUnlocked] = useState(false);
-  const saveAndContinue = () => {
-    sessionStorage.setItem("jobify_popup_seen", "true");
-    sessionStorage.setItem("jobify_country", country);
-    sessionStorage.setItem("jobify_role", role);
-    setOpen(false);
-    router.push("/upload");
-  };
-
+  
   useEffect(() => {
   const savedChecks = localStorage.getItem("jobify_free_checks_used");
   if (savedChecks) {
@@ -78,9 +73,8 @@ useEffect(() => {
     if (text.includes(word)) score += 2;
   });
 
-  if (role && text.includes(role.toLowerCase())) score += 6;
 
-  return Math.min(score, 68);
+  return Math.min(score, 96);
 };
 
   const score = analyzedScore ?? 0;
@@ -104,6 +98,7 @@ useEffect(() => {
   setTimeout(() => {
     const newScore = calculateScore();
     setAnalyzedScore(newScore);
+    setShowScorePopup(true);
 
 if (!isUnlocked) {
   const newUsed = freeChecksUsed + 1;
@@ -129,259 +124,76 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   };
 
   const getLabel = () => {
-    if (score < 50) return "Needs Improvement";
-    if (score < 75) return "Good CV";
-    return "Strong CV 🚀";
-  };
-
+  if (score < 50) return "High Risk CV";
+  if (score < 70) return "Needs Keyword Improvement";
+  return "Job-Ready CV 🚀";
+};
   const statsLine = `
     👥 500,000+ Users • 🌍 180+ Countries • 📄 2.4M CVs Generated • 💼 120,000+ Hired • ⚡ 94% Interview Success • 🧠 AI ATS Optimization • 🚀 Instant CV Rewrite • 📊 Real-time CV Scoring • 💡 Keyword Intelligence • 🔥 Recruiter Matching Engine •
   `;
 
-  // ================= AUTOCOMPLETE DATA =================
-  const countrySuggestions = [
-    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
-  "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
-  "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus",
-  "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
-  "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
-  "Bulgaria", "Burkina Faso", "Burundi",
-  "Cambodia", "Cameroon", "Canada", "Cape Verde",
-  "Central African Republic", "Chad", "Chile", "China", "Colombia",
-  "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba",
-  "Cyprus", "Czech Republic",
-  "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-  "Ecuador", "Egypt", "El Salvador", "Estonia", "Ethiopia",
-  "Fiji", "Finland", "France",
-  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Guatemala", "Guinea",
-  "Haiti", "Honduras", "Hungary",
-  "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
-  "Jamaica", "Japan", "Jordan",
-  "Kazakhstan", "Kenya", "Kuwait", "Kyrgyzstan",
-  "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Lithuania", "Luxembourg",
-  "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mexico", "Moldova",
-  "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
-  "Namibia", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria",
-  "North Korea", "North Macedonia", "Norway",
-  "Oman",
-  "Pakistan", "Panama", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
-  "Qatar",
-  "Romania", "Russia", "Rwanda",
-  "Saudi Arabia", "Senegal", "Serbia", "Singapore", "Slovakia", "Slovenia",
-  "Somalia", "South Africa", "South Korea", "Spain", "Sri Lanka", "Sudan", "Sweden", "Switzerland",
-  "Syria",
-  "Taiwan", "Tanzania", "Thailand", "Togo", "Tunisia", "Turkey",
-  "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
-  "Uruguay", "Uzbekistan",
-  "Venezuela", "Vietnam",
-  "Yemen",
-  "Zambia", "Zimbabwe",
-  ];
-
-  const roleSuggestions = [
-  // ================= TECHNOLOGY =================
-  "Software Engineer",
-  "Frontend Developer",
-  "Backend Developer",
-  "Full Stack Developer",
-  "Web Developer",
-  "Mobile App Developer",
-  "Flutter Developer",
-  "React Developer",
-  "Java Developer",
-  "Python Developer",
-  "Node.js Developer",
-  "iOS Developer",
-  "Android Developer",
-  "Game Developer",
-  "Embedded Systems Engineer",
-  "Firmware Engineer",
-  "Blockchain Developer",
-
-  // AI / DATA / ML
-  "Data Analyst",
-  "Data Scientist",
-  "Machine Learning Engineer",
-  "AI Engineer",
-  "Data Engineer",
-  "BI Analyst",
-  "NLP Engineer",
-  "Computer Vision Engineer",
-
-  // CYBER SECURITY
-  "Cyber Security Analyst",
-  "Security Engineer",
-  "Penetration Tester",
-  "SOC Analyst",
-  "Information Security Manager",
-
-  // CLOUD / DEVOPS
-  "DevOps Engineer",
-  "Cloud Engineer",
-  "AWS Engineer",
-  "Azure Engineer",
-  "GCP Engineer",
-  "Site Reliability Engineer",
-
-  // DESIGN
-  "UI Designer",
-  "UX Designer",
-  "UI/UX Designer",
-  "Product Designer",
-  "Graphic Designer",
-  "Motion Designer",
-  "3D Artist",
-  "Interior Designer",
-
-  // PRODUCT / MANAGEMENT
-  "Product Manager",
-  "Project Manager",
-  "Program Manager",
-  "Scrum Master",
-  "Business Analyst",
-  "Operations Manager",
-
-  // BUSINESS / CORPORATE
-  "Business Development Manager",
-  "Strategy Analyst",
-  "Consultant",
-  "Management Consultant",
-
-  // FINANCE / BANKING
-  "Accountant",
-  "Financial Analyst",
-  "Investment Banker",
-  "Auditor",
-  "Risk Analyst",
-  "Tax Consultant",
-  "Bank Teller",
-  "Loan Officer",
-
-  // MARKETING / MEDIA
-  "Marketing Manager",
-  "Digital Marketing Specialist",
-  "SEO Specialist",
-  "Content Writer",
-  "Copywriter",
-  "Social Media Manager",
-  "Brand Manager",
-  "Public Relations Officer",
-
-  // SALES
-  "Sales Executive",
-  "Sales Manager",
-  "Account Manager",
-  "Business Development Executive",
-  "Retail Sales Associate",
-
-  // HR / RECRUITMENT
-  "HR Manager",
-  "HR Executive",
-  "Recruiter",
-  "Talent Acquisition Specialist",
-  "Training Coordinator",
-
-  // HEALTHCARE
-  "Doctor",
-  "Nurse",
-  "Pharmacist",
-  "Dentist",
-  "Radiologist",
-  "Physiotherapist",
-  "Medical Lab Technician",
-
-  // EDUCATION
-  "Teacher",
-  "Lecturer",
-  "Professor",
-  "Teaching Assistant",
-  "School Principal",
-
-  // ENGINEERING (NON-IT)
-  "Civil Engineer",
-  "Mechanical Engineer",
-  "Electrical Engineer",
-  "Electronics Engineer",
-  "Automotive Engineer",
-  "Aerospace Engineer",
-  "Chemical Engineer",
-
-  // LOGISTICS / TRANSPORT
-  "Logistics Manager",
-  "Supply Chain Analyst",
-  "Warehouse Manager",
-  "Delivery Driver",
-  "Truck Driver",
-  "Operations Coordinator",
-
-  // CUSTOMER SERVICE
-  "Customer Support Agent",
-  "Call Center Agent",
-  "Customer Success Manager",
-  "Help Desk Technician",
-
-  // GOVERNMENT / ADMIN
-  "Police Officer",
-  "Administrative Officer",
-  "Civil Servant",
-  "Government Clerk",
-
-  // LEGAL
-  "Lawyer",
-  "Legal Assistant",
-  "Paralegal",
-  "Legal Advisor",
-
-  // HOSPITALITY
-  "Hotel Manager",
-  "Receptionist",
-  "Chef",
-  "Waiter",
-  "Barista",
-  "Housekeeping Staff",
-
-  // CONSTRUCTION / TRADES
-  "Architect",
-  "Site Engineer",
-  "Electrician",
-  "Plumber",
-  "Carpenter",
-  "Construction Worker",
-
-  // CREATIVE ARTS
-  "Photographer",
-  "Videographer",
-  "Film Editor",
-  "Actor",
-  "Music Producer",
-  "Animator",
-
-  // SCIENCE / RESEARCH
-  "Research Scientist",
-  "Lab Technician",
-  "Biologist",
-  "Chemist",
-  "Physicist",
-
-  // GENERAL
-  "Intern",
-  "Trainee",
-  "Fresher",
-  "Office Assistant",
-  "Administrative Assistant"
-];
-
-  const filteredCountries = countrySuggestions.filter((c) =>
-  c.toLowerCase().includes(country.toLowerCase())
-);
-
-const filteredRoles = roleSuggestions.filter((r) =>
-  r.toLowerCase().includes(role.toLowerCase())
-);
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-gray-900 overflow-x-hidden">
+    <main className="relative min-h-screen bg-gradient-to-b from-white to-slate-50 text-gray-900 overflow-x-hidden">
+      {showScorePopup && (
+  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/75 px-4 backdrop-blur-xl">
+    <div className="relative w-full max-w-sm overflow-hidden rounded-[2rem] bg-white p-6 text-center shadow-2xl animate-cinemaIn">
+      <div className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-red-200 blur-3xl opacity-70" />
+      <div className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-orange-200 blur-3xl opacity-70" />
+
+      <div className="relative">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-red-50 text-3xl text-red-600 shadow-lg">
+          ⚠️
+        </div>
+
+        <p className="mt-4 text-xs font-black uppercase tracking-widest text-red-600">
+          CV Score Result
+        </p>
+
+        <div className="mt-4 rounded-3xl bg-slate-950 p-5 text-white">
+          <p className="text-xs font-black uppercase tracking-widest text-white/50">
+            Your CV Score
+          </p>
+
+          <p className="mt-2 text-5xl font-black text-red-400">
+            {score}/100
+          </p>
+
+          <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-red-600 to-orange-400 transition-all duration-700"
+              style={{ width: `${score}%` }}
+            />
+          </div>
+        </div>
+
+        <h3 className="mt-5 text-2xl font-black text-slate-950">
+          You are less likely to get a job with this CV
+        </h3>
+
+        <p className="mt-3 text-sm leading-6 text-slate-600">
+          This CV may be missing important ATS keywords, stronger achievements,
+          and role-specific wording recruiters look for.
+        </p>
+
+        <button
+          onClick={goToCVGenerator}
+          className="mt-5 w-full rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 py-3 text-sm font-black text-white shadow-lg hover:scale-[1.02] transition"
+        >
+          Highlight Keywords & Improve My CV →
+        </button>
+
+        <button
+          onClick={() => setShowScorePopup(false)}
+          className="mt-3 text-sm font-bold text-slate-500 hover:text-slate-900 transition"
+        >
+          Continue checking
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 {/* FLOATING BACKGROUND ELEMENTS */}
-<div className="fixed inset-0 pointer-events-none overflow-hidden">
+<div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
 {/* Small Floating Emojis */}
 
 <div className="absolute top-10 left-10 text-3xl opacity-10">🚀</div>
@@ -427,100 +239,7 @@ const filteredRoles = roleSuggestions.filter((r) =>
   <div className="absolute text-6xl opacity-5 bottom-1/2 left-10 animate-pulse">⚡</div>
 
 </div>
-      {/* ================= POPUP ================= */}
-      {/* ================= POPUP ================= */}
-{open && (
-  <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 px-4">
-    
-    <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-6 animate-fadeIn">
-
-      {/* HEADER */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold">Get Started 🚀</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Setup your profile in 2 steps
-        </p>
-      </div>
-
-      {/* STEP INDICATOR */}
-      <div className="flex justify-center text-xs text-gray-500 gap-2">
-        <span className={country ? "text-green-600 font-semibold" : ""}>Country</span>
-        <span>→</span>
-        <span className={role ? "text-green-600 font-semibold" : ""}>Role</span>
-      </div>
-
-      {/* COUNTRY */}
-      <div>
-        <label className="text-sm font-medium text-gray-700">Country</label>
-        <input
-          className="w-full mt-1 border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="e.g. United Kingdom"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-        />
-
-        {country && filteredCountries.length > 0 && (
-          <div className="border rounded-xl mt-1 max-h-32 overflow-auto">
-            {filteredCountries.slice(0, 5).map((c) => (
-              <div
-                key={c}
-                onClick={() => setCountry(c)}
-                className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
-              >
-                {c}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ROLE */}
-      <div>
-        <label className="text-sm font-medium text-gray-700">Target Role</label>
-        <input
-          className="w-full mt-1 border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="e.g. Software Engineer"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        />
-
-        {role && filteredRoles.length > 0 && (
-          <div className="border rounded-xl mt-1 max-h-32 overflow-auto">
-            {filteredRoles.slice(0, 5).map((r) => (
-              <div
-                key={r}
-                onClick={() => setRole(r)}
-                className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
-              >
-                {r}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* BUTTONS */}
-      <div className="flex gap-3 pt-2">
-        <button
-          onClick={() => setOpen(false)}
-          className="w-1/2 border rounded-xl py-3 text-gray-600 hover:bg-gray-100"
-        >
-          Cancel
-        </button>
-
-        <button
-          onClick={saveAndContinue}
-          disabled={!country || !role}
-          className="w-1/2 bg-black text-white rounded-xl py-3 font-semibold hover:bg-gray-800 disabled:opacity-40"
-        >
-          Continue →
-        </button>
-      </div>
-
-    </div>
-  </div>
-)}
-
+      
       {/* ================= STATS MARQUEE ================= */}
       <div className="bg-white border-b overflow-hidden py-2 text-xs md:text-sm relative z-0">
   <div className="marquee-slow whitespace-nowrap pointer-events-none text-gray-700 font-medium">
@@ -593,7 +312,10 @@ const filteredRoles = roleSuggestions.filter((r) =>
     <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start w-full max-w-md mx-auto lg:mx-0">
   <button
     type="button"
-    onClick={() => setOpen(true)}
+    onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
     className="w-full sm:w-auto bg-black text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:scale-[1.02] hover:bg-gray-900 transition"
   >
     🚀 Build My CV
@@ -661,8 +383,26 @@ const filteredRoles = roleSuggestions.filter((r) =>
         </p>
       </div>
     </div>
-
     <div className="mt-4 rounded-3xl border border-red-200 bg-red-50 p-4">
+  {analyzedScore === null ? (
+  <div className="mb-3 rounded-2xl bg-white border border-orange-200 p-3">
+    <p className="text-sm font-black text-orange-700">
+      ⚠️ Paste your CV to check job readiness
+    </p>
+    <p className="text-xs text-orange-600 mt-1 leading-5">
+      Jobify will check ATS keywords, achievements, and role matching before you apply.
+    </p>
+  </div>
+) : score >= 70 ? (
+  <div className="mb-3 rounded-2xl bg-emerald-50 border border-emerald-200 p-3">
+    <p className="text-sm font-black text-emerald-700">
+      ✅ This CV is ready to apply
+    </p>
+    <p className="text-xs text-emerald-600 mt-1 leading-5">
+      This CV has strong keywords, clear structure, and good ATS readiness.
+    </p>
+  </div>
+) : (
   <div className="mb-3 rounded-2xl bg-white border border-red-200 p-3">
     <p className="text-sm font-black text-red-700">
       ⚠️ You are less likely to get a job with this CV
@@ -672,6 +412,7 @@ const filteredRoles = roleSuggestions.filter((r) =>
       and role-specific language recruiters search for.
     </p>
   </div>
+)}
 
   <textarea
     className="w-full border border-red-200 bg-white p-4 rounded-2xl h-28 md:h-32 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none text-sm leading-6"
@@ -726,17 +467,34 @@ const filteredRoles = roleSuggestions.filter((r) =>
           </div>
         ) : (
           <>
-            <p className="text-5xl md:text-6xl font-black mt-3 text-red-500">
-              {score}/100
-            </p>
+            <p
+  className={`text-5xl md:text-6xl font-black mt-3 ${
+    score >= 70 ? "text-emerald-400" : "text-red-500"
+  }`}
+>
+  {score}/100
+</p>
 
             <div className="mt-4 rounded-2xl bg-red-500/10 border border-red-500/20 p-4">
-              <p className="text-lg font-black text-red-300 leading-snug">
-                You are less likely to get a job with this CV.
-              </p>
-              <p className="text-xs text-white/60 mt-2">
-                Your CV needs stronger ATS keywords, clearer achievements, and better role matching.
-              </p>
+              {score < 70 ? (
+  <>
+    <p className="text-lg font-black text-red-300 leading-snug">
+      You are less likely to get a job with this CV.
+    </p>
+    <p className="text-xs text-white/60 mt-2">
+      Your CV needs stronger ATS keywords, clearer achievements, and better role matching.
+    </p>
+  </>
+) : (
+  <>
+    <p className="text-lg font-black text-emerald-300 leading-snug">
+      This CV looks job-ready.
+    </p>
+    <p className="text-xs text-white/60 mt-2">
+      Your CV has stronger keywords, better structure, and good ATS readiness.
+    </p>
+  </>
+)}
             </div>
 
             <div className="w-full h-3 bg-white/10 rounded-full mt-5 overflow-hidden">
@@ -771,15 +529,34 @@ const filteredRoles = roleSuggestions.filter((r) =>
         </div>
 
         {analyzedScore !== null && (
-          <div className="mt-5 rounded-2xl bg-red-50 border border-red-200 p-4">
-            <p className="text-sm font-black text-red-700">
-              ⚠️ Recruiters may skip this CV
-            </p>
-            <p className="text-xs text-red-600 mt-1 leading-5">
-              Fix it now by highlighting missing keywords and generating a stronger ATS-ready CV.
-            </p>
-          </div>
-        )}
+  <div
+    className={`mt-5 rounded-2xl border p-4 ${
+      score >= 70
+        ? "bg-emerald-50 border-emerald-200"
+        : "bg-red-50 border-red-200"
+    }`}
+  >
+    <p
+      className={`text-sm font-black ${
+        score >= 70 ? "text-emerald-700" : "text-red-700"
+      }`}
+    >
+      {score >= 70
+        ? "✅ This CV is ready to apply"
+        : "⚠️ Recruiters may skip this CV"}
+    </p>
+
+    <p
+      className={`text-xs mt-1 leading-5 ${
+        score >= 70 ? "text-emerald-600" : "text-red-600"
+      }`}
+    >
+      {score >= 70
+        ? "Your CV looks stronger for ATS screening and recruiter review."
+        : "Fix it now by highlighting missing keywords and generating a stronger ATS-ready CV."}
+    </p>
+  </div>
+)}
       </div>
     </div>
 
@@ -796,13 +573,19 @@ const filteredRoles = roleSuggestions.filter((r) =>
     </button>
 
     {analyzedScore !== null && (
-      <button
-        onClick={goToCVGenerator}
-        className="mt-3 w-full bg-gradient-to-r from-red-600 to-orange-500 text-white py-4 rounded-2xl font-black hover:scale-[1.01] transition shadow-lg"
-      >
-        Highlight Keywords to Get More Interviews →
-      </button>
-    )}
+  <div className="mt-4 rounded-3xl border border-blue-100 bg-blue-50 p-4 text-center shadow-sm">
+    <p className="text-sm font-black text-slate-900">
+      ✨ Just highlight the missing keywords and your CV will be ready to apply for jobs.
+    </p>
+
+    <button
+      onClick={goToCVGenerator}
+      className="mt-3 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:scale-[1.01] transition"
+    >
+      Highlight Keywords & Make My CV Ready →
+    </button>
+  </div>
+)}
   </div>
 </div>
 
@@ -884,7 +667,10 @@ const filteredRoles = roleSuggestions.filter((r) =>
 
           <div className="text-center mt-8">
             <button
-              onClick={() => setOpen(true)}
+              onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
               className="bg-black text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-gray-800 hover:scale-105 transition shadow-lg"
             >
               Start Building My CV
@@ -992,7 +778,10 @@ const filteredRoles = roleSuggestions.filter((r) =>
       </p>
 
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
         className="mt-8 bg-white text-black px-8 py-4 rounded-full font-black hover:bg-blue-50 transition shadow-xl"
       >
         Start Building My CV
@@ -1177,7 +966,10 @@ const filteredRoles = roleSuggestions.filter((r) =>
       </div>
 
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
         className="bg-black text-white px-7 py-3 rounded-full font-black hover:bg-slate-800 transition"
       >
         Check My CV Score
@@ -1241,7 +1033,10 @@ const filteredRoles = roleSuggestions.filter((r) =>
     </p>
 
     <button
-      onClick={() => setOpen(true)}
+      onClick={() => {
+  sessionStorage.setItem("jobify_force_setup", "true");
+  router.push("/upload");
+}}
       className="mt-8 bg-white text-blue-600 px-10 py-4 rounded-full font-black hover:scale-105 transition shadow-xl"
     >
       Build My CV
@@ -1342,6 +1137,70 @@ const filteredRoles = roleSuggestions.filter((r) =>
 
       {/* ================= STYLES ================= */}
       <style jsx>{`
+      @keyframes cinemaIn {
+  0% {
+    opacity: 0;
+    transform: perspective(900px) rotateX(8deg) scale(0.92) translateY(24px);
+    filter: blur(10px);
+  }
+  60% {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0deg) scale(1.02) translateY(0);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0deg) scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes questionCut {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes lightSweep {
+  0% {
+    transform: translateX(-40%) rotate(-8deg);
+  }
+  100% {
+    transform: translateX(40%) rotate(-8deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-cinemaIn {
+  animation: cinemaIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-questionCut {
+  animation: questionCut 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-lightSweep {
+  animation: lightSweep 2.8s ease-in-out infinite alternate;
+}
+
+.animate-float {
+  animation: float 2.6s ease-in-out infinite;
+}
         .marquee-fast,
         .marquee-slow {
           display: flex;
