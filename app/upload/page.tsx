@@ -1118,8 +1118,8 @@ const previousSetupStep = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
      {showSetupPopup && (
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-slate-950/80 px-4 py-6 backdrop-blur-2xl">
-    <div className="relative my-auto w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
+  <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 pt-[10vh] pb-8 backdrop-blur-2xl sm:items-center sm:pt-6">
+    <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
