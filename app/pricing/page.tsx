@@ -3,9 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import EmojiBackground from "@/app/components/EmojiBackground";
+import { useSearchParams } from "next/navigation";
 
 export default function PricingPage() {
   const router = useRouter();
+const searchParams = useSearchParams();
+const upgrade = searchParams.get("upgrade");
   const { data: session } = useSession();
 
   const startCheckout = (plan: string) => {
@@ -18,75 +21,72 @@ export default function PricingPage() {
   };
 
   const plans = [
-  {
-    id: "trial",
-    name: "7-Day Trial",
-    label: "FREE FOR 7 DAYS",
-    price: "£0",
-    sub: "today",
-    description:
-      "Try Jobify with full access before paying. Perfect for testing your first CV and cover letter.",
-    button: "Use Free for 7 Days",
-    highlight: true,
-    trial: true,
-    features: [
-      "Full CV generator access",
-      "Generate tailored cover letters",
-      "ATS keyword suggestions included",
-      "CV score checker included",
-      "Download your CV as PDF",
-      "Try before paying",
-      "£0 today",
-      "Cancel anytime before trial ends",
-    ],
-  },
-  {
-    id: "basic",
-    name: "Basic",
-    label: "Student friendly",
-    price: "£9.99",
-    sub: "per month",
-    description:
-      "Best for students and job seekers applying to a few roles each month.",
-    button: "Choose Basic",
-    highlight: false,
-    trial: false,
-    features: [
-      "30 CV generations per month",
-      "30 cover letters per month",
-      "ATS optimisation for each CV",
-      "Keyword suggestions for job descriptions",
-      "CV score checker access",
-      "PDF export included",
-      "Role-based CV tailoring",
-      "Good for part-time, graduate, and entry-level jobs",
-    ],
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    label: "Best value",
-    price: "£19.99",
-    sub: "per month",
-    description:
-      "For serious job seekers who want to apply faster with stronger, tailored applications.",
-    button: "Go Pro",
-    highlight: true,
-    trial: false,
-    features: [
-      "Unlimited CV generations",
-      "Unlimited cover letters",
-      "Advanced ATS scoring",
-      "Tailor your CV for every job description",
-      "Priority AI processing",
-      "Better role-specific keyword matching",
-      "Create multiple versions for different roles",
-      "Best for active job seekers applying weekly",
-      "Save time rewriting applications manually",
-      "Improve weak CV wording into stronger bullet points",
-    ],
-  },
-];
+    {
+      id: "trial",
+      name: "7-Day Trial",
+      label: "FREE FOR 7 DAYS",
+      price: "£0",
+      sub: "today",
+      description:
+        "Try Jobify with full access before paying. Perfect for testing your first CV and cover letter.",
+      button: "Use Free for 7 Days",
+      highlight: true,
+      trial: true,
+      features: [
+        "Full CV generator access",
+        "Generate tailored cover letters",
+        "ATS keyword suggestions included",
+        "CV score checker included",
+        "Download your CV as PDF",
+        "Try before paying",
+        "£0 today",
+        "Cancel anytime before trial ends",
+      ],
+    },
+    {
+      id: "basic",
+      name: "Basic",
+      label: "Student friendly",
+      price: "£9.99",
+      sub: "per month",
+      description:
+        "Best for students and job seekers applying to a few roles each month.",
+      button: "Choose Basic",
+      highlight: false,
+      trial: false,
+      features: [
+        "30 CV generations per month",
+        "30 cover letters per month",
+        "ATS optimisation for each CV",
+        "Keyword suggestions for job descriptions",
+        "CV score checker access",
+        "PDF export included",
+        "Role-based CV tailoring",
+        "Good for part-time, graduate, and entry-level jobs",
+      ],
+    },
+    {
+      id: "pro",
+      name: "Pro",
+      label: "Best value",
+      price: "£19.99",
+      sub: "per month",
+      description:
+        "For serious job seekers who want unlimited AI generation plus a full Pro document editor to customise, polish, and export final CVs and cover letters.",
+      button: "Go Pro",
+      highlight: true,
+      trial: false,
+      features: [
+  "Unlimited CV generations",
+  "Unlimited cover letters",
+  "Advanced ATS optimisation",
+  "Document Editor included",
+  "AI Polish, Grammar Fix, and ATS Improve",
+  "PDF and DOCX export",
+  "Autosave while editing",
+],
+    },
+  ];
 
   const companies = [
     {
@@ -114,6 +114,7 @@ export default function PricingPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900">
       <EmojiBackground />
+
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[-180px] left-[-130px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />
         <div className="absolute bottom-[-180px] right-[-120px] h-[520px] w-[520px] rounded-full bg-purple-200 blur-[160px] opacity-35" />
@@ -139,8 +140,8 @@ export default function PricingPage() {
         </h1>
 
         <p className="text-gray-500 mt-3 max-w-2xl mx-auto text-sm md:text-base">
-          Start free today and access your ATS-optimised CV, personalised cover letter,
-          keyword list, and PDF download.
+          Start free today and access your ATS-optimised CV, personalised cover
+          letter, keyword list, and PDF download.
         </p>
 
         <div className="mt-5 flex flex-col sm:flex-row justify-center gap-3">
@@ -200,125 +201,129 @@ export default function PricingPage() {
       </section>
 
       {/* PRICING CARDS */}
-<section
-  id="plans"
-  className="max-w-6xl mx-auto px-6 mt-7 grid md:grid-cols-3 gap-5"
->
-  {plans.map((plan) => (
-    <div
-      key={plan.id}
-      className={`relative rounded-3xl p-5 transition ${
-  plan.id === "pro"
-    ? "bg-slate-950 text-white border-2 border-blue-500 shadow-2xl md:scale-[1.03]"
-    : plan.highlight
-    ? "bg-white border-2 border-green-500 shadow-2xl md:scale-[1.02]"
-    : "bg-white border shadow-sm hover:shadow-xl"
-}`}
-    >
-      {plan.trial && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg">
-          FREE FOR 7 DAYS
-        </div>
-      )}
-
-      <div
-        className={`inline-flex text-xs px-3 py-1 rounded-full font-bold ${
-          plan.trial
-            ? "bg-green-50 text-green-700 border border-green-200"
-            : "bg-gray-100 text-gray-700"
-        }`}
+      <section
+        id="plans"
+        className="max-w-6xl mx-auto px-6 mt-7 grid md:grid-cols-3 gap-5"
       >
-        {plan.label}
-      </div>
+        {plans.map((plan) => (
+          <div
+            key={plan.id}
+            className={`relative rounded-3xl p-5 transition ${
+              plan.id === "pro"
+                ? "bg-slate-950 text-white border-2 border-blue-500 shadow-2xl md:scale-[1.03]"
+                : plan.highlight
+                ? "bg-white border-2 border-green-500 shadow-2xl md:scale-[1.02]"
+                : "bg-white border shadow-sm hover:shadow-xl"
+            }`}
+          >
+            {plan.trial && (
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg">
+                FREE FOR 7 DAYS
+              </div>
+            )}
 
-      <h2 className="text-2xl font-black mt-4">{plan.name}</h2>
+            <div
+              className={`inline-flex text-xs px-3 py-1 rounded-full font-bold ${
+                plan.trial
+                  ? "bg-green-50 text-green-700 border border-green-200"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {plan.label}
+            </div>
 
-      <p
-  className={`mt-2 text-sm ${
-    plan.id === "pro" ? "text-white/60" : "text-gray-500"
-  }`}
->
-  {plan.description}
-</p>
+            <h2 className="text-2xl font-black mt-4">{plan.name}</h2>
 
-<div
-  className={`mt-4 rounded-2xl border p-3 ${
-    plan.id === "pro"
-      ? "bg-white/10 border-white/10"
-      : "bg-slate-50 border-slate-100"
-  }`}
->
-  <p
-    className={`text-xs font-black ${
-      plan.id === "pro" ? "text-blue-300" : "text-slate-900"
-    }`}
-  >
-    {plan.id === "trial"
-      ? "Try the full CV builder before paying."
-      : plan.id === "basic"
-      ? "Best if you are applying to a few jobs each month."
-      : "Best if you are actively applying to multiple jobs."}
-  </p>
+            <p
+              className={`mt-2 text-sm ${
+                plan.id === "pro" ? "text-white/60" : "text-gray-500"
+              }`}
+            >
+              {plan.description}
+            </p>
 
-  <p
-    className={`mt-1 text-xs leading-5 ${
-      plan.id === "pro" ? "text-white/60" : "text-slate-500"
-    }`}
-  >
-    {plan.id === "trial"
-      ? "Generate your CV, cover letter, keywords, and PDF during the trial. Cancel before 7 days and pay £0."
-      : plan.id === "basic"
-      ? "Create stronger applications without rewriting your CV manually for every role."
-      : "Generate unlimited tailored CVs and cover letters so every application matches the job description better."}
-  </p>
-</div>
+            <div
+              className={`mt-4 rounded-2xl border p-3 ${
+                plan.id === "pro"
+                  ? "bg-white/10 border-white/10"
+                  : "bg-slate-50 border-slate-100"
+              }`}
+            >
+              <p
+                className={`text-xs font-black ${
+                  plan.id === "pro" ? "text-blue-300" : "text-slate-900"
+                }`}
+              >
+                {plan.id === "trial"
+                  ? "Try the full CV builder before paying."
+                  : plan.id === "basic"
+                  ? "Best if you are applying to a few jobs each month."
+                  : "Best if you are actively applying to multiple jobs."}
+              </p>
 
-      <div className="mt-5 flex items-end gap-2">
-        <span className="text-4xl font-black">{plan.price}</span>
-        <span className="text-sm mb-1 text-gray-500">
-          {plan.sub}
-        </span>
-      </div>
+              <p
+                className={`mt-1 text-xs leading-5 ${
+                  plan.id === "pro" ? "text-white/60" : "text-slate-500"
+                }`}
+              >
+                {plan.id === "trial"
+                  ? "Generate your CV, cover letter, keywords, and PDF during the trial. Cancel before 7 days and pay £0."
+                  : plan.id === "basic"
+                  ? "Create stronger applications without rewriting your CV manually for every role."
+                  : "Generate unlimited tailored CVs and cover letters, then edit them in the Pro Document Editor with AI tools, formatting, PDF export, and DOCX export."}
+              </p>
+            </div>
 
-      {plan.trial && (
-        <div className="mt-4 rounded-2xl bg-green-50 border border-green-200 p-3">
-          <p className="text-sm font-bold text-green-700">
-            Free for 7 days
-          </p>
-          <p className="text-xs text-green-700 mt-1">
-            Pay £0 today. Then £9.99/month unless cancelled.
-          </p>
-        </div>
-      )}
+            <div className="mt-5 flex items-end gap-2">
+              <span className="text-4xl font-black">{plan.price}</span>
+              <span
+                className={`text-sm mb-1 ${
+                  plan.id === "pro" ? "text-white/50" : "text-gray-500"
+                }`}
+              >
+                {plan.sub}
+              </span>
+            </div>
 
-      <ul
-  className={`mt-5 space-y-2 text-sm ${
-    plan.id === "pro" ? "text-white/75" : "text-gray-600"
-  }`}
->
-        {plan.features.map((feature) => (
-          <li key={feature} className="flex gap-2">
-            <span className="text-green-600 font-black">✓</span>
-            <span>{feature}</span>
-          </li>
+            {plan.trial && (
+              <div className="mt-4 rounded-2xl bg-green-50 border border-green-200 p-3">
+                <p className="text-sm font-bold text-green-700">
+                  Free for 7 days
+                </p>
+                <p className="text-xs text-green-700 mt-1">
+                  Pay £0 today. Then £9.99/month unless cancelled.
+                </p>
+              </div>
+            )}
+
+            <ul
+              className={`mt-5 space-y-2 text-sm ${
+                plan.id === "pro" ? "text-white/75" : "text-gray-600"
+              }`}
+            >
+              {plan.features.map((feature) => (
+                <li key={feature} className="flex gap-2">
+                  <span className="text-green-600 font-black">✓</span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => startCheckout(plan.id)}
+              className={`w-full mt-6 py-3 rounded-2xl font-bold transition ${
+                plan.id === "pro"
+                  ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
+                  : plan.trial
+                  ? "bg-green-600 text-white hover:bg-green-700 shadow-lg"
+                  : "bg-black text-white hover:bg-gray-800"
+              }`}
+            >
+              {plan.button}
+            </button>
+          </div>
         ))}
-      </ul>
-
-      <button
-        onClick={() => startCheckout(plan.id)}
-        className={`w-full mt-6 py-3 rounded-2xl font-bold transition ${
-  plan.id === "pro"
-    ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
-    : plan.trial
-    ? "bg-green-600 text-white hover:bg-green-700 shadow-lg"
-    : "bg-black text-white hover:bg-gray-800"
-}`}
-      >
-        {plan.button}
-      </button>
-    </div>
-  ))}
-</section>
+      </section>
 
       {/* TRUST SECTION */}
       <section className="max-w-5xl mx-auto px-6 mt-10 grid md:grid-cols-3 gap-4">
@@ -356,28 +361,43 @@ export default function PricingPage() {
             <div>
               <h3 className="font-semibold">Is it really free for 7 days?</h3>
               <p className="text-gray-500 mt-1">
-                Yes. You pay £0 today. If you cancel before the 7-day trial ends, you will not be charged.
+                Yes. You pay £0 today. If you cancel before the 7-day trial
+                ends, you will not be charged.
               </p>
             </div>
 
             <div>
               <h3 className="font-semibold">What happens after 7 days?</h3>
               <p className="text-gray-500 mt-1">
-                If you do not cancel, your trial continues as a paid subscription at £9.99/month.
+                If you do not cancel, your trial continues as a paid
+                subscription at £9.99/month.
               </p>
             </div>
 
             <div>
               <h3 className="font-semibold">Why is a card required?</h3>
               <p className="text-gray-500 mt-1">
-                A card is required to activate the trial and continue service after the trial period if you choose not to cancel.
+                A card is required to activate the trial and continue service
+                after the trial period if you choose not to cancel.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold">
+                Is the Pro Document Editor included in Basic?
+              </h3>
+              <p className="text-gray-500 mt-1">
+                No. The Pro Document Editor is included only in the Pro plan.
+                Basic users can generate and download CVs, but advanced editing
+                tools are Pro-only.
               </p>
             </div>
 
             <div>
               <h3 className="font-semibold">What happens after checkout?</h3>
               <p className="text-gray-500 mt-1">
-                You will unlock your full CV, cover letter, ATS keywords, and download options.
+                You will unlock your full CV, cover letter, ATS keywords, and
+                available download options based on your plan.
               </p>
             </div>
           </div>

@@ -10,6 +10,7 @@ import { Document, Packer, Paragraph, TextRun } from "docx";
 import { saveAs } from "file-saver";
 import EmojiBackground from "@/app/components/EmojiBackground";
 import HiredAtBox from "@/app/components/HiredAtBox";
+import mammoth from "mammoth";
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -162,6 +163,26 @@ useEffect(() => {
     await navigator.clipboard.writeText(value);
     alert(`${label} copied!`);
   };
+  const handleWordUpload = async (file: File) => {
+  if (!file) return;
+
+  if (!file.name.endsWith(".docx")) {
+    alert("Please upload a DOCX file");
+    return;
+  }
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+
+    const result = await mammoth.extractRawText({
+      arrayBuffer,
+    });
+
+    setText(result.value);
+  } catch {
+    alert("Could not read this Word file");
+  }
+};
   const rephraseDocument = async (type: "cv" | "cover") => {
   const content = type === "cv" ? cv : coverLetter;
 
@@ -205,6 +226,30 @@ useEffect(() => {
   } finally {
     setRephrasing(null);
   }
+};
+    
+  const openEditor = (type: "cv" | "cover") => {
+  if (!session) {
+    router.push("/login");
+    return;
+  }
+
+  const content = type === "cv" ? cv : coverLetter;
+
+  if (!content) {
+    alert(type === "cv" ? "CV is empty" : "Cover letter is empty");
+    return;
+  }
+
+  sessionStorage.setItem(
+    "jobify_editor_title",
+    type === "cv" ? "Edited CV" : "Edited Cover Letter"
+  );
+
+  sessionStorage.setItem("jobify_editor_content", content);
+  sessionStorage.setItem("jobify_editor_type", type);
+
+  router.push("/editor");
 };
 
   const downloadPDF = (title: string, content: string, fileName: string) => {
@@ -1073,8 +1118,8 @@ const previousSetupStep = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
      {showSetupPopup && (
-  <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 py-6 backdrop-blur-2xl md:items-center">
-    <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-slate-950/80 px-4 py-6 backdrop-blur-2xl">
+    <div className="relative my-auto w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
@@ -1321,7 +1366,7 @@ const previousSetupStep = () => {
   </div>
 )}
 
-{(loading || rephrasing) && (
+  {(loading || rephrasing) && (
   <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-white/80 px-4 backdrop-blur-xl">
     <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
@@ -1522,7 +1567,7 @@ const previousSetupStep = () => {
                   </div>
 
                   {showUnlock && (
-  <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
     <button
       onClick={() =>
         isUnlocked
@@ -1552,6 +1597,13 @@ const previousSetupStep = () => {
     >
       {rephrasing === "cv" ? "Rephrasing..." : "✨ Rephrase CV"}
     </button>
+      <button
+  onClick={() => openEditor("cv")}
+  className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50"
+>
+  ✏️ Edit CV
+</button>
+   
   </div>
 )}
                 </div>
@@ -1616,7 +1668,7 @@ const previousSetupStep = () => {
                   </div>
 
                   {showUnlock && (
-  <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
     <button
       onClick={() =>
         isUnlocked
@@ -1654,6 +1706,12 @@ const previousSetupStep = () => {
     >
       {rephrasing === "cover" ? "Rephrasing..." : "✨ Rephrase"}
     </button>
+      <button
+  onClick={() => openEditor("cover")}
+  className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
+>
+  ✏️ Edit Letter
+</button>
   </div>
 )}
                 </div>
@@ -1848,7 +1906,15 @@ const previousSetupStep = () => {
                     REQUIRED
                   </span>
                 </div>
-
+                <input
+  type="file"
+  accept=".docx"
+  onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file) handleWordUpload(file);
+  }}
+  className="mb-3 w-full rounded-2xl border border-blue-100 bg-white p-3 text-sm font-semibold text-slate-600"
+/>
                 <textarea
                   className="w-full border border-blue-100 bg-white p-3 md:p-4 rounded-2xl h-44 md:h-64 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none shadow-inner text-sm leading-6"
                   placeholder="Paste your CV here...
@@ -2075,71 +2141,7 @@ Company requirements"
         .animate-softPulse {
           animation: softPulse 1.6s ease-in-out infinite;
         }
-        @keyframes jobifyPop {
-  from {
-    opacity: 0;
-    transform: scale(0.94) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes jobifyFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(3deg);
-  }
-}
-
-@keyframes dotBounce {
-  0%, 100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translateY(-6px);
-    opacity: 1;
-  }
-}
-
-.animate-jobifyPop {
-  animation: jobifyPop 0.35s ease-out;
-}
-
-.animate-jobifyFloat {
-  animation: jobifyFloat 1.8s ease-in-out infinite;
-}
-
-.animate-dotOne {
-  animation: dotBounce 0.9s ease-in-out infinite;
-}
-
-.animate-dotTwo {
-  animation: dotBounce 0.9s ease-in-out infinite 0.15s;
-}
-
-.animate-dotThree {
-  animation: dotBounce 0.9s ease-in-out infinite 0.3s;
-}  
-  @keyframes loadingBar {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(160%);
-  }
-}
-
-.animate-loadingBar {
-  animation: loadingBar 1.15s ease-in-out infinite;
-}
-
-    
-}
+        
     
       @keyframes cookIn {
   from {
