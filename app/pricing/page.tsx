@@ -1,15 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import EmojiBackground from "@/app/components/EmojiBackground";
-import { useSearchParams } from "next/navigation";
 
 export default function PricingPage() {
   const router = useRouter();
-const searchParams = useSearchParams();
-const upgrade = searchParams.get("upgrade");
   const { data: session } = useSession();
+
+  const [upgrade, setUpgrade] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setUpgrade(params.get("upgrade"));
+  }, []);
 
   const startCheckout = (plan: string) => {
     if (!session) {
@@ -77,14 +82,14 @@ const upgrade = searchParams.get("upgrade");
       highlight: true,
       trial: false,
       features: [
-  "Unlimited CV generations",
-  "Unlimited cover letters",
-  "Advanced ATS optimisation",
-  "Document Editor included",
-  "AI Polish, Grammar Fix, and ATS Improve",
-  "PDF and DOCX export",
-  "Autosave while editing",
-],
+        "Unlimited CV generations",
+        "Unlimited cover letters",
+        "Advanced ATS optimisation",
+        "Document Editor included",
+        "AI Polish, Grammar Fix, and ATS Improve",
+        "PDF and DOCX export",
+        "Autosave while editing",
+      ],
     },
   ];
 
@@ -273,6 +278,18 @@ const upgrade = searchParams.get("upgrade");
                   : "Generate unlimited tailored CVs and cover letters, then edit them in the Pro Document Editor with AI tools, formatting, PDF export, and DOCX export."}
               </p>
             </div>
+
+            {plan.id === "pro" && upgrade === "pro" && (
+              <div className="mt-4 rounded-2xl border border-blue-400/30 bg-blue-500/10 p-3">
+                <p className="text-sm font-black text-blue-300">
+                  Pro required for File Editor
+                </p>
+                <p className="mt-1 text-xs text-white/70">
+                  Subscribe to Pro to unlock document editing, AI polish tools,
+                  and PDF/DOCX export.
+                </p>
+              </div>
+            )}
 
             <div className="mt-5 flex items-end gap-2">
               <span className="text-4xl font-black">{plan.price}</span>
