@@ -176,21 +176,22 @@ export default function JobsPage() {
 setFilesSaved(true);
 setSaving(false);
 
-  const saved = await saveApplication("applied");
-  if (!saved) return;
+  const emailRes = await fetch("/api/applications/confirm-email", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    job_title: currentJob.title,
+    company: currentJob.company,
+    location: currentJob.location,
+  }),
+});
 
-  await fetch("/api/applications/confirm-email", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      job_title: currentJob.title,
-      company: currentJob.company,
-      location: currentJob.location,
-    }),
-  });
-
+if (!emailRes.ok) {
+  const emailError = await emailRes.json();
+  alert(emailError?.error || "Application saved, but email was not sent.");
+}
   setCardAction("right");
   setMessage(`Application recorded for ${currentJob.company}. Email sent.`);
   setTimeout(nextJob, 550);

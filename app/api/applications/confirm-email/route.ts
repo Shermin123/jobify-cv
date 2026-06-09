@@ -15,6 +15,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json(
+        { error: "Missing RESEND_API_KEY" },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
 
     const jobTitle = body.job_title || "the job";
@@ -22,7 +29,7 @@ export async function POST(req: Request) {
     const location = body.location || "Not specified";
 
     const { error } = await resend.emails.send({
-      from: "Jobify.cv <no-reply@jobify.cv>",
+      from: "Jobify.cv <onboarding@resend.dev>",
       to: token.email,
       subject: "Your job application has been recorded",
       html: `
