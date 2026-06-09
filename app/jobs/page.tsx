@@ -81,6 +81,11 @@ export default function JobsPage() {
   const [cardAction, setCardAction] = useState<"left" | "right" | "up" | null>(
     null
   );
+  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(
+  null
+);
+const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+const [isDragging, setIsDragging] = useState(false);
 
   const currentJob = jobs[currentIndex];
 
@@ -301,6 +306,64 @@ export default function JobsPage() {
       : cardAction === "up"
       ? "-translate-y-8 opacity-0 scale-[0.97]"
       : "translate-x-0 translate-y-0 opacity-100 scale-100";
+      const dragHint =
+  dragOffset.x > 70
+    ? "APPLY"
+    : dragOffset.x < -70
+    ? "DECLINE"
+    : dragOffset.y < -70
+    ? "SKIP"
+    : "";
+
+const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
+  if (saving || searching || !currentJob) return;
+
+  setIsDragging(true);
+  setDragStart({ x: e.clientX, y: e.clientY });
+  e.currentTarget.setPointerCapture(e.pointerId);
+};
+
+const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
+  if (!isDragging || !dragStart) return;
+
+  setDragOffset({
+    x: e.clientX - dragStart.x,
+    y: e.clientY - dragStart.y,
+  });
+};
+
+const handlePointerUp = () => {
+  if (!isDragging) return;
+
+  const { x, y } = dragOffset;
+
+  setIsDragging(false);
+  setDragStart(null);
+  setDragOffset({ x: 0, y: 0 });
+
+  if (x > 120) {
+    handleApply();
+    return;
+  }
+
+  if (x < -120) {
+    handleDecline();
+    return;
+  }
+
+  if (y < -110) {
+    handleSkip();
+  }
+};
+
+const dragStyle = isDragging
+  ? {
+      transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${
+        dragOffset.x / 18
+      }deg)`,
+      transition: "none",
+    }
+  : undefined;
 
   return (
     <main className="min-h-screen bg-[#f3f2ef] text-[#191919]">
@@ -564,168 +627,202 @@ export default function JobsPage() {
 
                 <section className="min-w-0">
   {currentJob ? (
-    <article
-      className={`group relative overflow-hidden rounded-[32px] border border-[#d6d6d6] bg-white shadow-[0_18px_70px_rgba(0,0,0,0.08)] transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-[0_30px_100px_rgba(10,102,194,0.18)] ${cardAnimation}`}
-    >
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#0a66c2]/10 blur-3xl transition-all duration-700 group-hover:scale-125 group-hover:bg-[#0a66c2]/20" />
+    <div className="mx-auto w-full max-w-[430px]">
+      <div className="relative min-h-[650px] touch-none">
+        <div className="absolute left-1/2 top-7 h-[590px] w-[88%] -translate-x-1/2 rounded-[34px] border border-[#d6d6d6] bg-white/55 shadow-sm" />
+        <div className="absolute left-1/2 top-3 h-[610px] w-[94%] -translate-x-1/2 rounded-[36px] border border-[#d6d6d6] bg-white/80 shadow-sm" />
 
-      <div className="relative bg-gradient-to-br from-[#0a66c2] via-[#0758a8] to-[#003b73] p-6 text-white sm:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-black text-white">
-              {currentJob.type || "Job"}
-            </span>
+        {dragHint && (
+          <div
+            className={
+              dragHint === "APPLY"
+                ? "absolute right-6 top-12 z-30 rotate-12 rounded-2xl border-4 border-green-500 bg-white/90 px-5 py-2 text-2xl font-black text-green-600 shadow-xl"
+                : dragHint === "DECLINE"
+                ? "absolute left-6 top-12 z-30 -rotate-12 rounded-2xl border-4 border-red-500 bg-white/90 px-5 py-2 text-2xl font-black text-red-600 shadow-xl"
+                : "absolute left-1/2 top-12 z-30 -translate-x-1/2 rounded-2xl border-4 border-[#0a66c2] bg-white/90 px-5 py-2 text-2xl font-black text-[#0a66c2] shadow-xl"
+            }
+          >
+            {dragHint}
+          </div>
+        )}
 
-            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white/80">
-              {currentJob.posted || "Recently posted"}
-            </span>
+        <article
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={dragStyle}
+          className={`group relative z-20 overflow-hidden rounded-[34px] border border-[#d6d6d6] bg-white shadow-[0_26px_90px_rgba(0,0,0,0.14)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_34px_100px_rgba(10,102,194,0.18)] ${cardAnimation}`}
+        >
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#0a66c2] via-[#0758a8] to-[#003b73] p-5 text-white">
+            <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-white/15 blur-3xl transition duration-700 group-hover:scale-125" />
 
-            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white/80">
-              {currentJob.source || "Job board"}
-            </span>
+            <div className="relative flex items-start justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-black text-white">
+                  {currentJob.type || "Job"}
+                </span>
+
+                <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold text-white/80">
+                  {currentJob.posted || "Recently posted"}
+                </span>
+              </div>
+
+              <div className="rounded-2xl bg-white px-3 py-2 text-center text-[#0a66c2] shadow-lg">
+                <p className="text-lg font-black">
+                  {currentJob.matchScore ?? Math.round(progress)}%
+                </p>
+                <p className="text-[9px] font-black uppercase">Match</p>
+              </div>
+            </div>
+
+            <div className="relative mt-7">
+              <p className="text-sm font-bold text-white/70">
+                {currentJob.company}
+              </p>
+
+              <h2 className="mt-2 text-2xl font-black leading-tight tracking-tight sm:text-3xl">
+                {currentJob.title}
+              </h2>
+
+              <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-white/85">
+                <span className="rounded-full bg-black/15 px-3 py-2">
+                  📍 {currentJob.location}
+                </span>
+
+                <span className="rounded-full bg-black/15 px-3 py-2">
+                  💰 {currentJob.salary}
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="rounded-2xl bg-white px-4 py-3 text-center text-[#0a66c2] shadow-lg transition-all duration-500 group-hover:scale-105">
-            <p className="text-xl font-black">
-              {currentJob.matchScore ?? Math.round(progress)}%
-            </p>
-            <p className="text-[10px] font-black uppercase tracking-wide">
-              Match
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-8">
-          <p className="text-sm font-bold text-white/70">
-            {currentJob.company}
-          </p>
-
-          <h2 className="mt-3 text-3xl font-black leading-tight tracking-tight sm:text-5xl">
-            {currentJob.title}
-          </h2>
-
-          <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold text-white/85">
-            <span className="rounded-full bg-black/15 px-4 py-2">
-              📍 {currentJob.location}
-            </span>
-
-            <span className="rounded-full bg-black/15 px-4 py-2">
-              💰 {currentJob.salary}
-            </span>
-
-            {currentJob.smartReason && (
-              <span className="rounded-full bg-white px-4 py-2 text-[#0a66c2]">
-                ✨ {currentJob.smartReason}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="p-5 sm:p-7">
-        <div className="grid gap-3 sm:grid-cols-3">
-          <InfoBox label="Location" value={currentJob.location} />
-          <InfoBox label="Salary" value={currentJob.salary} />
-          <InfoBox
-            label="Apply link"
-            value={currentJob.applyUrl ? "Available" : "Not listed"}
-          />
-        </div>
-
-        <div className="mt-5 overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
-          <div className="border-b border-neutral-200 bg-[#f8fafd] p-5">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <h3 className="text-xl font-black text-[#191919]">
-                  About this job
-                </h3>
-                <p className="mt-1 text-sm font-semibold text-neutral-500">
-                  Important details from the listing
+          <div className="p-4">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
+                <p className="text-[10px] font-black uppercase text-neutral-400">
+                  Link
+                </p>
+                <p className="mt-1 text-xs font-black">
+                  {currentJob.applyUrl ? "Yes" : "No"}
                 </p>
               </div>
 
-              <span className="rounded-full bg-[#eef3f8] px-4 py-2 text-xs font-black text-[#0a66c2]">
-                Job {currentIndex + 1} of {jobs.length}
-              </span>
+              <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
+                <p className="text-[10px] font-black uppercase text-neutral-400">
+                  Source
+                </p>
+                <p className="mt-1 truncate text-xs font-black">
+                  {currentJob.source || "Job"}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
+                <p className="text-[10px] font-black uppercase text-neutral-400">
+                  Card
+                </p>
+                <p className="mt-1 text-xs font-black">
+                  {currentIndex + 1}/{jobs.length}
+                </p>
+              </div>
             </div>
 
-            <p className="mt-5 text-sm leading-7 text-neutral-700">
-              {currentJob.summary || currentJob.description}
-            </p>
-          </div>
+            <div className="mt-4 rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-lg font-black text-[#191919]">
+                    About this job
+                  </h3>
+                  <p className="mt-1 text-xs font-semibold text-neutral-500">
+                    Important details only
+                  </p>
+                </div>
 
-          <div className="p-5">
-            <div className="rounded-2xl bg-[#f8fafd] p-4">
-              <p className="text-xs font-black uppercase tracking-wide text-neutral-400">
-                Why this job stands out
+                {currentJob.smartReason && (
+                  <span className="rounded-full bg-[#eef3f8] px-3 py-1 text-[11px] font-black text-[#0a66c2]">
+                    {currentJob.smartReason}
+                  </span>
+                )}
+              </div>
+
+              <p className="mt-4 line-clamp-5 text-sm leading-7 text-neutral-700">
+                {currentJob.summary || currentJob.description}
               </p>
 
-              <ul className="mt-3 space-y-2">
-                {(currentJob.highlights || [currentJob.description])
-                  .slice(0, 3)
-                  .map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-3 text-sm leading-6 text-neutral-700"
+              <div className="mt-4 rounded-2xl bg-[#f8fafd] p-3">
+                <p className="text-[10px] font-black uppercase tracking-wide text-neutral-400">
+                  Why it stands out
+                </p>
+
+                <ul className="mt-2 space-y-2">
+                  {(currentJob.highlights || [currentJob.description])
+                    .slice(0, 2)
+                    .map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex gap-2 text-xs leading-5 text-neutral-700"
+                      >
+                        <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0a66c2] text-[9px] font-black text-white">
+                          ✓
+                        </span>
+                        <span className="line-clamp-2">{item}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(currentJob.skills || currentJob.tags || [])
+                  .slice(0, 4)
+                  .map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-[#0a66c2]/20 bg-[#eef3f8] px-3 py-1 text-[11px] font-bold text-[#0a66c2]"
                     >
-                      <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0a66c2] text-[10px] font-black text-white">
-                        ✓
-                      </span>
-                      <span>{item}</span>
-                    </li>
+                      {item}
+                    </span>
                   ))}
-              </ul>
+              </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {(currentJob.skills || currentJob.tags || [])
-                .slice(0, 6)
-                .map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-[#0a66c2]/20 bg-[#eef3f8] px-3 py-1.5 text-xs font-bold text-[#0a66c2] transition-all duration-300 hover:bg-[#0a66c2] hover:text-white"
-                  >
-                    {item}
-                  </span>
-                ))}
+            <div className="mt-4 grid grid-cols-3 gap-2 rounded-3xl bg-[#f8fafd] p-2">
+              <button
+                onClick={handleDecline}
+                disabled={saving || searching || !currentJob}
+                className="rounded-2xl border border-red-100 bg-white py-3 text-xs font-black text-red-600 transition active:scale-95 hover:bg-red-50 disabled:opacity-40"
+              >
+                ✕
+                <span className="mt-1 block">Decline</span>
+              </button>
+
+              <button
+                onClick={handleSkip}
+                disabled={saving || searching || !currentJob}
+                className="rounded-2xl border border-neutral-200 bg-white py-3 text-xs font-black text-neutral-700 transition active:scale-95 hover:bg-neutral-100 disabled:opacity-40"
+              >
+                ↑
+                <span className="mt-1 block">Skip</span>
+              </button>
+
+              <button
+                onClick={handleApply}
+                disabled={saving || searching || !currentJob}
+                className="group relative overflow-hidden rounded-2xl bg-[#0a66c2] py-3 text-xs font-black text-white shadow-[0_12px_30px_rgba(10,102,194,0.25)] transition active:scale-95 hover:bg-[#004182] disabled:opacity-40"
+              >
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                <span className="relative">Apply</span>
+              </button>
             </div>
+
+            <p className="mt-3 text-center text-[11px] font-bold text-neutral-400">
+              Swipe right to apply · left to decline · up to skip
+            </p>
           </div>
-        </div>
-
-        <div className="mt-6 rounded-3xl border border-neutral-200 bg-[#f8fafd] p-3">
-          <div className="grid gap-3 sm:grid-cols-3">
-            <button
-              onClick={handleApply}
-              disabled={saving || searching || !currentJob}
-              className="group relative overflow-hidden rounded-2xl bg-[#0a66c2] px-6 py-4 text-sm font-black text-white shadow-[0_14px_35px_rgba(10,102,194,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#004182] hover:shadow-[0_22px_55px_rgba(10,102,194,0.35)] disabled:opacity-40"
-            >
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-              <span className="relative">
-                {saving ? "Applying..." : "Apply now"}
-              </span>
-            </button>
-
-            <button
-              onClick={handleSkip}
-              disabled={saving || searching || !currentJob}
-              className="rounded-2xl border border-[#0a66c2]/25 bg-white px-6 py-4 text-sm font-black text-[#0a66c2] transition-all duration-300 hover:-translate-y-1 hover:bg-[#eef3f8] hover:shadow-md disabled:opacity-40"
-            >
-              Skip
-            </button>
-
-            <button
-              onClick={handleDecline}
-              disabled={saving || searching || !currentJob}
-              className="rounded-2xl border border-neutral-300 bg-white px-6 py-4 text-sm font-black text-neutral-700 transition-all duration-300 hover:-translate-y-1 hover:bg-neutral-100 hover:shadow-md disabled:opacity-40"
-            >
-              Decline
-            </button>
-          </div>
-        </div>
+        </article>
       </div>
-    </article>
+    </div>
   ) : (
-    <div className="rounded-3xl border border-[#d6d6d6] bg-white p-10 text-center shadow-sm">
+    <div className="mx-auto max-w-[430px] rounded-3xl border border-[#d6d6d6] bg-white p-10 text-center shadow-sm">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-xl bg-[#0a66c2] text-2xl font-black text-white">
         J
       </div>
