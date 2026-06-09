@@ -59,6 +59,7 @@ export default function JobsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [filesSaved, setFilesSaved] = useState(false);
   const [cardAction, setCardAction] = useState<"left" | "right" | "up" | null>(
     null
   );
@@ -167,12 +168,13 @@ export default function JobsPage() {
   });
 
   if (!uploadRes.ok) {
-    setSaving(false);
-    alert("Could not upload your CV and cover letter. Please try again.");
-    return;
-  }
-
   setSaving(false);
+  alert("Could not upload your CV and cover letter. Please try again.");
+  return;
+}
+
+setFilesSaved(true);
+setSaving(false);
 
   const saved = await saveApplication("applied");
   if (!saved) return;
@@ -235,7 +237,10 @@ export default function JobsPage() {
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx"
-                    onChange={(e) => setCvFile(e.target.files?.[0] || null)}
+                    onChange={(e) => {
+  setCvFile(e.target.files?.[0] || null);
+  setFilesSaved(false);
+}}
                     className="mt-3 w-full text-sm text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:font-bold file:text-white"
                   />
                   {cvFile && (
@@ -244,13 +249,21 @@ export default function JobsPage() {
                     </p>
                   )}
                 </label>
+                {filesSaved && (
+  <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-black text-green-700">
+    ✅ CV and cover letter saved securely
+  </div>
+)}
 
                 <label className="block rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   <span className="text-sm font-black">Upload Cover Letter</span>
                   <input
                     type="file"
                     accept=".pdf,.doc,.docx"
-                    onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
+                        onChange={(e) => {
+  setCoverFile(e.target.files?.[0] || null);
+  setFilesSaved(false);
+}}
                     className="mt-3 w-full text-sm text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-purple-600 file:px-4 file:py-2 file:font-bold file:text-white"
                   />
                   {coverFile && (
