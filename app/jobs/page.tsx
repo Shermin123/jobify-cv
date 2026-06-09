@@ -140,40 +140,59 @@ export default function JobsPage() {
   };
 
   const handleApply = async () => {
-    if (!session?.user?.email) {
-      router.push("/login");
-      return;
-    }
+  if (!session?.user?.email) {
+    router.push("/login");
+    return;
+  }
 
-    if (!cvFile) {
-      alert("Please upload your CV first.");
-      return;
-    }
+  if (!cvFile) {
+    alert("Please upload your CV first.");
+    return;
+  }
 
-    if (!coverFile) {
-      alert("Please upload your cover letter first.");
-      return;
-    }
+  if (!coverFile) {
+    alert("Please upload your cover letter first.");
+    return;
+  }
 
-    const saved = await saveApplication("applied");
-    if (!saved) return;
+  setSaving(true);
 
-    await fetch("/api/applications/confirm-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        job_title: currentJob.title,
-        company: currentJob.company,
-        location: currentJob.location,
-      }),
-    });
+  const formData = new FormData();
+  formData.append("cv", cvFile);
+  formData.append("coverLetter", coverFile);
 
-    setCardAction("right");
-    setMessage(`Application recorded for ${currentJob.company}. Email sent.`);
-    setTimeout(nextJob, 550);
-  };
+  const uploadRes = await fetch("/api/job-profile/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!uploadRes.ok) {
+    setSaving(false);
+    alert("Could not upload your CV and cover letter. Please try again.");
+    return;
+  }
+
+  setSaving(false);
+
+  const saved = await saveApplication("applied");
+  if (!saved) return;
+
+  await fetch("/api/applications/confirm-email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      job_title: currentJob.title,
+      company: currentJob.company,
+      location: currentJob.location,
+    }),
+  });
+
+  setCardAction("right");
+  setMessage(`Application recorded for ${currentJob.company}. Email sent.`);
+  setTimeout(nextJob, 550);
+};
 
   const cardAnimation =
     cardAction === "left"
