@@ -13,17 +13,19 @@ export default function Navbar() {
   const links = isLoggedIn
     ? [
         { name: "Dashboard", href: "/dashboard" },
+        { name: "Jobs", href: "/jobs" },
         { name: "AI CV Studio", href: "/upload" },
         { name: "File Editor", href: "/editor" },
         { name: "Documents", href: "/my-documents" },
         { name: "Pricing", href: "/pricing" },
       ]
-      : [
-    { name: "Home", href: "/" },
-    { name: "CV Score", href: "/#cv-score" },
-    { name: "File Editor", href: "/editor" },
-    { name: "Pricing", href: "/pricing" },
-  ];
+    : [
+        { name: "Home", href: "/" },
+        { name: "Jobs", href: "/jobs" },
+        { name: "CV Score", href: "/#cv-score" },
+        { name: "File Editor", href: "/editor" },
+        { name: "Pricing", href: "/pricing" },
+      ];
 
   const isActive = (href: string) => pathname === href;
 
@@ -64,19 +66,19 @@ export default function Navbar() {
                   </Link>
 
                   <Link
-  href="/editor"
-  className="rounded-full bg-blue-600 px-3 py-2 text-xs font-black text-white shadow-sm"
->
-  Editor
-</Link>
+                    href="/jobs"
+                    className="rounded-full bg-blue-600 px-3 py-2 text-xs font-black text-white shadow-sm"
+                  >
+                    Jobs
+                  </Link>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <Link
-                    href="/editor"
-                    className="rounded-full bg-slate-950 px-3 py-2 text-xs font-black text-white shadow-sm"
+                    href="/jobs"
+                    className="rounded-full bg-blue-600 px-3 py-2 text-xs font-black text-white shadow-sm"
                   >
-                    Edit
+                    Jobs
                   </Link>
 
                   <button
@@ -119,15 +121,15 @@ export default function Navbar() {
                 </Link>
 
                 <Link
-                  href="/upload"
+                  href="/jobs"
                   className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:shadow-xl"
                 >
-                  Start Free →
+                  Find Jobs →
                 </Link>
               </>
             ) : (
               <>
-                <div className="hidden lg:block max-w-[190px] text-right leading-tight">
+                <div className="hidden max-w-[190px] text-right leading-tight lg:block">
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
                     Signed in
                   </p>
@@ -137,15 +139,15 @@ export default function Navbar() {
                 </div>
 
                 <Link
-                  href="/editor"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                  href="/jobs"
+                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-700"
                 >
-                  Edit File
+                  Find Jobs
                 </Link>
 
                 <Link
                   href="/upload"
-                  className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-700"
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                 >
                   Create CV
                 </Link>
