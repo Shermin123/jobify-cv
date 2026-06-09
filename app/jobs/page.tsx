@@ -627,10 +627,10 @@ const dragStyle = isDragging
 
                 <section className="min-w-0">
   {currentJob ? (
-    <div className="mx-auto w-full max-w-[430px]">
-      <div className="relative min-h-[650px] touch-none">
-        <div className="absolute left-1/2 top-7 h-[590px] w-[88%] -translate-x-1/2 rounded-[34px] border border-[#d6d6d6] bg-white/55 shadow-sm" />
-        <div className="absolute left-1/2 top-3 h-[610px] w-[94%] -translate-x-1/2 rounded-[36px] border border-[#d6d6d6] bg-white/80 shadow-sm" />
+    <div className="mx-auto w-full max-w-[390px] sm:max-w-[430px]">
+  <div className="relative min-h-[570px] touch-none sm:min-h-[630px]">
+        <div className="absolute left-1/2 top-6 h-[520px] w-[86%] -translate-x-1/2 rounded-[30px] border border-[#d6d6d6] bg-white/50 shadow-sm sm:h-[580px]" />
+<div className="absolute left-1/2 top-3 h-[540px] w-[93%] -translate-x-1/2 rounded-[32px] border border-[#d6d6d6] bg-white/80 shadow-sm sm:h-[600px]" />
 
         {dragHint && (
           <div
@@ -652,9 +652,9 @@ const dragStyle = isDragging
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
           style={dragStyle}
-          className={`group relative z-20 overflow-hidden rounded-[34px] border border-[#d6d6d6] bg-white shadow-[0_26px_90px_rgba(0,0,0,0.14)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_34px_100px_rgba(10,102,194,0.18)] ${cardAnimation}`}
+          className={`group relative z-20 overflow-hidden rounded-[30px] border border-[#d6d6d6] bg-white shadow-[0_18px_60px_rgba(0,0,0,0.12)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(10,102,194,0.16)] ${cardAnimation}`}
         >
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#0a66c2] via-[#0758a8] to-[#003b73] p-5 text-white">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#0a66c2] via-[#0758a8] to-[#003b73] p-4 text-white sm:p-5">
             <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-white/15 blur-3xl transition duration-700 group-hover:scale-125" />
 
             <div className="relative flex items-start justify-between gap-3">
@@ -681,7 +681,7 @@ const dragStyle = isDragging
                 {currentJob.company}
               </p>
 
-              <h2 className="mt-2 text-2xl font-black leading-tight tracking-tight sm:text-3xl">
+              <h2 className="mt-2 text-xl font-black leading-tight tracking-tight sm:text-3xl">
                 {currentJob.title}
               </h2>
 
@@ -697,7 +697,7 @@ const dragStyle = isDragging
             </div>
           </div>
 
-          <div className="p-4">
+          <div className="p-3 sm:p-4">
             <div className="grid grid-cols-3 gap-2">
               <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
                 <p className="text-[10px] font-black uppercase text-neutral-400">
@@ -745,7 +745,7 @@ const dragStyle = isDragging
                 )}
               </div>
 
-              <p className="mt-4 line-clamp-5 text-sm leading-7 text-neutral-700">
+              <p className="mt-3 line-clamp-4 text-sm leading-6 text-neutral-700">
                 {currentJob.summary || currentJob.description}
               </p>
 
