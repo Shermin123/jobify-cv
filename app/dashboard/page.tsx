@@ -1,13 +1,25 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import EmojiBackground from "@/app/components/EmojiBackground";
 
+  type JobApplication = {
+  id: string;
+  job_title: string;
+  company: string | null;
+  location: string | null;
+  salary: string | null;
+  job_type: string | null;
+  status: "applied" | "skipped" | "declined";
+  created_at: string;
+};
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [applications, setApplications] = useState<JobApplication[]>([]);
+const [appsLoading, setAppsLoading] = useState(false);
 
   const handleManageSubscription = async () => {
     if (!session?.user?.email) {
@@ -44,6 +56,24 @@ export default function Dashboard() {
       </main>
     );
   }
+    useEffect(() => {
+  const loadApplications = async () => {
+    if (!session?.user?.email) return;
+
+    setAppsLoading(true);
+
+    const res = await fetch("/api/applications");
+    const data = await res.json();
+
+    if (res.ok) {
+      setApplications(data.applications || []);
+    }
+
+    setAppsLoading(false);
+  };
+
+  loadApplications();
+}, [session?.user?.email]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white text-slate-900">
@@ -221,6 +251,99 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
+          {/* RECENT JOB APPLICATIONS */}
+<div className="mt-8 rounded-[2rem] border bg-white p-6 md:p-8 shadow-sm">
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <p className="text-sm font-black text-blue-600 uppercase tracking-widest">
+        Job Applications
+      </p>
+      <h2 className="mt-2 text-3xl font-black text-slate-900">
+        Recent Job Applications
+      </h2>
+      <p className="mt-2 text-sm text-slate-500">
+        Track jobs you applied, skipped, or declined from One-Tap Apply.
+      </p>
+    </div>
+
+    <button
+      onClick={() => router.push("/jobs")}
+      className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-black text-white hover:bg-slate-800 transition"
+    >
+      Find More Jobs
+    </button>
+  </div>
+
+  <div className="mt-6">
+    {appsLoading ? (
+      <div className="rounded-3xl bg-slate-50 border p-6 text-center text-sm font-bold text-slate-500">
+        Loading applications...
+      </div>
+    ) : applications.length === 0 ? (
+      <div className="rounded-3xl bg-slate-50 border p-6 text-center">
+        <div className="text-4xl">💼</div>
+        <h3 className="mt-3 text-xl font-black text-slate-900">
+          No job applications yet
+        </h3>
+        <p className="mt-2 text-sm text-slate-500">
+          Start using One-Tap Apply to save your job activity here.
+        </p>
+        <button
+          onClick={() => router.push("/jobs")}
+          className="mt-5 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white hover:bg-blue-700 transition"
+        >
+          Start Applying
+        </button>
+      </div>
+    ) : (
+      <div className="grid gap-3">
+        {applications.map((app) => {
+          const statusStyle =
+            app.status === "applied"
+              ? "bg-green-50 text-green-700 border-green-200"
+              : app.status === "skipped"
+              ? "bg-slate-50 text-slate-700 border-slate-200"
+              : "bg-red-50 text-red-700 border-red-200";
+
+          return (
+            <div
+              key={app.id}
+              className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-3xl border bg-slate-50 p-5"
+            >
+              <div>
+                <h3 className="text-lg font-black text-slate-900">
+                  {app.job_title}
+                </h3>
+
+                <p className="mt-1 text-sm font-semibold text-slate-500">
+                  {app.company || "Company not specified"} •{" "}
+                  {app.location || "Location not specified"}
+                </p>
+
+                <p className="mt-1 text-xs text-slate-400">
+                  {app.salary || "Salary not listed"} •{" "}
+                  {app.job_type || "Job type not listed"}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span
+                  className={`rounded-full border px-4 py-2 text-xs font-black capitalize ${statusStyle}`}
+                >
+                  {app.status}
+                </span>
+
+                <span className="text-xs font-semibold text-slate-400">
+                  {new Date(app.created_at).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+</div>
 
         {/* WHY IT WORKS */}
         <div className="mt-8 rounded-[2rem] border bg-white p-6 md:p-8 shadow-sm">
