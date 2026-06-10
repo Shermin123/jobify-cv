@@ -15,12 +15,14 @@ export default function Navbar() {
         { name: "Dashboard", href: "/dashboard" },
         { name: "Auto Apply", href: "/jobs" },
         { name: "AI CV Studio", href: "/upload" },
+        { name: "Pricing", href: "/pricing" },
         { name: "File Editor", href: "/editor" },
         { name: "Documents", href: "/my-documents" },
       ]
     : [
         { name: "Home", href: "/" },
         { name: "Jobs", href: "/jobs" },
+        { name: "Pricing", href: "/pricing" },
         { name: "CV Score", href: "/#cv-score" },
         { name: "File Editor", href: "/editor" },
       ];
@@ -97,6 +99,13 @@ export default function Navbar() {
               Create CV
             </Link>
 
+            <Link
+              href="/pricing"
+              className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-black text-amber-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-amber-100 hover:shadow-md"
+            >
+              Pricing
+            </Link>
+
             {isLoggedIn ? (
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
@@ -121,6 +130,13 @@ export default function Navbar() {
               className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
             >
               Jobs
+            </Link>
+
+            <Link
+              href="/pricing"
+              className="rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-black text-amber-700 shadow-sm transition hover:bg-amber-100"
+            >
+              Pricing
             </Link>
 
             {isLoggedIn ? (

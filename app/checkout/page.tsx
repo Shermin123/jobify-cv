@@ -13,6 +13,39 @@ function CheckoutContent() {
   const [loading, setLoading] = useState(false);
 
   const plan = params.get("plan") || "basic";
+  const country = params.get("country") || "UK";
+
+  const pricingByCountry: Record<
+    string,
+    {
+      countryLabel: string;
+      trial: string;
+      basic: string;
+      pro: string;
+    }
+  > = {
+    UK: {
+      countryLabel: "United Kingdom",
+      trial: "£0 today",
+      basic: "£9.99/month",
+      pro: "£19.99/month",
+    },
+    LOW: {
+      countryLabel: "Low-cost countries",
+      trial: "£0 today",
+      basic: "£1.99/month",
+      pro: "£4.99/month",
+    },
+    DEFAULT: {
+      countryLabel: "Other countries",
+      trial: "£0 today",
+      basic: "£4.99/month",
+      pro: "£9.99/month",
+    },
+  };
+
+  const selectedPricing =
+    pricingByCountry[country] || pricingByCountry.DEFAULT;
 
   const planDetails: Record<
     string,
@@ -26,21 +59,21 @@ function CheckoutContent() {
   > = {
     trial: {
       name: "7-Day Trial",
-      price: "£0 today",
+      price: selectedPricing.trial,
       note: "Start your free trial. Stripe will securely manage your subscription.",
       button: "Start Free Trial",
       badge: "FREE FOR 7 DAYS",
     },
     basic: {
       name: "Basic",
-      price: "£9.99/month",
+      price: selectedPricing.basic,
       note: "Perfect for students and active job seekers.",
       button: "Continue to Secure Checkout",
       badge: "MONTHLY PLAN",
     },
     pro: {
       name: "Pro",
-      price: "£19.99/month",
+      price: selectedPricing.pro,
       note: "Best for serious job seekers applying to multiple roles.",
       button: "Continue to Secure Checkout",
       badge: "BEST VALUE",
@@ -66,6 +99,7 @@ function CheckoutContent() {
         body: JSON.stringify({
           plan,
           email: session.user.email,
+          country,
         }),
       });
 
@@ -93,7 +127,7 @@ function CheckoutContent() {
   return (
     <main className="relative min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100 text-gray-900 overflow-hidden">
       <EmojiBackground />
-      {/* BACKGROUND */}
+
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-[-160px] left-[-120px] h-[420px] w-[420px] rounded-full bg-blue-200 blur-[140px] opacity-40" />
         <div className="absolute bottom-[-180px] right-[-120px] h-[520px] w-[520px] rounded-full bg-purple-200 blur-[160px] opacity-35" />
@@ -107,7 +141,6 @@ function CheckoutContent() {
 
       <section className="min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-5xl grid lg:grid-cols-[1fr_0.9fr] gap-6 items-center">
-          {/* TRUST SIDE */}
           <div className="bg-black text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute right-8 top-8 text-8xl opacity-10">
               🔐
@@ -122,7 +155,8 @@ function CheckoutContent() {
             </h1>
 
             <p className="text-white/70 mt-4 max-w-xl">
-              Your payment is processed securely by Stripe. Jobify does not store your card details.
+              Your payment is processed securely by Stripe. Jobify does not
+              store your card details.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-3 mt-8">
@@ -156,22 +190,23 @@ function CheckoutContent() {
             </div>
           </div>
 
-          {/* CHECKOUT CARD */}
           <div className="bg-white border rounded-3xl p-7 shadow-xl">
             <div className="text-center">
               <div className="inline-flex bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-xs font-bold">
                 {selectedPlan.badge}
               </div>
 
-              <h2 className="text-3xl font-bold mt-5">
-                Checkout
-              </h2>
+              <h2 className="text-3xl font-bold mt-5">Checkout</h2>
 
               <p className="text-gray-500 mt-2">
                 You selected{" "}
                 <span className="font-semibold text-black">
                   {selectedPlan.name}
                 </span>
+              </p>
+
+              <p className="mt-2 text-xs font-bold text-blue-600">
+                Region: {selectedPricing.countryLabel}
               </p>
             </div>
 
@@ -203,7 +238,8 @@ function CheckoutContent() {
                 🔐 Secure payment
               </h3>
               <p className="text-xs text-blue-700 mt-1">
-                You will be redirected to Stripe Checkout to complete your payment securely.
+                You will be redirected to Stripe Checkout to complete your
+                payment securely.
               </p>
             </div>
 

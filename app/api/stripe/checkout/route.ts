@@ -9,9 +9,42 @@ if (!stripeSecretKey) {
 
 const stripe = new Stripe(stripeSecretKey);
 
+function normalizeCountry(country: string) {
+  if (country === "LOW") return "LOW";
+  if (country === "UK") return "UK";
+  return "DEFAULT";
+}
+
+function getPriceId(plan: string, country: string) {
+  const selectedPlan = plan === "pro" ? "pro" : "basic";
+  const selectedCountry = normalizeCountry(country);
+
+  if (selectedPlan === "pro" && selectedCountry === "LOW") {
+    return process.env.STRIPE_PRO_PRICE_ID_LOW;
+  }
+
+  if (selectedPlan === "basic" && selectedCountry === "LOW") {
+    return process.env.STRIPE_BASIC_PRICE_ID_LOW;
+  }
+
+  if (selectedPlan === "pro" && selectedCountry === "UK") {
+    return process.env.STRIPE_PRO_PRICE_ID_UK;
+  }
+
+  if (selectedPlan === "basic" && selectedCountry === "UK") {
+    return process.env.STRIPE_BASIC_PRICE_ID_UK;
+  }
+
+  if (selectedPlan === "pro") {
+    return process.env.STRIPE_PRO_PRICE_ID_DEFAULT;
+  }
+
+  return process.env.STRIPE_BASIC_PRICE_ID_DEFAULT;
+}
+
 export async function POST(req: Request) {
   try {
-    const { plan, email } = await req.json();
+    const { plan, email, country } = await req.json();
 
     if (!email) {
       return NextResponse.json(
@@ -20,16 +53,17 @@ export async function POST(req: Request) {
       );
     }
 
+    const isTrial = plan === "trial";
     const selectedPlan = plan === "pro" ? "pro" : "basic";
+    const selectedCountry = normalizeCountry(country || "UK");
 
-    const priceId =
-      selectedPlan === "pro"
-        ? process.env.STRIPE_PRO_PRICE_ID
-        : process.env.STRIPE_BASIC_PRICE_ID;
+    const priceId = getPriceId(selectedPlan, selectedCountry);
 
     if (!priceId) {
       return NextResponse.json(
-        { error: "Stripe price ID is missing" },
+        {
+          error: `Stripe price ID is missing for ${selectedPlan} / ${selectedCountry}`,
+        },
         { status: 500 }
       );
     }
@@ -46,12 +80,17 @@ export async function POST(req: Request) {
         },
       ],
       metadata: {
-        plan: selectedPlan,
+        plan: isTrial ? "trial" : selectedPlan,
+        access_plan: selectedPlan,
+        country: selectedCountry,
         user_email: email,
       },
       subscription_data: {
+        trial_period_days: isTrial ? 7 : undefined,
         metadata: {
-          plan: selectedPlan,
+          plan: isTrial ? "trial" : selectedPlan,
+          access_plan: selectedPlan,
+          country: selectedCountry,
           user_email: email,
         },
       },

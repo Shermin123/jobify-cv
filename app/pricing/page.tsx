@@ -10,11 +10,66 @@ export default function PricingPage() {
   const { data: session } = useSession();
 
   const [upgrade, setUpgrade] = useState<string | null>(null);
+  const [country, setCountry] = useState("UK");
+const [detectingRegion, setDetectingRegion] = useState(true);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setUpgrade(params.get("upgrade"));
-  }, []);
+  const params = new URLSearchParams(window.location.search);
+  setUpgrade(params.get("upgrade"));
+
+  const detectRegion = async () => {
+    try {
+      const res = await fetch("/api/region");
+      const data = await res.json();
+
+      if (data?.region) {
+        setCountry(data.region);
+      }
+    } catch {
+      setCountry("UK");
+    } finally {
+      setDetectingRegion(false);
+    }
+  };
+
+  detectRegion();
+}, []);
+
+  const pricingByCountry: Record<
+    string,
+    {
+      countryLabel: string;
+      trialPrice: string;
+      basicPrice: string;
+      proPrice: string;
+      trialNote: string;
+    }
+  > = {
+    UK: {
+      countryLabel: "United Kingdom",
+      trialPrice: "£0",
+      basicPrice: "£9.99",
+      proPrice: "£19.99",
+      trialNote: "Then £9.99/month unless cancelled.",
+    },
+    LOW: {
+      countryLabel: "Low-cost countries",
+      trialPrice: "£0",
+      basicPrice: "£1.99",
+      proPrice: "£4.99",
+      trialNote: "Then £1.99/month unless cancelled.",
+    },
+    DEFAULT: {
+      countryLabel: "Other countries",
+      trialPrice: "£0",
+      basicPrice: "£4.99",
+      proPrice: "£9.99",
+      trialNote: "Then £4.99/month unless cancelled.",
+    },
+  };
+
+  const selectedPricing =
+    pricingByCountry[country] || pricingByCountry.DEFAULT;
 
   const startCheckout = (plan: string) => {
     if (!session) {
@@ -22,7 +77,7 @@ export default function PricingPage() {
       return;
     }
 
-    router.push(`/checkout?plan=${plan}`);
+    router.push(`/checkout?plan=${plan}&country=${country}`);
   };
 
   const plans = [
@@ -30,7 +85,7 @@ export default function PricingPage() {
       id: "trial",
       name: "7-Day Trial",
       label: "FREE FOR 7 DAYS",
-      price: "£0",
+      price: selectedPricing.trialPrice,
       sub: "today",
       description:
         "Try Jobify with full access before paying. Perfect for testing your first CV and cover letter.",
@@ -44,7 +99,7 @@ export default function PricingPage() {
         "CV score checker included",
         "Download your CV as PDF",
         "Try before paying",
-        "£0 today",
+        "Pay £0 today",
         "Cancel anytime before trial ends",
       ],
     },
@@ -52,7 +107,7 @@ export default function PricingPage() {
       id: "basic",
       name: "Basic",
       label: "Student friendly",
-      price: "£9.99",
+      price: selectedPricing.basicPrice,
       sub: "per month",
       description:
         "Best for students and job seekers applying to a few roles each month.",
@@ -74,7 +129,7 @@ export default function PricingPage() {
       id: "pro",
       name: "Pro",
       label: "Best value",
-      price: "£19.99",
+      price: selectedPricing.proPrice,
       sub: "per month",
       description:
         "For serious job seekers who want unlimited AI generation plus a full Pro document editor to customise, polish, and export final CVs and cover letters.",
@@ -131,7 +186,6 @@ export default function PricingPage() {
         <div className="absolute bottom-24 right-20 text-3xl opacity-10">✨</div>
       </div>
 
-      {/* HEADER */}
       <section className="max-w-6xl mx-auto text-center pt-6 px-6">
         <div className="inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2 text-xs md:text-sm shadow-sm">
           <span>🎁</span>
@@ -148,7 +202,7 @@ export default function PricingPage() {
           Start free today and access your ATS-optimised CV, personalised cover
           letter, keyword list, and PDF download.
         </p>
-
+        
         <div className="mt-5 flex flex-col sm:flex-row justify-center gap-3">
           <button
             onClick={() => startCheckout("trial")}
@@ -174,7 +228,6 @@ export default function PricingPage() {
         </p>
       </section>
 
-      {/* COMPACT COMPANY LOGOS */}
       <section className="max-w-5xl mx-auto px-6 mt-5">
         <div className="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -205,7 +258,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* PRICING CARDS */}
       <section
         id="plans"
         className="max-w-6xl mx-auto px-6 mt-7 grid md:grid-cols-3 gap-5"
@@ -272,7 +324,7 @@ export default function PricingPage() {
                 }`}
               >
                 {plan.id === "trial"
-                  ? "Generate your CV, cover letter, keywords, and PDF during the trial. Cancel before 7 days and pay £0."
+                  ? `Generate your CV, cover letter, keywords, and PDF during the trial. ${selectedPricing.trialNote}`
                   : plan.id === "basic"
                   ? "Create stronger applications without rewriting your CV manually for every role."
                   : "Generate unlimited tailored CVs and cover letters, then edit them in the Pro Document Editor with AI tools, formatting, PDF export, and DOCX export."}
@@ -308,7 +360,7 @@ export default function PricingPage() {
                   Free for 7 days
                 </p>
                 <p className="text-xs text-green-700 mt-1">
-                  Pay £0 today. Then £9.99/month unless cancelled.
+                  Pay £0 today. {selectedPricing.trialNote}
                 </p>
               </div>
             )}
@@ -342,7 +394,6 @@ export default function PricingPage() {
         ))}
       </section>
 
-      {/* TRUST SECTION */}
       <section className="max-w-5xl mx-auto px-6 mt-10 grid md:grid-cols-3 gap-4">
         <div className="bg-white border rounded-2xl p-5 text-center shadow-sm">
           <p className="text-2xl">🔐</p>
@@ -369,7 +420,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
       <section className="max-w-3xl mx-auto px-6 mt-10 pb-16">
         <div className="bg-white border rounded-3xl p-6 shadow-sm">
           <h2 className="text-xl font-bold">Common questions</h2>
@@ -387,7 +437,7 @@ export default function PricingPage() {
               <h3 className="font-semibold">What happens after 7 days?</h3>
               <p className="text-gray-500 mt-1">
                 If you do not cancel, your trial continues as a paid
-                subscription at £9.99/month.
+                subscription. {selectedPricing.trialNote}
               </p>
             </div>
 
