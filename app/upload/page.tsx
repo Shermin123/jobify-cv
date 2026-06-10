@@ -251,43 +251,7 @@ useEffect(() => {
 
   router.push("/editor");
 };
-const createNewCV = () => {
-  if (!session) {
-    router.push("/login?callbackUrl=/upload");
-    return;
-  }
 
-  sessionStorage.setItem("jobify_editor_title", "New CV");
-  sessionStorage.setItem(
-    "jobify_editor_content",
-    `YOUR NAME
-
-Professional Summary
-Write 3-4 lines about your experience, skills, and career goal.
-
-Work Experience
-Job Title - Company Name
-Month Year - Month Year
-- Add your achievement here
-- Add your responsibility here
-- Add your result here
-
-Education
-Course / Degree - Institution
-Year
-
-Skills
-- Skill 1
-- Skill 2
-- Skill 3
-
-Projects / Certifications
-- Add project or certificate here`
-  );
-  sessionStorage.setItem("jobify_editor_type", "cv");
-
-  router.push("/editor");
-};
 
   const downloadPDF = (title: string, content: string, fileName: string) => {
     if (!content) {
@@ -1444,26 +1408,14 @@ const previousSetupStep = () => {
       Paste your CV and job description. Jobify creates an ATS-friendly CV
       and cover letter in seconds.
     </p>
-    <button
-  type="button"
-  onClick={createNewCV}
-  className="mt-5 rounded-2xl bg-black px-6 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
->
-  ✍️ Create New CV from Scratch
-</button>
+    
 
     {isUnlocked && (
       <div className="inline-flex mt-4 bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-sm font-bold">
         ✅ Subscription active — full access unlocked
       </div>
     )}
-    <button
-  type="button"
-  onClick={createNewCV}
-  className="mt-5 rounded-2xl bg-black px-6 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
->
-  ✍️ Create New CV from Scratch
-</button>
+    
   </div>
 </section>
 

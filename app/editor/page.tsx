@@ -10,7 +10,7 @@ import { checkProSubscription } from "@/lib/checkSubscription";
 
 type EditorMode = "cv" | "cover";
 type AiMode = "polish" | "shorten" | "ats" | "grammar";
-type PanelTab = "smart" | "insert" | "templates" | "review";
+type PanelTab = "assistant" | "insert" | "templates" | "review";
 
 export default function EditorPage() {
   const router = useRouter();
@@ -34,56 +34,60 @@ export default function EditorPage() {
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [aiLoading, setAiLoading] = useState<AiMode | null>(null);
   const [focusMode, setFocusMode] = useState(false);
-  const [panelTab, setPanelTab] = useState<PanelTab>("smart");
+  const [panelTab, setPanelTab] = useState<PanelTab>("assistant");
+
+  const [aiCvModalOpen, setAiCvModalOpen] = useState(false);
   const [newCvName, setNewCvName] = useState("");
-const [newCvEmail, setNewCvEmail] = useState("");
-const [newCvPhone, setNewCvPhone] = useState("");
-const [newCvLocation, setNewCvLocation] = useState("");
-const [newCvTargetRole, setNewCvTargetRole] = useState("");
-const [newCvExperience, setNewCvExperience] = useState("");
-const [newCvEducation, setNewCvEducation] = useState("");
-const [newCvSkills, setNewCvSkills] = useState("");
-const [newCvProjects, setNewCvProjects] = useState("");
-const [newCvLoading, setNewCvLoading] = useState(false);
-const [newCvLoadingStep, setNewCvLoadingStep] = useState(0);
-useEffect(() => {
-  if (!newCvLoading) {
-    setNewCvLoadingStep(0);
-    return;
-  }
+  const [newCvEmail, setNewCvEmail] = useState("");
+  const [newCvPhone, setNewCvPhone] = useState("");
+  const [newCvLocation, setNewCvLocation] = useState("");
+  const [newCvTargetRole, setNewCvTargetRole] = useState("");
+  const [newCvExperience, setNewCvExperience] = useState("");
+  const [newCvEducation, setNewCvEducation] = useState("");
+  const [newCvSkills, setNewCvSkills] = useState("");
+  const [newCvProjects, setNewCvProjects] = useState("");
+  const [newCvLoading, setNewCvLoading] = useState(false);
+  const [newCvLoadingStep, setNewCvLoadingStep] = useState(0);
 
-  const timer = setInterval(() => {
-    setNewCvLoadingStep((prev) => (prev + 1) % 4);
-  }, 900);
-
-  return () => clearInterval(timer);
-}, [newCvLoading]);
   useEffect(() => {
-  const checkAccess = async () => {
-    if (status === "loading") return;
-
-    if (!session?.user?.email) {
-      alert("Please login first to use the Pro Document Editor.");
-      router.push("/login");
+    if (!newCvLoading) {
+      setNewCvLoadingStep(0);
       return;
     }
 
-    const proAccess = await checkProSubscription(session.user.email);
+    const timer = setInterval(() => {
+      setNewCvLoadingStep((prev) => (prev + 1) % 4);
+    }, 900);
 
-    if (!proAccess) {
-      alert(
-        "The File Editor is a Pro feature. Please subscribe to the Pro plan to edit and export documents."
-      );
-      router.push("/pricing?upgrade=pro");
-      return;
-    }
+    return () => clearInterval(timer);
+  }, [newCvLoading]);
 
-    setIsPro(true);
-    setChecking(false);
-  };
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (status === "loading") return;
 
-  checkAccess();
-}, [session?.user?.email, status, router]);
+      if (!session?.user?.email) {
+        alert("Please login first to use the Pro Document Editor.");
+        router.push("/login");
+        return;
+      }
+
+      const proAccess = await checkProSubscription(session.user.email);
+
+      if (!proAccess) {
+        alert(
+          "The File Editor is a Pro feature. Please subscribe to the Pro plan to edit and export documents."
+        );
+        router.push("/pricing?upgrade=pro");
+        return;
+      }
+
+      setIsPro(true);
+      setChecking(false);
+    };
+
+    checkAccess();
+  }, [session?.user?.email, status, router]);
 
   useEffect(() => {
     const savedTitle = sessionStorage.getItem("jobify_editor_title");
@@ -134,9 +138,7 @@ useEffect(() => {
   const plainText = () => editorRef.current?.innerText || "";
 
   const wordCount = useMemo(() => {
-    return htmlContent
-      ? plainText().trim().split(/\s+/).filter(Boolean).length
-      : 0;
+    return plainText().trim().split(/\s+/).filter(Boolean).length;
   }, [htmlContent]);
 
   const characterCount = plainText().length;
@@ -160,6 +162,12 @@ useEffect(() => {
       hasExperience: text.includes("experience"),
     };
   }, [htmlContent]);
+
+  const checklistScore = useMemo(() => {
+    const values = Object.values(checklist);
+    const passed = values.filter(Boolean).length;
+    return Math.round((passed / values.length) * 100);
+  }, [checklist]);
 
   const updateContent = () => {
     setHtmlContent(editorRef.current?.innerHTML || "");
@@ -255,7 +263,9 @@ useEffect(() => {
 
     const text = prompt("Enter link text:") || url;
 
-    insertHtml(`<a href="${escapeHtml(url)}" target="_blank">${escapeHtml(text)}</a>`);
+    insertHtml(
+      `<a href="${escapeHtml(url)}" target="_blank">${escapeHtml(text)}</a>`
+    );
   };
 
   const addDivider = () => {
@@ -263,25 +273,25 @@ useEffect(() => {
   };
 
   const generateNewCvWithAI = async () => {
-  if (!newCvName.trim()) {
-    alert("Please enter your full name.");
-    return;
-  }
+    if (!newCvName.trim()) {
+      alert("Please enter your full name.");
+      return;
+    }
 
-  if (!newCvTargetRole.trim()) {
-    alert("Please enter your target job role.");
-    return;
-  }
+    if (!newCvTargetRole.trim()) {
+      alert("Please enter your target job role.");
+      return;
+    }
 
-  if (!newCvSkills.trim()) {
-    alert("Please enter your main skills.");
-    return;
-  }
+    if (!newCvSkills.trim()) {
+      alert("Please enter your main skills.");
+      return;
+    }
 
-  setNewCvLoading(true);
+    setNewCvLoading(true);
 
-  try {
-    const prompt = `
+    try {
+      const prompt = `
 Create a professional ATS-friendly CV from scratch using the details below.
 
 Full name: ${newCvName}
@@ -296,6 +306,8 @@ Projects / certifications: ${newCvProjects}
 
 Requirements:
 - Use strong ATS keywords for the target role
+- Make important ATS keywords bold using **keyword**
+- Make section headings clear and professional
 - Include a professional summary
 - Include key skills
 - Include work experience or relevant experience
@@ -306,41 +318,47 @@ Requirements:
 - Keep it professional and realistic
 `;
 
-    const res = await fetch("/api/rephrase", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: prompt,
-        type: "cv",
-      }),
-    });
+      const res = await fetch("/api/rephrase", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: prompt,
+          type: "cv",
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error(data?.error || "Could not generate CV.");
+      if (!res.ok) {
+        throw new Error(data?.error || "Could not generate CV.");
+      }
+
+      const generatedCv =
+        data.rephrased ||
+        data.optimizedCV ||
+        data.cv ||
+        "AI generated CV could not be created.";
+
+      const html = convertTextToHtml(generatedCv);
+
+      if (editorRef.current) {
+        editorRef.current.innerHTML = html;
+      }
+
+      setTitle(`${newCvName} - ATS CV`);
+      setDocumentType("cv");
+      setHtmlContent(html);
+      setPanelTab("review");
+      setAiCvModalOpen(false);
+    } catch (err: any) {
+      alert(err.message || "Could not generate CV.");
+    } finally {
+      setNewCvLoading(false);
     }
+  };
 
-    const generatedCv = data.rephrased || "";
-
-    const html = convertTextToHtml(generatedCv);
-
-    if (editorRef.current) {
-      editorRef.current.innerHTML = html;
-    }
-
-    setTitle(`${newCvName} - ATS CV`);
-    setDocumentType("cv");
-    setHtmlContent(html);
-    setPanelTab("review");
-  } catch (err: any) {
-    alert(err.message || "Could not generate CV.");
-  } finally {
-    setNewCvLoading(false);
-  }
-};
   const addCvTemplate = () => {
     const template = `
       <h1>Your Full Name</h1>
@@ -352,9 +370,9 @@ Requirements:
 
       <h2>Key Skills</h2>
       <ul>
-        <li>Communication and teamwork</li>
-        <li>Problem-solving and organisation</li>
-        <li>Customer service and stakeholder support</li>
+        <li><strong>Communication</strong> and teamwork</li>
+        <li><strong>Problem-solving</strong> and organisation</li>
+        <li><strong>Customer service</strong> and stakeholder support</li>
         <li>Technical tools and digital systems</li>
       </ul>
 
@@ -488,12 +506,12 @@ Requirements:
     try {
       const instruction =
         mode === "polish"
-          ? "Make this document more professional, polished, clear, and recruiter-friendly."
+          ? "Make this document more professional, polished, clear, and recruiter-friendly. Keep important ATS keywords bold using **keyword**."
           : mode === "shorten"
-          ? "Make this document shorter, cleaner, and easier to read while keeping the important meaning."
+          ? "Make this document shorter, cleaner, and easier to read while keeping the important meaning. Keep important ATS keywords bold using **keyword**."
           : mode === "grammar"
-          ? "Fix grammar, spelling, punctuation, and sentence clarity while keeping the same meaning."
-          : "Improve this document for ATS readability, stronger keywords, clearer structure, and better CV or cover letter wording.";
+          ? "Fix grammar, spelling, punctuation, and sentence clarity while keeping the same meaning. Keep important ATS keywords bold using **keyword**."
+          : "Improve this document for ATS readability, stronger keywords, clearer structure, and better CV or cover letter wording. Make important ATS keywords bold using **keyword**.";
 
       const res = await fetch("/api/rephrase", {
         method: "POST",
@@ -524,9 +542,7 @@ Requirements:
   };
 
   const downloadPDF = () => {
-    const text = plainText();
-
-    if (!text.trim()) {
+    if (!editorRef.current?.innerText.trim()) {
       alert("Document is empty.");
       return;
     }
@@ -542,33 +558,189 @@ Requirements:
     const pageHeight = doc.internal.pageSize.getHeight();
     const maxWidth = pageWidth - margin * 2;
 
-    let y = 20;
+    let y = 18;
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.setTextColor(15, 23, 42);
-    doc.text(title || "Edited Document", margin, y);
+    const addNewPageIfNeeded = (extra = 8) => {
+      if (y > pageHeight - extra) {
+        doc.addPage();
+        y = 18;
+      }
+    };
 
-    y += 12;
+    const renderText = (
+      text: string,
+      options?: {
+        fontSize?: number;
+        bold?: boolean;
+        color?: [number, number, number];
+        gap?: number;
+        indent?: number;
+      }
+    ) => {
+      const fontSize = options?.fontSize || 11;
+      const indent = options?.indent || 0;
+      const gap = options?.gap ?? 6;
+      const color = options?.color || [55, 65, 81];
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
-    doc.setTextColor(55, 65, 81);
+      doc.setFont("helvetica", options?.bold ? "bold" : "normal");
+      doc.setFontSize(fontSize);
+      doc.setTextColor(color[0], color[1], color[2]);
 
-    text.split("\n").forEach((paragraph) => {
-      const lines = doc.splitTextToSize(paragraph || " ", maxWidth);
+      const lines = doc.splitTextToSize(text || " ", maxWidth - indent);
 
       lines.forEach((line: string) => {
-        if (y > pageHeight - 18) {
-          doc.addPage();
-          y = 20;
-        }
+        addNewPageIfNeeded();
+        doc.text(line, margin + indent, y);
+        y += gap;
+      });
+    };
 
-        doc.text(line, margin, y);
-        y += 6;
+    const renderTextRuns = (
+      runs: { text: string; bold: boolean }[],
+      options?: {
+        fontSize?: number;
+        color?: [number, number, number];
+        indent?: number;
+        gap?: number;
+      }
+    ) => {
+      const fontSize = options?.fontSize || 11;
+      const color = options?.color || [55, 65, 81];
+      const indent = options?.indent || 0;
+      const gap = options?.gap ?? 6;
+
+      let x = margin + indent;
+
+      runs.forEach((run) => {
+        const words = run.text.split(/(\s+)/);
+
+        words.forEach((word) => {
+          if (!word) return;
+
+          doc.setFont("helvetica", run.bold ? "bold" : "normal");
+          doc.setFontSize(fontSize);
+          doc.setTextColor(color[0], color[1], color[2]);
+
+          const wordWidth = doc.getTextWidth(word);
+
+          if (x + wordWidth > pageWidth - margin) {
+            y += gap;
+            x = margin + indent;
+            addNewPageIfNeeded();
+          }
+
+          doc.text(word, x, y);
+          x += wordWidth;
+        });
       });
 
-      y += 2;
+      y += gap;
+    };
+
+    const getRuns = (
+      node: ChildNode,
+      inheritedBold = false
+    ): { text: string; bold: boolean }[] => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return [{ text: node.textContent || "", bold: inheritedBold }];
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) return [];
+
+      const el = node as HTMLElement;
+      const isBold =
+        inheritedBold ||
+        el.tagName === "STRONG" ||
+        el.tagName === "B" ||
+        el.style.fontWeight === "bold" ||
+        Number(el.style.fontWeight) >= 600;
+
+      const runs: { text: string; bold: boolean }[] = [];
+
+      el.childNodes.forEach((child) => {
+        runs.push(...getRuns(child, isBold));
+      });
+
+      return runs;
+    };
+
+    const elements = Array.from(editorRef.current.children);
+
+    elements.forEach((element) => {
+      const el = element as HTMLElement;
+      const tag = el.tagName.toLowerCase();
+
+      if (tag === "h1") {
+        renderText(el.innerText, {
+          fontSize: 20,
+          bold: true,
+          color: [15, 23, 42],
+          gap: 8,
+        });
+        y += 2;
+        return;
+      }
+
+      if (tag === "h2") {
+        y += 3;
+        renderText(el.innerText.toUpperCase(), {
+          fontSize: 13,
+          bold: true,
+          color: [15, 23, 42],
+          gap: 6,
+        });
+        doc.setDrawColor(226, 232, 240);
+        doc.line(margin, y - 3, pageWidth - margin, y - 3);
+        y += 1;
+        return;
+      }
+
+      if (tag === "h3") {
+        renderText(el.innerText, {
+          fontSize: 12,
+          bold: true,
+          color: [15, 23, 42],
+          gap: 6,
+        });
+        return;
+      }
+
+      if (tag === "ul" || tag === "ol") {
+        const items = Array.from(el.querySelectorAll("li"));
+
+        items.forEach((li) => {
+          renderTextRuns(
+            [
+              { text: "• ", bold: true },
+              ...getRuns(li),
+            ],
+            {
+              fontSize: 11,
+              color: [55, 65, 81],
+              indent: 4,
+              gap: 6,
+            }
+          );
+        });
+
+        y += 2;
+        return;
+      }
+
+      if (tag === "hr") {
+        doc.setDrawColor(226, 232, 240);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 6;
+        return;
+      }
+
+      renderTextRuns(getRuns(el), {
+        fontSize: 11,
+        color: [55, 65, 81],
+        gap: 6,
+      });
+
+      y += 1;
     });
 
     doc.save(
@@ -579,56 +751,175 @@ Requirements:
   };
 
   const downloadDOCX = async () => {
-    const text = plainText();
-
-    if (!text.trim()) {
+    if (!editorRef.current?.innerText.trim()) {
       alert("Document is empty.");
       return;
     }
 
-    const paragraphs = text.split("\n").map((line) => {
-      const clean = line.trim();
-
-      const isHeading =
-        clean.length > 0 &&
-        clean.length < 45 &&
-        clean === clean.toUpperCase() &&
-        /[A-Z]/.test(clean);
-
-      return new Paragraph({
-        children: [
+    const createTextRuns = (
+      node: ChildNode,
+      inheritedBold = false
+    ): TextRun[] => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return [
           new TextRun({
-            text: line || " ",
-            size: isHeading ? 25 : 22,
-            bold: isHeading,
-            color: isHeading ? "0F172A" : "374151",
+            text: node.textContent || "",
+            bold: inheritedBold,
+            size: 22,
+            color: inheritedBold ? "0F172A" : "374151",
           }),
-        ],
-        spacing: {
-          after: isHeading ? 220 : 120,
-        },
+        ];
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) return [];
+
+      const el = node as HTMLElement;
+      const isBold =
+        inheritedBold ||
+        el.tagName === "STRONG" ||
+        el.tagName === "B" ||
+        el.style.fontWeight === "bold" ||
+        Number(el.style.fontWeight) >= 600;
+
+      const runs: TextRun[] = [];
+
+      el.childNodes.forEach((child) => {
+        runs.push(...createTextRuns(child, isBold));
       });
+
+      return runs;
+    };
+
+    const paragraphs: Paragraph[] = [];
+    const elements = Array.from(editorRef.current.children);
+
+    elements.forEach((element) => {
+      const el = element as HTMLElement;
+      const tag = el.tagName.toLowerCase();
+
+      if (tag === "h1") {
+        paragraphs.push(
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: el.innerText,
+                bold: true,
+                size: 36,
+                color: "0F172A",
+              }),
+            ],
+            spacing: { after: 240 },
+          })
+        );
+        return;
+      }
+
+      if (tag === "h2") {
+        paragraphs.push(
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: el.innerText.toUpperCase(),
+                bold: true,
+                size: 26,
+                color: "0F172A",
+              }),
+            ],
+            spacing: { before: 220, after: 140 },
+            border: {
+              bottom: {
+                color: "E2E8F0",
+                space: 1,
+                style: "single",
+                size: 6,
+              },
+            },
+          })
+        );
+        return;
+      }
+
+      if (tag === "h3") {
+        paragraphs.push(
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: el.innerText,
+                bold: true,
+                size: 24,
+                color: "0F172A",
+              }),
+            ],
+            spacing: { before: 160, after: 120 },
+          })
+        );
+        return;
+      }
+
+      if (tag === "ul" || tag === "ol") {
+        const items = Array.from(el.querySelectorAll("li"));
+
+        items.forEach((li) => {
+          paragraphs.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "• ",
+                  bold: true,
+                  size: 22,
+                  color: "374151",
+                }),
+                ...createTextRuns(li),
+              ],
+              spacing: { after: 100 },
+              indent: { left: 360 },
+            })
+          );
+        });
+
+        return;
+      }
+
+      if (tag === "hr") {
+        paragraphs.push(
+          new Paragraph({
+            children: [new TextRun({ text: "" })],
+            border: {
+              bottom: {
+                color: "E2E8F0",
+                space: 1,
+                style: "single",
+                size: 6,
+              },
+            },
+            spacing: { after: 180 },
+          })
+        );
+        return;
+      }
+
+      paragraphs.push(
+        new Paragraph({
+          children: createTextRuns(el),
+          spacing: { after: 130 },
+        })
+      );
     });
 
     const doc = new Document({
       sections: [
         {
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: title || "Edited Document",
-                  bold: true,
-                  size: 36,
-                  color: "0F172A",
-                }),
-              ],
-              spacing: {
-                after: 320,
+          properties: {
+            page: {
+              margin: {
+                top: 720,
+                right: 720,
+                bottom: 720,
+                left: 720,
               },
-            }),
-            ...paragraphs,
-          ],
+            },
+          },
+          children: paragraphs,
         },
       ],
     });
@@ -654,17 +945,17 @@ Requirements:
   if (!isPro) return null;
 
   return (
-    <main className="min-h-screen bg-[#eef1f5] text-slate-900">
+    <main className="min-h-screen bg-[#e7ebf1] text-slate-900">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white print:hidden">
         <div className="flex min-h-14 flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-sm font-black text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-sm font-black text-white shadow-sm">
               J
             </div>
 
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">
-                Pro Document Editor
+                Jobify Word Studio
               </p>
 
               <input
@@ -677,6 +968,10 @@ Requirements:
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700 ring-1 ring-emerald-100">
+              {saveStatus}
+            </span>
+
             <button onClick={() => router.push("/upload")} className="top-btn">
               Back
             </button>
@@ -690,400 +985,361 @@ Requirements:
             </button>
 
             <button onClick={downloadPDF} className="top-btn-primary">
-              PDF
+              Export PDF
             </button>
 
             <button onClick={downloadDOCX} className="top-btn-dark">
-              DOCX
+              Export DOCX
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1 border-t border-slate-100 bg-slate-50 px-4 py-2">
-          <button onClick={() => runCommand("undo")} className="tool-btn">
-            Undo
-          </button>
+        <div className="border-t border-slate-100 bg-[#f8fafc] px-4 py-2">
+          <div className="flex flex-wrap items-stretch gap-2">
+            <RibbonGroup title="File">
+              <button onClick={() => runCommand("undo")} className="tool-btn">
+                Undo
+              </button>
+              <button onClick={() => runCommand("redo")} className="tool-btn">
+                Redo
+              </button>
+              <button onClick={selectAllText} className="tool-btn">
+                Select
+              </button>
+            </RibbonGroup>
 
-          <button onClick={() => runCommand("redo")} className="tool-btn">
-            Redo
-          </button>
+            <RibbonGroup title="Font">
+              <button
+                onClick={() => runCommand("bold")}
+                className="tool-btn font-black"
+              >
+                B
+              </button>
+              <button
+                onClick={() => runCommand("italic")}
+                className="tool-btn italic"
+              >
+                I
+              </button>
+              <button
+                onClick={() => runCommand("underline")}
+                className="tool-btn underline"
+              >
+                U
+              </button>
 
-          <div className="tool-divider" />
+              <select
+                value={fontFamily}
+                onChange={(e) => setFontFamily(e.target.value)}
+                className="select-btn"
+              >
+                <option value="Arial">Arial</option>
+                <option value="Calibri">Calibri</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times</option>
+              </select>
 
-          <button onClick={() => runCommand("bold")} className="tool-btn font-black">
-            B
-          </button>
+              <select
+                value={fontSize}
+                onChange={(e) => setFontSize(e.target.value)}
+                className="select-btn"
+              >
+                <option value="13">Small</option>
+                <option value="15">Normal</option>
+                <option value="17">Large</option>
+                <option value="19">Huge</option>
+              </select>
+            </RibbonGroup>
 
-          <button onClick={() => runCommand("italic")} className="tool-btn italic">
-            I
-          </button>
+            <RibbonGroup title="Style">
+              <button onClick={() => applyBlock("h1")} className="tool-btn">
+                Title
+              </button>
+              <button onClick={() => applyBlock("h2")} className="tool-btn">
+                Heading
+              </button>
+              <button onClick={() => applyBlock("p")} className="tool-btn">
+                Body
+              </button>
+              <button onClick={cleanFormatting} className="tool-btn">
+                Clear
+              </button>
+            </RibbonGroup>
 
-          <button onClick={() => runCommand("underline")} className="tool-btn underline">
-            U
-          </button>
+            <RibbonGroup title="Colour">
+              <button
+                onClick={() => applyColor("#0f172a")}
+                className="tool-btn"
+              >
+                Black
+              </button>
+              <button
+                onClick={() => applyColor("#2563eb")}
+                className="tool-btn text-blue-600"
+              >
+                Blue
+              </button>
+              <button
+                onClick={() => applyColor("#16a34a")}
+                className="tool-btn text-green-600"
+              >
+                Green
+              </button>
+              <button
+                onClick={() => applyHighlight("#fef08a")}
+                className="tool-btn"
+              >
+                Highlight
+              </button>
+            </RibbonGroup>
 
-          <button onClick={cleanFormatting} className="tool-btn">
-            Clear format
-          </button>
+            <RibbonGroup title="Paragraph">
+              <button
+                onClick={() => runCommand("insertUnorderedList")}
+                className="tool-btn"
+              >
+                Bullets
+              </button>
+              <button
+                onClick={() => runCommand("insertOrderedList")}
+                className="tool-btn"
+              >
+                Numbers
+              </button>
+              <button
+                onClick={() => runCommand("justifyLeft")}
+                className="tool-btn"
+              >
+                Left
+              </button>
+              <button
+                onClick={() => runCommand("justifyCenter")}
+                className="tool-btn"
+              >
+                Center
+              </button>
+              <button
+                onClick={() => runCommand("justifyRight")}
+                className="tool-btn"
+              >
+                Right
+              </button>
+            </RibbonGroup>
 
-          <div className="tool-divider" />
+            <RibbonGroup title="Insert">
+              <button onClick={addLink} className="tool-btn">
+                Link
+              </button>
+              <button onClick={addTable} className="tool-btn">
+                Table
+              </button>
+              <button onClick={addDivider} className="tool-btn">
+                Divider
+              </button>
+            </RibbonGroup>
 
-          <button onClick={() => applyBlock("h1")} className="tool-btn">
-            H1
-          </button>
+            <RibbonGroup title="AI">
+              <button
+                onClick={() => setAiCvModalOpen(true)}
+                className="tool-btn-ai"
+              >
+                Create CV
+              </button>
 
-          <button onClick={() => applyBlock("h2")} className="tool-btn">
-            H2
-          </button>
+              <button
+                onClick={() => improveWithAI("polish")}
+                disabled={!!aiLoading}
+                className="tool-btn-ai"
+              >
+                {aiLoading === "polish" ? "Polishing..." : "Polish"}
+              </button>
 
-          <button onClick={() => applyBlock("h3")} className="tool-btn">
-            H3
-          </button>
+              <button
+                onClick={() => improveWithAI("grammar")}
+                disabled={!!aiLoading}
+                className="tool-btn-ai"
+              >
+                {aiLoading === "grammar" ? "Fixing..." : "Grammar"}
+              </button>
 
-          <button onClick={() => applyBlock("p")} className="tool-btn">
-            Body
-          </button>
+              <button
+                onClick={() => improveWithAI("ats")}
+                disabled={!!aiLoading}
+                className="tool-btn-ai"
+              >
+                {aiLoading === "ats" ? "Improving..." : "ATS"}
+              </button>
+            </RibbonGroup>
 
-          <select
-            value={fontSize}
-            onChange={(e) => setFontSize(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold outline-none"
-          >
-            <option value="13">Small</option>
-            <option value="15">Normal</option>
-            <option value="17">Large</option>
-            <option value="19">Huge</option>
-          </select>
+            <RibbonGroup title="View">
+              <select
+                value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+                className="select-btn"
+              >
+                <option value={80}>80%</option>
+                <option value={90}>90%</option>
+                <option value={100}>100%</option>
+                <option value={110}>110%</option>
+                <option value={125}>125%</option>
+              </select>
 
-          <select
-            value={fontFamily}
-            onChange={(e) => setFontFamily(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold outline-none"
-          >
-            <option value="Arial">Arial</option>
-            <option value="Calibri">Calibri</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Times New Roman">Times</option>
-          </select>
-
-          <select
-            value={zoom}
-            onChange={(e) => setZoom(Number(e.target.value))}
-            className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold outline-none"
-          >
-            <option value={80}>80%</option>
-            <option value={90}>90%</option>
-            <option value={100}>100%</option>
-            <option value={110}>110%</option>
-            <option value={125}>125%</option>
-          </select>
-
-          <div className="tool-divider" />
-
-          <button onClick={() => applyColor("#0f172a")} className="tool-btn">
-            Black
-          </button>
-
-          <button onClick={() => applyColor("#2563eb")} className="tool-btn text-blue-600">
-            Blue
-          </button>
-
-          <button onClick={() => applyColor("#16a34a")} className="tool-btn text-green-600">
-            Green
-          </button>
-
-          <button onClick={() => applyHighlight("#fef08a")} className="tool-btn">
-            Highlight
-          </button>
-
-          <div className="tool-divider" />
-
-          <button onClick={() => runCommand("insertUnorderedList")} className="tool-btn">
-            Bullets
-          </button>
-
-          <button onClick={() => runCommand("insertOrderedList")} className="tool-btn">
-            Numbers
-          </button>
-
-          <button onClick={() => runCommand("justifyLeft")} className="tool-btn">
-            Left
-          </button>
-
-          <button onClick={() => runCommand("justifyCenter")} className="tool-btn">
-            Center
-          </button>
-
-          <button onClick={() => runCommand("justifyRight")} className="tool-btn">
-            Right
-          </button>
-
-          <div className="tool-divider" />
-
-          <button onClick={addLink} className="tool-btn">
-            Link
-          </button>
-
-          <button onClick={addTable} className="tool-btn">
-            Table
-          </button>
-
-          <button onClick={addDivider} className="tool-btn">
-            Divider
-          </button>
-
-          <div className="tool-divider" />
-
-          <button
-            onClick={() => improveWithAI("polish")}
-            disabled={!!aiLoading}
-            className="tool-btn text-blue-700"
-          >
-            {aiLoading === "polish" ? "Polishing..." : "AI Polish"}
-          </button>
-
-          <button
-            onClick={() => improveWithAI("grammar")}
-            disabled={!!aiLoading}
-            className="tool-btn text-emerald-700"
-          >
-            {aiLoading === "grammar" ? "Fixing..." : "Grammar"}
-          </button>
-
-          <button
-            onClick={() => improveWithAI("ats")}
-            disabled={!!aiLoading}
-            className="tool-btn text-purple-700"
-          >
-            {aiLoading === "ats" ? "Improving..." : "ATS"}
-          </button>
-
-          <button
-            onClick={() => improveWithAI("shorten")}
-            disabled={!!aiLoading}
-            className="tool-btn"
-          >
-            {aiLoading === "shorten" ? "Shortening..." : "Shorten"}
-          </button>
-
-          <div className="ml-auto hidden text-xs font-bold text-slate-500 xl:block">
-            {saveStatus} • {wordCount} words • {pageCount} page
-            {pageCount > 1 ? "s" : ""}
+              <button
+                onClick={() => setFocusMode(!focusMode)}
+                className="tool-btn"
+              >
+                {focusMode ? "Tools" : "Focus"}
+              </button>
+            </RibbonGroup>
           </div>
         </div>
       </header>
 
-      <section className="px-3 py-6 md:px-8 md:py-10 print:p-0">
-        <div className="mx-auto grid w-full max-w-7xl gap-6 xl:grid-cols-[1fr_320px]">
+      <section className="px-3 py-6 md:px-8 md:py-8 print:p-0">
+        <div className="mx-auto grid w-full max-w-[1500px] gap-6 xl:grid-cols-[1fr_340px]">
           <div>
             <div className="mb-4 flex items-center justify-between print:hidden">
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                  Editable document page
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                  Editable A4 document
                 </p>
-                <p className="text-sm text-slate-500">
-                  Paste your full CV or cover letter here and edit it like Word.
+                <p className="text-sm font-semibold text-slate-500">
+                  Edit your CV like Microsoft Word. Bold keywords and layout are
+                  kept in PDF/DOCX export.
                 </p>
               </div>
 
-              <button
-                onClick={() => setFocusMode(!focusMode)}
-                className="rounded-full bg-white px-4 py-2 text-xs font-black text-slate-600 shadow-sm ring-1 ring-slate-200"
-              >
-                {focusMode ? "Show tools" : "Focus mode"}
-              </button>
+              <div className="hidden rounded-2xl bg-white px-4 py-2 text-xs font-black text-slate-500 shadow-sm ring-1 ring-slate-200 md:block">
+                {wordCount} words • {pageCount} page
+                {pageCount > 1 ? "s" : ""} • {readability}
+              </div>
             </div>
 
-            <div
-              style={{
-                transform: `scale(${zoom / 100})`,
-                transformOrigin: "top center",
-              }}
-              className={`mx-auto min-h-[1550px] w-full bg-white shadow-[0_25px_80px_rgba(15,23,42,0.18)] ring-1 ring-slate-200 print:min-h-screen print:shadow-none print:ring-0 ${
-                focusMode ? "max-w-[1000px]" : "max-w-[920px]"
-              }`}
-            >
+            <div className="rounded-[2rem] bg-slate-300/40 p-4 shadow-inner">
               <div
-                ref={editorRef}
-                contentEditable
-                suppressContentEditableWarning
-                onInput={updateContent}
-                onBlur={updateContent}
                 style={{
-                  fontSize: `${fontSize}px`,
-                  fontFamily,
+                  transform: `scale(${zoom / 100})`,
+                  transformOrigin: "top center",
                 }}
-                className="editor-page min-h-[1550px] w-full px-6 py-8 text-slate-900 outline-none sm:px-10 md:px-16 md:py-14 print:min-h-screen print:p-8"
-                data-placeholder="Paste your full CV or cover letter here..."
-              />
+                className={`mx-auto min-h-[1550px] w-full bg-white shadow-[0_30px_100px_rgba(15,23,42,0.22)] ring-1 ring-slate-300 print:min-h-screen print:shadow-none print:ring-0 ${
+                  focusMode ? "max-w-[1000px]" : "max-w-[920px]"
+                }`}
+              >
+                <div className="h-7 border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-slate-50 print:hidden" />
+
+                <div
+                  ref={editorRef}
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={updateContent}
+                  onBlur={updateContent}
+                  style={{
+                    fontSize: `${fontSize}px`,
+                    fontFamily,
+                  }}
+                  className="editor-page min-h-[1550px] w-full px-6 py-8 text-slate-900 outline-none sm:px-10 md:px-16 md:py-14 print:min-h-screen print:p-8"
+                  data-placeholder="Paste your full CV or cover letter here..."
+                />
+              </div>
             </div>
           </div>
 
           {!focusMode && (
-            <aside className="h-fit rounded-3xl border border-slate-200 bg-white p-4 shadow-xl print:hidden xl:sticky xl:top-[125px]">
+            <aside className="h-fit rounded-3xl border border-slate-200 bg-white p-4 shadow-xl print:hidden xl:sticky xl:top-[170px]">
               <div className="mb-4 grid grid-cols-4 gap-1 rounded-2xl bg-slate-100 p-1">
-                {(["smart", "insert", "templates", "review"] as PanelTab[]).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setPanelTab(tab)}
-                    className={`rounded-xl px-2 py-2 text-[11px] font-black capitalize ${
-                      panelTab === tab
-                        ? "bg-white text-blue-700 shadow-sm"
-                        : "text-slate-500"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+                {(["assistant", "insert", "templates", "review"] as PanelTab[]).map(
+                  (tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setPanelTab(tab)}
+                      className={`rounded-xl px-2 py-2 text-[10px] font-black capitalize ${
+                        panelTab === tab
+                          ? "bg-white text-blue-700 shadow-sm"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  )
+                )}
               </div>
 
-              {panelTab === "smart" && (
+              {panelTab === "assistant" && (
                 <div className="space-y-5">
+                  <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-5 text-white shadow-lg">
+                    <p className="text-xs font-black uppercase tracking-widest text-white/70">
+                      Smart Assistant
+                    </p>
+                    <h2 className="mt-2 text-xl font-black">
+                      Make your CV stronger
+                    </h2>
+                    <p className="mt-2 text-sm font-semibold text-white/70">
+                      Create, polish, improve ATS keywords, and keep bold
+                      formatting in exports.
+                    </p>
+
+                    <button
+                      onClick={() => setAiCvModalOpen(true)}
+                      className="mt-4 w-full rounded-2xl bg-white py-3 text-sm font-black text-blue-700 shadow-sm transition hover:bg-blue-50"
+                    >
+                      ✨ Create CV with AI
+                    </button>
+                  </div>
+
                   <div>
-                    <p className="panel-title">AI tools</p>
+                    <p className="panel-title">AI actions</p>
 
                     <div className="mt-3 grid gap-2">
-                      <button onClick={() => improveWithAI("polish")} className="side-btn">
+                      <button
+                        onClick={() => improveWithAI("polish")}
+                        className="side-btn"
+                      >
                         AI polish document
                       </button>
-                      <button onClick={() => improveWithAI("grammar")} className="side-btn">
+                      <button
+                        onClick={() => improveWithAI("grammar")}
+                        className="side-btn"
+                      >
                         Fix grammar
                       </button>
-                      <button onClick={() => improveWithAI("ats")} className="side-btn">
+                      <button
+                        onClick={() => improveWithAI("ats")}
+                        className="side-btn"
+                      >
                         Improve ATS keywords
                       </button>
-                      <button onClick={() => improveWithAI("shorten")} className="side-btn">
+                      <button
+                        onClick={() => improveWithAI("shorten")}
+                        className="side-btn"
+                      >
                         Shorten document
                       </button>
                       <button onClick={makeCompact} className="side-btn">
                         Make layout compact
                       </button>
                     </div>
-                    <div className="mt-5 overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 shadow-sm">
-  <div className="border-b border-blue-100 bg-white/70 p-4">
-    <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-lg text-white shadow-sm">
-        ✨
-      </div>
-
-      <div>
-        <p className="text-sm font-black text-slate-900">
-          Create ATS CV from scratch
-        </p>
-        <p className="text-xs font-semibold text-slate-500">
-          Answer basic questions and AI will build your CV.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div className="grid gap-3 p-4">
-    <input
-      value={newCvName}
-      onChange={(e) => setNewCvName(e.target.value)}
-      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Full name"
-    />
-
-    <input
-      value={newCvTargetRole}
-      onChange={(e) => setNewCvTargetRole(e.target.value)}
-      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Target job role"
-    />
-
-    <input
-      value={newCvEmail}
-      onChange={(e) => setNewCvEmail(e.target.value)}
-      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Email"
-    />
-
-    <input
-      value={newCvPhone}
-      onChange={(e) => setNewCvPhone(e.target.value)}
-      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Phone"
-    />
-
-    <input
-      value={newCvLocation}
-      onChange={(e) => setNewCvLocation(e.target.value)}
-      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Location"
-    />
-
-    <textarea
-      value={newCvExperience}
-      onChange={(e) => setNewCvExperience(e.target.value)}
-      className="h-24 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Work experience, internship, part-time jobs"
-    />
-
-    <textarea
-      value={newCvEducation}
-      onChange={(e) => setNewCvEducation(e.target.value)}
-      className="h-20 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Education"
-    />
-
-    <textarea
-      value={newCvSkills}
-      onChange={(e) => setNewCvSkills(e.target.value)}
-      className="h-20 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Skills, tools, languages"
-    />
-
-    <textarea
-      value={newCvProjects}
-      onChange={(e) => setNewCvProjects(e.target.value)}
-      className="h-20 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-      placeholder="Projects, certificates, achievements"
-    />
-
-    <button
-      onClick={generateNewCvWithAI}
-      disabled={newCvLoading}
-      className="relative mt-1 overflow-hidden rounded-2xl bg-blue-600 py-3.5 text-sm font-black text-white shadow-lg transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-80"
-    >
-      {newCvLoading && (
-        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-cvShimmer" />
-      )}
-
-      <span className="relative z-10">
-        {newCvLoading ? "Creating your ATS CV..." : "Create AI Generated CV"}
-      </span>
-    </button>
-
-    {newCvLoading && (
-      <div className="rounded-2xl border border-blue-100 bg-white p-4 text-center shadow-sm">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-2xl text-white shadow-md animate-cvFloat">
-          🤖
-        </div>
-
-        <p className="mt-3 text-sm font-black text-slate-900">
-          {
-            [
-              "Reading your answers...",
-              "Writing ATS summary...",
-              "Adding job keywords...",
-              "Building your CV layout...",
-            ][newCvLoadingStep]
-          }
-        </p>
-
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-blue-100">
-          <div className="h-full w-1/2 rounded-full bg-blue-600 animate-cvBar" />
-        </div>
-      </div>
-    )}
-  </div>
-</div>
                   </div>
 
                   <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
-                    <p className="text-sm font-black text-blue-700">Smart status</p>
-                    <div className="mt-3 space-y-2 text-xs font-semibold text-blue-700/80">
+                    <p className="text-sm font-black text-blue-700">
+                      Smart status
+                    </p>
+
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between text-xs font-black text-blue-700">
+                        <span>Checklist score</span>
+                        <span>{checklistScore}%</span>
+                      </div>
+
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-blue-100">
+                        <div
+                          className="h-full rounded-full bg-blue-600"
+                          style={{ width: `${checklistScore}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-4 space-y-2 text-xs font-semibold text-blue-700/80">
                       <p>Length: {readability}</p>
                       <p>Words: {wordCount}</p>
                       <p>Pages: {pageCount}</p>
@@ -1099,27 +1355,45 @@ Requirements:
                     <p className="panel-title">Insert blocks</p>
 
                     <div className="mt-3 grid gap-2">
-                      <button onClick={insertContactHeader} className="side-btn">
+                      <button
+                        onClick={insertContactHeader}
+                        className="side-btn"
+                      >
                         Contact header
                       </button>
 
-                      <button onClick={() => addSection("Professional Summary")} className="side-btn">
+                      <button
+                        onClick={() => addSection("Professional Summary")}
+                        className="side-btn"
+                      >
                         Summary section
                       </button>
 
-                      <button onClick={() => addSection("Key Skills")} className="side-btn">
+                      <button
+                        onClick={() => addSection("Key Skills")}
+                        className="side-btn"
+                      >
                         Skills section
                       </button>
 
-                      <button onClick={addExperienceBlock} className="side-btn">
+                      <button
+                        onClick={addExperienceBlock}
+                        className="side-btn"
+                      >
                         Experience block
                       </button>
 
-                      <button onClick={() => addSection("Education")} className="side-btn">
+                      <button
+                        onClick={() => addSection("Education")}
+                        className="side-btn"
+                      >
                         Education section
                       </button>
 
-                      <button onClick={addAchievementBullet} className="side-btn">
+                      <button
+                        onClick={addAchievementBullet}
+                        className="side-btn"
+                      >
                         Achievement bullet
                       </button>
 
@@ -1145,13 +1419,14 @@ Requirements:
                         Full CV template
                       </button>
 
-                      <button onClick={addCoverLetterTemplate} className="side-btn">
+                      <button
+                        onClick={addCoverLetterTemplate}
+                        className="side-btn"
+                      >
                         Cover letter template
                       </button>
                     </div>
-                    
                   </div>
-                  
 
                   <div>
                     <p className="panel-title">Find & replace</p>
@@ -1188,9 +1463,18 @@ Requirements:
                     <div className="mt-3 space-y-2 text-sm font-bold">
                       <CheckItem done={checklist.hasEmail} label="Email added" />
                       <CheckItem done={checklist.hasPhone} label="Phone added" />
-                      <CheckItem done={checklist.hasLinkedIn} label="LinkedIn added" />
-                      <CheckItem done={checklist.hasSkills} label="Skills section" />
-                      <CheckItem done={checklist.hasExperience} label="Experience section" />
+                      <CheckItem
+                        done={checklist.hasLinkedIn}
+                        label="LinkedIn added"
+                      />
+                      <CheckItem
+                        done={checklist.hasSkills}
+                        label="Skills section"
+                      />
+                      <CheckItem
+                        done={checklist.hasExperience}
+                        label="Experience section"
+                      />
                     </div>
                   </div>
 
@@ -1199,12 +1483,16 @@ Requirements:
 
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       <div className="rounded-xl bg-white p-3 text-center">
-                        <p className="text-xs font-bold text-slate-400">Words</p>
+                        <p className="text-xs font-bold text-slate-400">
+                          Words
+                        </p>
                         <p className="text-xl font-black">{wordCount}</p>
                       </div>
 
                       <div className="rounded-xl bg-white p-3 text-center">
-                        <p className="text-xs font-bold text-slate-400">Chars</p>
+                        <p className="text-xs font-bold text-slate-400">
+                          Chars
+                        </p>
                         <p className="text-xl font-black">{characterCount}</p>
                       </div>
                     </div>
@@ -1224,14 +1512,157 @@ Requirements:
         </div>
       </section>
 
+      {aiCvModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 px-4 py-8 backdrop-blur-sm print:hidden">
+          <div className="max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] bg-white shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/95 p-5 backdrop-blur">
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-blue-600">
+                  AI CV Generator
+                </p>
+                <h2 className="text-2xl font-black text-slate-950">
+                  Create ATS CV from scratch
+                </h2>
+                <p className="mt-1 text-sm font-semibold text-slate-500">
+                  Important keywords will be bold and kept in PDF/DOCX exports.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setAiCvModalOpen(false)}
+                disabled={newCvLoading}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-black text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="grid gap-4 p-5 md:grid-cols-2">
+              <SmartInput
+                label="Full name"
+                value={newCvName}
+                onChange={setNewCvName}
+                placeholder="Mohammed Shermin"
+              />
+
+              <SmartInput
+                label="Target job role"
+                value={newCvTargetRole}
+                onChange={setNewCvTargetRole}
+                placeholder="AI Engineer / Data Analyst / Retail Assistant"
+              />
+
+              <SmartInput
+                label="Email"
+                value={newCvEmail}
+                onChange={setNewCvEmail}
+                placeholder="your@email.com"
+              />
+
+              <SmartInput
+                label="Phone"
+                value={newCvPhone}
+                onChange={setNewCvPhone}
+                placeholder="+44..."
+              />
+
+              <SmartInput
+                label="Location"
+                value={newCvLocation}
+                onChange={setNewCvLocation}
+                placeholder="London, United Kingdom"
+              />
+
+              <SmartTextarea
+                label="Skills"
+                value={newCvSkills}
+                onChange={setNewCvSkills}
+                placeholder="Python, React, Flutter, communication, teamwork..."
+              />
+
+              <SmartTextarea
+                label="Experience"
+                value={newCvExperience}
+                onChange={setNewCvExperience}
+                placeholder="Jobs, internships, part-time work, freelance work..."
+              />
+
+              <SmartTextarea
+                label="Education"
+                value={newCvEducation}
+                onChange={setNewCvEducation}
+                placeholder="MSc, BSc, college, university, certifications..."
+              />
+
+              <div className="md:col-span-2">
+                <SmartTextarea
+                  label="Projects / certificates / achievements"
+                  value={newCvProjects}
+                  onChange={setNewCvProjects}
+                  placeholder="Projects, certificates, hackathons, achievements..."
+                  tall
+                />
+              </div>
+            </div>
+
+            {newCvLoading && (
+              <div className="mx-5 mb-5 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-blue-600 text-3xl text-white shadow-md animate-cvFloat">
+                  🤖
+                </div>
+
+                <p className="mt-3 text-sm font-black text-slate-900">
+                  {
+                    [
+                      "Reading your answers...",
+                      "Writing ATS summary...",
+                      "Adding bold keywords...",
+                      "Building your CV layout...",
+                    ][newCvLoadingStep]
+                  }
+                </p>
+
+                <div className="mx-auto mt-4 h-2 max-w-md overflow-hidden rounded-full bg-blue-100">
+                  <div className="h-full w-1/2 rounded-full bg-blue-600 animate-cvBar" />
+                </div>
+              </div>
+            )}
+
+            <div className="sticky bottom-0 flex flex-col gap-3 border-t border-slate-100 bg-white/95 p-5 backdrop-blur sm:flex-row sm:justify-end">
+              <button
+                onClick={() => setAiCvModalOpen(false)}
+                disabled={newCvLoading}
+                className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-black text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={generateNewCvWithAI}
+                disabled={newCvLoading}
+                className="relative overflow-hidden rounded-2xl bg-blue-600 px-8 py-3 text-sm font-black text-white shadow-lg transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-80"
+              >
+                {newCvLoading && (
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-cvShimmer" />
+                )}
+
+                <span className="relative z-10">
+                  {newCvLoading ? "Creating your CV..." : "Create AI CV"}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
         .top-btn {
           border: 1px solid rgb(226 232 240);
           background: white;
-          border-radius: 0.5rem;
-          padding: 0.5rem 0.75rem;
+          border-radius: 0.75rem;
+          padding: 0.55rem 0.8rem;
           font-size: 0.75rem;
-          font-weight: 800;
+          font-weight: 900;
           color: rgb(51 65 85);
         }
 
@@ -1240,9 +1671,9 @@ Requirements:
         }
 
         .top-btn-primary {
-          border-radius: 0.5rem;
+          border-radius: 0.75rem;
           background: rgb(37 99 235);
-          padding: 0.5rem 0.75rem;
+          padding: 0.55rem 0.9rem;
           font-size: 0.75rem;
           font-weight: 900;
           color: white;
@@ -1253,9 +1684,9 @@ Requirements:
         }
 
         .top-btn-dark {
-          border-radius: 0.5rem;
+          border-radius: 0.75rem;
           background: rgb(15 23 42);
-          padding: 0.5rem 0.75rem;
+          padding: 0.55rem 0.9rem;
           font-size: 0.75rem;
           font-weight: 900;
           color: white;
@@ -1264,12 +1695,13 @@ Requirements:
         .tool-btn {
           border: 1px solid rgb(226 232 240);
           background: white;
-          border-radius: 0.5rem;
-          padding: 0.4rem 0.65rem;
+          border-radius: 0.6rem;
+          padding: 0.45rem 0.7rem;
           font-size: 0.75rem;
-          font-weight: 800;
+          font-weight: 900;
           color: rgb(51 65 85);
           transition: 0.15s ease;
+          white-space: nowrap;
         }
 
         .tool-btn:hover {
@@ -1281,23 +1713,47 @@ Requirements:
           cursor: not-allowed;
         }
 
-        .tool-divider {
-          height: 1.5rem;
-          width: 1px;
-          background: rgb(226 232 240);
-          margin-left: 0.25rem;
-          margin-right: 0.25rem;
+        .tool-btn-ai {
+          border: 1px solid rgb(191 219 254);
+          background: rgb(239 246 255);
+          border-radius: 0.6rem;
+          padding: 0.45rem 0.7rem;
+          font-size: 0.75rem;
+          font-weight: 900;
+          color: rgb(29 78 216);
+          transition: 0.15s ease;
+          white-space: nowrap;
+        }
+
+        .tool-btn-ai:hover {
+          background: rgb(219 234 254);
+        }
+
+        .tool-btn-ai:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .select-btn {
+          border: 1px solid rgb(226 232 240);
+          background: white;
+          border-radius: 0.6rem;
+          padding: 0.45rem 0.65rem;
+          font-size: 0.75rem;
+          font-weight: 900;
+          color: rgb(51 65 85);
+          outline: none;
         }
 
         .side-btn {
           width: 100%;
           border: 1px solid rgb(226 232 240);
           background: white;
-          border-radius: 0.8rem;
-          padding: 0.8rem;
+          border-radius: 0.9rem;
+          padding: 0.85rem;
           text-align: left;
           font-size: 0.85rem;
-          font-weight: 800;
+          font-weight: 900;
           color: rgb(51 65 85);
           transition: 0.15s ease;
         }
@@ -1387,41 +1843,44 @@ Requirements:
           border: 1px solid rgb(226 232 240);
           padding: 0.5rem;
         }
+
         @keyframes cvShimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
+          100% {
+            transform: translateX(100%);
+          }
+        }
 
-@keyframes cvFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-6px) rotate(3deg);
-  }
-}
+        @keyframes cvFloat {
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-6px) rotate(3deg);
+          }
+        }
 
-@keyframes cvBar {
-  0% {
-    transform: translateX(-120%);
-  }
-  100% {
-    transform: translateX(220%);
-  }
-}
+        @keyframes cvBar {
+          0% {
+            transform: translateX(-120%);
+          }
+          100% {
+            transform: translateX(220%);
+          }
+        }
 
-.animate-cvShimmer {
-  animation: cvShimmer 1.4s infinite;
-}
+        .animate-cvShimmer {
+          animation: cvShimmer 1.4s infinite;
+        }
 
-.animate-cvFloat {
-  animation: cvFloat 1.3s ease-in-out infinite;
-}
+        .animate-cvFloat {
+          animation: cvFloat 1.3s ease-in-out infinite;
+        }
 
-.animate-cvBar {
-  animation: cvBar 1.2s ease-in-out infinite;
-}
+        .animate-cvBar {
+          animation: cvBar 1.2s ease-in-out infinite;
+        }
+
         @media print {
           body {
             background: white;
@@ -1429,6 +1888,79 @@ Requirements:
         }
       `}</style>
     </main>
+  );
+}
+
+function RibbonGroup({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="flex flex-wrap gap-1">{children}</div>
+      <p className="mt-1 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+        {title}
+      </p>
+    </div>
+  );
+}
+
+function SmartInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <label className="block">
+      <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+        {label}
+      </span>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
+        placeholder={placeholder}
+      />
+    </label>
+  );
+}
+
+function SmartTextarea({
+  label,
+  value,
+  onChange,
+  placeholder,
+  tall = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  tall?: boolean;
+}) {
+  return (
+    <label className="block">
+      <span className="text-xs font-black uppercase tracking-widest text-slate-400">
+        {label}
+      </span>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`mt-2 w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 ${
+          tall ? "h-32" : "h-24"
+        }`}
+        placeholder={placeholder}
+      />
+    </label>
   );
 }
 
@@ -1460,15 +1992,22 @@ function convertTextToHtml(text: string) {
         clean === clean.toUpperCase() &&
         /[A-Z]/.test(clean);
 
+      const formatted = escapeHtml(clean)
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(
+          /\b(ATS|Python|React|Next\.js|JavaScript|TypeScript|SQL|Machine Learning|AI|Data Analysis|Flutter|Firebase|Docker|Communication|Teamwork|Customer Service|Leadership|Problem Solving|Project Management|Microsoft Excel|Power BI|Tableau|Data Science|Cloud|AWS|Azure|Google Cloud|Node\.js|Express|MongoDB|PostgreSQL|Supabase|Stripe|API|REST|Git|GitHub)\b/gi,
+          "<strong>$1</strong>"
+        );
+
       if (looksLikeHeading) {
-        return `<h2>${escapeHtml(clean)}</h2>`;
+        return `<h2>${formatted}</h2>`;
       }
 
       if (clean.startsWith("•") || clean.startsWith("-")) {
-        return `<ul><li>${escapeHtml(clean.replace(/^[-•]\s*/, ""))}</li></ul>`;
+        return `<ul><li>${formatted.replace(/^[-•]\s*/, "")}</li></ul>`;
       }
 
-      return `<p>${escapeHtml(clean)}</p>`;
+      return `<p>${formatted}</p>`;
     })
     .join("");
 }

@@ -15,16 +15,14 @@ export default function Navbar() {
         { name: "Dashboard", href: "/dashboard" },
         { name: "Auto Apply", href: "/jobs" },
         { name: "AI CV Studio", href: "/upload" },
-        { name: "Pricing", href: "/pricing" },
-        { name: "File Editor", href: "/editor" },
+        { name: "Editor", href: "/editor" },
         { name: "Documents", href: "/my-documents" },
       ]
     : [
         { name: "Home", href: "/" },
         { name: "Jobs", href: "/jobs" },
-        { name: "Pricing", href: "/pricing" },
         { name: "CV Score", href: "/#cv-score" },
-        { name: "File Editor", href: "/editor" },
+        { name: "Editor", href: "/editor" },
       ];
 
   const isActive = (href: string) => {
@@ -56,7 +54,7 @@ export default function Navbar() {
           </Link>
 
           {/* DESKTOP NAV */}
-          <nav className="hidden items-center gap-1 rounded-full bg-slate-100 p-1 md:flex">
+          <nav className="hidden items-center gap-1 rounded-full bg-slate-100 p-1 lg:flex">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -73,9 +71,9 @@ export default function Navbar() {
           </nav>
 
           {/* DESKTOP RIGHT */}
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
             {isLoggedIn && (
-              <div className="hidden max-w-[170px] text-right lg:block">
+              <div className="hidden max-w-[150px] text-right xl:block">
                 <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
                   Signed in
                 </p>
@@ -86,24 +84,24 @@ export default function Navbar() {
             )}
 
             <Link
-              href="/jobs"
-              className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
-            >
-              Find Jobs
-            </Link>
-
-            <Link
-              href="/upload"
-              className="rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-black text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-            >
-              Create CV
-            </Link>
-
-            <Link
               href="/pricing"
               className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-black text-amber-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-amber-100 hover:shadow-md"
             >
               Pricing
+            </Link>
+
+            <Link
+              href="/jobs"
+              className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-black text-blue-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-100 hover:shadow-md"
+            >
+              Jobs
+            </Link>
+
+            <Link
+              href="/upload"
+              className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+            >
+              Create CV
             </Link>
 
             {isLoggedIn ? (
@@ -126,17 +124,17 @@ export default function Navbar() {
           {/* MOBILE ACTIONS */}
           <div className="flex items-center gap-2 md:hidden">
             <Link
-              href="/jobs"
-              className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
-            >
-              Jobs
-            </Link>
-
-            <Link
               href="/pricing"
               className="rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-black text-amber-700 shadow-sm transition hover:bg-amber-100"
             >
               Pricing
+            </Link>
+
+            <Link
+              href="/upload"
+              className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
+            >
+              Create CV
             </Link>
 
             {isLoggedIn ? (
@@ -157,8 +155,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* MOBILE SCROLL NAV */}
-        <nav className="flex gap-2 overflow-x-auto border-t border-slate-100 py-3 md:hidden">
+        {/* MOBILE/TABLET SCROLL NAV */}
+        <nav className="flex gap-2 overflow-x-auto border-t border-slate-100 py-3 lg:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -172,6 +170,17 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
+
+          <Link
+            href="/pricing"
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
+              pathname === "/pricing"
+                ? "bg-amber-500 text-white"
+                : "bg-amber-50 text-amber-700 hover:bg-amber-100"
+            }`}
+          >
+            Pricing
+          </Link>
         </nav>
       </div>
     </header>
