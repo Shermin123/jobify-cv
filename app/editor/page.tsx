@@ -35,7 +35,29 @@ export default function EditorPage() {
   const [aiLoading, setAiLoading] = useState<AiMode | null>(null);
   const [focusMode, setFocusMode] = useState(false);
   const [panelTab, setPanelTab] = useState<PanelTab>("smart");
+  const [newCvName, setNewCvName] = useState("");
+const [newCvEmail, setNewCvEmail] = useState("");
+const [newCvPhone, setNewCvPhone] = useState("");
+const [newCvLocation, setNewCvLocation] = useState("");
+const [newCvTargetRole, setNewCvTargetRole] = useState("");
+const [newCvExperience, setNewCvExperience] = useState("");
+const [newCvEducation, setNewCvEducation] = useState("");
+const [newCvSkills, setNewCvSkills] = useState("");
+const [newCvProjects, setNewCvProjects] = useState("");
+const [newCvLoading, setNewCvLoading] = useState(false);
+const [newCvLoadingStep, setNewCvLoadingStep] = useState(0);
+useEffect(() => {
+  if (!newCvLoading) {
+    setNewCvLoadingStep(0);
+    return;
+  }
 
+  const timer = setInterval(() => {
+    setNewCvLoadingStep((prev) => (prev + 1) % 4);
+  }, 900);
+
+  return () => clearInterval(timer);
+}, [newCvLoading]);
   useEffect(() => {
   const checkAccess = async () => {
     if (status === "loading") return;
@@ -240,6 +262,85 @@ export default function EditorPage() {
     insertHtml("<hr /><p><br /></p>");
   };
 
+  const generateNewCvWithAI = async () => {
+  if (!newCvName.trim()) {
+    alert("Please enter your full name.");
+    return;
+  }
+
+  if (!newCvTargetRole.trim()) {
+    alert("Please enter your target job role.");
+    return;
+  }
+
+  if (!newCvSkills.trim()) {
+    alert("Please enter your main skills.");
+    return;
+  }
+
+  setNewCvLoading(true);
+
+  try {
+    const prompt = `
+Create a professional ATS-friendly CV from scratch using the details below.
+
+Full name: ${newCvName}
+Email: ${newCvEmail}
+Phone: ${newCvPhone}
+Location: ${newCvLocation}
+Target role: ${newCvTargetRole}
+Experience: ${newCvExperience}
+Education: ${newCvEducation}
+Skills: ${newCvSkills}
+Projects / certifications: ${newCvProjects}
+
+Requirements:
+- Use strong ATS keywords for the target role
+- Include a professional summary
+- Include key skills
+- Include work experience or relevant experience
+- Include education
+- Include projects or certifications if provided
+- Use clear CV sections
+- Use achievement-focused bullet points
+- Keep it professional and realistic
+`;
+
+    const res = await fetch("/api/rephrase", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: prompt,
+        type: "cv",
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Could not generate CV.");
+    }
+
+    const generatedCv = data.rephrased || "";
+
+    const html = convertTextToHtml(generatedCv);
+
+    if (editorRef.current) {
+      editorRef.current.innerHTML = html;
+    }
+
+    setTitle(`${newCvName} - ATS CV`);
+    setDocumentType("cv");
+    setHtmlContent(html);
+    setPanelTab("review");
+  } catch (err: any) {
+    alert(err.message || "Could not generate CV.");
+  } finally {
+    setNewCvLoading(false);
+  }
+};
   const addCvTemplate = () => {
     const template = `
       <h1>Your Full Name</h1>
@@ -858,6 +959,126 @@ export default function EditorPage() {
                         Make layout compact
                       </button>
                     </div>
+                    <div className="mt-5 overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 shadow-sm">
+  <div className="border-b border-blue-100 bg-white/70 p-4">
+    <div className="flex items-center gap-3">
+      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-lg text-white shadow-sm">
+        ✨
+      </div>
+
+      <div>
+        <p className="text-sm font-black text-slate-900">
+          Create ATS CV from scratch
+        </p>
+        <p className="text-xs font-semibold text-slate-500">
+          Answer basic questions and AI will build your CV.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div className="grid gap-3 p-4">
+    <input
+      value={newCvName}
+      onChange={(e) => setNewCvName(e.target.value)}
+      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Full name"
+    />
+
+    <input
+      value={newCvTargetRole}
+      onChange={(e) => setNewCvTargetRole(e.target.value)}
+      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Target job role"
+    />
+
+    <input
+      value={newCvEmail}
+      onChange={(e) => setNewCvEmail(e.target.value)}
+      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Email"
+    />
+
+    <input
+      value={newCvPhone}
+      onChange={(e) => setNewCvPhone(e.target.value)}
+      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Phone"
+    />
+
+    <input
+      value={newCvLocation}
+      onChange={(e) => setNewCvLocation(e.target.value)}
+      className="rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Location"
+    />
+
+    <textarea
+      value={newCvExperience}
+      onChange={(e) => setNewCvExperience(e.target.value)}
+      className="h-24 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Work experience, internship, part-time jobs"
+    />
+
+    <textarea
+      value={newCvEducation}
+      onChange={(e) => setNewCvEducation(e.target.value)}
+      className="h-20 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Education"
+    />
+
+    <textarea
+      value={newCvSkills}
+      onChange={(e) => setNewCvSkills(e.target.value)}
+      className="h-20 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Skills, tools, languages"
+    />
+
+    <textarea
+      value={newCvProjects}
+      onChange={(e) => setNewCvProjects(e.target.value)}
+      className="h-20 resize-none rounded-2xl border border-blue-100 bg-white p-3 text-sm font-bold outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+      placeholder="Projects, certificates, achievements"
+    />
+
+    <button
+      onClick={generateNewCvWithAI}
+      disabled={newCvLoading}
+      className="relative mt-1 overflow-hidden rounded-2xl bg-blue-600 py-3.5 text-sm font-black text-white shadow-lg transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-80"
+    >
+      {newCvLoading && (
+        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-cvShimmer" />
+      )}
+
+      <span className="relative z-10">
+        {newCvLoading ? "Creating your ATS CV..." : "Create AI Generated CV"}
+      </span>
+    </button>
+
+    {newCvLoading && (
+      <div className="rounded-2xl border border-blue-100 bg-white p-4 text-center shadow-sm">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-2xl text-white shadow-md animate-cvFloat">
+          🤖
+        </div>
+
+        <p className="mt-3 text-sm font-black text-slate-900">
+          {
+            [
+              "Reading your answers...",
+              "Writing ATS summary...",
+              "Adding job keywords...",
+              "Building your CV layout...",
+            ][newCvLoadingStep]
+          }
+        </p>
+
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-blue-100">
+          <div className="h-full w-1/2 rounded-full bg-blue-600 animate-cvBar" />
+        </div>
+      </div>
+    )}
+  </div>
+</div>
                   </div>
 
                   <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
@@ -928,7 +1149,9 @@ export default function EditorPage() {
                         Cover letter template
                       </button>
                     </div>
+                    
                   </div>
+                  
 
                   <div>
                     <p className="panel-title">Find & replace</p>
@@ -1164,7 +1387,41 @@ export default function EditorPage() {
           border: 1px solid rgb(226 232 240);
           padding: 0.5rem;
         }
+        @keyframes cvShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
 
+@keyframes cvFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
+@keyframes cvBar {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.animate-cvShimmer {
+  animation: cvShimmer 1.4s infinite;
+}
+
+.animate-cvFloat {
+  animation: cvFloat 1.3s ease-in-out infinite;
+}
+
+.animate-cvBar {
+  animation: cvBar 1.2s ease-in-out infinite;
+}
         @media print {
           body {
             background: white;

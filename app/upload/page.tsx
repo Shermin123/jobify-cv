@@ -251,6 +251,43 @@ useEffect(() => {
 
   router.push("/editor");
 };
+const createNewCV = () => {
+  if (!session) {
+    router.push("/login?callbackUrl=/upload");
+    return;
+  }
+
+  sessionStorage.setItem("jobify_editor_title", "New CV");
+  sessionStorage.setItem(
+    "jobify_editor_content",
+    `YOUR NAME
+
+Professional Summary
+Write 3-4 lines about your experience, skills, and career goal.
+
+Work Experience
+Job Title - Company Name
+Month Year - Month Year
+- Add your achievement here
+- Add your responsibility here
+- Add your result here
+
+Education
+Course / Degree - Institution
+Year
+
+Skills
+- Skill 1
+- Skill 2
+- Skill 3
+
+Projects / Certifications
+- Add project or certificate here`
+  );
+  sessionStorage.setItem("jobify_editor_type", "cv");
+
+  router.push("/editor");
+};
 
   const downloadPDF = (title: string, content: string, fileName: string) => {
     if (!content) {
@@ -327,11 +364,8 @@ useEffect(() => {
           const textWidth = doc.getTextWidth(part);
 
 if (isKeyword) {
-  doc.setFillColor(219, 234, 254);
-  doc.roundedRect(x - 0.7, y - 4.2, textWidth + 1.4, 5.4, 1, 1, "F");
-
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(29, 78, 216);
+  doc.setTextColor(0, 0, 0);
 } else {
   doc.setFont("helvetica", "normal");
   doc.setTextColor(55, 65, 81);
@@ -391,8 +425,8 @@ x += textWidth;
         text: part,
         size: 22,
         bold: isKeyword,
-        color: isKeyword ? "1D4ED8" : "374151",
-        highlight: isKeyword ? "yellow" : undefined,
+        color: isKeyword ? "000000" : "374151",
+highlight: undefined,
       });
     });
   };
@@ -466,11 +500,7 @@ x += textWidth;
       return (
         <strong
           key={index}
-          className={
-            highlightColor === "blue"
-              ? "font-black text-blue-700 bg-blue-100 px-1 rounded"
-              : "font-black text-purple-700 bg-purple-100 px-1 rounded"
-          }
+          className="font-black text-black"
         >
           {part}
         </strong>
@@ -1414,13 +1444,26 @@ const previousSetupStep = () => {
       Paste your CV and job description. Jobify creates an ATS-friendly CV
       and cover letter in seconds.
     </p>
+    <button
+  type="button"
+  onClick={createNewCV}
+  className="mt-5 rounded-2xl bg-black px-6 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
+>
+  ✍️ Create New CV from Scratch
+</button>
 
     {isUnlocked && (
       <div className="inline-flex mt-4 bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-full text-sm font-bold">
         ✅ Subscription active — full access unlocked
       </div>
     )}
-
+    <button
+  type="button"
+  onClick={createNewCV}
+  className="mt-5 rounded-2xl bg-black px-6 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
+>
+  ✍️ Create New CV from Scratch
+</button>
   </div>
 </section>
 
