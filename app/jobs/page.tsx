@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type PointerEvent } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -16,16 +16,16 @@ type Job = {
   source?: string;
   posted?: string;
   summary?: string;
-highlights?: string[];
-responsibilities?: string[];
-requirements?: string[];
-benefits?: string[];
-skills?: string[];
-category?: string;
-seniority?: string;
-matchScore?: number;
-smartReason?: string;
-tags?: string[];
+  highlights?: string[];
+  responsibilities?: string[];
+  requirements?: string[];
+  benefits?: string[];
+  skills?: string[];
+  category?: string;
+  seniority?: string;
+  matchScore?: number;
+  smartReason?: string;
+  tags?: string[];
 };
 
 const demoJobs: Job[] = [
@@ -44,23 +44,481 @@ const demoJobs: Job[] = [
   },
 ];
 
-const jobSuggestions = [
+const popularJobSuggestions = [
   "Finance Assistant",
   "Accounts Assistant",
   "Junior Accountant",
   "Bookkeeper",
   "Payroll Assistant",
   "Credit Controller",
+  "Finance Analyst",
+  "Data Analyst",
+  "Business Analyst",
+  "Software Developer",
+  "Frontend Developer",
+  "Backend Developer",
+  "React Developer",
+  "Python Developer",
+  "Retail Assistant",
+  "Sales Assistant",
+  "Customer Service Assistant",
+  "Store Assistant",
+  "Warehouse Operative",
+  "Warehouse Assistant",
+  "Admin Assistant",
+  "Receptionist",
+  "Hotel Receptionist",
+  "Care Assistant",
+  "Delivery Driver",
+  "Marketing Assistant",
+  "HR Assistant",
+  "Security Guard",
+  "Cleaner",
 ];
 
-const locationSuggestions = [
-  "United Arab Emirates",
-  "Dubai",
-  "Abu Dhabi",
-  "Qatar",
-  "Doha",
-  "Saudi Arabia",
+const jobGroups: Record<string, string[]> = {
+  finance: [
+    "Finance Assistant",
+    "Accounts Assistant",
+    "Junior Accountant",
+    "Bookkeeper",
+    "Payroll Assistant",
+    "Credit Controller",
+    "Finance Analyst",
+    "Accounts Payable Assistant",
+    "Accounts Receivable Assistant",
+    "Audit Assistant",
+  ],
+  accounting: [
+    "Accounts Assistant",
+    "Junior Accountant",
+    "Bookkeeper",
+    "Accounts Payable Assistant",
+    "Accounts Receivable Assistant",
+    "Payroll Assistant",
+  ],
+  data: [
+    "Data Analyst",
+    "Junior Data Analyst",
+    "Business Analyst",
+    "Reporting Analyst",
+    "Data Assistant",
+    "BI Analyst",
+  ],
+  software: [
+    "Junior Software Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "React Developer",
+    "Python Developer",
+    "Web Developer",
+    "Software Engineer",
+  ],
+  developer: [
+    "Junior Software Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "React Developer",
+    "Python Developer",
+    "Web Developer",
+  ],
+  retail: [
+    "Retail Assistant",
+    "Sales Assistant",
+    "Store Assistant",
+    "Cashier",
+    "Customer Assistant",
+    "Shop Assistant",
+    "Store Associate",
+  ],
+  sales: [
+    "Sales Assistant",
+    "Sales Executive",
+    "Retail Sales Assistant",
+    "Customer Sales Assistant",
+    "Business Development Executive",
+  ],
+  hotel: [
+    "Hotel Receptionist",
+    "Front Desk Assistant",
+    "Guest Service Agent",
+    "Restaurant Assistant",
+    "Barista",
+    "Waiter",
+  ],
+  hospitality: [
+    "Hotel Receptionist",
+    "Front Desk Assistant",
+    "Guest Service Agent",
+    "Restaurant Assistant",
+    "Barista",
+    "Waiter",
+  ],
+  warehouse: [
+    "Warehouse Operative",
+    "Picker Packer",
+    "Warehouse Assistant",
+    "Logistics Assistant",
+    "Inventory Assistant",
+  ],
+  driver: [
+    "Delivery Driver",
+    "Courier Driver",
+    "Van Driver",
+    "Driver",
+    "Taxi Driver",
+  ],
+  admin: [
+    "Admin Assistant",
+    "Office Assistant",
+    "Administrator",
+    "Receptionist",
+    "Secretary",
+  ],
+  healthcare: [
+    "Care Assistant",
+    "Support Worker",
+    "Healthcare Assistant",
+    "Nursing Assistant",
+    "Medical Assistant",
+  ],
+  marketing: [
+    "Marketing Assistant",
+    "Digital Marketing Assistant",
+    "Social Media Assistant",
+    "Content Assistant",
+    "SEO Assistant",
+  ],
+  security: ["Security Guard", "Security Officer", "Door Supervisor"],
+  cleaning: ["Cleaner", "Cleaning Operative", "Housekeeper"],
+};
+
+const popularLocationSuggestions = [
+  "Dubai, United Arab Emirates",
+  "Abu Dhabi, United Arab Emirates",
+  "Sharjah, United Arab Emirates",
+  "Doha, Qatar",
+  "Riyadh, Saudi Arabia",
+  "Jeddah, Saudi Arabia",
+  "London, United Kingdom",
+  "Manchester, United Kingdom",
+  "Birmingham, United Kingdom",
+  "New York, United States",
+  "California, United States",
+  "Texas, United States",
+  "Toronto, Canada",
+  "Vancouver, Canada",
+  "Bangalore, India",
+  "Mumbai, India",
+  "Delhi, India",
+  "Kochi, India",
+  "Singapore",
+  "Sydney, Australia",
+  "Melbourne, Australia",
+  "Berlin, Germany",
+  "Paris, France",
+  "Amsterdam, Netherlands",
+  "Dublin, Ireland",
+  "Remote",
+  "Worldwide",
 ];
+
+const locationGroups: Record<string, string[]> = {
+  uae: [
+    "Dubai, United Arab Emirates",
+    "Abu Dhabi, United Arab Emirates",
+    "Sharjah, United Arab Emirates",
+    "United Arab Emirates",
+  ],
+  dubai: ["Dubai, United Arab Emirates", "United Arab Emirates"],
+  "abu dhabi": ["Abu Dhabi, United Arab Emirates", "United Arab Emirates"],
+  qatar: ["Doha, Qatar", "Qatar"],
+  doha: ["Doha, Qatar", "Qatar"],
+  saudi: ["Riyadh, Saudi Arabia", "Jeddah, Saudi Arabia", "Saudi Arabia"],
+  riyadh: ["Riyadh, Saudi Arabia", "Saudi Arabia"],
+  uk: [
+    "London, United Kingdom",
+    "Manchester, United Kingdom",
+    "Birmingham, United Kingdom",
+    "United Kingdom",
+  ],
+  london: ["London, United Kingdom", "United Kingdom"],
+  india: [
+    "Bangalore, India",
+    "Mumbai, India",
+    "Delhi, India",
+    "Kochi, India",
+    "India",
+  ],
+  kerala: ["Kochi, India", "Kerala, India", "India"],
+  usa: [
+    "New York, United States",
+    "California, United States",
+    "Texas, United States",
+    "United States",
+  ],
+  canada: ["Toronto, Canada", "Vancouver, Canada", "Canada"],
+  australia: ["Sydney, Australia", "Melbourne, Australia", "Australia"],
+  germany: ["Berlin, Germany", "Munich, Germany", "Germany"],
+  france: ["Paris, France", "France"],
+  remote: ["Remote", "Worldwide"],
+  worldwide: ["Worldwide", "Remote"],
+};
+
+function getSmartJobSuggestions(value: string) {
+  const q = value.toLowerCase().trim();
+
+  if (!q || q === "job" || q === "jobs" || q === "work") {
+    return popularJobSuggestions.slice(0, 8);
+  }
+
+  const groupMatches = Object.entries(jobGroups)
+    .filter(([key]) => key.includes(q) || q.includes(key))
+    .flatMap(([, items]) => items);
+
+  const directMatches = [
+    ...popularJobSuggestions,
+    ...Object.values(jobGroups).flat(),
+  ].filter((item) => item.toLowerCase().includes(q));
+
+  return Array.from(new Set([...groupMatches, ...directMatches])).slice(0, 8);
+}
+
+function getAllCountryNames() {
+  return [
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Antigua and Barbuda",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain",
+    "Bangladesh",
+    "Barbados",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burundi",
+    "Cambodia",
+    "Cameroon",
+    "Canada",
+    "Cape Verde",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo",
+    "Costa Rica",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Djibouti",
+    "Dominica",
+    "Dominican Republic",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Eswatini",
+    "Ethiopia",
+    "Fiji",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Greece",
+    "Grenada",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Jamaica",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kiribati",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Laos",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Marshall Islands",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Micronesia",
+    "Moldova",
+    "Monaco",
+    "Mongolia",
+    "Montenegro",
+    "Morocco",
+    "Mozambique",
+    "Myanmar",
+    "Namibia",
+    "Nauru",
+    "Nepal",
+    "Netherlands",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "North Korea",
+    "North Macedonia",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palau",
+    "Palestine",
+    "Panama",
+    "Papua New Guinea",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russia",
+    "Rwanda",
+    "Saint Kitts and Nevis",
+    "Saint Lucia",
+    "Saint Vincent and the Grenadines",
+    "Samoa",
+    "San Marino",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Solomon Islands",
+    "Somalia",
+    "South Africa",
+    "South Korea",
+    "South Sudan",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Sweden",
+    "Switzerland",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Timor-Leste",
+    "Togo",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Vatican City",
+    "Venezuela",
+    "Vietnam",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe",
+  ];
+}
+
+function getSmartLocationSuggestions(value: string) {
+  const q = value.toLowerCase().trim();
+
+  const priorityLocations = [
+    "Worldwide",
+    "Remote",
+    "All countries",
+    "Every country",
+    "United Arab Emirates",
+    "Dubai, United Arab Emirates",
+    "Abu Dhabi, United Arab Emirates",
+    "Qatar",
+    "Doha, Qatar",
+    "Saudi Arabia",
+    "Riyadh, Saudi Arabia",
+    "India",
+    "United Kingdom",
+    "United States",
+    "Canada",
+    "Australia",
+    "Germany",
+    "France",
+    "Singapore",
+  ];
+
+  const allCountries = getAllCountryNames();
+
+  const allLocations = Array.from(
+    new Set([...priorityLocations, ...allCountries])
+  );
+
+  if (!q || q === "location" || q === "country" || q === "city") {
+    return allLocations;
+  }
+
+  return allLocations.filter((item) => item.toLowerCase().includes(q));
+}
 
 export default function JobsPage() {
   const { data: session } = useSession();
@@ -74,18 +532,20 @@ export default function JobsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState("Ready");
   const [saving, setSaving] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
+  
   const [searching, setSearching] = useState(false);
   const [filesSaved, setFilesSaved] = useState(false);
   const [setupOpen, setSetupOpen] = useState(true);
+  const [jobDropdownOpen, setJobDropdownOpen] = useState(false);
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
   const [cardAction, setCardAction] = useState<"left" | "right" | "up" | null>(
     null
   );
   const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(
-  null
-);
-const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-const [isDragging, setIsDragging] = useState(false);
+    null
+  );
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
 
   const currentJob = jobs[currentIndex];
 
@@ -95,23 +555,11 @@ const [isDragging, setIsDragging] = useState(false);
       : 0;
 
   const filteredJobSuggestions = useMemo(() => {
-    return jobTitle.length > 0
-      ? jobSuggestions
-          .filter((item) =>
-            item.toLowerCase().includes(jobTitle.toLowerCase())
-          )
-          .slice(0, 6)
-      : jobSuggestions;
+    return getSmartJobSuggestions(jobTitle);
   }, [jobTitle]);
 
   const filteredLocationSuggestions = useMemo(() => {
-    return location.length > 0
-      ? locationSuggestions
-          .filter((item) =>
-            item.toLowerCase().includes(location.toLowerCase())
-          )
-          .slice(0, 6)
-      : locationSuggestions;
+    return getSmartLocationSuggestions(location);
   }, [location]);
 
   const nextJob = () => {
@@ -127,14 +575,16 @@ const [isDragging, setIsDragging] = useState(false);
   };
 
   const moveToNextJobWithSwipe = () => {
-    setTimeout(nextJob, 350);
-  };
+  setTimeout(nextJob, 110);
+};
 
   const handleSearch = async () => {
     try {
       setSearching(true);
       setMessage("Finding matching vacancies...");
       setCardAction(null);
+      setJobDropdownOpen(false);
+      setLocationDropdownOpen(false);
 
       const res = await fetch(
         `/api/jobs/search?title=${encodeURIComponent(
@@ -163,211 +613,211 @@ const [isDragging, setIsDragging] = useState(false);
     }
   };
 
-  const saveApplication = async (status: "declined" | "skipped" | "applied") => {
-    if (!session?.user?.email) {
-      router.push("/login");
-      return false;
-    }
+ const saveApplication = async (
+  status: "declined" | "skipped" | "applied",
+  jobToSave: Job | undefined = currentJob,
+  silent = false
+) => {
+  if (!session?.user?.email) {
+    router.push("/login");
+    return false;
+  }
 
-    if (!currentJob) return false;
+  if (!jobToSave) return false;
 
-    setSaving(true);
+  if (!silent) setSaving(true);
 
+  try {
     const res = await fetch("/api/applications", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        job_title: currentJob.title,
-        company: currentJob.company,
-        location: currentJob.location,
-        salary: currentJob.salary,
-        job_type: currentJob.type,
+        job_title: jobToSave.title,
+        company: jobToSave.company,
+        location: jobToSave.location,
+        salary: jobToSave.salary,
+        job_type: jobToSave.type,
         status,
       }),
     });
 
-    setSaving(false);
-
     if (!res.ok) {
-      alert("Could not save this action. Please try again.");
+      if (!silent) alert("Could not save this action. Please try again.");
       return false;
     }
 
     return true;
-  };
+  } finally {
+    if (!silent) setSaving(false);
+  }
+};
 
-  const handleDecline = async () => {
-    const saved = await saveApplication("declined");
-    if (!saved) return;
+  const handleDecline = () => {
+  if (!currentJob) return;
 
-    setCardAction("left");
-    setMessage("Declined");
-    moveToNextJobWithSwipe();
-  };
+  const jobSnapshot = currentJob;
 
-  const handleSkip = async () => {
-    const saved = await saveApplication("skipped");
-    if (!saved) return;
+  setCardAction("left");
+  setMessage("Declined");
+  moveToNextJobWithSwipe();
 
-    setCardAction("up");
-    setMessage("Skipped");
-    moveToNextJobWithSwipe();
-  };
+  void saveApplication("declined", jobSnapshot, true);
+};
 
-  const handleApply = async () => {
-    if (!session?.user?.email) {
-      router.push("/login");
-      return;
-    }
+const handleSkip = () => {
+  if (!currentJob) return;
 
-    if (!cvFile) {
-      alert("Please upload your CV first.");
-      setSetupOpen(true);
-      return;
-    }
+  const jobSnapshot = currentJob;
 
-    if (!coverFile) {
-      alert("Please upload your cover letter first.");
-      setSetupOpen(true);
-      return;
-    }
+  setCardAction("up");
+  setMessage("Skipped");
+  moveToNextJobWithSwipe();
 
+  void saveApplication("skipped", jobSnapshot, true);
+};
+
+const handleApply = () => {
+  if (!session?.user?.email) {
+  router.push(`/login?callbackUrl=${encodeURIComponent("/jobs")}`);
+  return;
+}
+
+  if (!cvFile) {
+    alert("Please upload your CV first.");
+    setSetupOpen(true);
+    return;
+  }
+
+  if (!coverFile) {
+    alert("Please upload your cover letter first.");
+    setSetupOpen(true);
+    return;
+  }
+
+  if (!currentJob) return;
+
+  const jobSnapshot = currentJob;
+
+  setCardAction("right");
+  setMessage(`Applied to ${jobSnapshot.company}`);
+  moveToNextJobWithSwipe();
+
+  if (jobSnapshot.applyUrl) {
+    window.open(jobSnapshot.applyUrl, "_blank");
+  }
+
+  void (async () => {
     try {
-      setSaving(true);
-      setShowLoader(true);
-      setMessage("Preparing application...");
-
       const formData = new FormData();
       formData.append("cv", cvFile);
       formData.append("coverLetter", coverFile);
 
-      const uploadRes = await fetch("/api/job-profile/upload", {
+      await fetch("/api/job-profile/upload", {
         method: "POST",
         body: formData,
       });
 
-      if (!uploadRes.ok) {
-        setSaving(false);
-        setShowLoader(false);
-        alert("Could not upload your CV and cover letter. Please try again.");
-        return;
-      }
-
       setFilesSaved(true);
 
-      const saved = await saveApplication("applied");
-      if (!saved) {
-        setShowLoader(false);
-        return;
-      }
+      await saveApplication("applied", jobSnapshot, true);
 
-      const emailRes = await fetch("/api/applications/confirm-email", {
+      await fetch("/api/applications/confirm-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          job_title: currentJob.title,
-          company: currentJob.company,
-          location: currentJob.location,
+          job_title: jobSnapshot.title,
+          company: jobSnapshot.company,
+          location: jobSnapshot.location,
         }),
       });
-
-      if (!emailRes.ok) {
-        const emailError = await emailRes.json();
-        alert(emailError?.error || "Application saved, but email was not sent.");
-      }
-
-      setSaving(false);
-      setShowLoader(false);
-      setCardAction("right");
-      setMessage(`Applied to ${currentJob.company}`);
-
-      if (currentJob.applyUrl) {
-        window.open(currentJob.applyUrl, "_blank");
-      }
-
-      moveToNextJobWithSwipe();
     } catch {
-      setSaving(false);
-      setShowLoader(false);
-      setMessage("Application failed");
-      alert("Could not complete application. Please try again.");
+      console.error("Background apply failed");
     }
-  };
+  })();
+};
 
   const cardAnimation =
-    cardAction === "left"
-      ? "-translate-x-[80px] opacity-0 scale-[0.97]"
-      : cardAction === "right"
-      ? "translate-x-[80px] opacity-0 scale-[0.97]"
-      : cardAction === "up"
-      ? "-translate-y-8 opacity-0 scale-[0.97]"
-      : "translate-x-0 translate-y-0 opacity-100 scale-100";
-      const dragHint =
-  dragOffset.x > 70
-    ? "APPLY"
-    : dragOffset.x < -70
-    ? "DECLINE"
-    : dragOffset.y < -70
-    ? "SKIP"
-    : "";
+  cardAction === "left"
+    ? "-translate-x-[260px] rotate-[-12deg] opacity-0 scale-[0.92] blur-[1px]"
+    : cardAction === "right"
+    ? "translate-x-[260px] rotate-[12deg] opacity-0 scale-[0.92] blur-[1px]"
+    : cardAction === "up"
+    ? "-translate-y-[140px] opacity-0 scale-[0.92] blur-[1px]"
+    : "translate-x-0 translate-y-0 rotate-0 opacity-100 scale-100 blur-0";
 
-const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
-  if (saving || searching || !currentJob) return;
+  const dragHint =
+    dragOffset.x > 70
+      ? "APPLY"
+      : dragOffset.x < -70
+      ? "DECLINE"
+      : dragOffset.y < -70
+      ? "SKIP"
+      : "";
 
-  setIsDragging(true);
-  setDragStart({ x: e.clientX, y: e.clientY });
-  e.currentTarget.setPointerCapture(e.pointerId);
-};
+  const handlePointerDown = (e: PointerEvent<HTMLElement>) => {
+    if (saving || searching || !currentJob) return;
 
-const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
-  if (!isDragging || !dragStart) return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
 
-  setDragOffset({
-    x: e.clientX - dragStart.x,
-    y: e.clientY - dragStart.y,
-  });
-};
+  const handlePointerMove = (e: PointerEvent<HTMLElement>) => {
+    if (!isDragging || !dragStart) return;
 
-const handlePointerUp = () => {
-  if (!isDragging) return;
+    setDragOffset({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
 
-  const { x, y } = dragOffset;
+  const handlePointerUp = () => {
+    if (!isDragging) return;
 
-  setIsDragging(false);
-  setDragStart(null);
-  setDragOffset({ x: 0, y: 0 });
+    const { x, y } = dragOffset;
 
-  if (x > 120) {
-    handleApply();
-    return;
-  }
+    setIsDragging(false);
+    setDragStart(null);
+    setDragOffset({ x: 0, y: 0 });
 
-  if (x < -120) {
-    handleDecline();
-    return;
-  }
-
-  if (y < -110) {
-    handleSkip();
-  }
-};
-
-const dragStyle = isDragging
-  ? {
-      transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${
-        dragOffset.x / 18
-      }deg)`,
-      transition: "none",
+    if (x > 120) {
+      handleApply();
+      return;
     }
-  : undefined;
+
+    if (x < -120) {
+      handleDecline();
+      return;
+    }
+
+    if (y < -110) {
+      handleSkip();
+    }
+  };
+  const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
+  if (!session?.user?.email) {
+    e.preventDefault();
+    alert("Please login first, then upload your CV and cover letter.");
+    router.push(`/login?callbackUrl=${encodeURIComponent("/jobs")}`);
+  }
+};
+
+  const dragStyle = isDragging
+    ? {
+        transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${
+          dragOffset.x / 18
+        }deg)`,
+        transition: "none",
+      }
+    : undefined;
 
   return (
     <main className="min-h-screen bg-[#f3f2ef] text-[#191919]">
-      {(searching || showLoader) && (
+      {searching && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-white/70 px-6 backdrop-blur-xl">
           <div className="w-full max-w-sm rounded-3xl border border-[#d0d0d0] bg-white p-8 text-center shadow-xl">
             <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
@@ -429,53 +879,45 @@ const dragStyle = isDragging
         {setupOpen && (
           <section className="mt-4 rounded-2xl border border-[#d6d6d6] bg-white p-5 shadow-sm">
             <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-              <div>
-                <label className="mb-2 block text-xs font-black uppercase tracking-wide text-neutral-500">
-                  Job title
-                </label>
-                <input
-                  value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                  placeholder="e.g. Finance Assistant"
-                  className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#0a66c2] focus:ring-4 focus:ring-[#0a66c2]/10"
-                />
+              <SearchDropdown
+                label="Job title"
+                value={jobTitle}
+                placeholder="e.g. Finance, Data, Retail"
+                open={jobDropdownOpen}
+                suggestions={filteredJobSuggestions}
+                onFocus={() => setJobDropdownOpen(true)}
+                onBlur={() =>
+                  setTimeout(() => setJobDropdownOpen(false), 120)
+                }
+                onChange={(value) => {
+                  setJobTitle(value);
+                  setJobDropdownOpen(true);
+                }}
+                onSelect={(value) => {
+                  setJobTitle(value);
+                  setJobDropdownOpen(false);
+                }}
+              />
 
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {filteredJobSuggestions.map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => setJobTitle(item)}
-                      className="rounded-full border border-[#0a66c2]/20 bg-[#eef3f8] px-3 py-1.5 text-[11px] font-bold text-[#0a66c2] transition hover:bg-[#0a66c2] hover:text-white"
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-xs font-black uppercase tracking-wide text-neutral-500">
-                  Location
-                </label>
-                <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Dubai"
-                  className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#0a66c2] focus:ring-4 focus:ring-[#0a66c2]/10"
-                />
-
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {filteredLocationSuggestions.map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => setLocation(item)}
-                      className="rounded-full border border-[#0a66c2]/20 bg-[#eef3f8] px-3 py-1.5 text-[11px] font-bold text-[#0a66c2] transition hover:bg-[#0a66c2] hover:text-white"
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <SearchDropdown
+                label="Location"
+                value={location}
+                placeholder="Type any country: United Kingdom, Canada, Oman, Worldwide"
+                open={locationDropdownOpen}
+                suggestions={filteredLocationSuggestions}
+                onFocus={() => setLocationDropdownOpen(true)}
+                onBlur={() =>
+                  setTimeout(() => setLocationDropdownOpen(false), 120)
+                }
+                onChange={(value) => {
+                  setLocation(value);
+                  setLocationDropdownOpen(true);
+                }}
+                onSelect={(value) => {
+                  setLocation(value);
+                  setLocationDropdownOpen(false);
+                }}
+              />
             </div>
 
             <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr_180px]">
@@ -486,6 +928,7 @@ const dragStyle = isDragging
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
+                  onClick={requireLoginForFiles}
                   onChange={(e) => {
                     setCvFile(e.target.files?.[0] || null);
                     setFilesSaved(false);
@@ -506,6 +949,7 @@ const dragStyle = isDragging
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
+                  onClick={requireLoginForFiles}
                   onChange={(e) => {
                     setCoverFile(e.target.files?.[0] || null);
                     setFilesSaved(false);
@@ -531,115 +975,122 @@ const dragStyle = isDragging
         )}
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[260px_1fr_280px]">
-            <aside className="hidden lg:block">
-  <div className="group sticky top-24 overflow-hidden rounded-[28px] border border-[#d6d6d6] bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(10,102,194,0.16)]">
-    <div className="relative bg-gradient-to-br from-[#0a66c2] to-[#004182] p-5 text-white">
-      <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-white/15 blur-2xl transition-all duration-700 group-hover:scale-125" />
+          <aside className="hidden lg:block">
+            <div className="group sticky top-24 overflow-hidden rounded-[28px] border border-[#d6d6d6] bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(10,102,194,0.16)]">
+              <div className="relative bg-gradient-to-br from-[#0a66c2] to-[#004182] p-5 text-white">
+                <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-white/15 blur-2xl transition-all duration-700 group-hover:scale-125" />
 
-      <div className="relative flex items-start justify-between gap-4">
-        <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/70">
-            One-tap apply
-          </p>
-          <h2 className="mt-2 text-2xl font-black leading-tight">
-            Application cockpit
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-white/75">
-            Get your files ready once. Apply faster to every matching job.
-          </p>
-        </div>
+                <div className="relative flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/70">
+                      One-tap apply
+                    </p>
+                    <h2 className="mt-2 text-2xl font-black leading-tight">
+                      Application cockpit
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-white/75">
+                      Get your files ready once. Apply faster to every matching
+                      job.
+                    </p>
+                  </div>
 
-        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl font-black text-[#0a66c2] shadow-lg transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
-          {cvFile && coverFile ? "✓" : "↗"}
-          <span className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-green-400 ring-4 ring-[#0a66c2]" />
-        </div>
-      </div>
-    </div>
+                  <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl font-black text-[#0a66c2] shadow-lg transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
+                    {cvFile && coverFile ? "✓" : "↗"}
+                    <span className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-green-400 ring-4 ring-[#0a66c2]" />
+                  </div>
+                </div>
+              </div>
 
-    <div className="p-5">
-      <div className="mb-5 overflow-hidden rounded-2xl bg-[#eef3f8] p-1">
-        <div
-          className="h-3 rounded-xl bg-gradient-to-r from-[#0a66c2] to-[#40a9ff] transition-all duration-700 ease-out"
-          style={{
-            width:
-              cvFile && coverFile && filesSaved
-                ? "100%"
-                : cvFile && coverFile
-                ? "75%"
-                : cvFile || coverFile
-                ? "42%"
-                : "12%",
-          }}
-        />
-      </div>
+              <div className="p-5">
+                <div className="mb-5 overflow-hidden rounded-2xl bg-[#eef3f8] p-1">
+                  <div
+                    className="h-3 rounded-xl bg-gradient-to-r from-[#0a66c2] to-[#40a9ff] transition-all duration-700 ease-out"
+                    style={{
+                      width:
+                        cvFile && coverFile && filesSaved
+                          ? "100%"
+                          : cvFile && coverFile
+                          ? "75%"
+                          : cvFile || coverFile
+                          ? "42%"
+                          : "12%",
+                    }}
+                  />
+                </div>
 
-      <div className="space-y-3">
-        <PremiumStatusRow
-          label="CV / Resume"
-          value={cvFile ? "Ready" : "Upload"}
-          good={!!cvFile}
-        />
+                <div className="space-y-3">
+                  <PremiumStatusRow
+                    label="CV / Resume"
+                    value={cvFile ? "Ready" : "Upload"}
+                    good={!!cvFile}
+                  />
 
-        <PremiumStatusRow
-          label="Cover letter"
-          value={coverFile ? "Ready" : "Upload"}
-          good={!!coverFile}
-        />
+                  <PremiumStatusRow
+                    label="Cover letter"
+                    value={coverFile ? "Ready" : "Upload"}
+                    good={!!coverFile}
+                  />
 
-        <PremiumStatusRow
-          label="Apply system"
-          value={filesSaved ? "Synced" : cvFile && coverFile ? "Ready" : "Waiting"}
-          good={filesSaved || (!!cvFile && !!coverFile)}
-          neutral={!filesSaved && !(cvFile && coverFile)}
-        />
-      </div>
+                  <PremiumStatusRow
+                    label="Apply system"
+                    value={
+                      filesSaved
+                        ? "Synced"
+                        : cvFile && coverFile
+                        ? "Ready"
+                        : "Waiting"
+                    }
+                    good={filesSaved || (!!cvFile && !!coverFile)}
+                    neutral={!filesSaved && !(cvFile && coverFile)}
+                  />
+                </div>
 
-      <div className="mt-5 rounded-2xl border border-[#0a66c2]/15 bg-[#f8fafd] p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
-            ⚡
-          </div>
+                <div className="mt-5 rounded-2xl border border-[#0a66c2]/15 bg-[#f8fafd] p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
+                      ⚡
+                    </div>
 
-          <div>
-            <p className="text-sm font-black text-[#191919]">
-              {cvFile && coverFile
-                ? "Fast apply unlocked"
-                : "Upload files to unlock fast apply"}
-            </p>
-            <p className="mt-1 text-xs font-semibold leading-5 text-neutral-500">
-              {cvFile && coverFile
-                ? "You can now apply with one smooth action."
-                : "Your CV and cover letter are required before applying."}
-            </p>
-          </div>
-        </div>
-      </div>
+                    <div>
+                      <p className="text-sm font-black text-[#191919]">
+                        {cvFile && coverFile
+                          ? "Fast apply unlocked"
+                          : "Upload files to unlock fast apply"}
+                      </p>
+                      <p className="mt-1 text-xs font-semibold leading-5 text-neutral-500">
+                        {cvFile && coverFile
+                          ? "You can now apply with one smooth action."
+                          : "Your CV and cover letter are required before applying."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-      <button
-        onClick={() => setSetupOpen(true)}
-        className="mt-5 w-full rounded-full border border-[#0a66c2] bg-white px-5 py-3 text-sm font-black text-[#0a66c2] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#eef3f8]"
-      >
-        Manage files
-      </button>
-    </div>
-  </div>
-</aside>
+                <button
+                  onClick={() => setSetupOpen(true)}
+                  className="mt-5 w-full rounded-full border border-[#0a66c2] bg-white px-5 py-3 text-sm font-black text-[#0a66c2] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#eef3f8]"
+                >
+                  Manage files
+                </button>
+              </div>
+            </div>
+          </aside>
 
                 <section className="min-w-0">
   {currentJob ? (
-    <div className="mx-auto w-full max-w-[390px] sm:max-w-[430px]">
-  <div className="relative min-h-[570px] touch-none sm:min-h-[630px]">
-        <div className="absolute left-1/2 top-6 h-[520px] w-[86%] -translate-x-1/2 rounded-[30px] border border-[#d6d6d6] bg-white/50 shadow-sm sm:h-[580px]" />
-<div className="absolute left-1/2 top-3 h-[540px] w-[93%] -translate-x-1/2 rounded-[32px] border border-[#d6d6d6] bg-white/80 shadow-sm sm:h-[600px]" />
+    <div className="mx-auto w-full max-w-[390px]">
+      <div className="relative min-h-[620px] touch-none">
+        <div className="absolute inset-x-8 top-8 h-[540px] rounded-[42px] bg-black/10 blur-2xl" />
+        <div className="absolute left-1/2 top-5 h-[560px] w-[92%] -translate-x-1/2 rounded-[40px] bg-white/60 shadow-[0_30px_100px_rgba(15,23,42,0.12)]" />
 
         {dragHint && (
           <div
             className={
               dragHint === "APPLY"
-                ? "absolute right-6 top-12 z-30 rotate-12 rounded-2xl border-4 border-green-500 bg-white/90 px-5 py-2 text-2xl font-black text-green-600 shadow-xl"
+                ? "absolute right-4 top-16 z-30 rotate-12 rounded-2xl border-4 border-emerald-500 bg-white px-5 py-2 text-2xl font-black text-emerald-600 shadow-2xl"
                 : dragHint === "DECLINE"
-                ? "absolute left-6 top-12 z-30 -rotate-12 rounded-2xl border-4 border-red-500 bg-white/90 px-5 py-2 text-2xl font-black text-red-600 shadow-xl"
-                : "absolute left-1/2 top-12 z-30 -translate-x-1/2 rounded-2xl border-4 border-[#0a66c2] bg-white/90 px-5 py-2 text-2xl font-black text-[#0a66c2] shadow-xl"
+                ? "absolute left-4 top-16 z-30 -rotate-12 rounded-2xl border-4 border-rose-500 bg-white px-5 py-2 text-2xl font-black text-rose-600 shadow-2xl"
+                : "absolute left-1/2 top-16 z-30 -translate-x-1/2 rounded-2xl border-4 border-[#0a66c2] bg-white px-5 py-2 text-2xl font-black text-[#0a66c2] shadow-2xl"
             }
           >
             {dragHint}
@@ -652,184 +1103,123 @@ const dragStyle = isDragging
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
           style={dragStyle}
-          className={`group relative z-20 overflow-hidden rounded-[30px] border border-[#d6d6d6] bg-white shadow-[0_18px_60px_rgba(0,0,0,0.12)] transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(10,102,194,0.16)] ${cardAnimation}`}
+          className={`relative z-20 overflow-hidden rounded-[40px] border border-white bg-white shadow-[0_28px_90px_rgba(15,23,42,0.18)] transition-all duration-150 ease-out will-change-transform ${cardAnimation}`}
         >
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#0a66c2] via-[#0758a8] to-[#003b73] p-4 text-white sm:p-5">
-            <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-white/15 blur-3xl transition duration-700 group-hover:scale-125" />
+          <div className="relative h-[230px] overflow-hidden bg-gradient-to-br from-[#111827] via-[#0a66c2] to-[#38bdf8] p-5 text-white">
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
+            <div className="absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-cyan-300/25 blur-3xl" />
 
-            <div className="relative flex items-start justify-between gap-3">
-              <div className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-black text-white">
-                  {currentJob.type || "Job"}
-                </span>
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-[22px] bg-white text-xl font-black text-[#0a66c2] shadow-xl">
+                  {(currentJob.company || "J").charAt(0).toUpperCase()}
+                </div>
 
-                <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold text-white/80">
-                  {currentJob.posted || "Recently posted"}
-                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-black">
+                    {currentJob.company}
+                  </p>
+                  <p className="mt-1 text-xs font-bold text-white/65">
+                    {currentJob.posted || "Recently posted"}
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-2xl bg-white px-3 py-2 text-center text-[#0a66c2] shadow-lg">
-                <p className="text-lg font-black">
-                  {currentJob.matchScore ?? Math.round(progress)}%
-                </p>
-                <p className="text-[9px] font-black uppercase">Match</p>
+              <div className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-black text-white backdrop-blur-md">
+                {currentJob.type || "Job"}
               </div>
             </div>
 
             <div className="relative mt-7">
-              <p className="text-sm font-bold text-white/70">
-                {currentJob.company}
-              </p>
-
-              <h2 className="mt-2 text-xl font-black leading-tight tracking-tight sm:text-3xl">
+              <h2 className="line-clamp-3 text-[28px] font-black leading-[1.02] tracking-tight">
                 {currentJob.title}
               </h2>
+            </div>
+          </div>
 
-              <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold text-white/85">
-                <span className="rounded-full bg-black/15 px-3 py-2">
-                  📍 {currentJob.location}
-                </span>
+          <div className="relative -mt-8 px-4">
+            <div className="rounded-[30px] border border-neutral-100 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-[22px] bg-[#f8fafd] p-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-neutral-400">
+                    Location
+                  </p>
+                  <p className="mt-2 line-clamp-2 text-sm font-black text-neutral-950">
+                    {currentJob.location}
+                  </p>
+                </div>
 
-                <span className="rounded-full bg-black/15 px-3 py-2">
-                  💰 {currentJob.salary}
-                </span>
+                <div className="rounded-[22px] bg-[#f8fafd] p-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-neutral-400">
+                    Salary
+                  </p>
+                  <p className="mt-2 line-clamp-2 text-sm font-black text-neutral-950">
+                    {currentJob.salary}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-[24px] bg-neutral-950 p-4 text-white">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/45">
+                  Description
+                </p>
+
+                <p className="mt-3 line-clamp-6 text-sm font-medium leading-6 text-white/82">
+                  {currentJob.summary || currentJob.description}
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="p-3 sm:p-4">
-            <div className="grid grid-cols-3 gap-2">
-              <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
-                <p className="text-[10px] font-black uppercase text-neutral-400">
-                  Link
-                </p>
-                <p className="mt-1 text-xs font-black">
-                  {currentJob.applyUrl ? "Yes" : "No"}
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
-                <p className="text-[10px] font-black uppercase text-neutral-400">
-                  Source
-                </p>
-                <p className="mt-1 truncate text-xs font-black">
-                  {currentJob.source || "Job"}
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
-                <p className="text-[10px] font-black uppercase text-neutral-400">
-                  Card
-                </p>
-                <p className="mt-1 text-xs font-black">
-                  {currentIndex + 1}/{jobs.length}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="text-lg font-black text-[#191919]">
-                    About this job
-                  </h3>
-                  <p className="mt-1 text-xs font-semibold text-neutral-500">
-                    Important details only
-                  </p>
-                </div>
-
-                {currentJob.smartReason && (
-                  <span className="rounded-full bg-[#eef3f8] px-3 py-1 text-[11px] font-black text-[#0a66c2]">
-                    {currentJob.smartReason}
-                  </span>
-                )}
-              </div>
-
-              <p className="mt-3 line-clamp-4 text-sm leading-6 text-neutral-700">
-                {currentJob.summary || currentJob.description}
-              </p>
-
-              <div className="mt-4 rounded-2xl bg-[#f8fafd] p-3">
-                <p className="text-[10px] font-black uppercase tracking-wide text-neutral-400">
-                  Why it stands out
-                </p>
-
-                <ul className="mt-2 space-y-2">
-                  {(currentJob.highlights || [currentJob.description])
-                    .slice(0, 2)
-                    .map((item, index) => (
-                      <li
-                        key={index}
-                        className="flex gap-2 text-xs leading-5 text-neutral-700"
-                      >
-                        <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#0a66c2] text-[9px] font-black text-white">
-                          ✓
-                        </span>
-                        <span className="line-clamp-2">{item}</span>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                {(currentJob.skills || currentJob.tags || [])
-                  .slice(0, 4)
-                  .map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-[#0a66c2]/20 bg-[#eef3f8] px-3 py-1 text-[11px] font-bold text-[#0a66c2]"
-                    >
-                      {item}
-                    </span>
-                  ))}
-              </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-2 rounded-3xl bg-[#f8fafd] p-2">
+          <div className="px-4 pb-4 pt-4">
+            <div className="grid grid-cols-3 gap-3 rounded-[30px] bg-neutral-100 p-2">
               <button
                 onClick={handleDecline}
-                disabled={saving || searching || !currentJob}
-                className="rounded-2xl border border-red-100 bg-white py-3 text-xs font-black text-red-600 transition active:scale-95 hover:bg-red-50 disabled:opacity-40"
+                disabled={searching || !currentJob}
+                className="flex h-16 flex-col items-center justify-center rounded-[24px] bg-white text-xs font-black text-rose-600 shadow-sm transition duration-150 hover:-translate-y-0.5 hover:bg-rose-50 active:scale-95 disabled:opacity-40"
               >
-                ✕
-                <span className="mt-1 block">Decline</span>
+                <span className="text-xl leading-none">✕</span>
+                <span className="mt-1">Decline</span>
               </button>
 
               <button
                 onClick={handleSkip}
-                disabled={saving || searching || !currentJob}
-                className="rounded-2xl border border-neutral-200 bg-white py-3 text-xs font-black text-neutral-700 transition active:scale-95 hover:bg-neutral-100 disabled:opacity-40"
+                disabled={searching || !currentJob}
+                className="flex h-16 flex-col items-center justify-center rounded-[24px] bg-white text-xs font-black text-neutral-700 shadow-sm transition duration-150 hover:-translate-y-0.5 hover:bg-white active:scale-95 disabled:opacity-40"
               >
-                ↑
-                <span className="mt-1 block">Skip</span>
+                <span className="text-xl leading-none">↑</span>
+                <span className="mt-1">Skip</span>
               </button>
 
               <button
                 onClick={handleApply}
-                disabled={saving || searching || !currentJob}
-                className="group relative overflow-hidden rounded-2xl bg-[#0a66c2] py-3 text-xs font-black text-white shadow-[0_12px_30px_rgba(10,102,194,0.25)] transition active:scale-95 hover:bg-[#004182] disabled:opacity-40"
+                disabled={searching || !currentJob}
+                className="flex h-16 flex-col items-center justify-center rounded-[24px] bg-[#0a66c2] text-xs font-black text-white shadow-[0_14px_35px_rgba(10,102,194,0.35)] transition duration-150 hover:-translate-y-0.5 hover:bg-[#004182] active:scale-95 disabled:opacity-40"
               >
-                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                <span className="relative">Apply</span>
+                <span className="text-xl leading-none">↗</span>
+                <span className="mt-1">Apply</span>
               </button>
             </div>
 
-            <p className="mt-3 text-center text-[11px] font-bold text-neutral-400">
-              Swipe right to apply · left to decline · up to skip
+            <p className="mt-4 text-center text-[11px] font-bold text-neutral-400">
+              Swipe right apply · left decline · up skip
             </p>
           </div>
         </article>
       </div>
     </div>
   ) : (
-    <div className="mx-auto max-w-[430px] rounded-3xl border border-[#d6d6d6] bg-white p-10 text-center shadow-sm">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-xl bg-[#0a66c2] text-2xl font-black text-white">
+    <div className="mx-auto max-w-[390px] rounded-[36px] border border-neutral-200 bg-white p-10 text-center shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a66c2] text-2xl font-black text-white">
         J
       </div>
+
       <h2 className="mt-6 text-3xl font-black">No more jobs</h2>
+
       <p className="mt-2 text-sm leading-6 text-neutral-500">
         Search again to find more matching vacancies.
       </p>
+
       <button
         onClick={handleSearch}
         className="mt-6 rounded-full bg-[#0a66c2] px-6 py-3 text-sm font-black text-white transition hover:bg-[#004182]"
@@ -893,6 +1283,61 @@ const dragStyle = isDragging
   );
 }
 
+function SearchDropdown({
+  label,
+  value,
+  placeholder,
+  open,
+  suggestions,
+  onFocus,
+  onBlur,
+  onChange,
+  onSelect,
+}: {
+  label: string;
+  value: string;
+  placeholder: string;
+  open: boolean;
+  suggestions: string[];
+  onFocus: () => void;
+  onBlur: () => void;
+  onChange: (value: string) => void;
+  onSelect: (value: string) => void;
+}) {
+  return (
+    <div className="relative">
+      <label className="mb-2 block text-xs font-black uppercase tracking-wide text-neutral-500">
+        {label}
+      </label>
+
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#0a66c2] focus:ring-4 focus:ring-[#0a66c2]/10"
+      />
+
+      {open && suggestions.length > 0 && (
+        <div className="absolute left-0 right-0 top-[78px] z-[80] max-h-[320px] overflow-y-auto rounded-2xl border border-neutral-200 bg-white shadow-[0_18px_55px_rgba(0,0,0,0.14)]">
+          {suggestions.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onMouseDown={() => onSelect(item)}
+              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-bold text-neutral-700 transition hover:bg-[#eef3f8] hover:text-[#0a66c2]"
+            >
+              <span>{item}</span>
+              <span className="text-xs text-neutral-400">Select</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PremiumStatusRow({
   label,
   value,
@@ -942,40 +1387,13 @@ function PremiumStatusRow({
   );
 }
 
-function InfoBox({ label, value }: { label: string; value: string }) {
+function SmallInfo({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-[#f8fafd] p-4">
-      <p className="text-xs font-black uppercase text-neutral-400">{label}</p>
-      <p className="mt-2 text-sm font-black">{value}</p>
+    <div className="rounded-2xl bg-[#f8fafd] p-3 text-center">
+      <p className="text-[10px] font-black uppercase text-neutral-400">
+        {label}
+      </p>
+      <p className="mt-1 truncate text-xs font-black">{value}</p>
     </div>
-  );
-}
-
-function ActionButton({
-  label,
-  onClick,
-  disabled,
-  primary,
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  primary?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={
-        primary
-          ? "group relative flex-1 overflow-hidden rounded-full bg-[#0a66c2] px-6 py-4 text-sm font-black text-white shadow-[0_14px_35px_rgba(10,102,194,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#004182] hover:shadow-[0_20px_50px_rgba(10,102,194,0.35)] disabled:opacity-40"
-          : "flex-1 rounded-full border border-neutral-300 bg-white px-6 py-4 text-sm font-black text-neutral-700 transition-all duration-300 hover:-translate-y-1 hover:bg-neutral-100 hover:shadow-md disabled:opacity-40"
-      }
-    >
-      {primary && (
-        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-      )}
-      <span className="relative">{label}</span>
-    </button>
   );
 }

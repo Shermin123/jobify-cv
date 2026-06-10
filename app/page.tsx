@@ -312,14 +312,14 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
       Check your CV score, improve ATS keywords, and generate a better CV in minutes.
     </p>
 
-    <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start w-full max-w-md mx-auto lg:mx-0">
+    <div className="mt-6 flex w-full max-w-md flex-col gap-3 mx-auto lg:mx-0">
   <button
     type="button"
     onClick={() => {
-  sessionStorage.setItem("jobify_force_setup", "true");
-  router.push("/upload");
-}}
-    className="w-full sm:w-auto bg-black text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:scale-[1.02] hover:bg-gray-900 transition"
+      sessionStorage.setItem("jobify_force_setup", "true");
+      router.push("/upload");
+    }}
+    className="w-full rounded-2xl bg-black px-6 py-4 text-base font-black text-white shadow-lg transition hover:scale-[1.02] hover:bg-gray-900"
   >
     🚀 Build My CV
   </button>
@@ -329,10 +329,25 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
     onClick={() =>
       document.getElementById("cv-score")?.scrollIntoView({ behavior: "smooth" })
     }
-    className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:scale-[1.02] transition"
+    className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 text-base font-black text-white shadow-lg transition hover:scale-[1.02]"
   >
-    Check Your CV for Free
+    📊 Check CV Score
   </button>
+
+  <button
+  type="button"
+  onClick={() => router.push("/jobs")}
+  style={{
+    background: "#ffffff",
+    color: "#111827",
+    border: "2px solid #111827",
+  }}
+  className="w-full rounded-2xl px-6 py-4 text-base font-black shadow-lg transition hover:scale-[1.02]"
+>
+  <span style={{ color: "#111827", opacity: 1 }}>
+    🤖 AI Auto Apply
+  </span>
+</button>
 </div>
 
     <div className="mt-5 grid grid-cols-3 gap-3 text-center max-w-md mx-auto lg:mx-0">
