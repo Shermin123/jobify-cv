@@ -14,15 +14,13 @@ export default function Navbar() {
     ? [
         { name: "Dashboard", href: "/dashboard" },
         { name: "Auto Apply", href: "/jobs" },
-        { name: "Create CV", href: "/upload" },
-        { name: "Create New CV", href: "/editor" },
+        { name: "AI CV", href: "/upload" },
         { name: "Documents", href: "/my-documents" },
       ]
     : [
         { name: "Home", href: "/" },
         { name: "Jobs", href: "/jobs" },
-        { name: "Create CV", href: "/upload" },
-        { name: "Create New CV", href: "/editor" },
+        { name: "AI CV", href: "/upload" },
         { name: "CV Score", href: "/#cv-score" },
       ];
 
@@ -53,7 +51,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+          <nav className="hidden flex-1 items-center justify-center lg:flex">
             <div className="flex items-center gap-1 rounded-full bg-slate-100 p-1">
               {links.map((link) => (
                 <Link
@@ -91,13 +89,6 @@ export default function Navbar() {
             </Link>
 
             <Link
-              href="/upload"
-              className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-black text-blue-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-100 hover:shadow-md"
-            >
-              Create CV
-            </Link>
-
-            <Link
               href="/editor"
               className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
             >
@@ -126,7 +117,7 @@ export default function Navbar() {
               href="/upload"
               className="rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-black text-blue-700 shadow-sm transition hover:bg-blue-100"
             >
-              Create CV
+              AI CV
             </Link>
 
             <Link
@@ -135,22 +126,6 @@ export default function Navbar() {
             >
               New CV
             </Link>
-
-            {isLoggedIn ? (
-              <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
-                className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 shadow-sm transition hover:bg-red-50 hover:text-red-600"
-              >
-                Logout
-              </button>
-            ) : (
-              <Link
-                href="/login"
-                className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 shadow-sm transition hover:bg-slate-50"
-              >
-                Login
-              </Link>
-            )}
           </div>
         </div>
 
@@ -170,6 +145,17 @@ export default function Navbar() {
           ))}
 
           <Link
+            href="/editor"
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
+              pathname === "/editor"
+                ? "bg-blue-600 text-white"
+                : "bg-blue-50 text-blue-700 hover:bg-blue-100"
+            }`}
+          >
+            Create New CV
+          </Link>
+
+          <Link
             href="/pricing"
             className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
               pathname === "/pricing"
@@ -179,6 +165,22 @@ export default function Navbar() {
           >
             Pricing
           </Link>
+
+          {isLoggedIn ? (
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 transition hover:bg-red-50 hover:text-red-600"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 transition hover:bg-slate-50"
+            >
+              Login
+            </Link>
+          )}
         </nav>
       </div>
     </header>
