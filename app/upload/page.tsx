@@ -97,17 +97,11 @@ useEffect(() => {
   if (!showSetupPopup) return;
 
   const originalOverflow = document.body.style.overflow;
-  const originalPosition = document.body.style.position;
-  const originalWidth = document.body.style.width;
 
   document.body.style.overflow = "hidden";
-  document.body.style.position = "fixed";
-  document.body.style.width = "100%";
 
   return () => {
     document.body.style.overflow = originalOverflow;
-    document.body.style.position = originalPosition;
-    document.body.style.width = originalWidth;
   };
 }, [showSetupPopup]);
 
@@ -1115,8 +1109,11 @@ const previousSetupStep = () => {
   }
   if (showSetupPopup) {
   return (
-    <main className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-[#303647] px-3 py-4 text-slate-950">
-  <div className="flex min-h-[calc(100dvh-32px)] items-center justify-center">
+    <main
+  className="fixed inset-0 z-[999999] h-[100svh] w-screen overflow-y-scroll bg-[#303647] px-3 pt-4 pb-[180px] text-slate-950"
+  style={{ WebkitOverflowScrolling: "touch" }}
+>
+  <div className="flex min-h-[calc(100svh+140px)] items-center justify-center">
     <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
   <div className="pointer-events-none absolute inset-0 overflow-hidden">
