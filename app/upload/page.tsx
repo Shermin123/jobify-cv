@@ -1110,10 +1110,10 @@ const previousSetupStep = () => {
   if (showSetupPopup) {
   return (
     <main
-  className="fixed inset-0 z-[999999] h-[100svh] w-screen overflow-y-scroll bg-[#303647] px-3 pt-4 pb-[180px] text-slate-950"
+  className="fixed inset-0 z-[999999] h-[100svh] w-screen overflow-y-scroll bg-[#303647] px-3 pt-4 pb-[160px] text-slate-950"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
-  <div className="flex min-h-[calc(100svh+140px)] items-center justify-center">
+  <div className="flex min-h-[calc(100svh-32px)] items-start justify-center pt-4">
     <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
   <div className="pointer-events-none absolute inset-0 overflow-hidden">
