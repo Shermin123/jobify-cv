@@ -210,28 +210,27 @@ export default function LoginPage() {
               </p>
             </div>
           </div>
-                </div>
+        </div>
       </div>
-    </div>
 
-      <style jsx>{`
-        .animate-gradient {
-          background-size: 400% 400%;
-          animation: gradientMove 12s ease infinite;
-        }
+      <style>{`
+  .animate-gradient {
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+  }
 
-        @keyframes gradientMove {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+`}</style>
     </main>
   );
 }
