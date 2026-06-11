@@ -94,10 +94,21 @@ const [generated, setGenerated] = useState(false);
 }, [session?.user?.email]);
 
 useEffect(() => {
-  if (!showSetupPopup) {
-    setShowCountrySuggestions(false);
-    setShowRoleSuggestions(false);
-  }
+  if (!showSetupPopup) return;
+
+  const originalOverflow = document.body.style.overflow;
+  const originalPosition = document.body.style.position;
+  const originalWidth = document.body.style.width;
+
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.width = "100%";
+
+  return () => {
+    document.body.style.overflow = originalOverflow;
+    document.body.style.position = originalPosition;
+    document.body.style.width = originalWidth;
+  };
 }, [showSetupPopup]);
 
   const clearTypingTimer = () => {
@@ -1103,59 +1114,71 @@ const previousSetupStep = () => {
     );
   }
   if (showSetupPopup) {
-  return (
-    <main className="relative min-h-screen overflow-hidden bg-[#f3f7ff] px-4 py-6 text-slate-950">
-      {/* CLEAN PREMIUM STATIC BACKGROUND */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.14),transparent_34%),linear-gradient(135deg,#f8fbff_0%,#eef5ff_48%,#f7fbff_100%)]" />
+  const setupEmoji = ["🌍", "🎯", "📈", "💼", "🏢", "✨", "🚀"][setupStep];
 
-        {/* BIG PREMIUM EMOJIS */}
-        <div className="absolute left-[8%] top-[18%] text-[92px] opacity-[0.16] blur-[0.2px]">
+  return (
+    <main className="fixed inset-0 z-[9999] h-[100dvh] w-screen overflow-hidden bg-[#eef4ff] px-3 py-3 text-slate-950">
+      {/* STATIC PREMIUM BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.16),transparent_34%),linear-gradient(135deg,#f8fbff_0%,#edf5ff_50%,#f7fbff_100%)]" />
+
+        <div className="absolute left-[5%] top-[14%] text-[80px] opacity-[0.14] sm:text-[120px]">
           📄
         </div>
 
-        <div className="absolute right-[9%] top-[22%] text-[86px] opacity-[0.14] blur-[0.2px]">
+        <div className="absolute right-[6%] top-[16%] text-[78px] opacity-[0.13] sm:text-[116px]">
           ✨
         </div>
 
-        <div className="absolute bottom-[16%] left-[13%] text-[88px] opacity-[0.14] blur-[0.2px]">
+        <div className="absolute bottom-[14%] left-[7%] text-[78px] opacity-[0.13] sm:text-[112px]">
           🎯
         </div>
 
-        <div className="absolute bottom-[18%] right-[15%] text-[82px] opacity-[0.13] blur-[0.2px]">
+        <div className="absolute bottom-[14%] right-[8%] text-[82px] opacity-[0.13] sm:text-[120px]">
           🚀
         </div>
 
-        <div className="absolute left-1/2 top-[42%] h-[580px] w-[580px] -translate-x-1/2 rounded-full bg-white/55 blur-[90px]" />
+        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/60 blur-[90px]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-3rem)] max-w-[500px] items-center justify-center">
-        <div className="relative w-full overflow-hidden rounded-[32px] border border-white/80 bg-white/95 shadow-[0_30px_90px_rgba(15,23,42,0.16)] backdrop-blur-2xl">
-          <div className="relative p-5 sm:p-6">
-            {/* HEADER */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-700 ring-1 ring-blue-100">
-                  <span className="h-2 w-2 rounded-full bg-blue-600" />
-                  Jobify AI Setup
-                </div>
-
-                <h1 className="mt-4 text-[28px] font-black leading-tight tracking-[-0.04em] text-slate-950 sm:text-[34px]">
-                  Personalise your CV
-                </h1>
-
-                <p className="mt-2 max-w-md text-sm font-medium leading-6 text-slate-500">
-                  Answer a few quick questions so Jobify can create a sharper, ATS-ready CV.
-                </p>
+      <div className="relative z-10 flex h-full w-full items-center justify-center">
+        <div
+          className="w-full max-w-[470px] overflow-hidden rounded-[30px] border border-white/80 bg-white/95 shadow-[0_28px_90px_rgba(15,23,42,0.18)] backdrop-blur-2xl"
+          style={{
+            maxHeight: "calc(100dvh - 24px)",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          <div className="max-h-[calc(100dvh-24px)] overflow-y-auto overscroll-contain p-4 sm:p-5">
+            {/* TOP BADGE */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-blue-700 ring-1 ring-blue-100">
+                <span className="h-2 w-2 rounded-full bg-blue-600" />
+                AI Setup
               </div>
 
-              <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-blue-600 text-xl font-black text-white shadow-[0_18px_40px_rgba(37,99,235,0.28)] sm:flex">
-                J
+              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500">
+                {setupStep + 1}/7
               </div>
             </div>
 
+            {/* BIG EMOJI ICON */}
+            <div className="mt-5 text-center">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-[0_20px_45px_rgba(37,99,235,0.28)]">
+                {setupEmoji}
+              </div>
+
+              <h1 className="mt-4 text-2xl font-black tracking-[-0.04em] text-slate-950 sm:text-3xl">
+                Personalise your CV
+              </h1>
+
+              <p className="mx-auto mt-2 max-w-sm text-sm font-medium leading-6 text-slate-500">
+                Quick setup for a sharper, ATS-ready CV.
+              </p>
+            </div>
+
             {/* PROGRESS */}
-            <div className="mt-6">
+            <div className="mt-5">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-xs font-black text-slate-400">
                   Question {setupStep + 1} of 7
@@ -1177,16 +1200,16 @@ const previousSetupStep = () => {
             {/* QUESTION BOX */}
             <div
               key={setupStep}
-              className="mt-5 rounded-[26px] border border-slate-200 bg-slate-50/90 p-4 shadow-inner"
+              className="mt-5 rounded-[24px] border border-slate-200 bg-slate-50/90 p-4 shadow-inner"
             >
               {setupStep === 0 && (
                 <div className="relative">
-                  <h3 className="text-lg font-black tracking-tight text-slate-950">
-                    Which country are you applying in?
+                  <h3 className="text-lg font-black text-slate-950">
+                    🌍 Which country are you applying in?
                   </h3>
 
                   <input
-                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-base font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                     placeholder="Example: United Kingdom"
                     value={country}
                     onFocus={() => setShowCountrySuggestions(true)}
@@ -1199,7 +1222,7 @@ const previousSetupStep = () => {
                   {showCountrySuggestions &&
                     country &&
                     filteredCountries.length > 0 && (
-                      <div className="absolute z-40 mt-2 max-h-44 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                      <div className="absolute z-40 mt-2 max-h-40 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
                         {filteredCountries.slice(0, 8).map((c) => (
                           <button
                             key={c}
@@ -1221,12 +1244,12 @@ const previousSetupStep = () => {
 
               {setupStep === 1 && (
                 <div className="relative">
-                  <h3 className="text-lg font-black tracking-tight text-slate-950">
-                    What job role are you targeting?
+                  <h3 className="text-lg font-black text-slate-950">
+                    🎯 What job role are you targeting?
                   </h3>
 
                   <input
-                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-base font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                     placeholder="Example: Software Engineer"
                     value={jobRole}
                     onFocus={() => setShowRoleSuggestions(true)}
@@ -1237,7 +1260,7 @@ const previousSetupStep = () => {
                   />
 
                   {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
-                    <div className="absolute z-40 mt-2 max-h-44 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                    <div className="absolute z-40 mt-2 max-h-40 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
                       {filteredRoles.slice(0, 8).map((r, index) => (
                         <button
                           key={`${r}-${index}`}
@@ -1259,7 +1282,7 @@ const previousSetupStep = () => {
 
               {setupStep === 2 && (
                 <QuestionButtons
-                  title="What is your experience level?"
+                  title="📈 What is your experience level?"
                   value={experienceLevel}
                   setValue={setExperienceLevel}
                   options={[
@@ -1277,7 +1300,7 @@ const previousSetupStep = () => {
 
               {setupStep === 3 && (
                 <QuestionButtons
-                  title="What type of job do you want?"
+                  title="💼 What type of job do you want?"
                   value={jobType}
                   setValue={setJobType}
                   options={[
@@ -1295,7 +1318,7 @@ const previousSetupStep = () => {
 
               {setupStep === 4 && (
                 <QuestionButtons
-                  title="Which industry are you applying for?"
+                  title="🏢 Which industry are you applying for?"
                   value={industry}
                   setValue={setIndustry}
                   options={[
@@ -1316,7 +1339,7 @@ const previousSetupStep = () => {
 
               {setupStep === 5 && (
                 <QuestionButtons
-                  title="What should Jobify improve most?"
+                  title="✨ What should Jobify improve most?"
                   value={cvGoal}
                   setValue={setCvGoal}
                   options={[
@@ -1334,7 +1357,7 @@ const previousSetupStep = () => {
 
               {setupStep === 6 && (
                 <QuestionButtons
-                  title="When are you applying?"
+                  title="🚀 When are you applying?"
                   value={urgency}
                   setValue={setUrgency}
                   options={[
@@ -1362,7 +1385,7 @@ const previousSetupStep = () => {
 
                   previousSetupStep();
                 }}
-                className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-600 shadow-sm transition hover:bg-slate-50 active:scale-95"
+                className="rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-black text-slate-600 shadow-sm transition active:scale-95"
               >
                 {setupStep === 0 ? "Skip" : "Back"}
               </button>
@@ -1371,7 +1394,7 @@ const previousSetupStep = () => {
                 type="button"
                 onClick={nextSetupStep}
                 disabled={!canGoNext}
-                className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-[0_18px_38px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+                className="rounded-2xl bg-blue-600 px-5 py-3.5 text-sm font-black text-white shadow-[0_16px_34px_rgba(37,99,235,0.25)] transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
               >
                 {setupStep === 6 ? "Continue" : "Next"}
               </button>
@@ -2524,7 +2547,7 @@ function QuestionButtons({
         {title}
       </h3>
 
-      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-2">
         {options.map((option) => (
           <button
             key={option}
@@ -2532,8 +2555,8 @@ function QuestionButtons({
             onClick={() => setValue(option)}
             className={
               value === option
-                ? "rounded-2xl border border-blue-600 bg-blue-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.24)] transition active:scale-95"
-                : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 active:scale-95"
+                ? "rounded-2xl border border-blue-600 bg-blue-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] transition active:scale-95"
+                : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 transition active:scale-95"
             }
           >
             {option}
