@@ -878,14 +878,18 @@ const handleApply = () => {
         </div>
       )}
 
-      <section className="relative z-10 mx-auto max-w-5xl px-3 pb-24 pt-16 sm:px-6 lg:pb-10 lg:pt-6">
+      <section className="relative z-10 mx-auto max-w-4xl px-3 pb-24 pt-16 sm:px-6 lg:pb-10 lg:pt-6">
   {/* TOP SEARCH CARD */}
   <div className="rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)] backdrop-blur-xl">
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0a66c2] text-xl font-black text-white shadow-lg">
-          J
-        </div>
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-2 shadow-lg ring-1 ring-slate-200">
+  <img
+    src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
+    alt="Google G"
+    className="h-8 w-8 object-contain"
+  />
+</div>
 
         <div>
           <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0a66c2]">
@@ -1013,7 +1017,8 @@ const handleApply = () => {
   {/* JOB CARD */}
   {/* JOB CARD */}
 {/* JOB CARD */}
-<section className="mt-3">
+{/* JOB CARD */}
+<section className="mx-auto mt-3 max-w-2xl">
   {currentJob ? (
     <article
       onPointerDown={handlePointerDown}
@@ -1021,90 +1026,102 @@ const handleApply = () => {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       style={dragStyle}
-      className={`overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.12)] transition-all duration-500 ease-out ${cardAnimation}`}
+      className={`overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.12)] transition-all duration-500 ease-out ${cardAnimation}`}
     >
-      {/* JOB HEADER */}
-      <div className="bg-white p-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-base font-black text-white shadow-md">
-              {(currentJob.company || "J").charAt(0).toUpperCase()}
-            </div>
-
-            <div className="min-w-0">
-              <p className="truncate text-sm font-black text-slate-950">
-                {currentJob.company}
-              </p>
-              <p className="mt-0.5 truncate text-[11px] font-bold text-slate-400">
-                {currentJob.posted || "Recently posted"} ·{" "}
-                {currentJob.source || "Verified source"}
-              </p>
-            </div>
-          </div>
-
-          <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-700 ring-1 ring-emerald-100">
-            Verified
-          </span>
-        </div>
-
-        <h2 className="mt-3 text-[21px] font-black leading-tight tracking-tight text-slate-950">
-          {currentJob.title}
-        </h2>
-
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-black text-slate-700">
-            📍 {currentJob.location}
-          </span>
-
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-black text-slate-700">
-            💰 {currentJob.salary}
-          </span>
-
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-black text-slate-700">
-            💼 {currentJob.type || "Job"}
-          </span>
-        </div>
+      {/* SIMPLE JOB INFO */}
+<div className="p-4">
+  <div className="flex items-start justify-between gap-3">
+    <div className="flex min-w-0 items-start gap-3">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-md ring-1 ring-slate-200">
+        <img
+          src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
+          alt="Google G"
+          className="h-7 w-7 object-contain"
+        />
       </div>
 
-      {/* JOB BODY */}
-      <div className="border-t border-slate-100 bg-slate-50 p-3">
-        <div className="rounded-[18px] bg-white p-3 shadow-sm ring-1 ring-slate-200">
-          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">
-            Role summary
-          </p>
+      <div className="min-w-0">
+        <p className="truncate text-[13px] font-black text-blue-700">
+          {currentJob.company}
+        </p>
 
-          <p className="mt-2 max-h-[80px] overflow-y-auto pr-2 text-xs font-semibold leading-5 text-slate-700">
-            {currentJob.summary || currentJob.description}
-          </p>
-        </div>
+        <h2 className="mt-1 line-clamp-2 text-[22px] font-black leading-tight text-slate-950">
+          {currentJob.title}
+        </h2>
+      </div>
+    </div>
 
-        <div className="mt-2 rounded-[18px] bg-white p-3 shadow-sm ring-1 ring-blue-100">
-          <p className="text-sm font-black text-slate-950">
-            Why this might fit
-          </p>
+    <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-700 ring-1 ring-emerald-100">
+      AI Live
+    </span>
+  </div>
 
-          <p className="mt-1 text-[11px] font-semibold leading-4 text-slate-500">
-            {currentJob.smartReason ||
-              "This role may match your search based on job title, location, job type, and keywords."}
-          </p>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200">
+            <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
+              Job Type
+            </p>
+            <p className="mt-1 text-sm font-black text-slate-800">
+              {currentJob.type || "Full-time / Part-time"}
+            </p>
+          </div>
 
-          <div className="mt-2 overflow-hidden rounded-full bg-slate-100 p-1">
-            <div
-              className="rounded-full bg-blue-600 px-3 py-1.5 text-center text-[11px] font-black text-white"
-              style={{
-                width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
-              }}
-            >
-              {typeof currentJob.matchScore === "number"
-                ? `${currentJob.matchScore}/100 match`
-                : "Good match"}
-            </div>
+          <div className="rounded-2xl bg-blue-50 p-3 ring-1 ring-blue-100">
+            <p className="text-[10px] font-black uppercase tracking-wide text-blue-400">
+              CV Match
+            </p>
+            <p className="mt-1 text-sm font-black text-blue-700">
+              {Math.min(currentJob.matchScore || 72, 100)}% Match
+            </p>
           </div>
         </div>
+
+       <div className="mt-4 rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200">
+  <div className="flex items-center justify-between">
+    <p className="text-xs font-black text-slate-700">
+      How this matches your CV
+    </p>
+    <p className="text-xs font-black text-blue-700">
+      {Math.min(currentJob.matchScore || 72, 100)}%
+    </p>
+  </div>
+
+  <div className="mt-2 overflow-hidden rounded-full bg-white p-1">
+    <div
+      className="rounded-full bg-blue-600 py-2 text-center text-[11px] font-black text-white transition-all duration-700"
+      style={{
+        width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
+      }}
+    >
+      Good CV match
+    </div>
+  </div>
+
+  <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-500">
+    {currentJob.smartReason ||
+      "Matched using job role, job type, keywords, and your uploaded CV profile."}
+  </p>
+</div>
+
+<div className="mt-3 rounded-2xl bg-white p-3 ring-1 ring-slate-200">
+  <div className="flex items-center justify-between gap-3">
+    <p className="text-xs font-black text-slate-800">
+      Job description
+    </p>
+
+    <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-black text-blue-700">
+      LinkedIn style
+    </span>
+  </div>
+
+  <p className="mt-2 max-h-[92px] overflow-y-auto pr-2 text-[11px] font-semibold leading-5 text-slate-600">
+    {currentJob.summary || currentJob.description}
+  </p>
+</div>
       </div>
 
       {/* ACTION BUTTONS */}
-      <div className="bg-white px-3 pb-3 pt-2">
+      <div className="border-t border-slate-100 bg-white px-4 pb-4 pt-3">
         <div className="grid grid-cols-3 gap-2">
           <button
             onClick={handleDecline}
@@ -1133,10 +1150,6 @@ const handleApply = () => {
             <span className="mt-0.5">Apply</span>
           </button>
         </div>
-
-        <p className="mt-2 text-center text-[10px] font-bold text-slate-400">
-          Swipe right apply · left decline · up skip
-        </p>
       </div>
     </article>
   ) : (
