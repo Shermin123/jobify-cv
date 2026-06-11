@@ -1114,294 +1114,323 @@ const previousSetupStep = () => {
     );
   }
   if (showSetupPopup) {
-  const setupEmoji = ["🌍", "🎯", "📈", "💼", "🏢", "✨", "🚀"][setupStep];
-
   return (
-    <main className="fixed inset-0 z-[9999] h-[100dvh] w-screen overflow-hidden bg-[#eef4ff] px-3 py-3 text-slate-950">
-      {/* STATIC PREMIUM BACKGROUND */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.16),transparent_34%),linear-gradient(135deg,#f8fbff_0%,#edf5ff_50%,#f7fbff_100%)]" />
-
-        <div className="absolute left-[5%] top-[14%] text-[80px] opacity-[0.14] sm:text-[120px]">
-          📄
+    <main className="fixed inset-0 z-[9999] flex h-[100svh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-4 py-4 text-slate-950">
+      <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
+        {/* TOP LIGHT SHAPE */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
+          <div className="absolute left-0 top-0 h-36 w-full bg-gradient-to-br from-blue-50 via-white to-transparent" />
+          <div className="absolute right-[-30px] top-[65px] h-28 w-[120%] rotate-[-14deg] bg-blue-50/80" />
         </div>
 
-        <div className="absolute right-[6%] top-[16%] text-[78px] opacity-[0.13] sm:text-[116px]">
-          ✨
-        </div>
-
-        <div className="absolute bottom-[14%] left-[7%] text-[78px] opacity-[0.13] sm:text-[112px]">
-          🎯
-        </div>
-
-        <div className="absolute bottom-[14%] right-[8%] text-[82px] opacity-[0.13] sm:text-[120px]">
-          🚀
-        </div>
-
-        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/60 blur-[90px]" />
-      </div>
-
-      <div className="relative z-10 flex h-full w-full items-center justify-center">
         <div
-          className="w-full max-w-[470px] overflow-hidden rounded-[30px] border border-white/80 bg-white/95 shadow-[0_28px_90px_rgba(15,23,42,0.18)] backdrop-blur-2xl"
-          style={{
-            maxHeight: "calc(100dvh - 24px)",
-            WebkitOverflowScrolling: "touch",
-          }}
+          className="relative max-h-[calc(100svh-32px)] overflow-y-auto p-5"
+          style={{ WebkitOverflowScrolling: "touch" }}
         >
-          <div className="max-h-[calc(100dvh-24px)] overflow-y-auto overscroll-contain p-4 sm:p-5">
-            {/* TOP BADGE */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-blue-700 ring-1 ring-blue-100">
-                <span className="h-2 w-2 rounded-full bg-blue-600" />
-                AI Setup
-              </div>
-
-              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500">
-                {setupStep + 1}/7
-              </div>
+          {/* TOP ROW */}
+          <div className="flex items-center justify-between">
+            <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-dotPulse" />
+              AI Setup
             </div>
 
-            {/* BIG EMOJI ICON */}
-            <div className="mt-5 text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-[0_20px_45px_rgba(37,99,235,0.28)]">
-                {setupEmoji}
-              </div>
+            <p className="text-xs font-black text-slate-400">
+              {setupStep + 1}/7
+            </p>
+          </div>
 
-              <h1 className="mt-4 text-2xl font-black tracking-[-0.04em] text-slate-950 sm:text-3xl">
-                Personalise your CV
-              </h1>
-
-              <p className="mx-auto mt-2 max-w-sm text-sm font-medium leading-6 text-slate-500">
-                Quick setup for a sharper, ATS-ready CV.
-              </p>
+          {/* TITLE */}
+          <div className="mt-5 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-blue-600 to-indigo-700 text-2xl font-black text-white shadow-[0_18px_40px_rgba(37,99,235,0.35)] animate-iconFloat">
+              ✦
             </div>
 
-            {/* PROGRESS */}
-            <div className="mt-5">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-xs font-black text-slate-400">
-                  Question {setupStep + 1} of 7
-                </span>
+            <h1 className="mt-4 text-[25px] font-black tracking-[-0.04em] text-slate-950">
+              Personalise your CV
+            </h1>
 
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
-                  {Math.round(((setupStep + 1) / 7) * 100)}%
-                </span>
-              </div>
+            <p className="mt-1 text-sm font-medium text-slate-500">
+              Answer a few quick questions for better AI results.
+            </p>
+          </div>
 
-              <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="h-full rounded-full bg-blue-600 transition-all duration-500 ease-out"
-                  style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
-                />
-              </div>
-            </div>
-
-            {/* QUESTION BOX */}
+          {/* PROGRESS */}
+          <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-100">
             <div
-              key={setupStep}
-              className="mt-5 rounded-[24px] border border-slate-200 bg-slate-50/90 p-4 shadow-inner"
-            >
-              {setupStep === 0 && (
-                <div className="relative">
-                  <h3 className="text-lg font-black text-slate-950">
-                    🌍 Which country are you applying in?
-                  </h3>
+              className="h-full rounded-full bg-blue-600 transition-all duration-500 ease-out"
+              style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
+            />
+          </div>
 
-                  <input
-                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-base font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
-                    placeholder="Example: United Kingdom"
-                    value={country}
-                    onFocus={() => setShowCountrySuggestions(true)}
-                    onChange={(e) => {
-                      setCountry(e.target.value);
-                      setShowCountrySuggestions(true);
-                    }}
-                  />
+          {/* QUESTION BOX */}
+          <div
+  key={setupStep}
+  className="mt-5 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
+>
+            {setupStep === 0 && (
+              <div className="relative">
+                <h3 className="text-lg font-black text-slate-950">
+                  🌍 Applying in which country?
+                </h3>
 
-                  {showCountrySuggestions &&
-                    country &&
-                    filteredCountries.length > 0 && (
-                      <div className="absolute z-40 mt-2 max-h-40 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
-                        {filteredCountries.slice(0, 8).map((c) => (
-                          <button
-                            key={c}
-                            type="button"
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              setCountry(c);
-                              setShowCountrySuggestions(false);
-                            }}
-                            className="block w-full p-3 text-left text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
-                          >
-                            {c}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                </div>
-              )}
+                <input
+                  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+                  placeholder="Type country, e.g. United Kingdom"
+                  value={country}
+                  onFocus={() => setShowCountrySuggestions(true)}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setShowCountrySuggestions(true);
+                  }}
+                />
 
-              {setupStep === 1 && (
-                <div className="relative">
-                  <h3 className="text-lg font-black text-slate-950">
-                    🎯 What job role are you targeting?
-                  </h3>
-
-                  <input
-                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-base font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
-                    placeholder="Example: Software Engineer"
-                    value={jobRole}
-                    onFocus={() => setShowRoleSuggestions(true)}
-                    onChange={(e) => {
-                      setJobRole(e.target.value);
-                      setShowRoleSuggestions(true);
-                    }}
-                  />
-
-                  {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
-                    <div className="absolute z-40 mt-2 max-h-40 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
-                      {filteredRoles.slice(0, 8).map((r, index) => (
+                {showCountrySuggestions &&
+                  country &&
+                  filteredCountries.length > 0 && (
+                    <div className="absolute z-40 mt-2 max-h-36 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                      {filteredCountries.slice(0, 8).map((c) => (
                         <button
-                          key={`${r}-${index}`}
+                          key={c}
                           type="button"
                           onMouseDown={(e) => {
                             e.preventDefault();
-                            setJobRole(r);
-                            setShowRoleSuggestions(false);
+                            setCountry(c);
+                            setShowCountrySuggestions(false);
                           }}
-                          className="block w-full p-3 text-left text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                          className="block w-full p-3 text-left text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
                         >
-                          {r}
+                          {c}
                         </button>
                       ))}
                     </div>
                   )}
-                </div>
-              )}
+              </div>
+            )}
 
-              {setupStep === 2 && (
-                <QuestionButtons
-                  title="📈 What is your experience level?"
-                  value={experienceLevel}
-                  setValue={setExperienceLevel}
-                  options={[
-                    "Student / Fresher",
-                    "0-1 years",
-                    "1-3 years",
-                    "3-5 years",
-                    "5+ years",
-                    "No experience",
-                    "Internship experience",
-                    "Freelance experience",
-                  ]}
+            {setupStep === 1 && (
+              <div className="relative">
+                <h3 className="text-lg font-black text-slate-950">
+                  🎯 Target job role?
+                </h3>
+
+                <input
+                  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+                  placeholder="Type role, e.g. Software Engineer"
+                  value={jobRole}
+                  onFocus={() => setShowRoleSuggestions(true)}
+                  onChange={(e) => {
+                    setJobRole(e.target.value);
+                    setShowRoleSuggestions(true);
+                  }}
                 />
-              )}
 
-              {setupStep === 3 && (
-                <QuestionButtons
-                  title="💼 What type of job do you want?"
-                  value={jobType}
-                  setValue={setJobType}
-                  options={[
-                    "Full-time",
-                    "Part-time",
-                    "Internship",
-                    "Graduate role",
-                    "Remote job",
-                    "Career switch",
-                    "Contract",
-                    "Temporary",
-                  ]}
-                />
-              )}
+                {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
+                  <div className="absolute z-40 mt-2 max-h-36 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                    {filteredRoles.slice(0, 8).map((r, index) => (
+                      <button
+                        key={`${r}-${index}`}
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setJobRole(r);
+                          setShowRoleSuggestions(false);
+                        }}
+                        className="block w-full p-3 text-left text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+                      >
+                        {r}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
-              {setupStep === 4 && (
-                <QuestionButtons
-                  title="🏢 Which industry are you applying for?"
-                  value={industry}
-                  setValue={setIndustry}
-                  options={[
-                    "Technology",
-                    "Retail",
-                    "Hospitality",
-                    "Healthcare",
-                    "Finance",
-                    "Education",
-                    "Customer Service",
-                    "Warehouse",
-                    "Data / AI",
-                    "Software",
-                    "Administration",
-                  ]}
-                />
-              )}
+            {setupStep === 2 && (
+              <QuestionButtons
+                title="📈 Experience level?"
+                value={experienceLevel}
+                setValue={setExperienceLevel}
+                options={[
+                  "Student / Fresher",
+                  "0-1 years",
+                  "1-3 years",
+                  "3-5 years",
+                  "5+ years",
+                  "No experience",
+                  "Internship experience",
+                  "Freelance experience",
+                ]}
+              />
+            )}
 
-              {setupStep === 5 && (
-                <QuestionButtons
-                  title="✨ What should Jobify improve most?"
-                  value={cvGoal}
-                  setValue={setCvGoal}
-                  options={[
-                    "ATS keywords",
-                    "Professional wording",
-                    "Achievements",
-                    "Career switch",
-                    "CV structure",
-                    "Grammar",
-                    "Improve bullet points",
-                    "Highlight transferable skills",
-                  ]}
-                />
-              )}
+            {setupStep === 3 && (
+              <QuestionButtons
+                title="💼 Job type?"
+                value={jobType}
+                setValue={setJobType}
+                options={[
+                  "Full-time",
+                  "Part-time",
+                  "Internship",
+                  "Graduate role",
+                  "Remote job",
+                  "Career switch",
+                  "Contract",
+                  "Temporary",
+                ]}
+              />
+            )}
 
-              {setupStep === 6 && (
-                <QuestionButtons
-                  title="🚀 When are you applying?"
-                  value={urgency}
-                  setValue={setUrgency}
-                  options={[
-                    "Today",
-                    "This week",
-                    "This month",
-                    "Just preparing",
-                    "Urgent application",
-                    "Interview tomorrow",
-                    "Applying after improving CV",
-                  ]}
-                />
-              )}
-            </div>
+            {setupStep === 4 && (
+              <QuestionButtons
+                title="🏢 Industry?"
+                value={industry}
+                setValue={setIndustry}
+                options={[
+                  "Technology",
+                  "Retail",
+                  "Hospitality",
+                  "Healthcare",
+                  "Finance",
+                  "Education",
+                  "Customer Service",
+                  "Warehouse",
+                  "Data / AI",
+                  "Software",
+                  "Administration",
+                ]}
+              />
+            )}
 
-            {/* ACTIONS */}
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  if (setupStep === 0) {
-                    setShowSetupPopup(false);
-                    return;
-                  }
+            {setupStep === 5 && (
+              <QuestionButtons
+                title="✨ Improve what most?"
+                value={cvGoal}
+                setValue={setCvGoal}
+                options={[
+                  "ATS keywords",
+                  "Professional wording",
+                  "Achievements",
+                  "Career switch",
+                  "CV structure",
+                  "Grammar",
+                  "Improve bullet points",
+                  "Highlight transferable skills",
+                ]}
+              />
+            )}
 
-                  previousSetupStep();
-                }}
-                className="rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-black text-slate-600 shadow-sm transition active:scale-95"
-              >
-                {setupStep === 0 ? "Skip" : "Back"}
-              </button>
+            {setupStep === 6 && (
+              <QuestionButtons
+                title="⏳ Applying when?"
+                value={urgency}
+                setValue={setUrgency}
+                options={[
+                  "Today",
+                  "This week",
+                  "This month",
+                  "Just preparing",
+                  "Urgent application",
+                  "Interview tomorrow",
+                  "Applying after improving CV",
+                ]}
+              />
+            )}
+          </div>
 
-              <button
-                type="button"
-                onClick={nextSetupStep}
-                disabled={!canGoNext}
-                className="rounded-2xl bg-blue-600 px-5 py-3.5 text-sm font-black text-white shadow-[0_16px_34px_rgba(37,99,235,0.25)] transition active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
-              >
-                {setupStep === 6 ? "Continue" : "Next"}
-              </button>
-            </div>
+          {/* BUTTONS */}
+          <div className="mt-5 flex gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (setupStep === 0) {
+                  setShowSetupPopup(false);
+                  return;
+                }
+
+                previousSetupStep();
+              }}
+              className="w-1/2 rounded-2xl border border-slate-200 bg-white py-3 text-sm font-black text-slate-600 transition hover:bg-slate-50 active:scale-95"
+            >
+              {setupStep === 0 ? "Cancel" : "Back"}
+            </button>
+
+            <button
+              type="button"
+              onClick={nextSetupStep}
+              disabled={!canGoNext}
+              className="w-1/2 rounded-2xl bg-slate-950 py-3 text-sm font-black text-white transition hover:bg-blue-700 active:scale-95 disabled:bg-slate-400"
+            >
+              {setupStep === 6 ? "Start →" : "Next →"}
+            </button>
           </div>
         </div>
-      </div>
+            </div>
+
+      <style jsx>{`
+        @keyframes popupIn {
+          0% {
+            opacity: 0;
+            transform: translateY(18px) scale(0.96);
+            filter: blur(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        @keyframes questionIn {
+          0% {
+            opacity: 0;
+            transform: translateY(10px) scale(0.985);
+            filter: blur(5px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        @keyframes iconFloat {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+
+        @keyframes dotPulse {
+          0%, 100% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.25);
+          }
+        }
+
+        .animate-popupIn {
+          animation: popupIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-questionIn {
+          animation: questionIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .animate-iconFloat {
+          animation: iconFloat 3.2s ease-in-out infinite;
+        }
+
+        .animate-dotPulse {
+          animation: dotPulse 2s ease-in-out infinite;
+        }
+      `}</style>
     </main>
   );
 }
@@ -1431,7 +1460,7 @@ const previousSetupStep = () => {
           </p>
         </div>
 
-        <div className="mt-5 text-center">
+        <div className="mt-3 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-2xl text-white shadow-xl animate-float">
             ✦
           </div>
@@ -2543,9 +2572,7 @@ function QuestionButtons({
 }) {
   return (
     <div>
-      <h3 className="text-lg font-black tracking-tight text-slate-950">
-        {title}
-      </h3>
+      <h3 className="text-lg font-black text-slate-950">{title}</h3>
 
       <div className="mt-4 grid grid-cols-1 gap-2">
         {options.map((option) => (
@@ -2555,8 +2582,8 @@ function QuestionButtons({
             onClick={() => setValue(option)}
             className={
               value === option
-                ? "rounded-2xl border border-blue-600 bg-blue-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] transition active:scale-95"
-                : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 transition active:scale-95"
+                ? "rounded-2xl border border-blue-600 bg-blue-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] active:scale-95"
+                : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 active:scale-95"
             }
           >
             {option}
