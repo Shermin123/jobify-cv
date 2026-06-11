@@ -94,16 +94,10 @@ const [generated, setGenerated] = useState(false);
 }, [session?.user?.email]);
 
 useEffect(() => {
-  if (showSetupPopup) {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "";
+  if (!showSetupPopup) {
+    setShowCountrySuggestions(false);
+    setShowRoleSuggestions(false);
   }
-
-  return () => {
-    document.body.style.overflow = "";
-  };
 }, [showSetupPopup]);
 
   const clearTypingTimer = () => {
@@ -1112,14 +1106,14 @@ const previousSetupStep = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
      {showSetupPopup && (
-  <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-4 pt-[10vh] pb-8 backdrop-blur-2xl sm:items-center sm:pt-6">
-    <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
+  <div className="fixed inset-0 z-[9999] flex min-h-[100dvh] items-center justify-center overflow-y-auto overscroll-contain bg-slate-950/80 px-4 py-6 backdrop-blur-2xl">
+    <div className="relative my-auto w-full max-w-md max-h-[calc(100dvh-3rem)] overflow-y-auto rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
         <div className="absolute -left-20 -bottom-20 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
       </div>
-      
+
       <div className="relative p-5">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
@@ -1164,33 +1158,44 @@ const previousSetupStep = () => {
               </h3>
 
               <input
-  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-  placeholder="Type country, e.g. United Kingdom"
-  value={country}
-  onFocus={() => setShowCountrySuggestions(true)}
-  onChange={(e) => {
-    setCountry(e.target.value);
-    setShowCountrySuggestions(true);
-  }}
-/>
+                className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Type country, e.g. United Kingdom"
+                value={country}
+                onFocus={() => setShowCountrySuggestions(true)}
+                onClick={(e) => {
+                  setTimeout(() => {
+                    e.currentTarget.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                  }, 250);
+                }}
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                  setShowCountrySuggestions(true);
+                }}
+              />
 
-              {showCountrySuggestions && country && filteredCountries.length > 0 && (
-                <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
-                  {filteredCountries.slice(0, 8).map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => {
-  setCountry(c);
-  setShowCountrySuggestions(false);
-}}
-                      className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {showCountrySuggestions &&
+                country &&
+                filteredCountries.length > 0 && (
+                  <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
+                    {filteredCountries.slice(0, 8).map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setCountry(c);
+                          setShowCountrySuggestions(false);
+                        }}
+                        className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
           )}
 
@@ -1201,26 +1206,35 @@ const previousSetupStep = () => {
               </h3>
 
               <input
-  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-  placeholder="Type role, e.g. Software Engineer"
-  value={jobRole}
-  onFocus={() => setShowRoleSuggestions(true)}
-  onChange={(e) => {
-    setJobRole(e.target.value);
-    setShowRoleSuggestions(true);
-  }}
-/>
+                className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Type role, e.g. Software Engineer"
+                value={jobRole}
+                onFocus={() => setShowRoleSuggestions(true)}
+                onClick={(e) => {
+                  setTimeout(() => {
+                    e.currentTarget.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                  }, 250);
+                }}
+                onChange={(e) => {
+                  setJobRole(e.target.value);
+                  setShowRoleSuggestions(true);
+                }}
+              />
 
               {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
                 <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
                   {filteredRoles.slice(0, 8).map((r, index) => (
-  <button
-    key={`${r}-${index}`}
+                    <button
+                      key={`${r}-${index}`}
                       type="button"
-                      onClick={() => {
-  setJobRole(r);
-  setShowRoleSuggestions(false);
-}}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setJobRole(r);
+                        setShowRoleSuggestions(false);
+                      }}
                       className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
                     >
                       {r}
@@ -1415,7 +1429,7 @@ const previousSetupStep = () => {
         ✅ Subscription active — full access unlocked
       </div>
     )}
-    
+
   </div>
 </section>
 
@@ -2236,6 +2250,14 @@ function QuestionButtons({
         className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Type your answer or choose below..."
         value={value}
+        onClick={(e) => {
+          setTimeout(() => {
+            e.currentTarget.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }, 250);
+        }}
         onChange={(e) => setValue(e.target.value)}
       />
 
@@ -2246,7 +2268,10 @@ function QuestionButtons({
               <button
                 key={option}
                 type="button"
-                onClick={() => setValue(option)}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  setValue(option);
+                }}
                 className={`rounded-full border px-3 py-2 text-xs font-black transition ${
                   value === option
                     ? "border-blue-600 bg-blue-600 text-white shadow-md"
