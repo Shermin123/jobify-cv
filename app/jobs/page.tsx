@@ -813,7 +813,7 @@ const handleApply = () => {
     : undefined;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#f8fafc] text-[#191919]">
+    <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
          <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
   <div className="absolute inset-0 bg-[#f3f2ef]" />
 
@@ -878,508 +878,287 @@ const handleApply = () => {
         </div>
       )}
 
-      <section className="relative z-10 mx-auto max-w-7xl px-4 py-5 pb-28 sm:px-6 lg:pb-10">
-        <header className="sticky top-3 z-50 rounded-2xl border border-[#d6d6d6] bg-white/95 shadow-sm backdrop-blur-xl">
-          <div className="flex items-center justify-between gap-4 px-4 py-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#0a66c2] text-lg font-black text-white">
-                J
-              </div>
-
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#0a66c2]">
-                  Jobify
-                </p>
-                <h1 className="text-base font-black sm:text-xl">Jobs</h1>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="hidden rounded-full bg-[#eef3f8] px-4 py-2 text-xs font-bold text-neutral-600 sm:block">
-                {message}
-              </div>
-
-              <button
-                onClick={() => setSetupOpen((prev) => !prev)}
-                className="rounded-full bg-[#0a66c2] px-5 py-2 text-xs font-black text-white transition hover:bg-[#004182]"
-              >
-                {setupOpen ? "Close Search" : "Search Jobs"}
-              </button>
-            </div>
-          </div>
-
-          <div className="h-1 overflow-hidden bg-neutral-100">
-            <div
-              className="h-full bg-[#0a66c2] transition-all duration-700"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </header>
-
-        {setupOpen && (
-          <section className="mt-4 rounded-2xl border border-[#d6d6d6] bg-white p-5 shadow-sm">
-            <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-              <SearchDropdown
-                label="Job title"
-                value={jobTitle}
-                placeholder="e.g. Finance, Data, Retail"
-                open={jobDropdownOpen}
-                suggestions={filteredJobSuggestions}
-                onFocus={() => setJobDropdownOpen(true)}
-                onBlur={() =>
-                  setTimeout(() => setJobDropdownOpen(false), 120)
-                }
-                onChange={(value) => {
-                  setJobTitle(value);
-                  setJobDropdownOpen(true);
-                }}
-                onSelect={(value) => {
-                  setJobTitle(value);
-                  setJobDropdownOpen(false);
-                }}
-              />
-
-              <SearchDropdown
-                label="Location"
-                value={location}
-                placeholder="Type any country: United Kingdom, Canada, Oman, Worldwide"
-                open={locationDropdownOpen}
-                suggestions={filteredLocationSuggestions}
-                onFocus={() => setLocationDropdownOpen(true)}
-                onBlur={() =>
-                  setTimeout(() => setLocationDropdownOpen(false), 120)
-                }
-                onChange={(value) => {
-                  setLocation(value);
-                  setLocationDropdownOpen(true);
-                }}
-                onSelect={(value) => {
-                  setLocation(value);
-                  setLocationDropdownOpen(false);
-                }}
-              />
-            </div>
-
-            <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr_180px]">
-              <label className="rounded-xl border border-neutral-300 bg-[#f8fafd] px-4 py-3">
-                <span className="text-xs font-black uppercase tracking-wide text-neutral-500">
-                  CV / Resume
-                </span>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onClick={requireLoginForFiles}
-                  onChange={(e) => {
-                    setCvFile(e.target.files?.[0] || null);
-                    setFilesSaved(false);
-                  }}
-                  className="mt-2 w-full text-xs text-neutral-500 file:mr-2 file:rounded-lg file:border-0 file:bg-[#0a66c2] file:px-3 file:py-2 file:text-xs file:font-black file:text-white"
-                />
-                {cvFile && (
-                  <p className="mt-2 truncate text-xs font-black text-green-600">
-                    {cvFile.name}
-                  </p>
-                )}
-              </label>
-
-              <label className="rounded-xl border border-neutral-300 bg-[#f8fafd] px-4 py-3">
-                <span className="text-xs font-black uppercase tracking-wide text-neutral-500">
-                  Cover letter
-                </span>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onClick={requireLoginForFiles}
-                  onChange={(e) => {
-                    setCoverFile(e.target.files?.[0] || null);
-                    setFilesSaved(false);
-                  }}
-                  className="mt-2 w-full text-xs text-neutral-500 file:mr-2 file:rounded-lg file:border-0 file:bg-[#0a66c2] file:px-3 file:py-2 file:text-xs file:font-black file:text-white"
-                />
-                {coverFile && (
-                  <p className="mt-2 truncate text-xs font-black text-green-600">
-                    {coverFile.name}
-                  </p>
-                )}
-              </label>
-
-              <button
-                onClick={handleSearch}
-                disabled={searching || saving}
-                className="h-full rounded-xl bg-[#0a66c2] px-6 py-4 text-sm font-black text-white transition hover:bg-[#004182] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {searching ? "Searching..." : "Find Jobs"}
-              </button>
-            </div>
-          </section>
-        )}
-
-        <div className="mt-5 grid gap-5 lg:grid-cols-[260px_1fr_280px]">
-          <aside className="hidden lg:block">
-            <div className="group sticky top-24 overflow-hidden rounded-[28px] border border-[#d6d6d6] bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_80px_rgba(10,102,194,0.16)]">
-              <div className="relative bg-gradient-to-br from-[#0a66c2] to-[#004182] p-5 text-white">
-                <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-white/15 blur-2xl transition-all duration-700 group-hover:scale-125" />
-
-                <div className="relative flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/70">
-                      One-tap apply
-                    </p>
-                    <h2 className="mt-2 text-2xl font-black leading-tight">
-                      Application cockpit
-                    </h2>
-                    <p className="mt-2 text-sm leading-6 text-white/75">
-                      Get your files ready once. Apply faster to every matching
-                      job.
-                    </p>
-                  </div>
-
-                  <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl font-black text-[#0a66c2] shadow-lg transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
-                    {cvFile && coverFile ? "✓" : "↗"}
-                    <span className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-green-400 ring-4 ring-[#0a66c2]" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-5">
-                <div className="mb-5 overflow-hidden rounded-2xl bg-[#eef3f8] p-1">
-                  <div
-                    className="h-3 rounded-xl bg-gradient-to-r from-[#0a66c2] to-[#40a9ff] transition-all duration-700 ease-out"
-                    style={{
-                      width:
-                        cvFile && coverFile && filesSaved
-                          ? "100%"
-                          : cvFile && coverFile
-                          ? "75%"
-                          : cvFile || coverFile
-                          ? "42%"
-                          : "12%",
-                    }}
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <PremiumStatusRow
-                    label="CV / Resume"
-                    value={cvFile ? "Ready" : "Upload"}
-                    good={!!cvFile}
-                  />
-
-                  <PremiumStatusRow
-                    label="Cover letter"
-                    value={coverFile ? "Ready" : "Upload"}
-                    good={!!coverFile}
-                  />
-
-                  <PremiumStatusRow
-                    label="Apply system"
-                    value={
-                      filesSaved
-                        ? "Synced"
-                        : cvFile && coverFile
-                        ? "Ready"
-                        : "Waiting"
-                    }
-                    good={filesSaved || (!!cvFile && !!coverFile)}
-                    neutral={!filesSaved && !(cvFile && coverFile)}
-                  />
-                </div>
-
-                <div className="mt-5 rounded-2xl border border-[#0a66c2]/15 bg-[#f8fafd] p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
-                      ⚡
-                    </div>
-
-                    <div>
-                      <p className="text-sm font-black text-[#191919]">
-                        {cvFile && coverFile
-                          ? "Fast apply unlocked"
-                          : "Upload files to unlock fast apply"}
-                      </p>
-                      <p className="mt-1 text-xs font-semibold leading-5 text-neutral-500">
-                        {cvFile && coverFile
-                          ? "You can now apply with one smooth action."
-                          : "Your CV and cover letter are required before applying."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setSetupOpen(true)}
-                  className="mt-5 w-full rounded-full border border-[#0a66c2] bg-white px-5 py-3 text-sm font-black text-[#0a66c2] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#eef3f8]"
-                >
-                  Manage files
-                </button>
-              </div>
-            </div>
-          </aside>
-
-                <section className="min-w-0">
-  {currentJob ? (
-    <div className="mx-auto w-full max-w-[680px]">
-      <div className="relative min-h-[560px] touch-none">
-        <div className="absolute inset-x-8 top-8 h-[540px] rounded-[42px] bg-black/10 blur-2xl" />
-        <div className="absolute left-1/2 top-5 h-[500px] w-[92%] -translate-x-1/2 rounded-[40px] bg-white/60 shadow-[0_30px_100px_rgba(15,23,42,0.12)]" />
-
-        {dragHint && (
-          <div
-            className={
-              dragHint === "APPLY"
-                ? "absolute right-4 top-16 z-30 rotate-12 rounded-2xl border-4 border-emerald-500 bg-white px-5 py-2 text-2xl font-black text-emerald-600 shadow-2xl"
-                : dragHint === "DECLINE"
-                ? "absolute left-4 top-16 z-30 -rotate-12 rounded-2xl border-4 border-rose-500 bg-white px-5 py-2 text-2xl font-black text-rose-600 shadow-2xl"
-                : "absolute left-1/2 top-16 z-30 -translate-x-1/2 rounded-2xl border-4 border-[#0a66c2] bg-white px-5 py-2 text-2xl font-black text-[#0a66c2] shadow-2xl"
-            }
-          >
-            {dragHint}
-          </div>
-        )}
-
-        <article
-  onPointerDown={handlePointerDown}
-  onPointerMove={handlePointerMove}
-  onPointerUp={handlePointerUp}
-  onPointerCancel={handlePointerUp}
-  style={dragStyle}
-  className={`relative z-20 overflow-hidden rounded-[34px] border border-slate-200 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.16)] transition-all duration-500 ease-out will-change-transform hover:-translate-y-1 hover:shadow-[0_40px_110px_rgba(15,23,42,0.22)] ${cardAnimation}`}
->
-  <div className="relative overflow-hidden border-b border-slate-100 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-5 text-white">
-    <div className="absolute right-[-80px] top-[-80px] h-56 w-56 rounded-full bg-blue-500/25 blur-3xl animate-pulse" />
-    <div className="absolute bottom-[-90px] left-[-80px] h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl" />
-
-    <div className="relative flex items-start justify-between gap-4">
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 text-xl font-black text-blue-700 shadow-xl ring-1 ring-white/30">
-          {currentJob.company?.toLowerCase().includes("google") ? (
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google logo" className="max-h-7 max-w-full object-contain" />
-          ) : currentJob.company?.toLowerCase().includes("microsoft") ? (
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft logo" className="max-h-7 max-w-full object-contain" />
-          ) : currentJob.company?.toLowerCase().includes("amazon") ? (
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon logo" className="max-h-7 max-w-full object-contain" />
-          ) : (
-            (currentJob.company || "J").charAt(0).toUpperCase()
-          )}
+      <section className="relative z-10 mx-auto max-w-5xl px-3 pb-28 pt-4 sm:px-6 lg:pb-10">
+  {/* TOP SEARCH CARD */}
+  <div className="rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)] backdrop-blur-xl">
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0a66c2] text-xl font-black text-white shadow-lg">
+          J
         </div>
 
-        <div className="min-w-0">
-          <p className="truncate text-sm font-black">{currentJob.company}</p>
-          <p className="mt-1 text-xs font-bold text-white/60">
-            {currentJob.posted || "Recently posted"} · {currentJob.source || "Verified job source"}
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0a66c2]">
+            Jobify Jobs
           </p>
+          <h1 className="text-xl font-black text-slate-950">Auto Apply</h1>
         </div>
       </div>
-
-      <div className="rounded-full bg-emerald-400/15 px-3 py-1 text-[11px] font-black text-emerald-200 ring-1 ring-emerald-300/20">
-        Verified
-      </div>
-    </div>
-
-    <h2 className="relative mt-5 line-clamp-2 text-[26px] font-black leading-tight tracking-tight">
-      {currentJob.title}
-    </h2>
-
-    <div className="relative mt-4 flex flex-wrap gap-2">
-      <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black text-white/90 ring-1 ring-white/10">
-        📍 {currentJob.location}
-      </span>
-      <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black text-white/90 ring-1 ring-white/10">
-        💰 {currentJob.salary}
-      </span>
-      <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black text-white/90 ring-1 ring-white/10">
-        💼 {currentJob.type || "Job"}
-      </span>
-    </div>
-  </div>
-
-  <div className="p-4">
-    <div className="grid gap-4 md:grid-cols-[1fr_1fr]">
-      <div className="rounded-[26px] border border-slate-200 bg-slate-50 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg">
-        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
-          Role summary
-        </p>
-
-        <p className="mt-3 line-clamp-7 text-sm font-semibold leading-6 text-slate-700">
-          {currentJob.summary || currentJob.description}
-        </p>
-      </div>
-
-      <div className="rounded-[26px] border border-blue-100 bg-blue-50 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg">
-        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-blue-100">
-          <p className="text-sm font-black text-slate-950">
-            Why this might fit
-          </p>
-          <p className="mt-2 line-clamp-3 text-xs font-semibold leading-5 text-slate-600">
-            {currentJob.smartReason ||
-              "This role may match your search based on the job title, location, job type, and role keywords."}
-          </p>
-        </div>
-
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-emerald-100">
-            <p className="text-[11px] font-black uppercase tracking-wide text-emerald-600">
-              Matches
-            </p>
-
-            <div className="mt-2 space-y-2">
-              {(currentJob.skills?.length
-                ? currentJob.skills
-                : currentJob.highlights?.length
-                ? currentJob.highlights
-                : [
-                    currentJob.category || "Relevant role",
-                    currentJob.seniority || "Suitable level",
-                    currentJob.type || "Matching job type",
-                  ]
-              )
-                .slice(0, 3)
-                .map((item, index) => (
-                  <div key={`${item}-${index}`} className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white">
-                      ✓
-                    </span>
-                    <span className="line-clamp-1">{item}</span>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-rose-100">
-            <p className="text-[11px] font-black uppercase tracking-wide text-rose-500">
-              Check
-            </p>
-
-            <div className="mt-2 space-y-2">
-              {(currentJob.requirements?.length
-                ? currentJob.requirements
-                : ["Review exact experience", "Check employer details"]
-              )
-                .slice(0, 2)
-                .map((item, index) => (
-                  <div key={`${item}-${index}`} className="flex items-center gap-2 text-xs font-bold text-slate-600">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-500 text-[10px] text-white">
-                      !
-                    </span>
-                    <span className="line-clamp-1">{item}</span>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-3 overflow-hidden rounded-full bg-white p-1 shadow-inner ring-1 ring-blue-100">
-          <div
-            className="rounded-full bg-gradient-to-r from-emerald-500 to-blue-600 px-3 py-2 text-center text-xs font-black text-white transition-all duration-700"
-            style={{
-              width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
-            }}
-          >
-            {typeof currentJob.matchScore === "number"
-              ? `${currentJob.matchScore}/100 match`
-              : "Good match"}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div className="px-4 pb-4">
-    <div className="grid grid-cols-3 gap-3 rounded-[26px] bg-slate-100 p-2 shadow-inner">
-      <button
-        onClick={handleDecline}
-        disabled={searching || !currentJob}
-        className="flex h-14 flex-col items-center justify-center rounded-[20px] bg-white text-xs font-black text-rose-600 shadow-sm ring-1 ring-rose-100 transition-all duration-200 hover:-translate-y-1 hover:bg-rose-50 hover:shadow-lg active:scale-95 disabled:opacity-40"
-      >
-        <span className="text-lg leading-none">✕</span>
-        <span className="mt-1">Decline</span>
-      </button>
 
       <button
-        onClick={handleSkip}
-        disabled={searching || !currentJob}
-        className="flex h-14 flex-col items-center justify-center rounded-[20px] bg-white text-xs font-black text-slate-700 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:bg-slate-50 hover:shadow-lg active:scale-95 disabled:opacity-40"
+        onClick={() => setSetupOpen((prev) => !prev)}
+        className="rounded-full bg-[#0a66c2] px-4 py-2 text-xs font-black text-white shadow-lg transition active:scale-95"
       >
-        <span className="text-lg leading-none">↑</span>
-        <span className="mt-1">Skip</span>
-      </button>
-
-      <button
-        onClick={handleApply}
-        disabled={searching || !currentJob}
-        className="relative flex h-14 flex-col items-center justify-center overflow-hidden rounded-[20px] bg-emerald-600 text-xs font-black text-white shadow-[0_14px_35px_rgba(16,185,129,0.35)] transition-all duration-200 hover:-translate-y-1 hover:bg-emerald-700 hover:shadow-lg active:scale-95 disabled:opacity-40"
-      >
-        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition duration-700 hover:translate-x-full" />
-        <span className="relative text-lg leading-none">↗</span>
-        <span className="relative mt-1">Apply</span>
+        {setupOpen ? "Close" : "Search"}
       </button>
     </div>
 
-    <p className="mt-3 text-center text-[11px] font-bold text-slate-400">
-      Swipe right apply · left decline · up skip
+    <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+      <div
+        className="h-full rounded-full bg-[#0a66c2] transition-all duration-700"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+
+    <p className="mt-2 text-xs font-bold text-slate-500">
+      {message} · Job {currentJob ? currentIndex + 1 : 0} of {jobs.length}
     </p>
   </div>
-</article>
 
-      </div>
-    </div>
-  ) : (
-    <div className="mx-auto max-w-[390px] rounded-[36px] border border-neutral-200 bg-white p-10 text-center shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a66c2] text-2xl font-black text-white">
-        J
-      </div>
+  {/* SEARCH FORM */}
+  {setupOpen && (
+    <section className="mt-4 rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)]">
+      <div className="grid gap-4">
+        <SearchDropdown
+          label="Job title"
+          value={jobTitle}
+          placeholder="e.g. Finance Assistant, Data Analyst"
+          open={jobDropdownOpen}
+          suggestions={filteredJobSuggestions}
+          onFocus={() => setJobDropdownOpen(true)}
+          onBlur={() => setTimeout(() => setJobDropdownOpen(false), 120)}
+          onChange={(value) => {
+            setJobTitle(value);
+            setJobDropdownOpen(true);
+          }}
+          onSelect={(value) => {
+            setJobTitle(value);
+            setJobDropdownOpen(false);
+          }}
+        />
 
-      <h2 className="mt-6 text-3xl font-black">No more jobs</h2>
+        <SearchDropdown
+          label="Location"
+          value={location}
+          placeholder="e.g. London, Dubai, Remote"
+          open={locationDropdownOpen}
+          suggestions={filteredLocationSuggestions}
+          onFocus={() => setLocationDropdownOpen(true)}
+          onBlur={() => setTimeout(() => setLocationDropdownOpen(false), 120)}
+          onChange={(value) => {
+            setLocation(value);
+            setLocationDropdownOpen(true);
+          }}
+          onSelect={(value) => {
+            setLocation(value);
+            setLocationDropdownOpen(false);
+          }}
+        />
 
-      <p className="mt-2 text-sm leading-6 text-neutral-500">
-        Search again to find more matching vacancies.
-      </p>
-
-      <button
-        onClick={handleSearch}
-        className="mt-6 rounded-full bg-[#0a66c2] px-6 py-3 text-sm font-black text-white transition hover:bg-[#004182]"
-      >
-        Search Again
-      </button>
-    </div>
-  )}
-</section>
-
-          <aside className="hidden lg:block">
-            <div className="rounded-2xl border border-[#d6d6d6] bg-white p-5 shadow-sm">
-              <h3 className="text-lg font-black">Current progress</h3>
-              <div className="mt-4 h-2 overflow-hidden rounded-full bg-neutral-100">
-                <div
-                  className="h-full rounded-full bg-[#0a66c2] transition-all duration-700"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className="mt-3 text-sm font-bold text-neutral-500">
-                Job {currentJob ? currentIndex + 1 : 0} of {jobs.length}
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+              CV / Resume
+            </span>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onClick={requireLoginForFiles}
+              onChange={(e) => {
+                setCvFile(e.target.files?.[0] || null);
+                setFilesSaved(false);
+              }}
+              className="mt-2 w-full text-xs text-slate-500 file:mr-2 file:rounded-lg file:border-0 file:bg-[#0a66c2] file:px-3 file:py-2 file:text-xs file:font-black file:text-white"
+            />
+            {cvFile && (
+              <p className="mt-2 truncate text-xs font-black text-green-600">
+                {cvFile.name}
               </p>
-            </div>
+            )}
+          </label>
 
-            <div className="mt-4 rounded-2xl border border-[#d6d6d6] bg-white p-5 shadow-sm">
-              <h3 className="text-lg font-black">How it works</h3>
-              <div className="mt-4 space-y-4 text-sm leading-6 text-neutral-600">
-                <p>
-                  <span className="font-black text-[#191919]">Apply</span>{" "}
-                  records the job, uploads files, sends email, and opens the
-                  official link.
+          <label className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+              Cover letter
+            </span>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onClick={requireLoginForFiles}
+              onChange={(e) => {
+                setCoverFile(e.target.files?.[0] || null);
+                setFilesSaved(false);
+              }}
+              className="mt-2 w-full text-xs text-slate-500 file:mr-2 file:rounded-lg file:border-0 file:bg-[#0a66c2] file:px-3 file:py-2 file:text-xs file:font-black file:text-white"
+            />
+            {coverFile && (
+              <p className="mt-2 truncate text-xs font-black text-green-600">
+                {coverFile.name}
+              </p>
+            )}
+          </label>
+        </div>
+
+        <button
+          onClick={handleSearch}
+          disabled={searching || saving}
+          className="rounded-2xl bg-[#0a66c2] px-6 py-4 text-sm font-black text-white shadow-lg transition active:scale-95 disabled:opacity-50"
+        >
+          {searching ? "Searching..." : "Search Jobs"}
+        </button>
+      </div>
+    </section>
+  )}
+
+  {/* JOB CARD */}
+  <section className="mt-4">
+    {currentJob ? (
+      <article
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        style={dragStyle}
+        className={`overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.16)] transition-all duration-500 ease-out ${cardAnimation}`}
+      >
+        {/* CARD HEADER */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-5 text-white">
+          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-blue-500/25 blur-3xl" />
+
+          <div className="relative flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-xl font-black text-blue-700 shadow-xl">
+                {(currentJob.company || "J").charAt(0).toUpperCase()}
+              </div>
+
+              <div className="min-w-0">
+                <p className="truncate text-sm font-black">
+                  {currentJob.company}
                 </p>
-                <p>
-                  <span className="font-black text-[#191919]">Skip</span> saves
-                  the job without showing the loading popup.
-                </p>
-                <p>
-                  <span className="font-black text-[#191919]">Decline</span>{" "}
-                  records jobs you are not interested in.
+                <p className="mt-1 truncate text-xs font-bold text-white/60">
+                  {currentJob.posted || "Recently posted"} ·{" "}
+                  {currentJob.source || "Verified source"}
                 </p>
               </div>
             </div>
-          </aside>
+
+            <span className="shrink-0 rounded-full bg-emerald-400/15 px-3 py-1 text-[11px] font-black text-emerald-200 ring-1 ring-emerald-300/20">
+              Verified
+            </span>
+          </div>
+
+          <h2 className="relative mt-5 text-[28px] font-black leading-tight tracking-tight text-white">
+            {currentJob.title}
+          </h2>
+
+          <div className="relative mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-white/90">
+              📍 {currentJob.location}
+            </span>
+            <span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-white/90">
+              💰 {currentJob.salary}
+            </span>
+            <span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-white/90">
+              💼 {currentJob.type || "Job"}
+            </span>
+          </div>
         </div>
-      </section>
+
+        {/* CARD BODY */}
+        <div className="p-4">
+          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
+              Role summary
+            </p>
+
+            <p className="mt-3 max-h-[190px] overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-700">
+              {currentJob.summary || currentJob.description}
+            </p>
+          </div>
+
+          <div className="mt-4 rounded-[24px] border border-blue-100 bg-blue-50 p-4">
+            <p className="text-sm font-black text-slate-950">
+              Why this might fit
+            </p>
+
+            <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
+              {currentJob.smartReason ||
+                "This role may match your search based on job title, location, job type, and keywords."}
+            </p>
+
+            <div className="mt-4 overflow-hidden rounded-full bg-white p-1 shadow-inner">
+              <div
+                className="rounded-full bg-gradient-to-r from-emerald-500 to-blue-600 px-3 py-2 text-center text-xs font-black text-white"
+                style={{
+                  width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
+                }}
+              >
+                {typeof currentJob.matchScore === "number"
+                  ? `${currentJob.matchScore}/100 match`
+                  : "Good match"}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ACTION BUTTONS */}
+        <div className="sticky bottom-0 bg-white/95 px-4 pb-4 pt-2 backdrop-blur-xl">
+          <div className="grid grid-cols-3 gap-3 rounded-[24px] bg-slate-100 p-2">
+            <button
+              onClick={handleDecline}
+              disabled={searching || !currentJob}
+              className="flex h-14 flex-col items-center justify-center rounded-[18px] bg-white text-xs font-black text-rose-600 shadow-sm active:scale-95 disabled:opacity-40"
+            >
+              <span className="text-lg leading-none">✕</span>
+              <span className="mt-1">Decline</span>
+            </button>
+
+            <button
+              onClick={handleSkip}
+              disabled={searching || !currentJob}
+              className="flex h-14 flex-col items-center justify-center rounded-[18px] bg-white text-xs font-black text-slate-700 shadow-sm active:scale-95 disabled:opacity-40"
+            >
+              <span className="text-lg leading-none">↑</span>
+              <span className="mt-1">Skip</span>
+            </button>
+
+            <button
+              onClick={handleApply}
+              disabled={searching || !currentJob}
+              className="flex h-14 flex-col items-center justify-center rounded-[18px] bg-emerald-600 text-xs font-black text-white shadow-lg active:scale-95 disabled:opacity-40"
+            >
+              <span className="text-lg leading-none">↗</span>
+              <span className="mt-1">Apply</span>
+            </button>
+          </div>
+
+          <p className="mt-3 text-center text-[11px] font-bold text-slate-400">
+            Swipe right apply · left decline · up skip
+          </p>
+        </div>
+      </article>
+    ) : (
+      <div className="rounded-[30px] border border-slate-200 bg-white p-8 text-center shadow-lg">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a66c2] text-2xl font-black text-white">
+          J
+        </div>
+
+        <h2 className="mt-6 text-3xl font-black">No more jobs</h2>
+
+        <p className="mt-2 text-sm leading-6 text-slate-500">
+          Search again to find more matching vacancies.
+        </p>
+
+        <button
+          onClick={handleSearch}
+          className="mt-6 rounded-full bg-[#0a66c2] px-6 py-3 text-sm font-black text-white"
+        >
+          Search Again
+        </button>
+      </div>
+    )}
+  </section>
+</section>
 
       <style>{`
         @keyframes jobifyBar {
