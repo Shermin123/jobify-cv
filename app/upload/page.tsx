@@ -1110,10 +1110,10 @@ const previousSetupStep = () => {
   if (showSetupPopup) {
   return (
     <main
-  className="fixed inset-0 z-[999999] h-[100svh] w-screen overflow-y-scroll bg-[#303647] px-3 pt-4 pb-[160px] text-slate-950"
+  className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-[#303647] px-3 pt-4 pb-[160px] text-slate-950 [@media_(min-width:768px)_and_(max-height:850px)]:pt-12"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
-  <div className="flex min-h-[calc(100svh-32px)] items-start justify-center pt-4">
+  <div className="flex min-h-[calc(100dvh-32px)] items-start justify-center pt-4 [@media_(min-width:768px)_and_(max-height:850px)]:pt-8">
     <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
   <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -1123,7 +1123,7 @@ const previousSetupStep = () => {
   </div>
 
   <div
-    className="relative max-h-[calc(100dvh-24px)] overflow-y-auto p-4 overscroll-contain sm:p-5"
+  className="relative max-h-[calc(100dvh-24px)] overflow-y-auto p-4 overscroll-contain sm:p-5 [@media_(min-width:768px)_and_(max-height:850px)]:max-h-[calc(100dvh-120px)]"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
           {/* TOP ROW */}
