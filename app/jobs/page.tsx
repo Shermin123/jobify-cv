@@ -878,7 +878,7 @@ const handleApply = () => {
         </div>
       )}
 
-      <section className="relative z-10 mx-auto max-w-5xl px-3 pb-32 pt-36 sm:px-6 lg:pb-10 lg:pt-6">
+      <section className="relative z-10 mx-auto max-w-5xl px-3 pb-24 pt-24 sm:px-6 lg:pb-10 lg:pt-6">
   {/* TOP SEARCH CARD */}
   <div className="rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)] backdrop-blur-xl">
     <div className="flex items-center justify-between gap-3">
@@ -1020,9 +1020,9 @@ const handleApply = () => {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       style={dragStyle}
-      className={`overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_22px_70px_rgba(15,23,42,0.14)] transition-all duration-500 ease-out ${cardAnimation}`}
+      className={`overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_16px_50px_rgba(15,23,42,0.12)] transition-all duration-500 ease-out ${cardAnimation}`}
     >
-      <div className="bg-white p-4">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-base font-black text-white shadow-lg">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-lg">
@@ -1045,11 +1045,11 @@ const handleApply = () => {
           </span>
         </div>
 
-        <h2 className="mt-5 text-[28px] font-black leading-tight tracking-tight text-slate-950">
+        <h2 className="mt-3 text-[22px] font-black leading-tight tracking-tight text-slate-950">
           {currentJob.title}
         </h2>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-slate-700">
             📍 {currentJob.location}
           </span>
@@ -1062,28 +1062,28 @@ const handleApply = () => {
         </div>
       </div>
 
-      <div className="border-t border-slate-100 bg-slate-50 p-4">
-        <div className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-slate-200">
+      <div className="border-t border-slate-100 bg-slate-50 p-3">
+        <div className="rounded-[20px] bg-white p-3 shadow-sm ring-1 ring-slate-200">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
             Role summary
           </p>
 
-          <p className="mt-3 max-h-[140px] overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-700">
+          <p className="mt-2 max-h-[95px] overflow-y-auto pr-2 text-xs font-semibold leading-5 text-slate-700">
             {currentJob.summary || currentJob.description}
           </p>
         </div>
 
-        <div className="mt-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-blue-100">
+        <div className="mt-2 rounded-[20px] bg-white p-3 shadow-sm ring-1 ring-blue-100">
           <p className="text-sm font-black text-slate-950">
             Why this might fit
           </p>
 
-          <p className="mt-2 text-xs font-semibold leading-5 text-slate-500">
+          <p className="mt-1 text-[11px] font-semibold leading-4 text-slate-500">
             {currentJob.smartReason ||
               "This role may match your search based on job title, location, job type, and keywords."}
           </p>
 
-          <div className="mt-4 overflow-hidden rounded-full bg-slate-100 p-1">
+          <div className="mt-2 overflow-hidden rounded-full bg-slate-100 p-1">
             <div
               className="rounded-full bg-blue-600 px-3 py-2 text-center text-xs font-black text-white"
               style={{
@@ -1098,12 +1098,12 @@ const handleApply = () => {
         </div>
       </div>
 
-      <div className="bg-white px-4 pb-4 pt-3">
+      <div className="bg-white px-3 pb-3 pt-2">
         <div className="grid grid-cols-3 gap-3">
           <button
             onClick={handleDecline}
             disabled={searching || !currentJob}
-            className="flex h-14 flex-col items-center justify-center rounded-2xl bg-rose-50 text-xs font-black text-rose-600 ring-1 ring-rose-100 active:scale-95 disabled:opacity-40"
+            className="flex h-12 flex-col items-center justify-center rounded-2xl bg-rose-50 text-xs font-black text-rose-600 ring-1 ring-rose-100 active:scale-95 disabled:opacity-40"
           >
             <span className="text-xl leading-none">✕</span>
             <span className="mt-1">Decline</span>
@@ -1112,7 +1112,7 @@ const handleApply = () => {
           <button
             onClick={handleSkip}
             disabled={searching || !currentJob}
-            className="flex h-14 flex-col items-center justify-center rounded-2xl bg-slate-100 text-xs font-black text-slate-700 active:scale-95 disabled:opacity-40"
+            className="flex h-12 flex-col items-center justify-center rounded-2xl bg-slate-100 text-xs font-black text-slate-700 active:scale-95 disabled:opacity-40"
           >
             <span className="text-xl leading-none">↑</span>
             <span className="mt-1">Skip</span>
@@ -1121,7 +1121,7 @@ const handleApply = () => {
           <button
             onClick={handleApply}
             disabled={searching || !currentJob}
-            className="flex h-14 flex-col items-center justify-center rounded-2xl bg-emerald-600 text-xs font-black text-white shadow-lg active:scale-95 disabled:opacity-40"
+            className="flex h-12 flex-col items-center justify-center rounded-2xl bg-emerald-600 text-xs font-black text-white shadow-lg active:scale-95 disabled:opacity-40"
           >
             <span className="text-xl leading-none">↗</span>
             <span className="mt-1">Apply</span>
