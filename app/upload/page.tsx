@@ -1116,7 +1116,7 @@ const previousSetupStep = () => {
   if (showSetupPopup) {
   return (
     <main className="fixed inset-0 z-[9999] flex h-[100svh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-4 py-4 text-slate-950">
-      <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
+      <div className="relative flex h-[calc(100svh-24px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn sm:h-auto sm:max-h-[calc(100svh-32px)]">
         {/* TOP LIGHT SHAPE */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
@@ -1125,9 +1125,9 @@ const previousSetupStep = () => {
         </div>
 
         <div
-          className="relative max-h-[calc(100svh-32px)] overflow-y-auto p-5"
-          style={{ WebkitOverflowScrolling: "touch" }}
-        >
+  className="relative flex h-full min-h-0 flex-col p-4 overscroll-contain sm:p-5"
+  style={{ WebkitOverflowScrolling: "touch" }}
+>
           {/* TOP ROW */}
           <div className="flex items-center justify-between">
             <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">
@@ -1166,7 +1166,7 @@ const previousSetupStep = () => {
           {/* QUESTION BOX */}
           <div
   key={setupStep}
-  className="mt-5 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
+  className="mt-4 min-h-0 flex-1 overflow-y-auto rounded-[22px] border border-slate-200 bg-white/95 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn sm:p-4"
 >
             {setupStep === 0 && (
               <div className="relative">
@@ -1340,7 +1340,7 @@ const previousSetupStep = () => {
           </div>
 
           {/* BUTTONS */}
-          <div className="mt-5 flex gap-3">
+          <div className="mt-4 shrink-0 flex gap-3 border-t border-slate-100 pt-3">
             <button
               type="button"
               onClick={() => {
@@ -2582,8 +2582,8 @@ function QuestionButtons({
             onClick={() => setValue(option)}
             className={
               value === option
-                ? "rounded-2xl border border-blue-600 bg-blue-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] active:scale-95"
-                : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 active:scale-95"
+                ? "rounded-2xl border border-blue-600 bg-blue-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] active:scale-95"
+                : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 active:scale-95"
             }
           >
             {option}
