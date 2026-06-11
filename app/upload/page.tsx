@@ -1115,17 +1115,18 @@ const previousSetupStep = () => {
   }
   if (showSetupPopup) {
   return (
-    <main className="fixed inset-0 z-[999999] flex h-[100dvh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-3 py-3 text-slate-950">
-      <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
-        {/* TOP LIGHT SHAPE */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
-          <div className="absolute left-0 top-0 h-36 w-full bg-gradient-to-br from-blue-50 via-white to-transparent" />
-          <div className="absolute right-[-30px] top-[65px] h-28 w-[120%] rotate-[-14deg] bg-blue-50/80" />
-        </div>
+    <main className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-[#303647] px-3 py-4 text-slate-950">
+  <div className="flex min-h-[calc(100dvh-32px)] items-center justify-center">
+    <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
+  {/* TOP LIGHT SHAPE */}
+  <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
+    <div className="absolute left-0 top-0 h-36 w-full bg-gradient-to-br from-blue-50 via-white to-transparent" />
+    <div className="absolute right-[-30px] top-[65px] h-28 w-[120%] rotate-[-14deg] bg-blue-50/80" />
+  </div>
 
-        <div
-  className="relative max-h-[calc(100dvh-24px)] overflow-y-auto p-4 overscroll-contain sm:p-5"
+  <div
+    className="relative max-h-[calc(100dvh-24px)] overflow-y-auto p-4 overscroll-contain sm:p-5"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
           {/* TOP ROW */}
@@ -1363,10 +1364,11 @@ const previousSetupStep = () => {
               className="w-1/2 rounded-2xl bg-slate-950 py-3 text-sm font-black text-white transition hover:bg-blue-700 active:scale-95 disabled:bg-slate-400"
             >
               {setupStep === 6 ? "Start →" : "Next →"}
-            </button>
+                        </button>
           </div>
         </div>
-            </div>
+      </div>
+    </div>
 
       <style jsx>{`
         @keyframes popupIn {

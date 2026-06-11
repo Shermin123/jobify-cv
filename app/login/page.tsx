@@ -210,8 +210,9 @@ export default function LoginPage() {
               </p>
             </div>
           </div>
-        </div>
+                </div>
       </div>
+    </div>
 
       <style jsx>{`
         .animate-gradient {
