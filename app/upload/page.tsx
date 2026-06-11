@@ -76,9 +76,9 @@ const [generated, setGenerated] = useState(false);
   const setupCompleted = sessionStorage.getItem("jobify_setup_completed");
 
   if (!setupCompleted) {
-    setSetupStep(0);
-    setShowSetupPopup(true);
-  }
+  setSetupStep(0);
+  setShowSetupPopup(true);
+}
 
   const checkAccessStatus = async () => {
     if (!session?.user?.email) {
@@ -1102,10 +1102,289 @@ const previousSetupStep = () => {
       </div>
     );
   }
+  if (showSetupPopup) {
+  return (
+    <main className="relative min-h-screen overflow-hidden bg-[#f3f7ff] px-4 py-6 text-slate-950">
+      {/* CLEAN PREMIUM STATIC BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.14),transparent_34%),linear-gradient(135deg,#f8fbff_0%,#eef5ff_48%,#f7fbff_100%)]" />
 
+        {/* BIG PREMIUM EMOJIS */}
+        <div className="absolute left-[8%] top-[18%] text-[92px] opacity-[0.16] blur-[0.2px]">
+          📄
+        </div>
+
+        <div className="absolute right-[9%] top-[22%] text-[86px] opacity-[0.14] blur-[0.2px]">
+          ✨
+        </div>
+
+        <div className="absolute bottom-[16%] left-[13%] text-[88px] opacity-[0.14] blur-[0.2px]">
+          🎯
+        </div>
+
+        <div className="absolute bottom-[18%] right-[15%] text-[82px] opacity-[0.13] blur-[0.2px]">
+          🚀
+        </div>
+
+        <div className="absolute left-1/2 top-[42%] h-[580px] w-[580px] -translate-x-1/2 rounded-full bg-white/55 blur-[90px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-3rem)] max-w-[500px] items-center justify-center">
+        <div className="relative w-full overflow-hidden rounded-[32px] border border-white/80 bg-white/95 shadow-[0_30px_90px_rgba(15,23,42,0.16)] backdrop-blur-2xl">
+          <div className="relative p-5 sm:p-6">
+            {/* HEADER */}
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-blue-700 ring-1 ring-blue-100">
+                  <span className="h-2 w-2 rounded-full bg-blue-600" />
+                  Jobify AI Setup
+                </div>
+
+                <h1 className="mt-4 text-[28px] font-black leading-tight tracking-[-0.04em] text-slate-950 sm:text-[34px]">
+                  Personalise your CV
+                </h1>
+
+                <p className="mt-2 max-w-md text-sm font-medium leading-6 text-slate-500">
+                  Answer a few quick questions so Jobify can create a sharper, ATS-ready CV.
+                </p>
+              </div>
+
+              <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-blue-600 text-xl font-black text-white shadow-[0_18px_40px_rgba(37,99,235,0.28)] sm:flex">
+                J
+              </div>
+            </div>
+
+            {/* PROGRESS */}
+            <div className="mt-6">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-black text-slate-400">
+                  Question {setupStep + 1} of 7
+                </span>
+
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
+                  {Math.round(((setupStep + 1) / 7) * 100)}%
+                </span>
+              </div>
+
+              <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-blue-600 transition-all duration-500 ease-out"
+                  style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
+                />
+              </div>
+            </div>
+
+            {/* QUESTION BOX */}
+            <div
+              key={setupStep}
+              className="mt-5 rounded-[26px] border border-slate-200 bg-slate-50/90 p-4 shadow-inner"
+            >
+              {setupStep === 0 && (
+                <div className="relative">
+                  <h3 className="text-lg font-black tracking-tight text-slate-950">
+                    Which country are you applying in?
+                  </h3>
+
+                  <input
+                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    placeholder="Example: United Kingdom"
+                    value={country}
+                    onFocus={() => setShowCountrySuggestions(true)}
+                    onChange={(e) => {
+                      setCountry(e.target.value);
+                      setShowCountrySuggestions(true);
+                    }}
+                  />
+
+                  {showCountrySuggestions &&
+                    country &&
+                    filteredCountries.length > 0 && (
+                      <div className="absolute z-40 mt-2 max-h-44 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                        {filteredCountries.slice(0, 8).map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              setCountry(c);
+                              setShowCountrySuggestions(false);
+                            }}
+                            className="block w-full p-3 text-left text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                </div>
+              )}
+
+              {setupStep === 1 && (
+                <div className="relative">
+                  <h3 className="text-lg font-black tracking-tight text-slate-950">
+                    What job role are you targeting?
+                  </h3>
+
+                  <input
+                    className="mt-4 w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    placeholder="Example: Software Engineer"
+                    value={jobRole}
+                    onFocus={() => setShowRoleSuggestions(true)}
+                    onChange={(e) => {
+                      setJobRole(e.target.value);
+                      setShowRoleSuggestions(true);
+                    }}
+                  />
+
+                  {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
+                    <div className="absolute z-40 mt-2 max-h-44 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                      {filteredRoles.slice(0, 8).map((r, index) => (
+                        <button
+                          key={`${r}-${index}`}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            setJobRole(r);
+                            setShowRoleSuggestions(false);
+                          }}
+                          className="block w-full p-3 text-left text-sm font-bold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {setupStep === 2 && (
+                <QuestionButtons
+                  title="What is your experience level?"
+                  value={experienceLevel}
+                  setValue={setExperienceLevel}
+                  options={[
+                    "Student / Fresher",
+                    "0-1 years",
+                    "1-3 years",
+                    "3-5 years",
+                    "5+ years",
+                    "No experience",
+                    "Internship experience",
+                    "Freelance experience",
+                  ]}
+                />
+              )}
+
+              {setupStep === 3 && (
+                <QuestionButtons
+                  title="What type of job do you want?"
+                  value={jobType}
+                  setValue={setJobType}
+                  options={[
+                    "Full-time",
+                    "Part-time",
+                    "Internship",
+                    "Graduate role",
+                    "Remote job",
+                    "Career switch",
+                    "Contract",
+                    "Temporary",
+                  ]}
+                />
+              )}
+
+              {setupStep === 4 && (
+                <QuestionButtons
+                  title="Which industry are you applying for?"
+                  value={industry}
+                  setValue={setIndustry}
+                  options={[
+                    "Technology",
+                    "Retail",
+                    "Hospitality",
+                    "Healthcare",
+                    "Finance",
+                    "Education",
+                    "Customer Service",
+                    "Warehouse",
+                    "Data / AI",
+                    "Software",
+                    "Administration",
+                  ]}
+                />
+              )}
+
+              {setupStep === 5 && (
+                <QuestionButtons
+                  title="What should Jobify improve most?"
+                  value={cvGoal}
+                  setValue={setCvGoal}
+                  options={[
+                    "ATS keywords",
+                    "Professional wording",
+                    "Achievements",
+                    "Career switch",
+                    "CV structure",
+                    "Grammar",
+                    "Improve bullet points",
+                    "Highlight transferable skills",
+                  ]}
+                />
+              )}
+
+              {setupStep === 6 && (
+                <QuestionButtons
+                  title="When are you applying?"
+                  value={urgency}
+                  setValue={setUrgency}
+                  options={[
+                    "Today",
+                    "This week",
+                    "This month",
+                    "Just preparing",
+                    "Urgent application",
+                    "Interview tomorrow",
+                    "Applying after improving CV",
+                  ]}
+                />
+              )}
+            </div>
+
+            {/* ACTIONS */}
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  if (setupStep === 0) {
+                    setShowSetupPopup(false);
+                    return;
+                  }
+
+                  previousSetupStep();
+                }}
+                className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-600 shadow-sm transition hover:bg-slate-50 active:scale-95"
+              >
+                {setupStep === 0 ? "Skip" : "Back"}
+              </button>
+
+              <button
+                type="button"
+                onClick={nextSetupStep}
+                disabled={!canGoNext}
+                className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-[0_18px_38px_rgba(37,99,235,0.28)] transition hover:bg-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+              >
+                {setupStep === 6 ? "Continue" : "Next"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
-     {showSetupPopup && (
+     {false && showSetupPopup && (
   <div className="fixed inset-0 z-[9999] grid place-items-center overflow-hidden bg-slate-950/80 px-4 py-3 backdrop-blur-2xl">
     <div
   className="relative w-full max-w-md max-h-[calc(100svh-1.5rem)] overflow-y-auto overscroll-contain rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn"
@@ -1766,7 +2045,7 @@ const previousSetupStep = () => {
             )}
           </section>
         )}
-
+       
         {/* INPUT FORM */}
         <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white/90 backdrop-blur-xl shadow-2xl">
           <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500" />
@@ -2239,57 +2518,27 @@ function QuestionButtons({
   setValue: (value: string) => void;
   options: string[];
 }) {
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(value.toLowerCase().trim())
-  );
-
-  const visibleOptions = value ? filteredOptions : options;
-
   return (
     <div>
-      <h3 className="text-lg font-black text-slate-950">{title}</h3>
+      <h3 className="text-lg font-black tracking-tight text-slate-950">
+        {title}
+      </h3>
 
-      <input
-        className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Type your answer or choose below..."
-        value={value}
-        onClick={(e) => {
-          setTimeout(() => {
-            e.currentTarget.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }, 250);
-        }}
-        onChange={(e) => setValue(e.target.value)}
-      />
-
-      <div className="mt-3 max-h-44 overflow-y-auto rounded-2xl border border-slate-100 bg-slate-50/70 p-2">
-        <div className="flex flex-wrap gap-2">
-          {visibleOptions.length > 0 ? (
-            visibleOptions.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  setValue(option);
-                }}
-                className={`rounded-full border px-3 py-2 text-xs font-black transition ${
-                  value === option
-                    ? "border-blue-600 bg-blue-600 text-white shadow-md"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-blue-400 hover:bg-blue-50"
-                }`}
-              >
-                {option}
-              </button>
-            ))
-          ) : (
-            <p className="px-2 py-3 text-xs font-bold text-slate-400">
-              No suggestions found. You can type your own answer.
-            </p>
-          )}
-        </div>
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => setValue(option)}
+            className={
+              value === option
+                ? "rounded-2xl border border-blue-600 bg-blue-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.24)] transition active:scale-95"
+                : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 active:scale-95"
+            }
+          >
+            {option}
+          </button>
+        ))}
       </div>
     </div>
   );
