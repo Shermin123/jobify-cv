@@ -878,7 +878,7 @@ const handleApply = () => {
         </div>
       )}
 
-      <section className="relative z-10 mx-auto max-w-5xl px-3 pb-28 pt-4 sm:px-6 lg:pb-10">
+      <section className="relative z-10 mx-auto max-w-5xl px-3 pb-32 pt-36 sm:px-6 lg:pb-10 lg:pt-6">
   {/* TOP SEARCH CARD */}
   <div className="rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)] backdrop-blur-xl">
     <div className="flex items-center justify-between gap-3">
@@ -1011,153 +1011,149 @@ const handleApply = () => {
   )}
 
   {/* JOB CARD */}
-  <section className="mt-4">
-    {currentJob ? (
-      <article
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        style={dragStyle}
-        className={`overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.16)] transition-all duration-500 ease-out ${cardAnimation}`}
-      >
-        {/* CARD HEADER */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-5 text-white">
-          <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-blue-500/25 blur-3xl" />
-
-          <div className="relative flex items-start justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-xl font-black text-blue-700 shadow-xl">
-                {(currentJob.company || "J").charAt(0).toUpperCase()}
-              </div>
-
-              <div className="min-w-0">
-                <p className="truncate text-sm font-black">
-                  {currentJob.company}
-                </p>
-                <p className="mt-1 truncate text-xs font-bold text-white/60">
-                  {currentJob.posted || "Recently posted"} ·{" "}
-                  {currentJob.source || "Verified source"}
-                </p>
-              </div>
+  {/* JOB CARD */}
+<section className="mt-4">
+  {currentJob ? (
+    <article
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      style={dragStyle}
+      className={`overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_22px_70px_rgba(15,23,42,0.14)] transition-all duration-500 ease-out ${cardAnimation}`}
+    >
+      <div className="bg-white p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-lg">
+              {(currentJob.company || "J").charAt(0).toUpperCase()}
             </div>
 
-            <span className="shrink-0 rounded-full bg-emerald-400/15 px-3 py-1 text-[11px] font-black text-emerald-200 ring-1 ring-emerald-300/20">
-              Verified
-            </span>
-          </div>
-
-          <h2 className="relative mt-5 text-[28px] font-black leading-tight tracking-tight text-white">
-            {currentJob.title}
-          </h2>
-
-          <div className="relative mt-4 flex flex-wrap gap-2">
-            <span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-white/90">
-              📍 {currentJob.location}
-            </span>
-            <span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-white/90">
-              💰 {currentJob.salary}
-            </span>
-            <span className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-black text-white/90">
-              💼 {currentJob.type || "Job"}
-            </span>
-          </div>
-        </div>
-
-        {/* CARD BODY */}
-        <div className="p-4">
-          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
-              Role summary
-            </p>
-
-            <p className="mt-3 max-h-[190px] overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-700">
-              {currentJob.summary || currentJob.description}
-            </p>
-          </div>
-
-          <div className="mt-4 rounded-[24px] border border-blue-100 bg-blue-50 p-4">
-            <p className="text-sm font-black text-slate-950">
-              Why this might fit
-            </p>
-
-            <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
-              {currentJob.smartReason ||
-                "This role may match your search based on job title, location, job type, and keywords."}
-            </p>
-
-            <div className="mt-4 overflow-hidden rounded-full bg-white p-1 shadow-inner">
-              <div
-                className="rounded-full bg-gradient-to-r from-emerald-500 to-blue-600 px-3 py-2 text-center text-xs font-black text-white"
-                style={{
-                  width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
-                }}
-              >
-                {typeof currentJob.matchScore === "number"
-                  ? `${currentJob.matchScore}/100 match`
-                  : "Good match"}
-              </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-black text-slate-950">
+                {currentJob.company}
+              </p>
+              <p className="mt-1 truncate text-xs font-bold text-slate-400">
+                {currentJob.posted || "Recently posted"} ·{" "}
+                {currentJob.source || "Verified source"}
+              </p>
             </div>
           </div>
+
+          <span className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-black text-emerald-700 ring-1 ring-emerald-100">
+            Verified
+          </span>
         </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="sticky bottom-0 bg-white/95 px-4 pb-4 pt-2 backdrop-blur-xl">
-          <div className="grid grid-cols-3 gap-3 rounded-[24px] bg-slate-100 p-2">
-            <button
-              onClick={handleDecline}
-              disabled={searching || !currentJob}
-              className="flex h-14 flex-col items-center justify-center rounded-[18px] bg-white text-xs font-black text-rose-600 shadow-sm active:scale-95 disabled:opacity-40"
-            >
-              <span className="text-lg leading-none">✕</span>
-              <span className="mt-1">Decline</span>
-            </button>
+        <h2 className="mt-5 text-[28px] font-black leading-tight tracking-tight text-slate-950">
+          {currentJob.title}
+        </h2>
 
-            <button
-              onClick={handleSkip}
-              disabled={searching || !currentJob}
-              className="flex h-14 flex-col items-center justify-center rounded-[18px] bg-white text-xs font-black text-slate-700 shadow-sm active:scale-95 disabled:opacity-40"
-            >
-              <span className="text-lg leading-none">↑</span>
-              <span className="mt-1">Skip</span>
-            </button>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-slate-700">
+            📍 {currentJob.location}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-slate-700">
+            💰 {currentJob.salary}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-slate-700">
+            💼 {currentJob.type || "Job"}
+          </span>
+        </div>
+      </div>
 
-            <button
-              onClick={handleApply}
-              disabled={searching || !currentJob}
-              className="flex h-14 flex-col items-center justify-center rounded-[18px] bg-emerald-600 text-xs font-black text-white shadow-lg active:scale-95 disabled:opacity-40"
-            >
-              <span className="text-lg leading-none">↗</span>
-              <span className="mt-1">Apply</span>
-            </button>
-          </div>
+      <div className="border-t border-slate-100 bg-slate-50 p-4">
+        <div className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">
+            Role summary
+          </p>
 
-          <p className="mt-3 text-center text-[11px] font-bold text-slate-400">
-            Swipe right apply · left decline · up skip
+          <p className="mt-3 max-h-[140px] overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-700">
+            {currentJob.summary || currentJob.description}
           </p>
         </div>
-      </article>
-    ) : (
-      <div className="rounded-[30px] border border-slate-200 bg-white p-8 text-center shadow-lg">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a66c2] text-2xl font-black text-white">
-          J
+
+        <div className="mt-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-blue-100">
+          <p className="text-sm font-black text-slate-950">
+            Why this might fit
+          </p>
+
+          <p className="mt-2 text-xs font-semibold leading-5 text-slate-500">
+            {currentJob.smartReason ||
+              "This role may match your search based on job title, location, job type, and keywords."}
+          </p>
+
+          <div className="mt-4 overflow-hidden rounded-full bg-slate-100 p-1">
+            <div
+              className="rounded-full bg-blue-600 px-3 py-2 text-center text-xs font-black text-white"
+              style={{
+                width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
+              }}
+            >
+              {typeof currentJob.matchScore === "number"
+                ? `${currentJob.matchScore}/100 match`
+                : "Good match"}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white px-4 pb-4 pt-3">
+        <div className="grid grid-cols-3 gap-3">
+          <button
+            onClick={handleDecline}
+            disabled={searching || !currentJob}
+            className="flex h-14 flex-col items-center justify-center rounded-2xl bg-rose-50 text-xs font-black text-rose-600 ring-1 ring-rose-100 active:scale-95 disabled:opacity-40"
+          >
+            <span className="text-xl leading-none">✕</span>
+            <span className="mt-1">Decline</span>
+          </button>
+
+          <button
+            onClick={handleSkip}
+            disabled={searching || !currentJob}
+            className="flex h-14 flex-col items-center justify-center rounded-2xl bg-slate-100 text-xs font-black text-slate-700 active:scale-95 disabled:opacity-40"
+          >
+            <span className="text-xl leading-none">↑</span>
+            <span className="mt-1">Skip</span>
+          </button>
+
+          <button
+            onClick={handleApply}
+            disabled={searching || !currentJob}
+            className="flex h-14 flex-col items-center justify-center rounded-2xl bg-emerald-600 text-xs font-black text-white shadow-lg active:scale-95 disabled:opacity-40"
+          >
+            <span className="text-xl leading-none">↗</span>
+            <span className="mt-1">Apply</span>
+          </button>
         </div>
 
-        <h2 className="mt-6 text-3xl font-black">No more jobs</h2>
-
-        <p className="mt-2 text-sm leading-6 text-slate-500">
-          Search again to find more matching vacancies.
+        <p className="mt-3 text-center text-[11px] font-bold text-slate-400">
+          Swipe right apply · left decline · up skip
         </p>
-
-        <button
-          onClick={handleSearch}
-          className="mt-6 rounded-full bg-[#0a66c2] px-6 py-3 text-sm font-black text-white"
-        >
-          Search Again
-        </button>
       </div>
-    )}
-  </section>
+    </article>
+  ) : (
+    <div className="rounded-[30px] border border-slate-200 bg-white p-8 text-center shadow-lg">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a66c2] text-2xl font-black text-white">
+        J
+      </div>
+
+      <h2 className="mt-6 text-3xl font-black">No more jobs</h2>
+
+      <p className="mt-2 text-sm leading-6 text-slate-500">
+        Search again to find more matching vacancies.
+      </p>
+
+      <button
+        onClick={handleSearch}
+        className="mt-6 rounded-full bg-[#0a66c2] px-6 py-3 text-sm font-black text-white"
+      >
+        Search Again
+      </button>
+    </div>
+  )}
+</section>
 </section>
 
       <style>{`
