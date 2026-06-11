@@ -10,19 +10,21 @@ export default function Navbar() {
 
   const isLoggedIn = !!session;
 
-    const links = isLoggedIn
-  ? [
-      { name: "Dashboard", href: "/dashboard" },
-      { name: "Auto Apply", href: "/jobs" },
-      { name: "Create CV", href: "/editor" },
-      { name: "Documents", href: "/my-documents" },
-    ]
-  : [
-      { name: "Home", href: "/" },
-      { name: "Jobs", href: "/jobs" },
-      { name: "Create CV", href: "/editor" },
-      { name: "CV Score", href: "/#cv-score" },
-    ];
+  const links = isLoggedIn
+    ? [
+        { name: "Dashboard", href: "/dashboard" },
+        { name: "Auto Apply", href: "/jobs" },
+        { name: "Create CV", href: "/upload" },
+        { name: "Create New CV", href: "/editor" },
+        { name: "Documents", href: "/my-documents" },
+      ]
+    : [
+        { name: "Home", href: "/" },
+        { name: "Jobs", href: "/jobs" },
+        { name: "Create CV", href: "/upload" },
+        { name: "Create New CV", href: "/editor" },
+        { name: "CV Score", href: "/#cv-score" },
+      ];
 
   const isActive = (href: string) => {
     if (href === "/#cv-score") return false;
@@ -51,25 +53,27 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-1 rounded-full bg-slate-100 p-1 lg:flex">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 ${
-                  isActive(link.href)
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-slate-600 hover:bg-white hover:text-slate-950 hover:shadow-sm"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+          <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+            <div className="flex items-center gap-1 rounded-full bg-slate-100 p-1">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 ${
+                    isActive(link.href)
+                      ? "bg-white text-blue-600 shadow-sm"
+                      : "text-slate-600 hover:bg-white hover:text-slate-950 hover:shadow-sm"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
           </nav>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden shrink-0 items-center gap-2 md:flex">
             {isLoggedIn && (
-              <div className="hidden max-w-[150px] text-right xl:block">
+              <div className="hidden max-w-[145px] text-right xl:block">
                 <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
                   Signed in
                 </p>
@@ -87,17 +91,17 @@ export default function Navbar() {
             </Link>
 
             <Link
-              href="/jobs"
+              href="/upload"
               className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-black text-blue-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-100 hover:shadow-md"
             >
-              Jobs
+              Create CV
             </Link>
 
             <Link
               href="/editor"
               className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
             >
-              Create CV
+              Create New CV
             </Link>
 
             {isLoggedIn ? (
@@ -117,32 +121,32 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex shrink-0 items-center gap-2 md:hidden">
             <Link
-              href="/pricing"
-              className="rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-black text-amber-700 shadow-sm transition hover:bg-amber-100"
+              href="/upload"
+              className="rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-black text-blue-700 shadow-sm transition hover:bg-blue-100"
             >
-              Pricing
+              Create CV
             </Link>
 
             <Link
               href="/editor"
-              className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
+              className="rounded-full bg-blue-600 px-3 py-2 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
             >
-              Create CV
+              New CV
             </Link>
 
             {isLoggedIn ? (
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 shadow-sm transition hover:bg-red-50 hover:text-red-600"
+                className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 shadow-sm transition hover:bg-red-50 hover:text-red-600"
               >
                 Logout
               </button>
             ) : (
               <Link
                 href="/login"
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 shadow-sm transition hover:bg-slate-50"
+                className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 shadow-sm transition hover:bg-slate-50"
               >
                 Login
               </Link>
