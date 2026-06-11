@@ -1115,8 +1115,8 @@ const previousSetupStep = () => {
   }
   if (showSetupPopup) {
   return (
-    <main className="fixed inset-0 z-[9999] flex h-[100svh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-3 py-2 text-slate-950">
-      <div className="relative flex h-[calc(100svh-16px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn sm:h-auto sm:max-h-[calc(100svh-32px)]">
+    <main className="fixed inset-0 z-[999999] flex h-[100dvh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-3 py-3 text-slate-950">
+      <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
         {/* TOP LIGHT SHAPE */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
@@ -1125,7 +1125,7 @@ const previousSetupStep = () => {
         </div>
 
         <div
-  className="relative flex h-full min-h-0 flex-col p-4 overscroll-contain sm:p-5"
+  className="relative max-h-[calc(100dvh-24px)] overflow-y-auto p-4 overscroll-contain sm:p-5"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
           {/* TOP ROW */}
@@ -1166,7 +1166,7 @@ const previousSetupStep = () => {
           {/* QUESTION BOX */}
           <div
   key={setupStep}
-  className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-[20px] border border-slate-200 bg-white/95 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn sm:p-4"
+  className="mt-4 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
 >
             {setupStep === 0 && (
               <div className="relative">
@@ -1340,7 +1340,7 @@ const previousSetupStep = () => {
           </div>
 
           {/* BUTTONS */}
-          <div className="mt-3 shrink-0 flex gap-3 border-t border-slate-100 pt-3">
+          <div className="mt-5 flex gap-3">
             <button
               type="button"
               onClick={() => {
