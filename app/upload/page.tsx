@@ -1115,8 +1115,8 @@ const previousSetupStep = () => {
   }
   if (showSetupPopup) {
   return (
-    <main className="fixed inset-0 z-[9999] flex h-[100svh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-4 py-4 text-slate-950">
-      <div className="relative flex h-[calc(100svh-24px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn sm:h-auto sm:max-h-[calc(100svh-32px)]">
+    <main className="fixed inset-0 z-[9999] flex h-[100svh] w-screen items-center justify-center overflow-hidden bg-[#303647] px-3 py-2 text-slate-950">
+      <div className="relative flex h-[calc(100svh-16px)] w-full max-w-[430px] flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn sm:h-auto sm:max-h-[calc(100svh-32px)]">
         {/* TOP LIGHT SHAPE */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
@@ -1141,12 +1141,12 @@ const previousSetupStep = () => {
           </div>
 
           {/* TITLE */}
-          <div className="mt-5 text-center">
+          <div className="mt-3 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-blue-600 to-indigo-700 text-2xl font-black text-white shadow-[0_18px_40px_rgba(37,99,235,0.35)] animate-iconFloat">
               ✦
             </div>
 
-            <h1 className="mt-4 text-[25px] font-black tracking-[-0.04em] text-slate-950">
+            <h1 className="mt-3 text-[24px] font-black tracking-[-0.04em] text-slate-950">
               Personalise your CV
             </h1>
 
@@ -1166,7 +1166,7 @@ const previousSetupStep = () => {
           {/* QUESTION BOX */}
           <div
   key={setupStep}
-  className="mt-4 min-h-0 flex-1 overflow-y-auto rounded-[22px] border border-slate-200 bg-white/95 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn sm:p-4"
+  className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-[20px] border border-slate-200 bg-white/95 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn sm:p-4"
 >
             {setupStep === 0 && (
               <div className="relative">
@@ -1340,7 +1340,7 @@ const previousSetupStep = () => {
           </div>
 
           {/* BUTTONS */}
-          <div className="mt-4 shrink-0 flex gap-3 border-t border-slate-100 pt-3">
+          <div className="mt-3 shrink-0 flex gap-3 border-t border-slate-100 pt-3">
             <button
               type="button"
               onClick={() => {
@@ -1474,7 +1474,7 @@ const previousSetupStep = () => {
           </p>
         </div>
 
-        <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-100">
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
           <div
             className="h-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-700 ease-out"
             style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
