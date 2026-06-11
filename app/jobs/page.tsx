@@ -704,9 +704,6 @@ const handleApply = () => {
   setMessage(`Applied to ${jobSnapshot.company}`);
   moveToNextJobWithSwipe();
 
-  if (jobSnapshot.applyUrl) {
-    window.open(jobSnapshot.applyUrl, "_blank");
-  }
 
   void (async () => {
     try {
@@ -816,7 +813,50 @@ const handleApply = () => {
     : undefined;
 
   return (
-    <main className="min-h-screen bg-[#f3f2ef] text-[#191919]">
+    <main className="relative min-h-screen overflow-hidden bg-[#f8fafc] text-[#191919]">
+         <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+  <div className="absolute inset-0 bg-[#f3f2ef]" />
+
+  <div
+    className="absolute -left-28 top-14 h-[420px] w-[420px] rounded-full bg-[#0a66c2]/35 blur-3xl"
+    style={{ animation: "jobifyBlobOne 7s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute right-[-160px] top-32 h-[500px] w-[500px] rounded-full bg-sky-400/40 blur-3xl"
+    style={{ animation: "jobifyBlobTwo 8s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute bottom-[-180px] left-[25%] h-[520px] w-[520px] rounded-full bg-indigo-500/35 blur-3xl"
+    style={{ animation: "jobifyBlobThree 9s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute left-[-45%] top-[20%] h-48 w-[190%] rotate-[-8deg] bg-gradient-to-r from-transparent via-[#0a66c2]/25 to-transparent"
+    style={{ animation: "jobifyLightSweep 4s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(10,102,194,0.22)_1px,transparent_0)] bg-[size:32px_32px] opacity-80"
+    style={{ animation: "jobifyGridMove 10s linear infinite" }}
+  />
+
+  <div
+    className="absolute left-[10%] top-[22%] h-3 w-3 rounded-full bg-[#0a66c2]/70 shadow-[0_0_28px_rgba(10,102,194,0.8)]"
+    style={{ animation: "jobifyDotOne 4s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute right-[14%] top-[38%] h-3 w-3 rounded-full bg-sky-500/70 shadow-[0_0_28px_rgba(14,165,233,0.8)]"
+    style={{ animation: "jobifyDotTwo 5s ease-in-out infinite" }}
+  />
+
+  <div
+    className="absolute left-[22%] bottom-[16%] h-3 w-3 rounded-full bg-indigo-500/70 shadow-[0_0_28px_rgba(99,102,241,0.8)]"
+    style={{ animation: "jobifyDotThree 6s ease-in-out infinite" }}
+  />
+</div>
       {searching && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-white/70 px-6 backdrop-blur-xl">
           <div className="w-full max-w-sm rounded-3xl border border-[#d0d0d0] bg-white p-8 text-center shadow-xl">
@@ -838,7 +878,7 @@ const handleApply = () => {
         </div>
       )}
 
-      <section className="mx-auto max-w-7xl px-4 py-5 pb-28 sm:px-6 lg:pb-10">
+      <section className="relative z-10 mx-auto max-w-7xl px-4 py-5 pb-28 sm:px-6 lg:pb-10">
         <header className="sticky top-3 z-50 rounded-2xl border border-[#d6d6d6] bg-white/95 shadow-sm backdrop-blur-xl">
           <div className="flex items-center justify-between gap-4 px-4 py-3">
             <div className="flex items-center gap-3">
@@ -1078,10 +1118,10 @@ const handleApply = () => {
 
                 <section className="min-w-0">
   {currentJob ? (
-    <div className="mx-auto w-full max-w-[390px]">
-      <div className="relative min-h-[620px] touch-none">
+    <div className="mx-auto w-full max-w-[680px]">
+      <div className="relative min-h-[560px] touch-none">
         <div className="absolute inset-x-8 top-8 h-[540px] rounded-[42px] bg-black/10 blur-2xl" />
-        <div className="absolute left-1/2 top-5 h-[560px] w-[92%] -translate-x-1/2 rounded-[40px] bg-white/60 shadow-[0_30px_100px_rgba(15,23,42,0.12)]" />
+        <div className="absolute left-1/2 top-5 h-[500px] w-[92%] -translate-x-1/2 rounded-[40px] bg-white/60 shadow-[0_30px_100px_rgba(15,23,42,0.12)]" />
 
         {dragHint && (
           <div
@@ -1098,114 +1138,189 @@ const handleApply = () => {
         )}
 
         <article
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          style={dragStyle}
-          className={`relative z-20 overflow-hidden rounded-[40px] border border-white bg-white shadow-[0_28px_90px_rgba(15,23,42,0.18)] transition-all duration-150 ease-out will-change-transform ${cardAnimation}`}
-        >
-          <div className="relative h-[230px] overflow-hidden bg-gradient-to-br from-[#111827] via-[#0a66c2] to-[#38bdf8] p-5 text-white">
-            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
-            <div className="absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-cyan-300/25 blur-3xl" />
+  onPointerDown={handlePointerDown}
+  onPointerMove={handlePointerMove}
+  onPointerUp={handlePointerUp}
+  onPointerCancel={handlePointerUp}
+  style={dragStyle}
+  className={`relative z-20 overflow-hidden rounded-[34px] border border-slate-200 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.16)] transition-all duration-500 ease-out will-change-transform hover:-translate-y-1 hover:shadow-[0_40px_110px_rgba(15,23,42,0.22)] ${cardAnimation}`}
+>
+  <div className="relative overflow-hidden border-b border-slate-100 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-5 text-white">
+    <div className="absolute right-[-80px] top-[-80px] h-56 w-56 rounded-full bg-blue-500/25 blur-3xl animate-pulse" />
+    <div className="absolute bottom-[-90px] left-[-80px] h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl" />
 
-            <div className="relative flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-[22px] bg-white text-xl font-black text-[#0a66c2] shadow-xl">
-                  {(currentJob.company || "J").charAt(0).toUpperCase()}
-                </div>
+    <div className="relative flex items-start justify-between gap-4">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 text-xl font-black text-blue-700 shadow-xl ring-1 ring-white/30">
+          {currentJob.company?.toLowerCase().includes("google") ? (
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google logo" className="max-h-7 max-w-full object-contain" />
+          ) : currentJob.company?.toLowerCase().includes("microsoft") ? (
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft logo" className="max-h-7 max-w-full object-contain" />
+          ) : currentJob.company?.toLowerCase().includes("amazon") ? (
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon logo" className="max-h-7 max-w-full object-contain" />
+          ) : (
+            (currentJob.company || "J").charAt(0).toUpperCase()
+          )}
+        </div>
 
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-black">
-                    {currentJob.company}
-                  </p>
-                  <p className="mt-1 text-xs font-bold text-white/65">
-                    {currentJob.posted || "Recently posted"}
-                  </p>
-                </div>
-              </div>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-black">{currentJob.company}</p>
+          <p className="mt-1 text-xs font-bold text-white/60">
+            {currentJob.posted || "Recently posted"} · {currentJob.source || "Verified job source"}
+          </p>
+        </div>
+      </div>
 
-              <div className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-black text-white backdrop-blur-md">
-                {currentJob.type || "Job"}
-              </div>
-            </div>
+      <div className="rounded-full bg-emerald-400/15 px-3 py-1 text-[11px] font-black text-emerald-200 ring-1 ring-emerald-300/20">
+        Verified
+      </div>
+    </div>
 
-            <div className="relative mt-7">
-              <h2 className="line-clamp-3 text-[28px] font-black leading-[1.02] tracking-tight">
-                {currentJob.title}
-              </h2>
-            </div>
-          </div>
+    <h2 className="relative mt-5 line-clamp-2 text-[26px] font-black leading-tight tracking-tight">
+      {currentJob.title}
+    </h2>
 
-          <div className="relative -mt-8 px-4">
-            <div className="rounded-[30px] border border-neutral-100 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-[22px] bg-[#f8fafd] p-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-neutral-400">
-                    Location
-                  </p>
-                  <p className="mt-2 line-clamp-2 text-sm font-black text-neutral-950">
-                    {currentJob.location}
-                  </p>
-                </div>
+    <div className="relative mt-4 flex flex-wrap gap-2">
+      <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black text-white/90 ring-1 ring-white/10">
+        📍 {currentJob.location}
+      </span>
+      <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black text-white/90 ring-1 ring-white/10">
+        💰 {currentJob.salary}
+      </span>
+      <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-black text-white/90 ring-1 ring-white/10">
+        💼 {currentJob.type || "Job"}
+      </span>
+    </div>
+  </div>
 
-                <div className="rounded-[22px] bg-[#f8fafd] p-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-neutral-400">
-                    Salary
-                  </p>
-                  <p className="mt-2 line-clamp-2 text-sm font-black text-neutral-950">
-                    {currentJob.salary}
-                  </p>
-                </div>
-              </div>
+  <div className="p-4">
+    <div className="grid gap-4 md:grid-cols-[1fr_1fr]">
+      <div className="rounded-[26px] border border-slate-200 bg-slate-50 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg">
+        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
+          Role summary
+        </p>
 
-              <div className="mt-4 rounded-[24px] bg-neutral-950 p-4 text-white">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/45">
-                  Description
-                </p>
+        <p className="mt-3 line-clamp-7 text-sm font-semibold leading-6 text-slate-700">
+          {currentJob.summary || currentJob.description}
+        </p>
+      </div>
 
-                <p className="mt-3 line-clamp-6 text-sm font-medium leading-6 text-white/82">
-                  {currentJob.summary || currentJob.description}
-                </p>
-              </div>
-            </div>
-          </div>
+      <div className="rounded-[26px] border border-blue-100 bg-blue-50 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg">
+        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-blue-100">
+          <p className="text-sm font-black text-slate-950">
+            Why this might fit
+          </p>
+          <p className="mt-2 line-clamp-3 text-xs font-semibold leading-5 text-slate-600">
+            {currentJob.smartReason ||
+              "This role may match your search based on the job title, location, job type, and role keywords."}
+          </p>
+        </div>
 
-          <div className="px-4 pb-4 pt-4">
-            <div className="grid grid-cols-3 gap-3 rounded-[30px] bg-neutral-100 p-2">
-              <button
-                onClick={handleDecline}
-                disabled={searching || !currentJob}
-                className="flex h-16 flex-col items-center justify-center rounded-[24px] bg-white text-xs font-black text-rose-600 shadow-sm transition duration-150 hover:-translate-y-0.5 hover:bg-rose-50 active:scale-95 disabled:opacity-40"
-              >
-                <span className="text-xl leading-none">✕</span>
-                <span className="mt-1">Decline</span>
-              </button>
-
-              <button
-                onClick={handleSkip}
-                disabled={searching || !currentJob}
-                className="flex h-16 flex-col items-center justify-center rounded-[24px] bg-white text-xs font-black text-neutral-700 shadow-sm transition duration-150 hover:-translate-y-0.5 hover:bg-white active:scale-95 disabled:opacity-40"
-              >
-                <span className="text-xl leading-none">↑</span>
-                <span className="mt-1">Skip</span>
-              </button>
-
-              <button
-                onClick={handleApply}
-                disabled={searching || !currentJob}
-                className="flex h-16 flex-col items-center justify-center rounded-[24px] bg-[#0a66c2] text-xs font-black text-white shadow-[0_14px_35px_rgba(10,102,194,0.35)] transition duration-150 hover:-translate-y-0.5 hover:bg-[#004182] active:scale-95 disabled:opacity-40"
-              >
-                <span className="text-xl leading-none">↗</span>
-                <span className="mt-1">Apply</span>
-              </button>
-            </div>
-
-            <p className="mt-4 text-center text-[11px] font-bold text-neutral-400">
-              Swipe right apply · left decline · up skip
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-emerald-100">
+            <p className="text-[11px] font-black uppercase tracking-wide text-emerald-600">
+              Matches
             </p>
+
+            <div className="mt-2 space-y-2">
+              {(currentJob.skills?.length
+                ? currentJob.skills
+                : currentJob.highlights?.length
+                ? currentJob.highlights
+                : [
+                    currentJob.category || "Relevant role",
+                    currentJob.seniority || "Suitable level",
+                    currentJob.type || "Matching job type",
+                  ]
+              )
+                .slice(0, 3)
+                .map((item, index) => (
+                  <div key={`${item}-${index}`} className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white">
+                      ✓
+                    </span>
+                    <span className="line-clamp-1">{item}</span>
+                  </div>
+                ))}
+            </div>
           </div>
-        </article>
+
+          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-rose-100">
+            <p className="text-[11px] font-black uppercase tracking-wide text-rose-500">
+              Check
+            </p>
+
+            <div className="mt-2 space-y-2">
+              {(currentJob.requirements?.length
+                ? currentJob.requirements
+                : ["Review exact experience", "Check employer details"]
+              )
+                .slice(0, 2)
+                .map((item, index) => (
+                  <div key={`${item}-${index}`} className="flex items-center gap-2 text-xs font-bold text-slate-600">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-500 text-[10px] text-white">
+                      !
+                    </span>
+                    <span className="line-clamp-1">{item}</span>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 overflow-hidden rounded-full bg-white p-1 shadow-inner ring-1 ring-blue-100">
+          <div
+            className="rounded-full bg-gradient-to-r from-emerald-500 to-blue-600 px-3 py-2 text-center text-xs font-black text-white transition-all duration-700"
+            style={{
+              width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
+            }}
+          >
+            {typeof currentJob.matchScore === "number"
+              ? `${currentJob.matchScore}/100 match`
+              : "Good match"}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="px-4 pb-4">
+    <div className="grid grid-cols-3 gap-3 rounded-[26px] bg-slate-100 p-2 shadow-inner">
+      <button
+        onClick={handleDecline}
+        disabled={searching || !currentJob}
+        className="flex h-14 flex-col items-center justify-center rounded-[20px] bg-white text-xs font-black text-rose-600 shadow-sm ring-1 ring-rose-100 transition-all duration-200 hover:-translate-y-1 hover:bg-rose-50 hover:shadow-lg active:scale-95 disabled:opacity-40"
+      >
+        <span className="text-lg leading-none">✕</span>
+        <span className="mt-1">Decline</span>
+      </button>
+
+      <button
+        onClick={handleSkip}
+        disabled={searching || !currentJob}
+        className="flex h-14 flex-col items-center justify-center rounded-[20px] bg-white text-xs font-black text-slate-700 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:bg-slate-50 hover:shadow-lg active:scale-95 disabled:opacity-40"
+      >
+        <span className="text-lg leading-none">↑</span>
+        <span className="mt-1">Skip</span>
+      </button>
+
+      <button
+        onClick={handleApply}
+        disabled={searching || !currentJob}
+        className="relative flex h-14 flex-col items-center justify-center overflow-hidden rounded-[20px] bg-emerald-600 text-xs font-black text-white shadow-[0_14px_35px_rgba(16,185,129,0.35)] transition-all duration-200 hover:-translate-y-1 hover:bg-emerald-700 hover:shadow-lg active:scale-95 disabled:opacity-40"
+      >
+        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition duration-700 hover:translate-x-full" />
+        <span className="relative text-lg leading-none">↗</span>
+        <span className="relative mt-1">Apply</span>
+      </button>
+    </div>
+
+    <p className="mt-3 text-center text-[11px] font-bold text-slate-400">
+      Swipe right apply · left decline · up skip
+    </p>
+  </div>
+</article>
+
       </div>
     </div>
   ) : (
@@ -1278,6 +1393,361 @@ const handleApply = () => {
             transform: translateX(160%);
           }
         }
+          @keyframes bgBlobOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(80px, 60px) scale(1.15);
+  }
+}
+
+@keyframes bgBlobTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-90px, 80px) scale(1.2);
+  }
+}
+
+@keyframes bgBlobThree {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(60px, -90px) scale(1.18);
+  }
+}
+
+@keyframes bgGrid {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 42px 42px;
+  }
+}
+
+@keyframes floatOne {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(8deg);
+  }
+}
+
+@keyframes floatTwo {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(26px) rotate(-8deg);
+  }
+}
+
+@keyframes floatThree {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(28px) rotate(10deg);
+  }
+}
+
+.animate-bgBlobOne {
+  animation: bgBlobOne 11s ease-in-out infinite;
+}
+
+.animate-bgBlobTwo {
+  animation: bgBlobTwo 13s ease-in-out infinite;
+}
+
+.animate-bgBlobThree {
+  animation: bgBlobThree 15s ease-in-out infinite;
+}
+
+.animate-bgGrid {
+  animation: bgGrid 18s linear infinite;
+}
+
+.animate-floatOne {
+  animation: floatOne 5s ease-in-out infinite;
+}
+
+.animate-floatTwo {
+  animation: floatTwo 6s ease-in-out infinite;
+}
+
+.animate-floatThree {
+  animation: floatThree 7s ease-in-out infinite;
+}
+  @keyframes premiumBlobOne {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(45px, 35px, 0) scale(1.08);
+  }
+}
+
+@keyframes premiumBlobTwo {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-50px, 30px, 0) scale(1.1);
+  }
+}
+
+@keyframes premiumBlobThree {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(35px, -45px, 0) scale(1.09);
+  }
+}
+
+.animate-premiumBlobOne {
+  animation: premiumBlobOne 14s ease-in-out infinite;
+}
+
+.animate-premiumBlobTwo {
+  animation: premiumBlobTwo 16s ease-in-out infinite;
+}
+
+.animate-premiumBlobThree {
+  animation: premiumBlobThree 18s ease-in-out infinite;
+}
+  @keyframes premiumBlobOne {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(70px, 40px, 0) scale(1.12);
+  }
+}
+
+@keyframes premiumBlobTwo {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-70px, 45px, 0) scale(1.14);
+  }
+}
+
+@keyframes premiumBlobThree {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(45px, -60px, 0) scale(1.12);
+  }
+}
+
+@keyframes premiumGrid {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 34px 34px;
+  }
+}
+
+@keyframes premiumDotOne {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-35px);
+    opacity: 0.9;
+  }
+}
+
+@keyframes premiumDotTwo {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateX(-38px);
+    opacity: 0.9;
+  }
+}
+
+@keyframes premiumDotThree {
+  0%, 100% {
+    transform: translate(0, 0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(32px, -28px);
+    opacity: 0.9;
+  }
+}
+
+.animate-premiumBlobOne {
+  animation: premiumBlobOne 12s ease-in-out infinite;
+}
+
+.animate-premiumBlobTwo {
+  animation: premiumBlobTwo 14s ease-in-out infinite;
+}
+
+.animate-premiumBlobThree {
+  animation: premiumBlobThree 16s ease-in-out infinite;
+}
+
+.animate-premiumGrid {
+  animation: premiumGrid 18s linear infinite;
+}
+
+.animate-premiumDotOne {
+  animation: premiumDotOne 5s ease-in-out infinite;
+}
+
+.animate-premiumDotTwo {
+  animation: premiumDotTwo 6s ease-in-out infinite;
+}
+
+.animate-premiumDotThree {
+  animation: premiumDotThree 7s ease-in-out infinite;
+}
+  @keyframes jobifyBlobOne {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(120px, 60px, 0) scale(1.18);
+  }
+}
+
+@keyframes jobifyBlobTwo {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-130px, 70px, 0) scale(1.2);
+  }
+}
+
+@keyframes jobifyBlobThree {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(80px, -90px, 0) scale(1.15);
+  }
+}
+
+@keyframes jobifyLightSweep {
+  0% {
+    transform: translateX(-35%) rotate(-8deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(35%) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes jobifyGridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 34px 34px;
+  }
+}
+  @keyframes jobifyBlobOne {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(150px, 85px, 0) scale(1.25);
+  }
+}
+
+@keyframes jobifyBlobTwo {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-160px, 90px, 0) scale(1.28);
+  }
+}
+
+@keyframes jobifyBlobThree {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(110px, -120px, 0) scale(1.22);
+  }
+}
+
+@keyframes jobifyLightSweep {
+  0% {
+    transform: translateX(-40%) rotate(-8deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(40%) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes jobifyGridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 32px;
+  }
+}
+
+@keyframes jobifyDotOne {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateY(-60px) scale(1.7);
+    opacity: 1;
+  }
+}
+
+@keyframes jobifyDotTwo {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateX(-70px) scale(1.7);
+    opacity: 1;
+  }
+}
+
+@keyframes jobifyDotThree {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate(55px, -55px) scale(1.7);
+    opacity: 1;
+  }
+}
       `}</style>
     </main>
   );
