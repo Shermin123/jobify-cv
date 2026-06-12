@@ -90,30 +90,26 @@ export default function EditorPage() {
   }, [session?.user?.email, status, router]);
 
   useEffect(() => {
-    const savedTitle = sessionStorage.getItem("jobify_editor_title");
-    const savedContent = sessionStorage.getItem("jobify_editor_content");
-    const savedType = sessionStorage.getItem("jobify_editor_type");
-    const savedHtml = sessionStorage.getItem("jobify_editor_html");
+  if (!isPro) return;
 
-    if (savedTitle) setTitle(savedTitle);
-    if (savedType === "cover") setDocumentType("cover");
+  const savedTitle = sessionStorage.getItem("jobify_editor_title");
+  const savedContent = sessionStorage.getItem("jobify_editor_content");
+  const savedType = sessionStorage.getItem("jobify_editor_type");
+  const savedHtml = sessionStorage.getItem("jobify_editor_html");
 
-    if (savedHtml) {
-      setHtmlContent(savedHtml);
-      setTimeout(() => {
-        if (editorRef.current) editorRef.current.innerHTML = savedHtml;
-      }, 50);
-      return;
+  if (savedTitle) setTitle(savedTitle);
+  setDocumentType(savedType === "cover" ? "cover" : "cv");
+
+  const finalHtml = savedHtml || (savedContent ? convertTextToHtml(savedContent) : "");
+
+  setHtmlContent(finalHtml);
+
+  requestAnimationFrame(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = finalHtml;
     }
-
-    if (savedContent) {
-      const html = convertTextToHtml(savedContent);
-      setHtmlContent(html);
-      setTimeout(() => {
-        if (editorRef.current) editorRef.current.innerHTML = html;
-      }, 50);
-    }
-  }, []);
+  });
+}, [isPro]);
 
   useEffect(() => {
     if (!isPro) return;
@@ -1228,18 +1224,19 @@ Requirements:
                 <div className="h-7 border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-slate-50 print:hidden" />
 
                 <div
-                  ref={editorRef}
-                  contentEditable
-                  suppressContentEditableWarning
-                  onInput={updateContent}
-                  onBlur={updateContent}
-                  style={{
-                    fontSize: `${fontSize}px`,
-                    fontFamily,
-                  }}
-                  className="editor-page min-h-[1550px] w-full px-6 py-8 text-slate-900 outline-none sm:px-10 md:px-16 md:py-14 print:min-h-screen print:p-8"
-                  data-placeholder="Paste your full CV or cover letter here..."
-                />
+  ref={editorRef}
+  contentEditable
+  suppressContentEditableWarning
+  onInput={updateContent}
+  onBlur={updateContent}
+  style={{
+    fontSize: `${fontSize}px`,
+    fontFamily,
+  }}
+  className="editor-page min-h-[1550px] w-full px-6 py-8 text-slate-900 outline-none sm:px-10 md:px-16 md:py-14 print:min-h-screen print:p-8"
+  data-placeholder="Paste your full CV or cover letter here..."
+  dangerouslySetInnerHTML={{ __html: htmlContent }}
+/>
               </div>
             </div>
           </div>
