@@ -30,14 +30,14 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex min-h-[72px] items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6">
+        <div className="flex h-[64px] items-center justify-between gap-3">
           <Link
             href="/"
-            className="group flex shrink-0 items-center gap-3 rounded-2xl transition hover:scale-[1.02]"
+            className="flex shrink-0 items-center gap-2 transition active:scale-[0.98]"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-sm transition group-hover:bg-blue-700 group-hover:shadow-md">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-sm">
               J
             </div>
 
@@ -51,13 +51,14 @@ export default function Navbar() {
             </div>
           </Link>
 
+          {/* DESKTOP NAV */}
           <nav className="hidden flex-1 items-center justify-center lg:flex">
             <div className="flex items-center gap-1 rounded-full bg-slate-100 p-1">
               {links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 ${
+                  className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition ${
                     isActive(link.href)
                       ? "bg-white text-blue-600 shadow-sm"
                       : "text-slate-600 hover:bg-white hover:text-slate-950 hover:shadow-sm"
@@ -69,28 +70,18 @@ export default function Navbar() {
             </div>
           </nav>
 
+          {/* DESKTOP ACTIONS */}
           <div className="hidden shrink-0 items-center gap-2 md:flex">
-            {isLoggedIn && (
-              <div className="hidden max-w-[145px] text-right xl:block">
-                <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
-                  Signed in
-                </p>
-                <p className="truncate text-xs font-semibold text-slate-600">
-                  {session.user?.email}
-                </p>
-              </div>
-            )}
-
             <Link
               href="/pricing"
-              className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-black text-amber-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-amber-100 hover:shadow-md"
+              className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-black text-amber-700 shadow-sm transition hover:bg-amber-100"
             >
               Pricing
             </Link>
 
             <Link
               href="/editor"
-              className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg"
+              className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-sm transition hover:bg-blue-700"
             >
               Create New CV
             </Link>
@@ -98,90 +89,46 @@ export default function Navbar() {
             {isLoggedIn ? (
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-600 transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
               >
                 Logout
               </button>
             ) : (
               <Link
                 href="/login"
-                className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-600 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50"
               >
                 Login
               </Link>
             )}
           </div>
 
+          {/* MOBILE ONE-LINE ACTIONS */}
           <div className="flex shrink-0 items-center gap-2 md:hidden">
             <Link
               href="/upload"
-              className="rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-black text-blue-700 shadow-sm transition hover:bg-blue-100"
+              className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white shadow-sm active:scale-[0.98]"
             >
               AI CV
             </Link>
 
-            <Link
-              href="/editor"
-              className="rounded-full bg-blue-600 px-3 py-2 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
-            >
-              New CV
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 shadow-sm active:scale-[0.98]"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 shadow-sm active:scale-[0.98]"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
-
-        <nav className="flex gap-2 overflow-x-auto border-t border-slate-100 py-3 lg:hidden">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
-                isActive(link.href)
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-
-          <Link
-            href="/editor"
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
-              pathname === "/editor"
-                ? "bg-blue-600 text-white"
-                : "bg-blue-50 text-blue-700 hover:bg-blue-100"
-            }`}
-          >
-            Create New CV
-          </Link>
-
-          <Link
-            href="/pricing"
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-black transition ${
-              pathname === "/pricing"
-                ? "bg-amber-500 text-white"
-                : "bg-amber-50 text-amber-700 hover:bg-amber-100"
-            }`}
-          >
-            Pricing
-          </Link>
-
-          {isLoggedIn ? (
-            <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 transition hover:bg-red-50 hover:text-red-600"
-            >
-              Logout
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              className="whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 transition hover:bg-slate-50"
-            >
-              Login
-            </Link>
-          )}
-        </nav>
       </div>
     </header>
   );
