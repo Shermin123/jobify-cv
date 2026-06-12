@@ -386,9 +386,6 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   createPortal(
     <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/85 px-4 py-4 backdrop-blur-xl">
       <div className="relative flex max-h-[calc(100svh-32px)] w-full max-w-[350px] flex-col overflow-hidden rounded-[26px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)] sm:max-w-[420px]">
-        <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-red-200 opacity-70 blur-3xl" />
-        <div className="absolute -bottom-16 -left-16 h-36 w-36 rounded-full bg-orange-200 opacity-70 blur-3xl" />
-
         <div className="relative flex flex-col p-4 text-center">
           <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-red-600 text-lg text-white shadow-lg">
             ⚠️
@@ -424,19 +421,18 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
           </div>
 
           {score < 70 && (
-            <div className="mt-3 rounded-2xl border border-red-300 bg-red-50 px-3 py-2">
-              <p className="text-base font-black leading-5 text-red-700">
-                You are less likely to get a job with this CV
-              </p>
-            </div>
-          )}
+  <div className="mt-2 rounded-xl bg-red-50 px-3 py-2">
+    <p className="text-xs font-black text-red-700">
+      ⚠️ You are less likely to get a job with this CV
+    </p>
+  </div>
+)}
 
           <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-            ATS systems and recruiters may not see enough proof, keywords, or
-            job relevance.
+            ATS systems and recruiters may not see enough proof, keywords, or job relevance.
           </p>
 
-          <div className="mt-3 max-h-[260px] space-y-2 overflow-y-auto pr-1 text-left">
+          <div className="mt-3 max-h-[250px] space-y-2 overflow-y-auto pr-1 text-left">
             {cvIssues.slice(0, 2).map((issue, index) => (
               <div
                 key={`${issue.title}-${index}`}
@@ -826,20 +822,24 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
 
             <div className="mt-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-3">
               <p
-                className={`text-base font-black leading-snug ${
-                  score >= 70 ? "text-emerald-300" : "text-red-300"
-                }`}
-              >
-                {score >= 70
-  ? "This CV looks job-ready."
-  : "You are less likely to get a job with this CV."}
-              </p>
+  className={`text-base font-black leading-snug ${
+    score >= 70 ? "text-emerald-300" : "text-red-300"
+  }`}
+>
+  {score >= 70 ? "This CV looks job-ready." : "CV risk detected."}
+</p>
 
-              <p className="mt-1 text-xs leading-5 text-white/60">
-                {score >= 70
-                  ? "Still tailor it to each job for better results."
-                  : "Fix the issues before applying to serious jobs."}
-              </p>
+{cvIssues.length > 0 && (
+  <p className="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs font-black text-red-700">
+    ⚠️ You are less likely to get a job with this CV
+  </p>
+)}
+
+<p className="mt-2 text-xs leading-5 text-white/60">
+  {score >= 70
+    ? "Still tailor it to each job for better results."
+    : "Fix the issues before applying to serious jobs."}
+</p>
             </div>
 
             <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-white/10">
