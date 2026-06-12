@@ -126,19 +126,13 @@ useEffect(() => {
 
   const originalHtmlOverflow = document.documentElement.style.overflow;
   const originalBodyOverflow = document.body.style.overflow;
-  const originalBodyPosition = document.body.style.position;
-  const originalBodyWidth = document.body.style.width;
 
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
-  document.body.style.position = "fixed";
-  document.body.style.width = "100%";
 
   return () => {
     document.documentElement.style.overflow = originalHtmlOverflow;
     document.body.style.overflow = originalBodyOverflow;
-    document.body.style.position = originalBodyPosition;
-    document.body.style.width = originalBodyWidth;
   };
 }, [loading, rephrasing]);
 
@@ -1747,7 +1741,7 @@ const previousSetupStep = () => {
 )}
 
   {(loading || rephrasing) && (
-  <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-white/90 px-4 backdrop-blur-xl">
+  <div className="fixed left-0 top-0 z-[999999999] flex h-[100dvh] w-[100vw] items-center justify-center overflow-hidden bg-white/95 px-4 backdrop-blur-xl">
     <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
         {loading ? "👨‍🍳" : "✨"}
