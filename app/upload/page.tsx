@@ -51,7 +51,7 @@ const [generated, setGenerated] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
-  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  
 
   const savedCountry = sessionStorage.getItem("jobify_country");
   const savedRole = sessionStorage.getItem("jobify_role");
@@ -121,6 +121,26 @@ useEffect(() => {
     document.body.style.overflow = originalOverflow;
   };
 }, [showSetupPopup]);
+    useEffect(() => {
+  if (!loading && !rephrasing) return;
+
+  const originalHtmlOverflow = document.documentElement.style.overflow;
+  const originalBodyOverflow = document.body.style.overflow;
+  const originalBodyPosition = document.body.style.position;
+  const originalBodyWidth = document.body.style.width;
+
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.width = "100%";
+
+  return () => {
+    document.documentElement.style.overflow = originalHtmlOverflow;
+    document.body.style.overflow = originalBodyOverflow;
+    document.body.style.position = originalBodyPosition;
+    document.body.style.width = originalBodyWidth;
+  };
+}, [loading, rephrasing]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -161,13 +181,6 @@ useEffect(() => {
   const typeDocuments = (finalCv: string, finalCoverLetter: string) => {
   const cvPreview = finalCv.substring(0, 900);
   const coverPreview = finalCoverLetter.substring(0, 800);
-
-  setTimeout(() => {
-    resultRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }, 200);
 
   typeText(cvPreview, coverPreview, 16, () => {
     setTimeout(() => {
