@@ -374,6 +374,17 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   if (score < 70) return "Needs Keyword Improvement";
   return "Job-Ready CV 🚀";
 };
+const getRiskMessage = () => {
+  if (score < 85) {
+    return "You are less likely to get a job with this CV";
+  }
+
+  if (score <= 97) {
+    return "You are less likely to get a job without an optimised cover letter";
+  }
+
+  return "";
+};
   const statsLine = `
     👥 500,000+ Users • 🌍 180+ Countries • 📄 2.4M CVs Generated • 💼 120,000+ Hired • ⚡ 94% Interview Success • 🧠 AI ATS Optimization • 🚀 Instant CV Rewrite • 📊 Real-time CV Scoring • 💡 Keyword Intelligence • 🔥 Recruiter Matching Engine •
   `;
@@ -420,12 +431,23 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
             </div>
           </div>
 
-          {score < 70 && (
-  <div className="mt-2 rounded-xl bg-red-50 px-3 py-2">
-    <p className="text-xs font-black text-red-700">
-      ⚠️ You are less likely to get a job with this CV
+          {score <= 97 && (
+  <button
+    onClick={goToCVGenerator}
+    className="mt-3 w-full rounded-3xl border-2 border-red-400 bg-gradient-to-r from-red-100 via-orange-50 to-red-100 px-4 py-5 text-center shadow-xl transition hover:scale-[1.02]"
+  >
+    <p className="text-xs font-black uppercase tracking-[0.22em] text-red-600">
+      Important warning
     </p>
-  </div>
+
+    <p className="mt-2 text-xl font-black leading-snug text-red-800">
+      ⚠️ {getRiskMessage()}
+    </p>
+
+    <p className="mt-3 rounded-2xl bg-red-600 px-4 py-3 text-sm font-black text-white">
+      Tap here to fix it now →
+    </p>
+  </button>
 )}
 
           <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
@@ -829,10 +851,23 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   {score >= 70 ? "This CV looks job-ready." : "CV risk detected."}
 </p>
 
-{cvIssues.length > 0 && (
-  <p className="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs font-black text-red-700">
-    ⚠️ You are less likely to get a job with this CV
-  </p>
+{score <= 97 && (
+  <button
+    onClick={goToCVGenerator}
+    className="mt-3 w-full rounded-3xl border-2 border-red-400 bg-gradient-to-r from-red-100 via-orange-50 to-red-100 px-4 py-5 text-center shadow-xl transition hover:scale-[1.02]"
+  >
+    <p className="text-xs font-black uppercase tracking-[0.22em] text-red-600">
+      Important warning
+    </p>
+
+    <p className="mt-2 text-xl font-black leading-snug text-red-800">
+      ⚠️ {getRiskMessage()}
+    </p>
+
+    <p className="mt-3 rounded-2xl bg-red-600 px-4 py-3 text-sm font-black text-white">
+      Click here to fix it now →
+    </p>
+  </button>
 )}
 
 <p className="mt-2 text-xs leading-5 text-white/60">
