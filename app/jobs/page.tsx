@@ -995,10 +995,10 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
   )}
 
 {/* LUXURY JOB CARD */}
-<section className="mx-auto mt-5 max-w-3xl">
+<section className="mx-auto mt-3 max-w-3xl sm:mt-5">
   {currentJob ? (
     <article
-      className={`relative overflow-hidden rounded-[34px] border border-white/70 bg-white/90 shadow-[0_30px_90px_rgba(15,23,42,0.18)] backdrop-blur-2xl transition-all duration-500 ease-out ${cardAnimation}`}
+      className={`relative overflow-hidden rounded-[24px] border border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-2xl transition-all duration-500 ease-out sm:rounded-[34px] sm:shadow-[0_30px_90px_rgba(15,23,42,0.18)] ${cardAnimation}`}
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-blue-200/70 blur-3xl" />
@@ -1006,14 +1006,14 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
       </div>
 
-      <div className="relative p-5 sm:p-6">
+      <div className="relative p-3.5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-4">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[22px] bg-white p-3 shadow-[0_18px_40px_rgba(15,23,42,0.15)] ring-1 ring-slate-200">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-white p-2 shadow-[0_12px_28px_rgba(15,23,42,0.12)] ring-1 ring-slate-200 sm:h-16 sm:w-16 sm:rounded-[22px] sm:p-3 sm:shadow-[0_18px_40px_rgba(15,23,42,0.15)]">
               <img
                 src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
                 alt="Company logo"
-                className="h-10 w-10 object-contain"
+                className="h-7 w-7 object-contain sm:h-10 sm:w-10"
               />
             </div>
 
@@ -1028,7 +1028,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
                 </span>
               </div>
 
-              <h2 className="mt-2 line-clamp-2 text-2xl font-black leading-tight text-slate-950 sm:text-3xl">
+              <h2 className="mt-1.5 line-clamp-2 text-xl font-black leading-tight text-slate-950 sm:mt-2 sm:text-3xl">
                 {currentJob.title}
               </h2>
 
@@ -1039,8 +1039,8 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl bg-slate-950 p-4 text-white shadow-lg">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3 sm:grid-cols-4">
+          <div className="rounded-2xl bg-slate-950 p-3 text-white shadow-lg sm:p-4">
             <p className="text-[10px] font-black uppercase tracking-wide text-white/40">
               Match
             </p>
@@ -1049,7 +1049,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-4">
             <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
               Type
             </p>
@@ -1058,7 +1058,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-4">
             <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
               Salary
             </p>
@@ -1067,7 +1067,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-4">
             <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
               Source
             </p>
@@ -1077,7 +1077,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           </div>
         </div>
 
-        <div className="mt-5 rounded-[26px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 shadow-sm">
+        <div className="mt-3 rounded-[20px] sm:mt-5 sm:rounded-[26px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-black text-slate-950">
@@ -1110,7 +1110,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           </p>
         </div>
 
-        <div className="mt-5 rounded-[26px] border border-slate-200 bg-white/90 p-4 shadow-sm">
+        <div className="mt-3 rounded-[20px] sm:mt-5 sm:rounded-[26px] border border-slate-200 bg-white/90 p-4 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-black text-slate-950">
               Job description
@@ -1126,11 +1126,11 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           </p>
         </div>
 
-        <div className="mt-5 grid grid-cols-3 gap-3">
+        <div className="mt-3 grid grid-cols-3 gap-2 sm:mt-5 sm:gap-3">
           <button
             onClick={handleDecline}
             disabled={searching || !currentJob}
-            className="rounded-2xl border border-rose-200 bg-rose-50 px-3 py-4 text-sm font-black text-rose-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
+            className="rounded-2xl border border-rose-200 bg-rose-50 px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-smfont-black text-rose-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
           >
             ✕ Decline
           </button>
@@ -1138,7 +1138,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           <button
             onClick={handleSkip}
             disabled={searching || !currentJob}
-            className="rounded-2xl border border-slate-200 bg-white px-3 py-4 text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
+            className="rounded-2xl border border-slate-200 bg-white px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
           >
             ↑ Skip
           </button>
@@ -1146,7 +1146,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           <button
             onClick={handleApply}
             disabled={searching || !currentJob}
-            className="rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-4 text-sm font-black text-white shadow-[0_16px_35px_rgba(16,185,129,0.35)] transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95 disabled:opacity-40"
+            className="rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-smfont-black text-white shadow-[0_16px_35px_rgba(16,185,129,0.35)] transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95 disabled:opacity-40"
           >
             ↗ Apply
           </button>
@@ -1159,7 +1159,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
         <img
           src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
           alt="Google G"
-          className="h-10 w-10 object-contain"
+          className="h-7 w-7 object-contain sm:h-10 sm:w-10"
         />
       </div>
 
