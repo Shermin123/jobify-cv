@@ -20,6 +20,17 @@ export default function Dashboard() {
   const router = useRouter();
   const [applications, setApplications] = useState<JobApplication[]>([]);
 const [appsLoading, setAppsLoading] = useState(false);
+useEffect(() => {
+  if (status !== "authenticated") return;
+
+  const redirectAfterLogin = sessionStorage.getItem("redirect_after_login");
+  const generatedDone = sessionStorage.getItem("jobify_generated_done");
+
+  if (redirectAfterLogin === "/upload" || generatedDone === "true") {
+    sessionStorage.removeItem("redirect_after_login");
+    router.replace("/upload");
+  }
+}, [status, router]);
 
   const handleManageSubscription = async () => {
     if (!session?.user?.email) {

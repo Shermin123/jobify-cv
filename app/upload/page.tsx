@@ -72,6 +72,23 @@ const [generated, setGenerated] = useState(false);
   if (savedIndustry) setIndustry(savedIndustry);
   if (savedCvGoal) setCvGoal(savedCvGoal);
   if (savedUrgency) setUrgency(savedUrgency);
+  const savedGenerated = sessionStorage.getItem("jobify_generated_done");
+const savedCv = sessionStorage.getItem("jobify_generated_cv");
+const savedCover = sessionStorage.getItem("jobify_generated_cover");
+const savedKeywords = sessionStorage.getItem("jobify_generated_keywords");
+const savedAts = sessionStorage.getItem("jobify_generated_ats");
+
+if (savedGenerated && savedCv && savedCover) {
+  setCv(savedCv);
+  setCoverLetter(savedCover);
+  setDisplayCv(savedCv.substring(0, 900));
+  setDisplayCoverLetter(savedCover.substring(0, 800));
+  setKeywords(savedKeywords ? JSON.parse(savedKeywords) : []);
+  setAtsScore(savedAts ? Number(savedAts) : 94);
+  setGenerated(true);
+  setTyping(false);
+  setShowUnlock(true);
+}
 
   const setupCompleted = sessionStorage.getItem("jobify_setup_completed");
 
@@ -140,18 +157,25 @@ useEffect(() => {
       }
     }, speed);
   };
-
+  
   const typeDocuments = (finalCv: string, finalCoverLetter: string) => {
-    const cvPreview = finalCv.substring(0, 900);
-    const coverPreview = finalCoverLetter.substring(0, 800);
+  const cvPreview = finalCv.substring(0, 900);
+  const coverPreview = finalCoverLetter.substring(0, 800);
 
-    typeText(cvPreview, coverPreview, 16, () => {
-      setTimeout(() => {
-        setTyping(false);
-        setShowUnlock(true);
-      }, 700);
+  setTimeout(() => {
+    resultRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
     });
-  };
+  }, 200);
+
+  typeText(cvPreview, coverPreview, 16, () => {
+    setTimeout(() => {
+      setTyping(false);
+      setShowUnlock(true);
+    }, 700);
+  });
+};
 
   const copyText = async (value: string, label: string) => {
     if (!value) {
@@ -229,9 +253,10 @@ useEffect(() => {
     
   const openEditor = (type: "cv" | "cover") => {
   if (!session) {
-    router.push("/login");
-    return;
-  }
+  sessionStorage.setItem("redirect_after_login", "/upload");
+  router.push(`/login?callbackUrl=${encodeURIComponent("/upload")}`);
+  return;
+}
 
   const content = type === "cv" ? cv : coverLetter;
 
@@ -508,22 +533,15 @@ highlight: undefined,
     }
 
     setLoading(true);
-    setGenerated(true);
-    setTyping(true);
-    setShowUnlock(false);
+setGenerated(false);
+setTyping(false);
+setShowUnlock(false);
 
-    setCv("");
-    setCoverLetter("");
-    setKeywords([]);
-    setDisplayCv("");
-    setDisplayCoverLetter("");
-
-    setTimeout(() => {
-      resultRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 100);
+setCv("");
+setCoverLetter("");
+setKeywords([]);
+setDisplayCv("");
+setDisplayCoverLetter("");
 
     const fakeCvTyping = `Reading your CV...
 Finding your strongest achievements...
@@ -540,7 +558,7 @@ Writing a personalised opening...
 Improving professional tone...
 Preparing your cover letter preview...`;
 
-    typeText(fakeCvTyping, fakeCoverTyping, 25);
+    
 
     try {
       const res = await fetch("/api/generate-cv", {
@@ -577,9 +595,16 @@ Preparing your cover letter preview...`;
       const finalAtsScore = data.atsScore || 94;
 
       setCv(finalCv);
-      setCoverLetter(finalCoverLetter);
-      setKeywords(finalKeywords);
-      setAtsScore(finalAtsScore);
+setCoverLetter(finalCoverLetter);
+setKeywords(finalKeywords);
+setAtsScore(finalAtsScore);
+setGenerated(true);
+setTyping(true);
+      sessionStorage.setItem("jobify_generated_cv", finalCv);
+sessionStorage.setItem("jobify_generated_cover", finalCoverLetter);
+sessionStorage.setItem("jobify_generated_keywords", JSON.stringify(finalKeywords));
+sessionStorage.setItem("jobify_generated_ats", String(finalAtsScore));
+sessionStorage.setItem("jobify_generated_done", "true");
 
       await saveGeneratedDocument(
         finalCv,
@@ -600,18 +625,19 @@ Preparing your cover letter preview...`;
   };
 
   const handleUnlockClick = () => {
-    if (!session) {
-      router.push("/login");
-      return;
-    }
+  if (!session) {
+    sessionStorage.setItem("redirect_after_login", "/upload");
+    router.push(`/login?callbackUrl=${encodeURIComponent("/upload")}`);
+    return;
+  }
 
-    if (!isUnlocked) {
-      router.push("/pricing");
-      return;
-    }
+  if (!isUnlocked) {
+    router.push("/pricing");
+    return;
+  }
 
-    alert("Full access is active.");
-  };
+  alert("Full access is active.");
+};
   const countrySuggestions = [
   "Afghanistan",
   "Albania",
@@ -1708,7 +1734,7 @@ const previousSetupStep = () => {
 )}
 
   {(loading || rephrasing) && (
-  <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-white/80 px-4 backdrop-blur-xl">
+  <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-white/90 px-4 backdrop-blur-xl">
     <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
         {loading ? "👨‍🍳" : "✨"}

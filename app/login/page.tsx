@@ -68,7 +68,7 @@ export default function LoginPage() {
 
   useEffect(() => {
   if (status === "authenticated") {
-    router.replace("/dashboard");
+    router.replace(getSafeCallbackUrl());
   }
 }, [status, router]);
 
@@ -109,9 +109,9 @@ export default function LoginPage() {
 
   try {
     await signIn("google", {
-      callbackUrl: "/dashboard",
-      redirect: true,
-    });
+  callbackUrl: getAbsoluteCallbackUrl(),
+  redirect: true,
+});
   } catch {
     setGoogleLoading(false);
     setError("Google login failed. Please try again.");
