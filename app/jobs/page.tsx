@@ -858,9 +858,9 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
         </div>
       )}
 
-      <section className="relative z-10 mx-auto max-w-4xl px-3 pb-24 pt-16 sm:px-6 lg:pb-10 lg:pt-6">
+      <section className="relative z-10 mx-auto max-w-4xl px-2 pb-16 pt-2 sm:px-6 lg:pb-10 lg:pt-6">
   {/* TOP SEARCH CARD */}
-  <div className="rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)] backdrop-blur-xl">
+  <div className="rounded-[22px] border border-slate-200 bg-white/95 p-3 shadow-[0_12px_35px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:rounded-[28px] sm:p-4">
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-2 shadow-lg ring-1 ring-slate-200">
@@ -1044,7 +1044,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             <p className="text-[10px] font-black uppercase tracking-wide text-white/40">
               Match
             </p>
-            <p className="mt-1 text-2xl font-black text-emerald-300">
+            <p className="mt-0.5 text-xl font-black text-emerald-300 sm:mt-1 sm:text-2xl">
               {Math.min(currentJob.matchScore || 72, 100)}%
             </p>
           </div>
@@ -1053,7 +1053,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
               Type
             </p>
-            <p className="mt-1 line-clamp-1 text-sm font-black text-slate-800">
+            <p className="mt-0.5 line-clamp-1 text-xs font-black text-slate-800 sm:mt-1 sm:text-sm">
               {currentJob.type || "Full-time"}
             </p>
           </div>
@@ -1062,7 +1062,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
               Salary
             </p>
-            <p className="mt-1 line-clamp-1 text-sm font-black text-slate-800">
+            <p className="mt-0.5 line-clamp-1 text-xs font-black text-slate-800 sm:mt-1 sm:text-sm">
               {currentJob.salary || "Not listed"}
             </p>
           </div>
@@ -1071,21 +1071,21 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
               Source
             </p>
-            <p className="mt-1 line-clamp-1 text-sm font-black text-slate-800">
+            <p className="mt-0.5 line-clamp-1 text-xs font-black text-slate-800 sm:mt-1 sm:text-sm">
               {currentJob.source || "Jobify"}
             </p>
           </div>
         </div>
 
-        <div className="mt-3 rounded-[20px] sm:mt-5 sm:rounded-[26px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 shadow-sm">
+        <div className="mt-2 rounded-[18px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-sm sm:mt-5 sm:rounded-[26px] sm:p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-black text-slate-950">
                 AI CV match analysis
               </p>
-              <p className="mt-1 text-xs font-semibold text-slate-500">
-                Based on title, location, role keywords, and your uploaded profile.
-              </p>
+              <p className="mt-0.5 line-clamp-1 text-[10px] font-semibold text-slate-500 sm:mt-1 sm:text-xs">
+  Based on title, location, role keywords, and your uploaded profile.
+</p>
             </div>
 
             <p className="shrink-0 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-black text-white">
@@ -1093,9 +1093,9 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </p>
           </div>
 
-          <div className="mt-3 overflow-hidden rounded-full bg-white p-1 shadow-inner">
+          <div className="mt-2 overflow-hidden rounded-full bg-white p-1 shadow-inner sm:mt-3">
             <div
-              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-2 text-center text-[11px] font-black text-white shadow-sm transition-all duration-700"
+              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-1.5 text-center text-[10px] font-black text-white shadow-sm transition-all duration-700 sm:py-2 sm:text-[11px]"
               style={{
                 width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
               }}
@@ -1104,13 +1104,13 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </div>
           </div>
 
-          <p className="mt-3 text-xs font-semibold leading-5 text-slate-600">
+          <p className="mt-2 line-clamp-2 text-[11px] font-semibold leading-4 text-slate-600 sm:mt-3 sm:text-xs sm:leading-5">
             {currentJob.smartReason ||
               "This role appears relevant based on the job title, job type, and the skills normally expected for this position."}
           </p>
         </div>
 
-        <div className="mt-3 rounded-[20px] sm:mt-5 sm:rounded-[26px] border border-slate-200 bg-white/90 p-4 shadow-sm">
+        <div className="mt-2 rounded-[18px] border border-slate-200 bg-white/90 p-3 shadow-sm sm:mt-5 sm:rounded-[26px] sm:p-4">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-black text-slate-950">
               Job description
@@ -1121,7 +1121,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </span>
           </div>
 
-          <p className="mt-3 max-h-[140px] overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-600">
+          <p className="mt-2 max-h-[72px] overflow-y-auto pr-2 text-xs font-semibold leading-5 text-slate-600 sm:mt-3 sm:max-h-[140px] sm:text-sm sm:leading-6">
             {currentJob.summary || currentJob.description}
           </p>
         </div>
@@ -1130,7 +1130,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           <button
             onClick={handleDecline}
             disabled={searching || !currentJob}
-            className="rounded-2xl border border-rose-200 bg-rose-50 px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-smfont-black text-rose-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
+            className="rounded-2xl border border-rose-200 bg-rose-50 px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-sm font-black text-rose-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
           >
             ✕ Decline
           </button>
@@ -1146,7 +1146,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           <button
             onClick={handleApply}
             disabled={searching || !currentJob}
-            className="rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-smfont-black text-white shadow-[0_16px_35px_rgba(16,185,129,0.35)] transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95 disabled:opacity-40"
+            className="rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-2 py-3 text-xs sm:px-3 sm:py-4 sm:text-sm font-black text-white shadow-[0_16px_35px_rgba(16,185,129,0.35)] transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95 disabled:opacity-40"
           >
             ↗ Apply
           </button>
