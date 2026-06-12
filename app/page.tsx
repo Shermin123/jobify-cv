@@ -1788,7 +1788,7 @@ const getRiskMessage = () => {
 
         <div className="mt-4 space-y-2 text-sm text-slate-500">
           <p>Email: support@jobify.cv</p>
-          <p>Location: London, United Kingdom</p>
+          <p>Location: Dubai, United Kingdom</p>
         </div>
 
         <div className="flex gap-3 mt-5">

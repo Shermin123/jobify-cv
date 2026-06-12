@@ -9,7 +9,9 @@ type Job = {
   id: number;
   title: string;
   company: string;
+  logo?: string;
   location: string;
+
   salary: string;
   type: string;
   description: string;
@@ -29,6 +31,16 @@ type Job = {
   tags?: string[];
 };
 
+function getCompanyLogo(company?: string, logo?: string) {
+  if (logo) return logo;
+
+  if (!company) {
+    return "https://www.google.com/s2/favicons?domain=google.com&sz=128";
+  }
+
+  const clean = company.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return `https://logo.clearbit.com/${clean}.com`;
+}
 const DAILY_FREE_AUTO_APPLY_LIMIT = 10;
 const demoJobs: Job[] = [
   {
@@ -599,39 +611,47 @@ const [autoApplyCount, setAutoApplyCount] = useState(0);
 };
 
   const handleSearch = async () => {
+  try {
+    setSearching(true);
+    setMessage("Finding matching vacancies...");
+    setCardAction(null);
+    setJobDropdownOpen(false);
+    setLocationDropdownOpen(false);
+
+    const url = `/api/jobs/search?title=${encodeURIComponent(
+      jobTitle || "finance assistant"
+    )}&location=${encodeURIComponent(location || "United Arab Emirates")}`;
+
+    const res = await fetch(url);
+    const text = await res.text();
+
+    let data: any = {};
+
     try {
-      setSearching(true);
-      setMessage("Finding matching vacancies...");
-      setCardAction(null);
-      setJobDropdownOpen(false);
-      setLocationDropdownOpen(false);
-
-      const res = await fetch(
-        `/api/jobs/search?title=${encodeURIComponent(
-          jobTitle || "finance assistant"
-        )}&location=${encodeURIComponent(location || "United Arab Emirates")}`
-      );
-
-      const data = await res.json();
-
-      setSearching(false);
-
-      if (!res.ok) {
-        alert(data?.error || "Could not find jobs.");
-        setMessage("Search failed");
-        return;
-      }
-
-      setJobs(data.jobs || []);
-      setCurrentIndex(0);
-      setSetupOpen(false);
-      setMessage(`Found ${data.jobs?.length || 0} jobs`);
+      data = JSON.parse(text);
     } catch {
-      setSearching(false);
-      setMessage("Search failed");
-      alert("Could not search jobs. Please try again.");
+      throw new Error(`API did not return JSON. Response: ${text.slice(0, 200)}`);
     }
-  };
+
+    setSearching(false);
+
+    if (!res.ok) {
+      alert(data?.error || "Could not find jobs.");
+      setMessage("Search failed");
+      return;
+    }
+
+    setJobs(data.jobs || []);
+    setCurrentIndex(0);
+    setSetupOpen(false);
+    setMessage(`Found ${data.jobs?.length || 0} jobs`);
+  } catch (error: any) {
+    setSearching(false);
+    setMessage("Search failed");
+    console.error("Job search error:", error);
+    alert(error.message || "Could not search jobs. Please try again.");
+  }
+};
 
  const saveApplication = async (
   status: "declined" | "skipped" | "applied",
@@ -924,7 +944,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
         <SearchDropdown
           label="Location"
           value={location}
-          placeholder="e.g. London, Dubai, Remote"
+          placeholder="e.g. United Kingdom, Dubai, Remote"
           open={locationDropdownOpen}
           suggestions={filteredLocationSuggestions}
           onFocus={() => setLocationDropdownOpen(true)}
@@ -1007,37 +1027,45 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       </div>
 
       <div className="relative p-3.5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex min-w-0 items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] bg-white p-2 shadow-[0_12px_28px_rgba(15,23,42,0.12)] ring-1 ring-slate-200 sm:h-16 sm:w-16 sm:rounded-[22px] sm:p-3 sm:shadow-[0_18px_40px_rgba(15,23,42,0.15)]">
-              <img
-                src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
-                alt="Company logo"
-                className="h-7 w-7 object-contain sm:h-10 sm:w-10"
-              />
-            </div>
+        <div className="rounded-[24px] border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-indigo-50 p-4 shadow-sm sm:p-5">
+  <div className="flex items-start gap-4">
+    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] bg-white p-3 shadow-[0_12px_28px_rgba(15,23,42,0.12)] ring-1 ring-slate-200 sm:h-20 sm:w-20 sm:rounded-[24px]">
+      <img
+        src={getCompanyLogo(currentJob.company, currentJob.logo)}
+        alt={`${currentJob.company} logo`}
+        className="h-10 w-10 object-contain sm:h-12 sm:w-12"
+        onError={(e) => {
+          e.currentTarget.src =
+            "https://www.google.com/s2/favicons?domain=google.com&sz=128";
+        }}
+      />
+    </div>
 
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="truncate text-sm font-black text-blue-700">
-                  {currentJob.company}
-                </p>
+    <div className="min-w-0 flex-1">
+      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-600">
+        Applying to
+      </p>
 
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-100">
-                  AI Matched
-                </span>
-              </div>
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        <h2 className="truncate text-2xl font-black leading-tight text-slate-950 sm:text-4xl">
+          {currentJob.company}
+        </h2>
 
-              <h2 className="mt-1.5 line-clamp-2 text-xl font-black leading-tight text-slate-950 sm:mt-2 sm:text-3xl">
-                {currentJob.title}
-              </h2>
+        <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-100">
+          AI Matched
+        </span>
+      </div>
 
-              <p className="mt-2 text-sm font-bold text-slate-500">
-                {currentJob.location || "Location not specified"}
-              </p>
-            </div>
-          </div>
-        </div>
+      <p className="mt-2 text-base font-black text-slate-700 sm:text-lg">
+        {currentJob.title}
+      </p>
+
+      <p className="mt-1 text-sm font-semibold text-slate-500">
+        {currentJob.location || "Location not specified"}
+      </p>
+    </div>
+  </div>
+</div>
 
         <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3 sm:grid-cols-4">
           <div className="rounded-2xl bg-slate-950 p-3 text-white shadow-lg sm:p-4">
