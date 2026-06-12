@@ -1,6 +1,7 @@
 "use client";
 import HiredAtBox from "./components/HiredAtBox";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
@@ -380,113 +381,115 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
       <EmojiBackground />
-      {showScorePopup && (
-  <div className="fixed inset-0 z-[2147483647] flex items-center justify-center bg-slate-950/80 px-3 py-4 backdrop-blur-xl">
-    <div className="relative w-full max-w-[360px] overflow-hidden rounded-[26px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.45)] sm:max-w-[420px]">
-      <div className="absolute -right-20 -top-20 h-44 w-44 rounded-full bg-red-200 opacity-70 blur-3xl" />
-      <div className="absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-orange-200 opacity-70 blur-3xl" />
+      {showScorePopup &&
+  typeof document !== "undefined" &&
+  createPortal(
+    <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/85 px-4 py-4 backdrop-blur-xl">
+      <div className="relative flex max-h-[calc(100svh-32px)] w-full max-w-[350px] flex-col overflow-hidden rounded-[26px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)] sm:max-w-[420px]">
+        <div className="absolute -right-16 -top-16 h-36 w-36 rounded-full bg-red-200 opacity-70 blur-3xl" />
+        <div className="absolute -bottom-16 -left-16 h-36 w-36 rounded-full bg-orange-200 opacity-70 blur-3xl" />
 
-      <div className="relative flex max-h-[calc(100svh-32px)] flex-col p-4 text-center sm:max-h-[88vh] sm:p-5">
-        <div className="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-xl text-white shadow-lg">
-          ⚠️
-        </div>
-
-        <p className="mt-2 text-[10px] font-black uppercase tracking-[0.22em] text-red-600">
-          CV Risk Report
-        </p>
-
-        <div className="mt-3 rounded-[20px] bg-slate-950 p-3 text-white">
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
-            Your CV Score
-          </p>
-
-          <p
-            className={`mt-1 text-4xl font-black ${
-              score >= 70 ? "text-emerald-400" : "text-red-400"
-            }`}
-          >
-            {score}/100
-          </p>
-
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
-            <div
-              className={`h-full rounded-full transition-all duration-700 ${
-                score >= 70
-                  ? "bg-gradient-to-r from-emerald-500 to-green-300"
-                  : "bg-gradient-to-r from-red-600 to-orange-400"
-              }`}
-              style={{ width: `${score}%` }}
-            />
+        <div className="relative flex flex-col p-4 text-center">
+          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-red-600 text-lg text-white shadow-lg">
+            ⚠️
           </div>
-        </div>
 
-        {score < 70 && (
-          <div className="mt-3 rounded-2xl border border-red-300 bg-red-50 px-3 py-2">
-            <p className="text-base font-black leading-5 text-red-700">
-              You are less likely to get a job with this CV
+          <p className="mt-2 text-[10px] font-black uppercase tracking-[0.22em] text-red-600">
+            CV Risk Report
+          </p>
+
+          <div className="mt-3 rounded-[20px] bg-slate-950 p-3 text-white">
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              Your CV Score
             </p>
-          </div>
-        )}
 
-        <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-          These issues can reduce interview chances because ATS systems and recruiters may not see enough proof, keywords, or job relevance.
-        </p>
-
-        <div className="mt-3 flex-1 space-y-2 overflow-y-auto pr-1 text-left">
-          {cvIssues.slice(0, 3).map((issue, index) => (
-            <div
-              key={`${issue.title}-${index}`}
-              className={
-                issue.severity === "high"
-                  ? "rounded-2xl border border-red-200 bg-red-50 p-3"
-                  : issue.severity === "medium"
-                  ? "rounded-2xl border border-orange-200 bg-orange-50 p-3"
-                  : "rounded-2xl border border-blue-200 bg-blue-50 p-3"
-              }
+            <p
+              className={`mt-1 text-4xl font-black ${
+                score >= 70 ? "text-emerald-400" : "text-red-400"
+              }`}
             >
-              <div className="flex items-start gap-2.5">
-                <div
-                  className={
-                    issue.severity === "high"
-                      ? "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-red-600 text-sm font-black text-white"
-                      : issue.severity === "medium"
-                      ? "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-orange-500 text-sm font-black text-white"
-                      : "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-500 text-sm font-black text-white"
-                  }
-                >
-                  !
-                </div>
+              {score}/100
+            </p>
 
-                <div className="min-w-0">
-                  <p className="text-sm font-black leading-tight text-slate-950">
-                    {index + 1}. {issue.title}
-                  </p>
-
-                  <p className="mt-1 text-[11px] font-semibold leading-4 text-slate-600">
-                    {issue.detail}
-                  </p>
-
-                  <p className="mt-2 rounded-xl bg-white px-2.5 py-2 text-[11px] font-black leading-4 text-slate-900">
-                    Fix: {issue.fix}
-                  </p>
-                </div>
-              </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+              <div
+                className={`h-full rounded-full ${
+                  score >= 70
+                    ? "bg-gradient-to-r from-emerald-500 to-green-300"
+                    : "bg-gradient-to-r from-red-600 to-orange-400"
+                }`}
+                style={{ width: `${score}%` }}
+              />
             </div>
-          ))}
+          </div>
 
-          {cvIssues.length > 3 && (
-            <div className="rounded-2xl border border-red-200 bg-white px-3 py-2 text-center">
-              <p className="text-xs font-black text-red-600">
-                + {cvIssues.length - 3} more CV issues found
+          {score < 70 && (
+            <div className="mt-3 rounded-2xl border border-red-300 bg-red-50 px-3 py-2">
+              <p className="text-base font-black leading-5 text-red-700">
+                You are less likely to get a job with this CV
               </p>
             </div>
           )}
-        </div>
 
-        <div className="mt-3 shrink-0">
+          <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+            ATS systems and recruiters may not see enough proof, keywords, or
+            job relevance.
+          </p>
+
+          <div className="mt-3 max-h-[260px] space-y-2 overflow-y-auto pr-1 text-left">
+            {cvIssues.slice(0, 2).map((issue, index) => (
+              <div
+                key={`${issue.title}-${index}`}
+                className={
+                  issue.severity === "high"
+                    ? "rounded-2xl border border-red-200 bg-red-50 p-3"
+                    : issue.severity === "medium"
+                    ? "rounded-2xl border border-orange-200 bg-orange-50 p-3"
+                    : "rounded-2xl border border-blue-200 bg-blue-50 p-3"
+                }
+              >
+                <div className="flex items-start gap-2.5">
+                  <div
+                    className={
+                      issue.severity === "high"
+                        ? "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-red-600 text-sm font-black text-white"
+                        : issue.severity === "medium"
+                        ? "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-orange-500 text-sm font-black text-white"
+                        : "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-500 text-sm font-black text-white"
+                    }
+                  >
+                    !
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-sm font-black leading-tight text-slate-950">
+                      {index + 1}. {issue.title}
+                    </p>
+
+                    <p className="mt-1 text-[11px] font-semibold leading-4 text-slate-600">
+                      {issue.detail}
+                    </p>
+
+                    <p className="mt-2 rounded-xl bg-white px-2.5 py-2 text-[11px] font-black leading-4 text-slate-900">
+                      Fix: {issue.fix}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {cvIssues.length > 2 && (
+              <div className="rounded-2xl border border-red-200 bg-white px-3 py-2 text-center">
+                <p className="text-xs font-black text-red-600">
+                  + {cvIssues.length - 2} more CV issues found
+                </p>
+              </div>
+            )}
+          </div>
+
           <button
             onClick={goToCVGenerator}
-            className="w-full rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 py-3 text-sm font-black text-white shadow-lg active:scale-[0.98]"
+            className="mt-3 w-full rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 py-3 text-sm font-black text-white shadow-lg active:scale-[0.98]"
           >
             Fix My CV Now →
           </button>
@@ -499,9 +502,9 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
           </button>
         </div>
       </div>
-    </div>
-  </div>
-)}
+    </div>,
+    document.body
+  )}
 {/* FLOATING BACKGROUND ELEMENTS */}
 <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
   
