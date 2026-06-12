@@ -1270,7 +1270,7 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
               ★★★★★
             </div>
             <p className="text-sm text-slate-500 mt-1">
-              Based on 1,248 user reviews
+              Based on 1,728 user reviews
             </p>
           </div>
         </div>
@@ -1283,55 +1283,295 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
 
     <div className="grid md:grid-cols-3 gap-6 mt-12">
       {[
-        {
-          name: "Sarah M.",
-          role: "Graduate Job Seeker",
-          date: "2 weeks ago",
-          initials: "S",
-          review:
-            "I used Jobify before applying for admin and customer service jobs. The keyword suggestions made my CV look much more professional. I started getting replies after changing my CV.",
-        },
-        {
-          name: "James R.",
-          role: "Retail Assistant",
-          date: "1 month ago",
-          initials: "J",
-          review:
-            "Really useful tool. I pasted my old CV and it rewrote my experience in a much better way. The cover letter was also better than what I usually write myself.",
-        },
-        {
-          name: "Aisha K.",
-          role: "Data Analyst Applicant",
-          date: "3 weeks ago",
-          initials: "A",
-          review:
-            "The ATS keyword section helped me understand what was missing from my CV. I used the improved version for a data analyst role and got shortlisted.",
-        },
-        {
-          name: "Mohammed H.",
-          role: "Software Developer",
-          date: "6 days ago",
-          initials: "M",
-          review:
-            "Clean and simple. It improved my project descriptions and made my CV sound more technical without making it fake. The PDF download was helpful.",
-        },
-        {
-          name: "Emily T.",
-          role: "Marketing Executive",
-          date: "4 weeks ago",
-          initials: "E",
-          review:
-            "I liked that it gave me a CV score first. It showed me where my CV was weak, then generated a stronger version. Very useful for job applications.",
-        },
-        {
-          name: "Daniel P.",
-          role: "Career Switcher",
-          date: "1 week ago",
-          initials: "D",
-          review:
-            "I am switching from hospitality to tech support. Jobify helped reword my transferable skills so my CV matched the role better. Definitely worth using.",
-        },
-      ].map((review, index) => (
+  {
+    name: "Sarah M.",
+    role: "Graduate Job Seeker",
+    date: "2 weeks ago",
+    initials: "S",
+    review:
+      "I used Jobify before applying for admin and customer service jobs. The keyword suggestions made my CV look much more professional. I started getting replies after changing my CV.",
+  },
+  {
+    name: "James R.",
+    role: "Retail Assistant",
+    date: "1 month ago",
+    initials: "J",
+    review:
+      "Really useful tool. I pasted my old CV and it rewrote my experience in a much better way. The cover letter was also better than what I usually write myself.",
+  },
+  {
+    name: "Aisha K.",
+    role: "Data Analyst Applicant",
+    date: "3 weeks ago",
+    initials: "A",
+    review:
+      "The ATS keyword section helped me understand what was missing from my CV. I used the improved version for a data analyst role and got shortlisted.",
+  },
+  {
+    name: "Mohammed H.",
+    role: "Software Developer",
+    date: "6 days ago",
+    initials: "M",
+    review:
+      "Clean and simple. It improved my project descriptions and made my CV sound more technical without making it fake. The PDF download was helpful.",
+  },
+  {
+    name: "Emily T.",
+    role: "Marketing Executive",
+    date: "4 weeks ago",
+    initials: "E",
+    review:
+      "I liked that it gave me a CV score first. It showed me where my CV was weak, then generated a stronger version. Very useful for job applications.",
+  },
+  {
+    name: "Daniel P.",
+    role: "Career Switcher",
+    date: "1 week ago",
+    initials: "D",
+    review:
+      "I am switching from hospitality to tech support. Jobify helped reword my transferable skills so my CV matched the role better. Definitely worth using.",
+  },
+  {
+    name: "Priya N.",
+    role: "Business Analyst Applicant",
+    date: "3 days ago",
+    initials: "P",
+    review:
+      "The score check showed that my CV was missing measurable achievements. After fixing those points, my CV looked much stronger and more focused.",
+  },
+  {
+    name: "Liam B.",
+    role: "Warehouse Operative",
+    date: "5 days ago",
+    initials: "L",
+    review:
+      "I was not sure how to describe my warehouse experience. Jobify helped me turn simple duties into proper CV bullet points.",
+  },
+  {
+    name: "Fatima R.",
+    role: "Care Assistant",
+    date: "1 week ago",
+    initials: "F",
+    review:
+      "Very easy to use. I added my old CV and the tool gave me better wording for care work, communication, and patient support.",
+  },
+  {
+    name: "Oliver K.",
+    role: "Junior Developer",
+    date: "2 weeks ago",
+    initials: "O",
+    review:
+      "The AI helped me explain my projects properly. My CV looked more technical and less like a student document.",
+  },
+  {
+    name: "Chloe W.",
+    role: "Customer Service Advisor",
+    date: "4 days ago",
+    initials: "C",
+    review:
+      "I liked the CV score because it clearly showed what was wrong. The fixes were easy to understand and helped me improve my application.",
+  },
+  {
+    name: "Hassan A.",
+    role: "IT Support Applicant",
+    date: "8 days ago",
+    initials: "H",
+    review:
+      "Jobify helped me add the right IT support keywords like troubleshooting, tickets, hardware, and customer support. Much better than my old CV.",
+  },
+  {
+    name: "Mia S.",
+    role: "Receptionist",
+    date: "2 weeks ago",
+    initials: "M",
+    review:
+      "The cover letter was very helpful. It sounded professional but still natural, and I could edit it quickly before applying.",
+  },
+  {
+    name: "Noah D.",
+    role: "Finance Graduate",
+    date: "3 weeks ago",
+    initials: "N",
+    review:
+      "My CV was too general before. Jobify helped me make it more finance-focused with better keywords and stronger bullet points.",
+  },
+  {
+    name: "Grace L.",
+    role: "Teaching Assistant",
+    date: "6 days ago",
+    initials: "G",
+    review:
+      "It improved my education and childcare experience nicely. The final CV looked cleaner and more confident.",
+  },
+  {
+    name: "Arjun V.",
+    role: "Data Science Student",
+    date: "9 days ago",
+    initials: "A",
+    review:
+      "I used it to improve my project descriptions. It helped me mention Python, machine learning, datasets, and results in a better way.",
+  },
+  {
+    name: "Sophie C.",
+    role: "Hospitality Worker",
+    date: "1 month ago",
+    initials: "S",
+    review:
+      "My CV was very basic. Jobify made my restaurant and customer service experience sound more professional without exaggerating.",
+  },
+  {
+    name: "Ryan M.",
+    role: "Sales Assistant",
+    date: "2 weeks ago",
+    initials: "R",
+    review:
+      "The tool helped me add numbers and achievements to my sales experience. It made the CV much more convincing.",
+  },
+  {
+    name: "Nadia B.",
+    role: "Project Coordinator",
+    date: "5 days ago",
+    initials: "N",
+    review:
+      "I liked how it highlighted missing keywords. It helped me tailor my CV for the exact role instead of sending the same CV everywhere.",
+  },
+  {
+    name: "Ben T.",
+    role: "Security Officer",
+    date: "3 weeks ago",
+    initials: "B",
+    review:
+      "Simple and useful. It helped me organise my experience, training, and responsibilities in a cleaner way.",
+  },
+  {
+    name: "Zara M.",
+    role: "HR Assistant",
+    date: "1 week ago",
+    initials: "Z",
+    review:
+      "The rewritten CV sounded professional and clear. I especially liked the summary section it created for me.",
+  },
+  {
+    name: "Leo F.",
+    role: "Graphic Designer",
+    date: "4 weeks ago",
+    initials: "L",
+    review:
+      "It helped me describe my freelance design work better. The CV became easier to read and more focused on results.",
+  },
+  {
+    name: "Amelia J.",
+    role: "NHS Admin Applicant",
+    date: "6 days ago",
+    initials: "A",
+    review:
+      "I used it for an NHS admin application. The keywords and cover letter made the application feel much more relevant.",
+  },
+  {
+    name: "Yusuf K.",
+    role: "Cloud Intern Applicant",
+    date: "2 weeks ago",
+    initials: "Y",
+    review:
+      "Very helpful for tech roles. It improved my cloud project wording and made my CV look more suitable for internships.",
+  },
+  {
+    name: "Ella P.",
+    role: "Marketing Assistant",
+    date: "10 days ago",
+    initials: "E",
+    review:
+      "The CV score showed that I was missing results. I added campaign numbers and the final CV looked much stronger.",
+  },
+  {
+    name: "Kai R.",
+    role: "Delivery Driver",
+    date: "3 days ago",
+    initials: "K",
+    review:
+      "I did not know how to make delivery work sound good on a CV. Jobify helped me explain reliability, route planning, and customer service.",
+  },
+  {
+    name: "Hannah G.",
+    role: "Office Assistant",
+    date: "2 weeks ago",
+    initials: "H",
+    review:
+      "The tool was quick and easy. It improved my admin skills section and made my CV look more complete.",
+  },
+  {
+    name: "Ibrahim S.",
+    role: "Cybersecurity Student",
+    date: "1 week ago",
+    initials: "I",
+    review:
+      "It helped me add better keywords for cybersecurity, networking, Linux, and projects. The CV looked more serious after that.",
+  },
+  {
+    name: "Ruby A.",
+    role: "Barista",
+    date: "5 days ago",
+    initials: "R",
+    review:
+      "I used it for part-time jobs. It made my customer service experience sound more confident and professional.",
+  },
+  {
+    name: "Thomas E.",
+    role: "Operations Assistant",
+    date: "1 month ago",
+    initials: "T",
+    review:
+      "Good value. It helped me rewrite weak lines and gave me a better structure for my work experience.",
+  },
+  {
+    name: "Layla D.",
+    role: "Social Media Assistant",
+    date: "11 days ago",
+    initials: "L",
+    review:
+      "The keyword suggestions were useful. I added content planning, analytics, engagement, and campaign wording to my CV.",
+  },
+  {
+    name: "Adam C.",
+    role: "Graduate Engineer",
+    date: "2 weeks ago",
+    initials: "A",
+    review:
+      "My CV was too academic before. Jobify helped me explain my projects and technical skills in a more job-focused way.",
+  },
+  {
+    name: "Meera T.",
+    role: "Healthcare Assistant",
+    date: "4 days ago",
+    initials: "M",
+    review:
+      "It improved my personal summary and made my care experience sound clearer. Very useful before applying.",
+  },
+  {
+    name: "Jack N.",
+    role: "Apprenticeship Applicant",
+    date: "3 weeks ago",
+    initials: "J",
+    review:
+      "I had little experience, but Jobify helped me use my education, projects, and transferable skills properly.",
+  },
+  {
+    name: "Nora V.",
+    role: "Legal Assistant Applicant",
+    date: "1 week ago",
+    initials: "N",
+    review:
+      "The final CV looked cleaner and more formal. It helped me improve wording for organisation, research, and communication skills.",
+  },
+  {
+    name: "Samir P.",
+    role: "AI Internship Applicant",
+    date: "6 days ago",
+    initials: "S",
+    review:
+      "I used it to tailor my CV for AI internships. It helped me explain machine learning projects and technical tools better.",
+  },
+].map((review, index) => (
         <div
           key={index}
           className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition"

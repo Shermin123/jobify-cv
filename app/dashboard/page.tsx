@@ -44,36 +44,36 @@ const [appsLoading, setAppsLoading] = useState(false);
   };
 
   useEffect(() => {
-    if (status === "loading") return;
-    if (!session) router.push("/login");
-  }, [session, status, router]);
-
-  if (status === "loading") {
-    return (
-      <main className="min-h-screen flex items-center justify-center text-gray-500">
-        <EmojiBackground />
-        Loading...
-      </main>
-    );
-  }
-    useEffect(() => {
   const loadApplications = async () => {
     if (!session?.user?.email) return;
 
     setAppsLoading(true);
 
-    const res = await fetch("/api/applications");
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/applications");
+      const data = await res.json();
 
-    if (res.ok) {
-      setApplications(data.applications || []);
+      if (res.ok) {
+        setApplications(data.applications || []);
+      }
+    } catch (error) {
+      console.error("Failed to load applications:", error);
+    } finally {
+      setAppsLoading(false);
     }
-
-    setAppsLoading(false);
   };
 
   loadApplications();
 }, [session?.user?.email]);
+
+if (status === "loading") {
+  return (
+    <main className="min-h-screen flex items-center justify-center text-gray-500">
+      <EmojiBackground />
+      Loading...
+    </main>
+  );
+}
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white text-slate-900">
@@ -99,30 +99,44 @@ const [appsLoading, setAppsLoading] = useState(false);
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => {
-  sessionStorage.setItem("jobify_force_setup", "true");
-  router.push("/upload");
-}}
-              className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-blue-700 transition"
-            >
-              Create CV
-            </button>
+  <button
+    onClick={() => router.push("/jobs")}
+    className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-emerald-700 transition"
+  >
+    Auto Job Apply
+  </button>
 
-            <button
-              onClick={handleManageSubscription}
-              className="rounded-2xl bg-black px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-slate-800 transition"
-            >
-              Billing Portal
-            </button>
+  <button
+    onClick={() => router.push("/#cv-score")}
+    className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-orange-600 transition"
+  >
+    Check CV Score
+  </button>
 
-            <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="rounded-2xl border bg-white px-5 py-3 text-sm font-black text-slate-700 hover:border-red-400 hover:text-red-600 transition"
-            >
-              Logout
-            </button>
-          </div>
+  <button
+    onClick={() => {
+      sessionStorage.setItem("jobify_force_setup", "true");
+      router.push("/upload");
+    }}
+    className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-blue-700 transition"
+  >
+    Create CV
+  </button>
+
+  <button
+    onClick={handleManageSubscription}
+    className="rounded-2xl bg-black px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-slate-800 transition"
+  >
+    Billing Portal
+  </button>
+
+  <button
+    onClick={() => signOut({ callbackUrl: "/login" })}
+    className="rounded-2xl border bg-white px-5 py-3 text-sm font-black text-slate-700 hover:border-red-400 hover:text-red-600 transition"
+  >
+    Logout
+  </button>
+</div>
         </div>
 
         {/* HERO */}

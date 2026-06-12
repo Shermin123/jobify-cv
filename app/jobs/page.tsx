@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type PointerEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -545,11 +545,7 @@ const [autoApplyCount, setAutoApplyCount] = useState(0);
   const [cardAction, setCardAction] = useState<"left" | "right" | "up" | null>(
     null
   );
-  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(
-    null
-  );
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
+  
 
   const currentJob = jobs[currentIndex];
 
@@ -598,8 +594,8 @@ const [autoApplyCount, setAutoApplyCount] = useState(0);
     setCurrentIndex((prev) => prev + 1);
   };
 
-  const moveToNextJobWithSwipe = () => {
-  setTimeout(nextJob, 110);
+  const moveToNextJob = () => {
+  setTimeout(nextJob, 260);
 };
 
   const handleSearch = async () => {
@@ -685,7 +681,7 @@ const [autoApplyCount, setAutoApplyCount] = useState(0);
 
   setCardAction("left");
   setMessage("Declined");
-  moveToNextJobWithSwipe();
+  moveToNextJob();
 
   void saveApplication("declined", jobSnapshot, true);
 };
@@ -697,7 +693,7 @@ const handleSkip = () => {
 
   setCardAction("up");
   setMessage("Skipped");
-  moveToNextJobWithSwipe();
+  moveToNextJob();
 
   void saveApplication("skipped", jobSnapshot, true);
 };
@@ -743,7 +739,7 @@ const handleApply = () => {
 
   setCardAction("right");
   setMessage(`Applied to ${jobSnapshot.company}`);
-  moveToNextJobWithSwipe();
+  moveToNextJob();
   if (!isSubscribed) {
   increaseFreeAutoApplyUsage();
 }
@@ -780,7 +776,13 @@ const handleApply = () => {
     }
   })();
 };
-
+const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
+  if (!session?.user?.email) {
+    e.preventDefault();
+    alert("Please login first, then upload your CV and cover letter.");
+    router.push(`/login?callbackUrl=${encodeURIComponent("/jobs")}`);
+  }
+};
   const cardAnimation =
   cardAction === "left"
     ? "-translate-x-[260px] rotate-[-12deg] opacity-0 scale-[0.92] blur-[1px]"
@@ -789,72 +791,6 @@ const handleApply = () => {
     : cardAction === "up"
     ? "-translate-y-[140px] opacity-0 scale-[0.92] blur-[1px]"
     : "translate-x-0 translate-y-0 rotate-0 opacity-100 scale-100 blur-0";
-
-  const dragHint =
-    dragOffset.x > 70
-      ? "APPLY"
-      : dragOffset.x < -70
-      ? "DECLINE"
-      : dragOffset.y < -70
-      ? "SKIP"
-      : "";
-
-  const handlePointerDown = (e: PointerEvent<HTMLElement>) => {
-    if (saving || searching || !currentJob) return;
-
-    setIsDragging(true);
-    setDragStart({ x: e.clientX, y: e.clientY });
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-
-  const handlePointerMove = (e: PointerEvent<HTMLElement>) => {
-    if (!isDragging || !dragStart) return;
-
-    setDragOffset({
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y,
-    });
-  };
-
-  const handlePointerUp = () => {
-    if (!isDragging) return;
-
-    const { x, y } = dragOffset;
-
-    setIsDragging(false);
-    setDragStart(null);
-    setDragOffset({ x: 0, y: 0 });
-
-    if (x > 120) {
-      handleApply();
-      return;
-    }
-
-    if (x < -120) {
-      handleDecline();
-      return;
-    }
-
-    if (y < -110) {
-      handleSkip();
-    }
-  };
-  const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
-  if (!session?.user?.email) {
-    e.preventDefault();
-    alert("Please login first, then upload your CV and cover letter.");
-    router.push(`/login?callbackUrl=${encodeURIComponent("/jobs")}`);
-  }
-};
-
-  const dragStyle = isDragging
-    ? {
-        transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${
-          dragOffset.x / 18
-        }deg)`,
-        transition: "none",
-      }
-    : undefined;
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
@@ -1058,164 +994,191 @@ const handleApply = () => {
     </section>
   )}
 
-  {/* JOB CARD */}
-  {/* JOB CARD */}
-{/* JOB CARD */}
-{/* JOB CARD */}
-<section className="mx-auto mt-3 max-w-2xl">
+{/* LUXURY JOB CARD */}
+<section className="mx-auto mt-5 max-w-3xl">
   {currentJob ? (
     <article
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      style={dragStyle}
-      className={`overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.12)] transition-all duration-500 ease-out ${cardAnimation}`}
+      className={`relative overflow-hidden rounded-[34px] border border-white/70 bg-white/90 shadow-[0_30px_90px_rgba(15,23,42,0.18)] backdrop-blur-2xl transition-all duration-500 ease-out ${cardAnimation}`}
     >
-      {/* SIMPLE JOB INFO */}
-<div className="p-4">
-  <div className="flex items-start justify-between gap-3">
-    <div className="flex min-w-0 items-start gap-3">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-md ring-1 ring-slate-200">
-        <img
-          src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
-          alt="Google G"
-          className="h-7 w-7 object-contain"
-        />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-blue-200/70 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-indigo-200/70 blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
       </div>
 
-      <div className="min-w-0">
-        <p className="truncate text-[13px] font-black text-blue-700">
-          {currentJob.company}
-        </p>
+      <div className="relative p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[22px] bg-white p-3 shadow-[0_18px_40px_rgba(15,23,42,0.15)] ring-1 ring-slate-200">
+              <img
+                src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
+                alt="Company logo"
+                className="h-10 w-10 object-contain"
+              />
+            </div>
 
-        <h2 className="mt-1 line-clamp-2 text-[22px] font-black leading-tight text-slate-950">
-          {currentJob.title}
-        </h2>
-      </div>
-    </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="truncate text-sm font-black text-blue-700">
+                  {currentJob.company}
+                </p>
 
-    <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-700 ring-1 ring-emerald-100">
-      AI Live
-    </span>
-  </div>
+                <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-100">
+                  AI Matched
+                </span>
+              </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <div className="rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200">
-            <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
-              Job Type
+              <h2 className="mt-2 line-clamp-2 text-2xl font-black leading-tight text-slate-950 sm:text-3xl">
+                {currentJob.title}
+              </h2>
+
+              <p className="mt-2 text-sm font-bold text-slate-500">
+                {currentJob.location || "Location not specified"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-2xl bg-slate-950 p-4 text-white shadow-lg">
+            <p className="text-[10px] font-black uppercase tracking-wide text-white/40">
+              Match
             </p>
-            <p className="mt-1 text-sm font-black text-slate-800">
-              {currentJob.type || "Full-time / Part-time"}
+            <p className="mt-1 text-2xl font-black text-emerald-300">
+              {Math.min(currentJob.matchScore || 72, 100)}%
             </p>
           </div>
 
-          <div className="rounded-2xl bg-blue-50 p-3 ring-1 ring-blue-100">
-            <p className="text-[10px] font-black uppercase tracking-wide text-blue-400">
-              CV Match
+          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+            <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
+              Type
             </p>
-            <p className="mt-1 text-sm font-black text-blue-700">
-              {Math.min(currentJob.matchScore || 72, 100)}% Match
+            <p className="mt-1 line-clamp-1 text-sm font-black text-slate-800">
+              {currentJob.type || "Full-time"}
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+            <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
+              Salary
+            </p>
+            <p className="mt-1 line-clamp-1 text-sm font-black text-slate-800">
+              {currentJob.salary || "Not listed"}
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+            <p className="text-[10px] font-black uppercase tracking-wide text-slate-400">
+              Source
+            </p>
+            <p className="mt-1 line-clamp-1 text-sm font-black text-slate-800">
+              {currentJob.source || "Jobify"}
             </p>
           </div>
         </div>
 
-       <div className="mt-4 rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200">
-  <div className="flex items-center justify-between">
-    <p className="text-xs font-black text-slate-700">
-      How this matches your CV
-    </p>
-    <p className="text-xs font-black text-blue-700">
-      {Math.min(currentJob.matchScore || 72, 100)}%
-    </p>
-  </div>
+        <div className="mt-5 rounded-[26px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-black text-slate-950">
+                AI CV match analysis
+              </p>
+              <p className="mt-1 text-xs font-semibold text-slate-500">
+                Based on title, location, role keywords, and your uploaded profile.
+              </p>
+            </div>
 
-  <div className="mt-2 overflow-hidden rounded-full bg-white p-1">
-    <div
-      className="rounded-full bg-blue-600 py-2 text-center text-[11px] font-black text-white transition-all duration-700"
-      style={{
-        width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
-      }}
-    >
-      Good CV match
-    </div>
-  </div>
+            <p className="shrink-0 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-black text-white">
+              {Math.min(currentJob.matchScore || 72, 100)}%
+            </p>
+          </div>
 
-  <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-500">
-    {currentJob.smartReason ||
-      "Matched using job role, job type, keywords, and your uploaded CV profile."}
-  </p>
-</div>
+          <div className="mt-3 overflow-hidden rounded-full bg-white p-1 shadow-inner">
+            <div
+              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 py-2 text-center text-[11px] font-black text-white shadow-sm transition-all duration-700"
+              style={{
+                width: `${Math.min(currentJob.matchScore || 72, 100)}%`,
+              }}
+            >
+              Strong match
+            </div>
+          </div>
 
-<div className="mt-3 rounded-2xl bg-white p-3 ring-1 ring-slate-200">
-  <div className="flex items-center justify-between gap-3">
-    <p className="text-xs font-black text-slate-800">
-      Job description
-    </p>
+          <p className="mt-3 text-xs font-semibold leading-5 text-slate-600">
+            {currentJob.smartReason ||
+              "This role appears relevant based on the job title, job type, and the skills normally expected for this position."}
+          </p>
+        </div>
 
-    <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-black text-blue-700">
-      LinkedIn style
-    </span>
-  </div>
+        <div className="mt-5 rounded-[26px] border border-slate-200 bg-white/90 p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-black text-slate-950">
+              Job description
+            </p>
 
-  <p className="mt-2 max-h-[92px] overflow-y-auto pr-2 text-[11px] font-semibold leading-5 text-slate-600">
-    {currentJob.summary || currentJob.description}
-  </p>
-</div>
-      </div>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-slate-600">
+              Preview
+            </span>
+          </div>
 
-      {/* ACTION BUTTONS */}
-      <div className="border-t border-slate-100 bg-white px-4 pb-4 pt-3">
-        <div className="grid grid-cols-3 gap-2">
+          <p className="mt-3 max-h-[140px] overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-600">
+            {currentJob.summary || currentJob.description}
+          </p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-3 gap-3">
           <button
             onClick={handleDecline}
             disabled={searching || !currentJob}
-            className="flex h-11 flex-col items-center justify-center rounded-xl bg-rose-50 text-[11px] font-black text-rose-600 ring-1 ring-rose-100 active:scale-95 disabled:opacity-40"
+            className="rounded-2xl border border-rose-200 bg-rose-50 px-3 py-4 text-sm font-black text-rose-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
           >
-            <span className="text-lg leading-none">✕</span>
-            <span className="mt-0.5">Decline</span>
+            ✕ Decline
           </button>
 
           <button
             onClick={handleSkip}
             disabled={searching || !currentJob}
-            className="flex h-11 flex-col items-center justify-center rounded-xl bg-slate-100 text-[11px] font-black text-slate-700 active:scale-95 disabled:opacity-40"
+            className="rounded-2xl border border-slate-200 bg-white px-3 py-4 text-sm font-black text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95 disabled:opacity-40"
           >
-            <span className="text-lg leading-none">↑</span>
-            <span className="mt-0.5">Skip</span>
+            ↑ Skip
           </button>
 
           <button
             onClick={handleApply}
             disabled={searching || !currentJob}
-            className="flex h-11 flex-col items-center justify-center rounded-xl bg-emerald-600 text-[11px] font-black text-white shadow-md active:scale-95 disabled:opacity-40"
+            className="rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 px-3 py-4 text-sm font-black text-white shadow-[0_16px_35px_rgba(16,185,129,0.35)] transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95 disabled:opacity-40"
           >
-            <span className="text-lg leading-none">↗</span>
-            <span className="mt-0.5">Apply</span>
+            ↗ Apply
           </button>
         </div>
       </div>
     </article>
   ) : (
-    <div className="rounded-[24px] border border-slate-200 bg-white p-6 text-center shadow-lg">
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0a66c2] text-xl font-black text-white">
-        J
+    <div className="rounded-[34px] border border-white/70 bg-white/90 p-8 text-center shadow-[0_30px_90px_rgba(15,23,42,0.16)] backdrop-blur-2xl">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[24px] bg-white p-3 shadow-lg ring-1 ring-slate-200">
+        <img
+          src="https://www.google.com/s2/favicons?domain=google.com&sz=128"
+          alt="Google G"
+          className="h-10 w-10 object-contain"
+        />
       </div>
 
-      <h2 className="mt-5 text-2xl font-black">No more jobs</h2>
+      <h2 className="mt-5 text-3xl font-black text-slate-950">
+        No more jobs
+      </h2>
 
-      <p className="mt-2 text-sm leading-6 text-slate-500">
-        Search again to find more matching vacancies.
+      <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">
+        You have reviewed all current vacancies. Search again to discover more matching jobs.
       </p>
 
       <button
         onClick={handleSearch}
-        className="mt-5 rounded-full bg-[#0a66c2] px-6 py-3 text-sm font-black text-white"
+        className="mt-6 rounded-2xl bg-[#0a66c2] px-7 py-3 text-sm font-black text-white shadow-lg transition hover:bg-blue-700 active:scale-95"
       >
         Search Again
       </button>
     </div>
-  )}
+    )}
 </section>
 </section>
 
