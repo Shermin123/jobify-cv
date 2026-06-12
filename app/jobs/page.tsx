@@ -995,7 +995,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
   )}
 
 {/* LUXURY JOB CARD */}
-<section className="mx-auto mt-3 max-w-3xl sm:mt-5">
+<section className="mx-auto mt-2 max-w-3xl sm:mt-5">
   {currentJob ? (
     <article
       className={`relative overflow-hidden rounded-[24px] border border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(15,23,42,0.14)] backdrop-blur-2xl transition-all duration-500 ease-out sm:rounded-[34px] sm:shadow-[0_30px_90px_rgba(15,23,42,0.18)] ${cardAnimation}`}
@@ -1077,7 +1077,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
           </div>
         </div>
 
-        <div className="mt-2 rounded-[18px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-sm sm:mt-5 sm:rounded-[26px] sm:p-4">
+        <div className="mt-2 rounded-[18px] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-2.5 shadow-sm sm:mt-5 sm:rounded-[26px] sm:p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-black text-slate-950">
@@ -1103,11 +1103,6 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
               Strong match
             </div>
           </div>
-
-          <p className="mt-2 line-clamp-2 text-[11px] font-semibold leading-4 text-slate-600 sm:mt-3 sm:text-xs sm:leading-5">
-            {currentJob.smartReason ||
-              "This role appears relevant based on the job title, job type, and the skills normally expected for this position."}
-          </p>
         </div>
 
         <div className="mt-2 rounded-[18px] border border-slate-200 bg-white/90 p-3 shadow-sm sm:mt-5 sm:rounded-[26px] sm:p-4">
@@ -1121,7 +1116,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
             </span>
           </div>
 
-          <p className="mt-2 max-h-[72px] overflow-y-auto pr-2 text-xs font-semibold leading-5 text-slate-600 sm:mt-3 sm:max-h-[140px] sm:text-sm sm:leading-6">
+          <p className="mt-2 max-h-[54px] overflow-y-auto pr-2 text-xs font-semibold leading-5 text-slate-600 sm:mt-3 sm:max-h-[140px] sm:text-sm sm:leading-6">
             {currentJob.summary || currentJob.description}
           </p>
         </div>
