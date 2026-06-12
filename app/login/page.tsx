@@ -67,10 +67,10 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    if (status === "authenticated") {
-      router.replace(getSafeCallbackUrl());
-    }
-  }, [status, router]);
+  if (status === "authenticated") {
+    router.replace("/dashboard");
+  }
+}, [status, router]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -104,19 +104,19 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
-    setGoogleLoading(true);
-    setError("");
+  setGoogleLoading(true);
+  setError("");
 
-    try {
-      await signIn("google", {
-        callbackUrl: getAbsoluteCallbackUrl(),
-        redirect: true,
-      });
-    } catch {
-      setGoogleLoading(false);
-      setError("Google login failed. Please try again.");
-    }
-  };
+  try {
+    await signIn("google", {
+      callbackUrl: "/dashboard",
+      redirect: true,
+    });
+  } catch {
+    setGoogleLoading(false);
+    setError("Google login failed. Please try again.");
+  }
+};
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleLogin();
