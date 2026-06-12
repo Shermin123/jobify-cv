@@ -94,6 +94,8 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       trial: true,
       features: [
         "Full CV generator access",
+        "Free AI Auto Apply included",
+"10 free AI Auto Apply applications per day",
         "Generate tailored cover letters",
         "ATS keyword suggestions included",
         "CV score checker included",
@@ -116,6 +118,8 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       trial: false,
       features: [
         "30 CV generations per month",
+        "AI Auto Apply included",
+"Apply faster with saved CV and cover letter",
         "30 cover letters per month",
         "ATS optimisation for each CV",
         "Keyword suggestions for job descriptions",
@@ -138,6 +142,8 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       trial: false,
       features: [
         "Unlimited CV generations",
+        "Unlimited AI Auto Apply",
+"Best for daily job applications",
         "Unlimited cover letters",
         "Advanced ATS optimisation",
         "Document Editor included",
@@ -202,6 +208,11 @@ const [detectingRegion, setDetectingRegion] = useState(true);
           Start free today and access your ATS-optimised CV, personalised cover
           letter, keyword list, and PDF download.
         </p>
+        {upgrade === "auto-apply-limit" && (
+  <div className="mt-4 mx-auto max-w-xl rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-bold text-orange-700">
+    You used your 10 free AI Auto Apply applications today. Upgrade to continue applying without waiting.
+  </div>
+)}
         
         <div className="mt-5 flex flex-col sm:flex-row justify-center gap-3">
           <button

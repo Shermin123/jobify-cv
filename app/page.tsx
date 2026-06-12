@@ -5,12 +5,20 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import EmojiBackground from "@/app/components/EmojiBackground";
+type CvIssue = {
+  title: string;
+  detail: string;
+  fix: string;
+  severity: "high" | "medium" | "low";
+};
 
 export default function Home() {
   
   
   
   const [cvText, setCvText] = useState("");
+const [targetRole, setTargetRole] = useState("");
+const [cvIssues, setCvIssues] = useState<CvIssue[]>([]);
   
   const [freeChecksUsed, setFreeChecksUsed] = useState(0);
   const [analyzedScore, setAnalyzedScore] = useState<number | null>(null);
@@ -39,43 +47,278 @@ useEffect(() => {
 }, [session?.user?.email]);
   // ================= CV SCORE ENGINE =================
   const calculateScore = () => {
-  let score = 32;
+  const raw = cvText.trim();
+  const text = raw.toLowerCase();
+  const role = targetRole.trim().toLowerCase();
+  const wordCount = raw.split(/\s+/).filter(Boolean).length;
 
-  const text = cvText.toLowerCase();
-  const wordCount = cvText.trim().split(/\s+/).filter(Boolean).length;
+  let score = 100;
+  const issues: CvIssue[] = [];
 
-  if (wordCount > 80) score += 5;
-  if (wordCount > 150) score += 6;
-  if (wordCount > 250) score += 7;
+  const addIssue = (
+    title: string,
+    detail: string,
+    fix: string,
+    penalty: number,
+    severity: "high" | "medium" | "low"
+  ) => {
+    score -= penalty;
+    issues.push({ title, detail, fix, severity });
+  };
 
-  const strongKeywords = [
+  const hasEmail = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(raw);
+  const hasPhone = /(\+?\d[\d\s().-]{7,}\d)/.test(raw);
+  const hasLinkedIn = /linkedin\.com|linkedin/i.test(text);
+
+  const hasSummary =
+    /summary|profile|personal statement|career objective/.test(text);
+
+  const hasExperience =
+    /work experience|professional experience|employment history|experience/.test(
+      text
+    );
+
+  const hasEducation =
+    /education|degree|university|college|school|bsc|msc|bachelor|master/.test(
+      text
+    );
+
+  const hasSkills =
+    /skills|technical skills|key skills|core skills|competencies/.test(text);
+
+  const actionWords = [
     "managed",
     "developed",
-    "achieved",
+    "built",
+    "created",
     "improved",
     "increased",
     "reduced",
     "led",
-    "built",
     "delivered",
+    "achieved",
+    "trained",
+    "supported",
+    "coordinated",
+    "implemented",
     "optimized",
-    "project",
-    "team",
-    "customer",
-    "sales",
-    "training",
-    "python",
-    "react",
-    "data",
-    "cloud",
+    "resolved",
+    "analysed",
+    "analyzed",
   ];
 
-  strongKeywords.forEach((word) => {
-    if (text.includes(word)) score += 2;
-  });
+  const actionWordCount = actionWords.filter((word) =>
+    text.includes(word)
+  ).length;
 
+  const measurableResults =
+    raw.match(
+      /(\d+%|\d+\+|\d+\s*(years?|months?|clients?|customers?|projects?|sales|orders|tickets|users?|team members?)|£\d+|\$\d+)/gi
+    ) || [];
 
-  return Math.min(score, 96);
+  const bullets = raw.match(/^\s*(•|-|\*)\s+/gm) || [];
+
+  const lines = raw.split("\n").filter((line) => line.trim().length > 0);
+  const longParagraphs = lines.filter(
+    (line) => line.trim().split(/\s+/).length > 35
+  ).length;
+
+  const roleWords = role
+    .split(/[\s,/.-]+/)
+    .map((word) => word.trim())
+    .filter((word) => word.length > 3);
+
+  const roleMatches = roleWords.filter((word) => text.includes(word));
+
+  const genericPhrases = [
+    "hard working",
+    "team player",
+    "good communication",
+    "fast learner",
+    "self motivated",
+    "work under pressure",
+  ];
+
+  const genericHits = genericPhrases.filter((phrase) => text.includes(phrase));
+
+  if (wordCount < 120) {
+    addIssue(
+      "CV is too short",
+      "Your CV does not give enough evidence of your skills, experience, education, or achievements.",
+      "Add more detail under experience, projects, education, and key skills.",
+      18,
+      "high"
+    );
+  } else if (wordCount < 220) {
+    addIssue(
+      "CV needs more detail",
+      "The CV has some information, but it may still look thin to recruiters and ATS systems.",
+      "Add stronger bullet points with responsibilities, tools, and results.",
+      8,
+      "medium"
+    );
+  } else if (wordCount > 900) {
+    addIssue(
+      "CV may be too long",
+      "A very long CV can hide your strongest points and reduce recruiter attention.",
+      "Shorten repeated lines and keep only relevant experience.",
+      8,
+      "medium"
+    );
+  }
+
+  if (!hasEmail || !hasPhone) {
+    addIssue(
+      "Missing contact details",
+      "Recruiters need clear contact details. Missing email or phone number can reduce trust.",
+      "Add your email and phone number clearly at the top of the CV.",
+      10,
+      "high"
+    );
+  }
+
+  if (!hasLinkedIn) {
+    addIssue(
+      "No LinkedIn profile found",
+      "A LinkedIn link helps recruiters verify your profile and makes the CV look more professional.",
+      "Add your LinkedIn URL near your contact details.",
+      4,
+      "low"
+    );
+  }
+
+  if (!hasSummary) {
+    addIssue(
+      "Missing professional summary",
+      "Your CV should quickly explain who you are, your target role, and your strongest skills.",
+      "Add a 3-4 line professional summary at the top.",
+      8,
+      "medium"
+    );
+  }
+
+  if (!hasExperience) {
+    addIssue(
+      "Work experience section is unclear",
+      "Recruiters and ATS systems look for a clear experience section.",
+      "Use a clear heading like 'Work Experience' or 'Professional Experience'.",
+      12,
+      "high"
+    );
+  }
+
+  if (!hasSkills) {
+    addIssue(
+      "Skills section is missing",
+      "ATS systems scan for skills related to the job role.",
+      "Add a clear skills section with tools, software, technical skills, and transferable skills.",
+      10,
+      "high"
+    );
+  }
+
+  if (!hasEducation) {
+    addIssue(
+      "Education section is missing",
+      "Education helps recruiters understand your background and eligibility.",
+      "Add your degree, college/university, certifications, or relevant training.",
+      5,
+      "medium"
+    );
+  }
+
+  if (actionWordCount < 4) {
+    addIssue(
+      "Weak action words",
+      "Your CV needs stronger verbs to make your experience sound more active and professional.",
+      "Use words like managed, developed, improved, achieved, delivered, supported, and reduced.",
+      10,
+      "medium"
+    );
+  }
+
+  if (measurableResults.length < 2) {
+    addIssue(
+      "Missing measurable achievements",
+      "Recruiters prefer CVs with numbers, percentages, targets, results, or clear impact.",
+      "Add numbers such as sales improved by 15%, handled 40+ customers daily, or completed 5 projects.",
+      14,
+      "high"
+    );
+  }
+
+  if (bullets.length < 4) {
+    addIssue(
+      "Not enough bullet points",
+      "Long paragraphs are harder to scan. Recruiters prefer short, clear bullet points.",
+      "Rewrite experience using bullet points with action + task + result.",
+      7,
+      "medium"
+    );
+  }
+
+  if (longParagraphs > 2) {
+    addIssue(
+      "Too many long paragraphs",
+      "Large text blocks make the CV harder to read quickly.",
+      "Break long paragraphs into short bullet points.",
+      6,
+      "medium"
+    );
+  }
+
+  if (!role) {
+    addIssue(
+      "No target role added",
+      "Without a target role, the score cannot check how well your CV matches a specific job.",
+      "Add a target role like Data Analyst, Retail Assistant, or Software Developer.",
+      6,
+      "low"
+    );
+  } else if (roleWords.length > 0 && roleMatches.length === 0) {
+    addIssue(
+      "CV does not match the target role",
+      `Your CV does not clearly mention important words from '${targetRole}'.`,
+      "Add role-specific skills, tools, and responsibilities related to the target job.",
+      14,
+      "high"
+    );
+  } else if (roleWords.length >= 2 && roleMatches.length < Math.ceil(roleWords.length / 2)) {
+    addIssue(
+      "Weak role keyword match",
+      "Your CV partly matches the role, but important job keywords are missing.",
+      "Add more keywords from the job title and job description naturally into your CV.",
+      8,
+      "medium"
+    );
+  }
+
+  if (genericHits.length >= 2) {
+    addIssue(
+      "Too many generic phrases",
+      "Phrases like hard working or team player are weak unless supported with proof.",
+      "Replace generic claims with specific examples and results.",
+      5,
+      "low"
+    );
+  }
+
+  const finalScore = Math.max(28, Math.min(96, Math.round(score)));
+
+  if (issues.length === 0) {
+    issues.push({
+      title: "CV looks strong",
+      detail:
+        "Your CV has good structure, keywords, contact details, and achievement signals.",
+      fix: "You can still improve it further by tailoring it to each job description.",
+      severity: "low",
+    });
+  }
+
+  return {
+    score: finalScore,
+    issues,
+  };
 };
 
   const score = analyzedScore ?? 0;
@@ -97,9 +340,10 @@ useEffect(() => {
   setAnalyzing(true);
 
   setTimeout(() => {
-    const newScore = calculateScore();
-    setAnalyzedScore(newScore);
-    setShowScorePopup(true);
+    const result = calculateScore();
+setAnalyzedScore(result.score);
+setCvIssues(result.issues);
+setShowScorePopup(true);
 
 if (!isUnlocked) {
   const newUsed = freeChecksUsed + 1;
@@ -172,10 +416,39 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
           You are less likely to get a job with this CV
         </h3>
 
-        <p className="mt-3 text-sm leading-6 text-slate-600">
-          This CV may be missing important ATS keywords, stronger achievements,
-          and role-specific wording recruiters look for.
-        </p>
+        <div className="mt-5 max-h-72 space-y-3 overflow-y-auto text-left">
+  {cvIssues.slice(0, 5).map((issue, index) => (
+    <div
+      key={`${issue.title}-${index}`}
+      className="rounded-3xl border-2 border-red-300 bg-gradient-to-br from-red-50 to-orange-50 p-4 shadow-[0_12px_30px_rgba(220,38,38,0.18)]"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-lg font-black text-white shadow-lg">
+          !
+        </div>
+
+        <div>
+          <p className="text-base font-black leading-tight text-red-800">
+            {index + 1}. {issue.title}
+          </p>
+
+          <p className="mt-2 text-sm font-bold leading-5 text-red-700">
+            {issue.detail}
+          </p>
+
+          <div className="mt-3 rounded-2xl bg-white p-3 ring-1 ring-red-200">
+            <p className="text-xs font-black uppercase tracking-wide text-red-500">
+              Fix this now
+            </p>
+            <p className="mt-1 text-sm font-black leading-5 text-slate-900">
+              {issue.fix}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
         <button
           onClick={goToCVGenerator}
@@ -331,7 +604,7 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
     }
     className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 text-base font-black text-white shadow-lg transition hover:scale-[1.02]"
   >
-    📊 Check CV Score
+    📊 Check CV Score For Free
   </button>
 
   <button
@@ -431,15 +704,31 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
     </p>
   </div>
 )}
+  <div className="mb-3">
+  <label className="mb-2 block text-xs font-black uppercase tracking-wide text-slate-500">
+    Target role for smarter scoring
+  </label>
 
+  <input
+    className="w-full rounded-2xl border border-red-200 bg-white p-3 text-sm font-bold text-slate-900 outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500"
+    placeholder="e.g. Data Analyst, Retail Assistant, Software Developer"
+    value={targetRole}
+    onChange={(e) => {
+      setTargetRole(e.target.value);
+      setAnalyzedScore(null);
+      setCvIssues([]);
+    }}
+  />
+</div>
   <textarea
     className="w-full border border-red-200 bg-white p-4 rounded-2xl h-28 md:h-32 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none text-sm leading-6"
     placeholder="Paste your CV here to check if it is job-ready..."
     value={cvText}
     onChange={(e) => {
-      setCvText(e.target.value);
-      setAnalyzedScore(null);
-    }}
+  setCvText(e.target.value);
+  setAnalyzedScore(null);
+  setCvIssues([]);
+}}
   />
 
   <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs">
@@ -525,26 +814,111 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
         )}
       </div>
 
-      <div className="bg-white border border-red-100 rounded-3xl p-5">
-        <h3 className="font-black text-slate-900">
-          Why your CV may be rejected
-        </h3>
+      <div className="bg-gradient-to-br from-red-50 via-white to-orange-50 border-2 border-red-200 rounded-3xl p-5 shadow-[0_18px_45px_rgba(220,38,38,0.14)]">
+        <h3 className="text-2xl font-black leading-tight text-red-800">
+  ⚠️ Serious CV problems found
+</h3>
 
-        <div className="mt-4 space-y-3 text-sm text-slate-600">
-          {[
-            "Weak ATS keyword match",
-            "Missing measurable achievements",
-            "Not tailored to the target role",
-            "Low recruiter impact words",
-          ].map((item) => (
-            <div key={item} className="flex items-center gap-3">
-              <span className="h-7 w-7 rounded-full bg-red-50 text-red-600 flex items-center justify-center font-black">
-                !
-              </span>
-              {item}
-            </div>
-          ))}
+<p className="mt-2 text-sm font-bold leading-6 text-red-600">
+  These issues can reduce interview chances because recruiters and ATS systems may not see enough proof, keywords, or job relevance.
+</p>
+
+        <div className="mt-4 space-y-4">
+  {analyzedScore === null ? (
+    [
+      "ATS keyword match",
+      "Measurable achievements",
+      "Target role relevance",
+      "Recruiter readability",
+    ].map((item) => (
+      <div
+        key={item}
+        className="rounded-3xl border border-slate-200 bg-slate-50 p-4"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-200 text-lg font-black text-slate-500">
+            ?
+          </span>
+
+          <div>
+            <p className="text-base font-black text-slate-800">{item}</p>
+            <p className="text-xs font-semibold text-slate-500">
+              This will be checked after scanning.
+            </p>
+          </div>
         </div>
+      </div>
+    ))
+  ) : (
+    cvIssues.map((issue, index) => (
+      <div
+        key={`${issue.title}-${index}`}
+        className={
+          issue.severity === "high"
+            ? "rounded-3xl border-2 border-red-300 bg-gradient-to-br from-red-50 to-orange-50 p-5 shadow-[0_14px_35px_rgba(220,38,38,0.18)]"
+            : issue.severity === "medium"
+            ? "rounded-3xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-5 shadow-[0_14px_35px_rgba(249,115,22,0.16)]"
+            : "rounded-3xl border border-blue-200 bg-blue-50 p-5 shadow-sm"
+        }
+      >
+        <div className="flex items-start gap-4">
+          <span
+            className={
+              issue.severity === "high"
+                ? "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-xl font-black text-white shadow-lg"
+                : issue.severity === "medium"
+                ? "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-xl font-black text-white shadow-lg"
+                : "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-xl font-black text-white shadow-lg"
+            }
+          >
+            !
+          </span>
+
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <p
+                className={
+                  issue.severity === "high"
+                    ? "text-lg font-black leading-tight text-red-800"
+                    : issue.severity === "medium"
+                    ? "text-lg font-black leading-tight text-orange-800"
+                    : "text-lg font-black leading-tight text-blue-800"
+                }
+              >
+                {index + 1}. {issue.title}
+              </p>
+
+              <span
+                className={
+                  issue.severity === "high"
+                    ? "rounded-full bg-red-600 px-3 py-1 text-[10px] font-black uppercase text-white"
+                    : issue.severity === "medium"
+                    ? "rounded-full bg-orange-500 px-3 py-1 text-[10px] font-black uppercase text-white"
+                    : "rounded-full bg-blue-500 px-3 py-1 text-[10px] font-black uppercase text-white"
+                }
+              >
+                {issue.severity} risk
+              </span>
+            </div>
+
+            <p className="mt-2 text-sm font-bold leading-6 text-slate-700">
+              {issue.detail}
+            </p>
+
+            <div className="mt-4 rounded-2xl bg-white p-4 ring-1 ring-red-100">
+              <p className="text-xs font-black uppercase tracking-wide text-red-500">
+                What to fix
+              </p>
+              <p className="mt-1 text-sm font-black leading-6 text-slate-950">
+                {issue.fix}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+  )}
+</div>
 
         {analyzedScore !== null && (
   <div

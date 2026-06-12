@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, type PointerEvent } from "react";
+import { useEffect, useMemo, useState, type PointerEvent } from "react";
+import { checkSubscription } from "@/lib/checkSubscription";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -28,6 +29,7 @@ type Job = {
   tags?: string[];
 };
 
+const DAILY_FREE_AUTO_APPLY_LIMIT = 10;
 const demoJobs: Job[] = [
   {
     id: 1,
@@ -532,6 +534,8 @@ export default function JobsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState("Ready");
   const [saving, setSaving] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+const [autoApplyCount, setAutoApplyCount] = useState(0);
   
   const [searching, setSearching] = useState(false);
   const [filesSaved, setFilesSaved] = useState(false);
@@ -561,6 +565,26 @@ export default function JobsPage() {
   const filteredLocationSuggestions = useMemo(() => {
     return getSmartLocationSuggestions(location);
   }, [location]);
+  useEffect(() => {
+  const loadAutoApplyAccess = async () => {
+    if (!session?.user?.email) {
+      setIsSubscribed(false);
+      setAutoApplyCount(0);
+      return;
+    }
+
+    const hasAccess = await checkSubscription(session.user.email);
+    setIsSubscribed(hasAccess);
+
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `jobify_auto_apply_${session.user.email}_${today}`;
+    const savedCount = Number(localStorage.getItem(key) || "0");
+
+    setAutoApplyCount(savedCount);
+  };
+
+  loadAutoApplyAccess();
+}, [session?.user?.email]);
 
   const nextJob = () => {
     setMessage("Ready");
@@ -677,6 +701,16 @@ const handleSkip = () => {
 
   void saveApplication("skipped", jobSnapshot, true);
 };
+const increaseFreeAutoApplyUsage = () => {
+  if (!session?.user?.email) return;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `jobify_auto_apply_${session.user.email}_${today}`;
+  const nextCount = autoApplyCount + 1;
+
+  localStorage.setItem(key, String(nextCount));
+  setAutoApplyCount(nextCount);
+};
 
 const handleApply = () => {
   if (!session?.user?.email) {
@@ -695,6 +729,13 @@ const handleApply = () => {
     setSetupOpen(true);
     return;
   }
+  if (!isSubscribed && autoApplyCount >= DAILY_FREE_AUTO_APPLY_LIMIT) {
+  alert(
+    "You have used your 10 free AI Auto Apply applications today. Upgrade to continue applying."
+  );
+  router.push("/pricing?upgrade=auto-apply-limit");
+  return;
+}
 
   if (!currentJob) return;
 
@@ -703,6 +744,9 @@ const handleApply = () => {
   setCardAction("right");
   setMessage(`Applied to ${jobSnapshot.company}`);
   moveToNextJobWithSwipe();
+  if (!isSubscribed) {
+  increaseFreeAutoApplyUsage();
+}
 
 
   void (async () => {
