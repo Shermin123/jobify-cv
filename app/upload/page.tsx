@@ -502,6 +502,11 @@ highlight: undefined,
       );
     });
   };
+  const cleanAiText = (value: string) => {
+  return value
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*/g, "");
+};
 
   const generateAll = async () => {
     const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
