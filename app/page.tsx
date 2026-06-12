@@ -381,34 +381,34 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
       <EmojiBackground />
       {showScorePopup && (
-  <div className="fixed inset-x-0 top-[118px] bottom-0 z-[2147483647] flex items-start justify-center overflow-y-auto bg-slate-950/80 px-3 py-4 backdrop-blur-xl sm:top-0 sm:items-center sm:px-4 sm:py-6">
-    <div className="relative w-full max-w-[390px] overflow-hidden rounded-[24px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.45)] sm:max-w-[440px]">
-      <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-red-200 opacity-70 blur-3xl" />
-      <div className="absolute -bottom-24 -left-20 h-52 w-52 rounded-full bg-orange-200 opacity-70 blur-3xl" />
+  <div className="fixed inset-0 z-[2147483647] flex items-center justify-center bg-slate-950/80 px-3 py-4 backdrop-blur-xl">
+    <div className="relative w-full max-w-[360px] overflow-hidden rounded-[26px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.45)] sm:max-w-[420px]">
+      <div className="absolute -right-20 -top-20 h-44 w-44 rounded-full bg-red-200 opacity-70 blur-3xl" />
+      <div className="absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-orange-200 opacity-70 blur-3xl" />
 
-      <div className="relative max-h-[calc(100dvh-150px)] overflow-y-auto p-4 text-center sm:max-h-[88dvh] sm:p-5">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600 text-2xl text-white shadow-lg">
+      <div className="relative flex max-h-[calc(100svh-32px)] flex-col p-4 text-center sm:max-h-[88vh] sm:p-5">
+        <div className="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-xl text-white shadow-lg">
           ⚠️
         </div>
 
-        <p className="mt-3 text-[11px] font-black uppercase tracking-[0.2em] text-red-600">
+        <p className="mt-2 text-[10px] font-black uppercase tracking-[0.22em] text-red-600">
           CV Risk Report
         </p>
 
-        <div className="mt-3 rounded-[22px] bg-slate-950 p-4 text-white">
-          <p className="text-[11px] font-black uppercase tracking-widest text-white/50">
+        <div className="mt-3 rounded-[20px] bg-slate-950 p-3 text-white">
+          <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
             Your CV Score
           </p>
 
           <p
-            className={`mt-1 text-5xl font-black ${
+            className={`mt-1 text-4xl font-black ${
               score >= 70 ? "text-emerald-400" : "text-red-400"
             }`}
           >
             {score}/100
           </p>
 
-          <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/10">
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
                 score >= 70
@@ -418,29 +418,22 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
               style={{ width: `${score}%` }}
             />
           </div>
-          {score < 70 && (
-  <div className="mt-3 rounded-2xl border border-red-300 bg-red-50 px-4 py-3">
-    <p className="text-sm font-black leading-5 text-red-700">
-      You are less likely to get a job with this CV
-    </p>
-  </div>
-)}
         </div>
 
-        <h3 className="mt-4 text-xl font-black leading-tight text-slate-950">
-          {score >= 70
-  ? "Your CV looks stronger"
-  : "You are less likely to get a job with this CV"}
-        </h3>
+        {score < 70 && (
+          <div className="mt-3 rounded-2xl border border-red-300 bg-red-50 px-3 py-2">
+            <p className="text-base font-black leading-5 text-red-700">
+              You are less likely to get a job with this CV
+            </p>
+          </div>
+        )}
 
-        <p className="mt-2 text-sm font-semibold leading-5 text-slate-500">
-          {score >= 70
-            ? "Your CV has some good signs, but you can still improve it for each job."
-            : "These issues can reduce your interview chances because ATS systems and recruiters may not see enough proof, keywords, or job relevance."}
+        <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+          These issues can reduce interview chances because ATS systems and recruiters may not see enough proof, keywords, or job relevance.
         </p>
 
-        <div className="mt-4 max-h-[280px] space-y-2 overflow-y-auto pr-1 text-left">
-          {cvIssues.slice(0, 5).map((issue, index) => (
+        <div className="mt-3 flex-1 space-y-2 overflow-y-auto pr-1 text-left">
+          {cvIssues.slice(0, 3).map((issue, index) => (
             <div
               key={`${issue.title}-${index}`}
               className={
@@ -451,7 +444,7 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
                   : "rounded-2xl border border-blue-200 bg-blue-50 p-3"
               }
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-2.5">
                 <div
                   className={
                     issue.severity === "high"
@@ -464,45 +457,47 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
                   !
                 </div>
 
-                <div>
-                  <p
-                    className={
-                      issue.severity === "high"
-                        ? "text-sm font-black leading-tight text-red-800"
-                        : issue.severity === "medium"
-                        ? "text-sm font-black leading-tight text-orange-800"
-                        : "text-sm font-black leading-tight text-blue-800"
-                    }
-                  >
+                <div className="min-w-0">
+                  <p className="text-sm font-black leading-tight text-slate-950">
                     {index + 1}. {issue.title}
                   </p>
 
-                  <p className="mt-1 text-xs font-semibold leading-4 text-slate-600">
+                  <p className="mt-1 text-[11px] font-semibold leading-4 text-slate-600">
                     {issue.detail}
                   </p>
 
-                  <p className="mt-2 rounded-xl bg-white px-3 py-2 text-xs font-black leading-4 text-slate-900">
+                  <p className="mt-2 rounded-xl bg-white px-2.5 py-2 text-[11px] font-black leading-4 text-slate-900">
                     Fix: {issue.fix}
                   </p>
                 </div>
               </div>
             </div>
           ))}
+
+          {cvIssues.length > 3 && (
+            <div className="rounded-2xl border border-red-200 bg-white px-3 py-2 text-center">
+              <p className="text-xs font-black text-red-600">
+                + {cvIssues.length - 3} more CV issues found
+              </p>
+            </div>
+          )}
         </div>
 
-        <button
-          onClick={goToCVGenerator}
-          className="mt-4 w-full rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 py-3 text-sm font-black text-white shadow-lg active:scale-[0.98]"
-        >
-          Fix My CV Now →
-        </button>
+        <div className="mt-3 shrink-0">
+          <button
+            onClick={goToCVGenerator}
+            className="w-full rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 py-3 text-sm font-black text-white shadow-lg active:scale-[0.98]"
+          >
+            Fix My CV Now →
+          </button>
 
-        <button
-          onClick={() => setShowScorePopup(false)}
-          className="mt-3 text-sm font-black text-slate-500"
-        >
-          Continue checking
-        </button>
+          <button
+            onClick={() => setShowScorePopup(false)}
+            className="mt-2 text-sm font-black text-slate-500"
+          >
+            Continue checking
+          </button>
+        </div>
       </div>
     </div>
   </div>
