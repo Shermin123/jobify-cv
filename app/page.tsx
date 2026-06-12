@@ -381,8 +381,8 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
       <EmojiBackground />
       {showScorePopup && (
-  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/75 px-4 backdrop-blur-xl">
-    <div className="relative w-full max-w-sm overflow-hidden rounded-[2rem] bg-white p-6 text-center shadow-2xl animate-cinemaIn">
+  <div className="fixed inset-0 z-[999] flex items-start justify-center overflow-y-auto bg-slate-950/75 px-3 py-4 backdrop-blur-xl sm:items-center sm:px-4">
+    <div className="relative w-full max-w-[360px] max-h-[92dvh] overflow-y-auto rounded-[1.5rem] bg-white p-4 text-center shadow-2xl animate-cinemaIn sm:p-5">
       <div className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-red-200 blur-3xl opacity-70" />
       <div className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-orange-200 blur-3xl opacity-70" />
 
@@ -644,7 +644,7 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
         {/* ================= CV SCORE ================= */}
 <div
   id="cv-score"
-  className="relative overflow-hidden bg-white border border-red-100 rounded-[2rem] p-5 md:p-6 text-left shadow-2xl"
+  className="relative overflow-hidden bg-white border border-red-100 rounded-[1.5rem] p-3 md:p-5 text-left shadow-xl"
 >
   <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-red-100 blur-3xl opacity-80" />
   <div className="absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-orange-100 blur-3xl opacity-70" />
@@ -754,8 +754,8 @@ const freeChecksLeft = Math.max(3 - freeChecksUsed, 0);
   </div>
 </div>
 
-    <div className="mt-5 grid md:grid-cols-[0.8fr_1fr] gap-5">
-      <div className="bg-slate-950 text-white rounded-3xl p-5 border border-red-500/20">
+    <div className="mt-4 grid md:grid-cols-[0.75fr_1fr] gap-4">
+      <div className="bg-slate-950 text-white rounded-2xl p-4 border border-red-500/20">
         <p className="text-sm text-white/50">CV Job-Readiness Score</p>
 
         {analyzing ? (
