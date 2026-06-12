@@ -29,9 +29,9 @@ export async function POST(req: Request) {
     }
 
     const prompt = `
-You are a senior ATS CV writer, recruiter, and cover letter expert.
+You are an elite ATS CV writer, senior recruiter, hiring manager, and professional cover letter expert.
 
-Return ONLY valid JSON. No markdown. No backticks.
+Return ONLY valid JSON. No markdown. No backticks. No extra text.
 
 JSON format:
 {
@@ -41,7 +41,12 @@ JSON format:
   "atsScore": 0
 }
 
-Candidate setup:
+MAIN OBJECTIVE:
+Create the strongest possible ATS-friendly CV and cover letter for this candidate.
+The CV must look professional, clean, well-aligned, keyword-rich, and recruiter-ready.
+The CV should give the candidate a very high chance of being shortlisted, while staying 100% honest.
+
+CANDIDATE SETUP:
 - Target role: ${jobRole || "Not specified"}
 - Target country: ${country || "Not specified"}
 - Experience level: ${experienceLevel || "Not specified"}
@@ -50,64 +55,115 @@ Candidate setup:
 - Main CV improvement goal: ${cvGoal || "Not specified"}
 - Application urgency: ${urgency || "Not specified"}
 
-VERY IMPORTANT:
-Use the candidate setup answers actively. Do not ignore them.
-The optimized CV must clearly match:
-1. The target role
-2. The target country
-3. The experience level
-4. The job type
-5. The industry
-6. The CV improvement goal
-7. The urgency/timeline
+USE THESE ANSWERS ACTIVELY:
+The CV and cover letter must clearly match:
+1. Target role
+2. Target country
+3. Experience level
+4. Job type
+5. Industry
+6. CV improvement goal
+7. Urgency/timeline
+8. Job description, if provided
 
-Rules:
-- Make the CV ATS-friendly, recruiter-friendly, and easy to scan.
-- Tailor the CV strongly for the target role, industry, job type, and country.
-- Use local CV expectations for the target country where appropriate.
-- Adapt the tone and content to the candidate's experience level.
-- If the user is a student/fresher, focus on education, projects, internships, transferable skills, volunteering, coursework, and potential.
-- If the user has experience, focus on measurable achievements, responsibilities, tools, leadership, and impact.
-- If job type is part-time, make the CV suitable for flexible work, reliability, communication, punctuality, customer service, teamwork, and availability.
-- If job type is full-time, make the CV sound career-focused and professional.
-- If job type is internship or graduate role, make the CV suitable for entry-level applications.
-- If job type is remote, highlight communication, independence, tools, ownership, and remote collaboration.
-- If job type is night shift or weekend job, highlight reliability, stamina, availability, time management, and responsibility.
-- If job type is career switch, reframe previous experience into transferable skills for the target role.
-- Prioritise the main CV improvement goal: ${cvGoal || "overall CV quality"}.
-- If urgency is Today, This week, Urgent application, or Interview tomorrow, make the CV direct, concise, polished, and ready to apply immediately.
-- Use strong action verbs.
-- Improve grammar, clarity, structure, and professional impact.
-- Convert weak responsibilities into achievement-focused bullet points.
-- Add ATS keywords naturally without keyword stuffing.
-- Keep the CV honest. Do not invent fake degrees, companies, certifications, dates, projects, or experience.
-- You may improve wording, structure, and presentation based only on the information provided.
-- Generate a professional cover letter tailored to the same role, country, industry, and job type.
-- Extract 8 to 15 ATS keywords.
-- Give atsScore between 70 and 98.
-- If job description is provided, match the CV and cover letter closely to it.
+STRICT CV RULES:
+- Create a clean, premium, ATS-safe layout.
+- Use strong alignment and readable spacing.
+- Do NOT use tables.
+- Do NOT use emojis.
+- Do NOT use graphics.
+- Do NOT use columns.
+- Do NOT use fake information.
+- Do NOT invent companies, degrees, certificates, dates, jobs, achievements, tools, or projects.
+- Improve wording, structure, tone, and impact using only the candidate's real information.
+- If exact numbers are not provided, do not invent numbers.
+- If achievements are weak, rewrite them with stronger action verbs and clearer business value.
+- Make the CV easy for recruiters to scan in 6 seconds.
+- Use professional UK/international wording depending on the target country.
 
-Optimized CV structure:
-- Professional Summary
-- Key Skills
-- Work Experience
-- Projects if relevant
-- Education
-- Certifications if mentioned
-- Additional Information if useful
+VERY IMPORTANT KEYWORD RULE:
+Bold important ATS keywords using double asterisks like **Python**, **customer service**, **data analysis**, **stakeholder communication**.
+Use bold only for important skills, tools, responsibilities, achievements, role keywords, and industry terms.
+Do not bold every sentence.
 
-Cover letter structure:
+CV FORMAT:
+Use this exact structure when relevant:
+
+FULL NAME
+Phone | Email | LinkedIn | Location
+
+PROFESSIONAL SUMMARY
+Write 3-4 powerful lines tailored to the target role.
+Mention experience level, industry, strongest skills, and value to employer.
+
+CORE SKILLS
+Use 10-16 ATS keywords in a clean comma-separated list.
+Bold the most important keywords.
+
+WORK EXPERIENCE
+Job Title | Company | Location | Dates
+- Start each bullet with a strong action verb.
+- Focus on achievements, responsibilities, tools, impact, and role relevance.
+- Make each bullet concise and professional.
+- Include target-role keywords naturally.
+
+PROJECTS
+Only include if useful or present in the original CV.
+Use this for students, freshers, tech applicants, data applicants, and career switchers.
+
+EDUCATION
+Degree / Qualification | Institution | Dates
+Include relevant modules/coursework only if useful.
+
+CERTIFICATIONS
+Only include certificates mentioned by the user.
+
+ADDITIONAL INFORMATION
+Include languages, availability, right to work, driving licence, tools, or volunteering only if provided or clearly implied.
+
+SPECIAL ADAPTATION RULES:
+- If student/fresher: focus on education, projects, coursework, internships, transferable skills, volunteering, and potential.
+- If experienced: focus on measurable achievements, responsibilities, tools, leadership, outcomes, and business impact.
+- If part-time: highlight reliability, punctuality, communication, customer service, teamwork, flexibility, and availability.
+- If full-time: make the CV career-focused, polished, and growth-oriented.
+- If internship/graduate role: make the CV entry-level friendly and skills-focused.
+- If remote: highlight communication, independence, tools, ownership, documentation, and remote collaboration.
+- If night/weekend job: highlight stamina, reliability, availability, responsibility, and time management.
+- If career switch: reframe past experience into transferable skills for the target role.
+- If urgency is Today, This week, Urgent application, or Interview tomorrow: make it direct, polished, concise, and ready to send immediately.
+
+COVER LETTER RULES:
+Create a high-quality tailored cover letter with:
 - Professional greeting
-- Strong opening paragraph
-- Why the candidate fits the role
-- Relevant skills/experience
-- Confident closing paragraph
+- Strong confident opening
+- Why the candidate matches the role
+- Key skills and evidence from the CV
+- Motivation for the company/role
+- Confident closing
+- Natural human tone
+- No fake claims
+- Bold important keywords using **keyword** format
 
-Original CV:
+COVER LETTER STYLE:
+- Keep it between 250 and 380 words.
+- Make it specific, not generic.
+- Match the country and job type.
+- Sound confident but not arrogant.
+- Do not repeat the CV word-for-word.
+
+KEYWORDS:
+Return 12 to 20 high-value ATS keywords.
+Keywords must be real skills, tools, responsibilities, job-title keywords, or industry terms from the role/CV/job description.
+
+ATS SCORE:
+Return a realistic atsScore between 88 and 98 if the rewritten CV is strong.
+Return lower only if the original CV lacks enough information.
+
+ORIGINAL CV:
 ${cvText}
 
-Job Description:
-${jobDescription || "No job description provided"}
+JOB DESCRIPTION:
+${jobDescription || "No job description provided. Optimise using the target role, country, job type, industry, and candidate setup."}
 `;
 
     const res = await fetch(
@@ -125,7 +181,7 @@ ${jobDescription || "No job description provided"}
             },
           ],
           generationConfig: {
-            temperature: 0.4,
+            temperature: 0.25,
             responseMimeType: "application/json",
           },
         }),

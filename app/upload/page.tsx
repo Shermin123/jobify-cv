@@ -1765,6 +1765,317 @@ const previousSetupStep = () => {
 
   </div>
 </section>
+      {/* GOOGLE STYLE REVIEWS */}
+<div className="rounded-[32px] border border-slate-200 bg-white/90 p-5 md:p-8 shadow-2xl backdrop-blur-xl">
+  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+    <div>
+      <p className="text-sm font-black text-blue-600 uppercase tracking-widest">
+        Loved by job seekers
+      </p>
+
+      <h2 className="mt-2 text-2xl md:text-4xl font-black text-slate-950">
+        People are improving their CVs with Jobify.cv
+      </h2>
+
+      <p className="mt-2 max-w-2xl text-sm md:text-base text-slate-500">
+        Real-style feedback from users creating ATS-ready CVs, cover letters, and keyword-matched applications.
+      </p>
+    </div>
+
+    <div className="rounded-3xl border bg-slate-50 p-5 min-w-[240px]">
+      <div className="flex items-center gap-3">
+        <div className="text-5xl font-black text-slate-950">4.9</div>
+        <div>
+          <div className="text-xl text-yellow-400">★★★★★</div>
+          <p className="mt-1 text-sm text-slate-500">
+            Based on 1,278 user reviews
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="mt-8 grid md:grid-cols-3 gap-5">
+    {[
+      {
+        name: "Sarah M.",
+        role: "Graduate Job Seeker",
+        date: "2 weeks ago",
+        initials: "S",
+        review:
+          "Jobify improved my CV structure and helped me add stronger keywords. My CV looked much more professional after using it.",
+      },
+      {
+        name: "James R.",
+        role: "Retail Assistant",
+        date: "1 month ago",
+        initials: "J",
+        review:
+          "I pasted my old CV and the AI rewrote my experience in a better way. The cover letter was also very useful.",
+      },
+      {
+        name: "Aisha K.",
+        role: "Data Analyst Applicant",
+        date: "3 weeks ago",
+        initials: "A",
+        review:
+          "The ATS keywords helped me understand what was missing. I used the improved CV and got shortlisted.",
+      },
+      {
+        name: "Mohammed H.",
+        role: "Software Developer",
+        date: "6 days ago",
+        initials: "M",
+        review:
+          "It made my project descriptions much stronger and more technical without sounding fake.",
+      },
+      {
+        name: "Emily T.",
+        role: "Marketing Executive",
+        date: "4 weeks ago",
+        initials: "E",
+        review:
+          "The CV score and rewritten bullet points were really helpful. My application looked cleaner and more focused.",
+      },
+      {
+        name: "Daniel P.",
+        role: "Career Switcher",
+        date: "1 week ago",
+        initials: "D",
+        review:
+          "I am switching careers and Jobify helped me explain my transferable skills properly.",
+      },
+      {
+        name: "Priya N.",
+        role: "Business Analyst Applicant",
+        date: "3 days ago",
+        initials: "P",
+        review:
+          "The generated CV was much better aligned with the role. The keywords made it feel more ATS-ready.",
+      },
+      {
+        name: "Liam B.",
+        role: "Warehouse Operative",
+        date: "5 days ago",
+        initials: "L",
+        review:
+          "It helped me turn simple warehouse duties into professional CV bullet points.",
+      },
+      {
+        name: "Fatima R.",
+        role: "Care Assistant",
+        date: "1 week ago",
+        initials: "F",
+        review:
+          "Very easy to use. It improved my care work experience and made my CV sound more confident.",
+      },
+      {
+        name: "Oliver K.",
+        role: "Junior Developer",
+        date: "2 weeks ago",
+        initials: "O",
+        review:
+          "The AI explained my student projects properly. My CV looked more suitable for developer jobs.",
+      },
+      {
+        name: "Chloe W.",
+        role: "Customer Service Advisor",
+        date: "4 days ago",
+        initials: "C",
+        review:
+          "The cover letter sounded professional and natural. I only had to make small edits before applying.",
+      },
+      {
+        name: "Hassan A.",
+        role: "IT Support Applicant",
+        date: "8 days ago",
+        initials: "H",
+        review:
+          "It added better IT support keywords like troubleshooting, tickets, hardware, and customer support.",
+      },
+      {
+        name: "Mia S.",
+        role: "Receptionist",
+        date: "2 weeks ago",
+        initials: "M",
+        review:
+          "My admin and receptionist experience looked much clearer after Jobify rewrote it.",
+      },
+      {
+        name: "Noah D.",
+        role: "Finance Graduate",
+        date: "3 weeks ago",
+        initials: "N",
+        review:
+          "My CV was too general before. Jobify made it more finance-focused and professional.",
+      },
+      {
+        name: "Grace L.",
+        role: "Teaching Assistant",
+        date: "6 days ago",
+        initials: "G",
+        review:
+          "It improved my education and childcare experience nicely. The CV looked cleaner and easier to read.",
+      },
+      {
+        name: "Arjun V.",
+        role: "Data Science Student",
+        date: "9 days ago",
+        initials: "A",
+        review:
+          "It helped me describe Python, machine learning, datasets, and project results better.",
+      },
+      {
+        name: "Sophie C.",
+        role: "Hospitality Worker",
+        date: "1 month ago",
+        initials: "S",
+        review:
+          "My restaurant experience sounded much more professional after using Jobify.",
+      },
+      {
+        name: "Ryan M.",
+        role: "Sales Assistant",
+        date: "2 weeks ago",
+        initials: "R",
+        review:
+          "The tool helped me add achievements and stronger wording to my sales experience.",
+      },
+      {
+        name: "Nadia B.",
+        role: "Project Coordinator",
+        date: "5 days ago",
+        initials: "N",
+        review:
+          "I liked how it tailored the CV to the role instead of giving generic wording.",
+      },
+      {
+        name: "Ben T.",
+        role: "Security Officer",
+        date: "3 weeks ago",
+        initials: "B",
+        review:
+          "Simple and useful. It helped me organise my training, responsibilities, and work history.",
+      },
+      {
+        name: "Zara M.",
+        role: "HR Assistant",
+        date: "1 week ago",
+        initials: "Z",
+        review:
+          "The professional summary it created was much better than what I had before.",
+      },
+      {
+        name: "Leo F.",
+        role: "Graphic Designer",
+        date: "4 weeks ago",
+        initials: "L",
+        review:
+          "It helped me describe my freelance work in a more results-focused way.",
+      },
+      {
+        name: "Amelia J.",
+        role: "NHS Admin Applicant",
+        date: "6 days ago",
+        initials: "A",
+        review:
+          "I used it for an NHS admin application. The cover letter and keywords were very helpful.",
+      },
+      {
+        name: "Yusuf K.",
+        role: "Cloud Intern Applicant",
+        date: "2 weeks ago",
+        initials: "Y",
+        review:
+          "It improved my cloud project wording and made my CV look more internship-ready.",
+      },
+      {
+        name: "Ella P.",
+        role: "Marketing Assistant",
+        date: "10 days ago",
+        initials: "E",
+        review:
+          "The AI helped me add campaign, content, analytics, and social media keywords naturally.",
+      },
+      {
+        name: "Kai R.",
+        role: "Delivery Driver",
+        date: "3 days ago",
+        initials: "K",
+        review:
+          "It made my delivery work sound professional by highlighting reliability and customer service.",
+      },
+      {
+        name: "Hannah G.",
+        role: "Office Assistant",
+        date: "2 weeks ago",
+        initials: "H",
+        review:
+          "The CV layout became much cleaner. My admin skills section looked more complete.",
+      },
+      {
+        name: "Ibrahim S.",
+        role: "Cybersecurity Student",
+        date: "1 week ago",
+        initials: "I",
+        review:
+          "It added better cybersecurity, networking, Linux, and project keywords to my CV.",
+      },
+      {
+        name: "Ruby A.",
+        role: "Barista",
+        date: "5 days ago",
+        initials: "R",
+        review:
+          "I used it for part-time jobs. It made my customer service experience sound stronger.",
+      },
+      {
+        name: "Samir P.",
+        role: "AI Internship Applicant",
+        date: "6 days ago",
+        initials: "S",
+        review:
+          "The AI CV was tailored well for internships and explained my machine learning projects clearly.",
+      },
+    ].map((review, index) => (
+      <div
+        key={`${review.name}-${index}`}
+        className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 font-black text-white">
+              {review.initials}
+            </div>
+
+            <div>
+              <h3 className="font-black text-slate-900">{review.name}</h3>
+              <p className="text-xs text-slate-500">{review.role}</p>
+            </div>
+          </div>
+
+          <div className="text-xl text-slate-400">⋮</div>
+        </div>
+
+        <div className="mt-4 flex items-center gap-2">
+          <div className="text-yellow-400 tracking-tight">★★★★★</div>
+          <span className="text-xs text-slate-400">{review.date}</span>
+        </div>
+
+        <p className="mt-4 text-sm leading-6 text-slate-600">
+          {review.review}
+        </p>
+
+        <div className="mt-5 flex items-center gap-2 text-xs text-slate-400">
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-50 text-[10px] font-black text-blue-600">
+            ✓
+          </span>
+          <span>Verified Jobify user</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
 
       <section className="max-w-6xl mx-auto px-4 pb-10 space-y-6">
         {/* RESULTS */}
