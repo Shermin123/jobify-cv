@@ -26,7 +26,7 @@ const [cvIssues, setCvIssues] = useState<CvIssue[]>([]);
   const [analyzing, setAnalyzing] = useState(false);
   const [showScorePopup, setShowScorePopup] = useState(false);
   const [showScoreAd, setShowScoreAd] = useState(false);
-const [scoreAdSeconds, setScoreAdSeconds] = useState(4);
+const [scoreAdSeconds, setScoreAdSeconds] = useState(6);
 
   const router = useRouter();
   const { data: session } = useSession();
@@ -342,9 +342,9 @@ useEffect(() => {
 
   setAnalyzing(true);
 setShowScoreAd(true);
-setScoreAdSeconds(4);
+setScoreAdSeconds(6);
 
-let seconds = 4;
+let seconds = 6;
 
 const countdown = setInterval(() => {
   seconds -= 1;
@@ -372,7 +372,7 @@ setTimeout(() => {
   }
 
   setAnalyzing(false);
-}, 4000);
+}, 6000);
 };
 
 const goToCVGenerator = () => {
@@ -411,6 +411,40 @@ const getRiskMessage = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
       <EmojiBackground />
+      {showScoreAd && (
+  <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-4 py-4 backdrop-blur-xl">
+    <div className="w-full max-w-[390px] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)]">
+      <div className="p-4 text-center">
+        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
+          Advertisement
+        </p>
+
+        <div className="mt-3 flex h-[250px] w-full items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
+          <div className="text-center">
+            <p className="text-sm font-black text-slate-500">
+              Ad Space
+            </p>
+            <p className="mt-1 text-xs font-semibold text-slate-400">
+              300 × 250 display ad
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm font-black text-slate-900">
+          Checking your CV score...
+        </p>
+
+        <p className="mt-1 text-xs font-semibold text-slate-500">
+          Result showing in {scoreAdSeconds}s
+        </p>
+
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-blue-600 to-indigo-600" />
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       {showScorePopup &&
   typeof document !== "undefined" &&
   createPortal(
