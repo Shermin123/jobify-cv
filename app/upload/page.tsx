@@ -2281,77 +2281,7 @@ const previousSetupStep = () => {
             </div>
             
 
-            {(fullName ||
-  country ||
-  jobRole ||
-  experienceLevel ||
-  jobType ||
-  educationLevel ||
-  industry ||
-  urgency ||
-  mainStrength ||
-  cvGoal ||
-  certificates ||
-  portfolio ||
-  workAvailability ||
-  toneStyle ||
-  coverLetterNeed) && (
-  <div
-    id="ai-setup-summary"
-    className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-4"
-  >
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm font-black text-blue-700">
-        🤖 AI setup loaded from your answers
-      </p>
-
-      <button
-        type="button"
-        onClick={() => {
-          setSetupStep(0);
-          setShowSetupPopup(true);
-        }}
-        className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white transition hover:bg-blue-700"
-      >
-        Edit answers
-      </button>
-    </div>
-
-    <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {[
-        ["Name", fullName],
-        ["Country", country],
-        ["Role", jobRole],
-        ["Level", experienceLevel],
-        ["Type", jobType],
-        ["Education", educationLevel],
-        ["Industry", industry],
-        ["Focus", cvGoal],
-        ["Applying", urgency],
-        ["Strength", mainStrength],
-        ["Certificates", certificates],
-        ["Portfolio", portfolio],
-        ["Availability", workAvailability],
-        ["Style", toneStyle],
-        ["Cover Letter", coverLetterNeed],
-      ]
-        .filter((item) => item[1])
-        .map(([label, value]) => (
-          <div
-            key={label}
-            className="min-w-0 rounded-2xl border border-blue-100 bg-white px-4 py-3 shadow-sm"
-          >
-            <p className="text-[10px] font-black uppercase tracking-wide text-blue-500">
-              {label}
-            </p>
-            <p className="mt-1 truncate text-sm font-black text-slate-800">
-              {value}
-            </p>
-          </div>
-        ))}
-    </div>
-  </div>
-)}
+            
 
             <div>
               <label className="flex items-center justify-between mb-2">
@@ -2470,8 +2400,86 @@ Company requirements"
               </div>
             </div>
 
-            <button
-              onClick={generateAll}
+{(fullName ||
+  country ||
+  jobRole ||
+  experienceLevel ||
+  jobType ||
+  educationLevel ||
+  industry ||
+  urgency ||
+  mainStrength ||
+  cvGoal ||
+  certificates ||
+  portfolio ||
+  workAvailability ||
+  toneStyle ||
+  coverLetterNeed) && (
+  <div
+    id="ai-setup-summary"
+    className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-4"
+  >
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm font-black text-blue-700">
+        🤖 AI setup loaded from your answers
+      </p>
+
+      <button
+        type="button"
+        onClick={() => {
+          setSetupStep(0);
+          setShowSetupPopup(true);
+        }}
+        className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white transition hover:bg-blue-700"
+      >
+        Edit answers
+      </button>
+    </div>
+
+    <details className="mt-3">
+      <summary className="cursor-pointer text-xs font-black text-slate-500">
+        View setup details
+      </summary>
+
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {[
+          ["Name", fullName],
+          ["Country", country],
+          ["Role", jobRole],
+          ["Level", experienceLevel],
+          ["Type", jobType],
+          ["Education", educationLevel],
+          ["Industry", industry],
+          ["Focus", cvGoal],
+          ["Applying", urgency],
+          ["Strength", mainStrength],
+          ["Certificates", certificates],
+          ["Portfolio", portfolio],
+          ["Availability", workAvailability],
+          ["Style", toneStyle],
+          ["Cover Letter", coverLetterNeed],
+        ]
+          .filter((item) => item[1])
+          .map(([label, value]) => (
+            <div
+              key={label}
+              className="min-w-0 rounded-2xl border border-blue-100 bg-white px-4 py-3 shadow-sm"
+            >
+              <p className="text-[10px] font-black uppercase tracking-wide text-blue-500">
+                {label}
+              </p>
+              <p className="mt-1 truncate text-sm font-black text-slate-800">
+                {value}
+              </p>
+            </div>
+          ))}
+      </div>
+    </details>
+  </div>
+)}
+
+<button
+  onClick={generateAll}
               disabled={
                 loading ||
                 !text ||
