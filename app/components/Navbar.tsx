@@ -37,13 +37,15 @@ export default function Navbar() {
             href="/"
             className="flex shrink-0 items-center gap-2 transition active:scale-[0.98]"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-sm">
-              J
-            </div>
+            <img
+              src="/j-logo.png"
+              alt="Jobifycv logo"
+              className="h-12 w-12 shrink-0 object-contain"
+            />
 
             <div className="leading-tight">
               <p className="text-lg font-black tracking-tight text-slate-950">
-                Jobify<span className="text-blue-600">.cv</span>
+                Jobify<span className="text-blue-600">cv.co</span>
               </p>
               <p className="text-[11px] font-semibold text-slate-400">
                 AI CV Builder
@@ -51,7 +53,6 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* DESKTOP NAV */}
           <nav className="hidden flex-1 items-center justify-center lg:flex">
             <div className="flex items-center gap-1 rounded-full bg-slate-100 p-1">
               {links.map((link) => (
@@ -70,7 +71,6 @@ export default function Navbar() {
             </div>
           </nav>
 
-          {/* DESKTOP ACTIONS */}
           <div className="hidden shrink-0 items-center gap-2 md:flex">
             <Link
               href="/pricing"
@@ -103,7 +103,6 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* MOBILE ONE-LINE ACTIONS */}
           <div className="flex shrink-0 items-center gap-2 md:hidden">
             <Link
               href="/upload"
