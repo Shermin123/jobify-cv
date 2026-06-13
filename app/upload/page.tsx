@@ -2296,119 +2296,62 @@ const previousSetupStep = () => {
   workAvailability ||
   toneStyle ||
   coverLetterNeed) && (
-              <div
-  id="ai-setup-summary"
-  className="rounded-3xl border border-blue-100 bg-blue-50 p-4"
->
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-  <p className="text-sm font-black text-blue-700">
-    🤖 AI setup loaded from your answers
-  </p>
-
-  <button
-    type="button"
-    onClick={() => {
-      setSetupStep(0);
-      setShowSetupPopup(true);
-    }}
-    className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white hover:bg-blue-700 transition"
+  <div
+    id="ai-setup-summary"
+    className="rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-4"
   >
-    Edit answers
-  </button>
-</div>
-      {fullName && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Name: {fullName}
-  </span>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm font-black text-blue-700">
+        🤖 AI setup loaded from your answers
+      </p>
+
+      <button
+        type="button"
+        onClick={() => {
+          setSetupStep(0);
+          setShowSetupPopup(true);
+        }}
+        className="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white transition hover:bg-blue-700"
+      >
+        Edit answers
+      </button>
+    </div>
+
+    <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {[
+        ["Name", fullName],
+        ["Country", country],
+        ["Role", jobRole],
+        ["Level", experienceLevel],
+        ["Type", jobType],
+        ["Education", educationLevel],
+        ["Industry", industry],
+        ["Focus", cvGoal],
+        ["Applying", urgency],
+        ["Strength", mainStrength],
+        ["Certificates", certificates],
+        ["Portfolio", portfolio],
+        ["Availability", workAvailability],
+        ["Style", toneStyle],
+        ["Cover Letter", coverLetterNeed],
+      ]
+        .filter((item) => item[1])
+        .map(([label, value]) => (
+          <div
+            key={label}
+            className="min-w-0 rounded-2xl border border-blue-100 bg-white px-4 py-3 shadow-sm"
+          >
+            <p className="text-[10px] font-black uppercase tracking-wide text-blue-500">
+              {label}
+            </p>
+            <p className="mt-1 truncate text-sm font-black text-slate-800">
+              {value}
+            </p>
+          </div>
+        ))}
+    </div>
+  </div>
 )}
-
-{country && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Country: {country}
-  </span>
-)}
-
-{jobRole && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Role: {jobRole}
-  </span>
-)}
-
-{educationLevel && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Education: {educationLevel}
-  </span>
-)}
-
-{mainStrength && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Strength: {mainStrength}
-  </span>
-)}
-
-{certificates && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Certificates: {certificates}
-  </span>
-)}
-
-{portfolio && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Portfolio: {portfolio}
-  </span>
-)}
-
-{workAvailability && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Availability: {workAvailability}
-  </span>
-)}
-
-{toneStyle && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Style: {toneStyle}
-  </span>
-)}
-
-{coverLetterNeed && (
-  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-    Cover Letter: {coverLetterNeed}
-  </span>
-)}
-
-                <div className="mt-3 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 text-xs">
-                  {experienceLevel && (
-                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-                      Level: {experienceLevel}
-                    </span>
-                  )}
-
-                  {jobType && (
-                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-                      Type: {jobType}
-                    </span>
-                  )}
-
-                  {industry && (
-                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-                      Industry: {industry}
-                    </span>
-                  )}
-
-                  {cvGoal && (
-                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-                      Focus: {cvGoal}
-                    </span>
-                  )}
-
-                  {urgency && (
-                    <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
-                      Applying: {urgency}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
 
             <div>
               <label className="flex items-center justify-between mb-2">
