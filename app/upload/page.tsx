@@ -48,7 +48,7 @@ const [cvLength, setCvLength] = useState("");
   const [cv, setCv] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [atsScore, setAtsScore] = useState(94);
+  const [atsScore, setAtsScore] = useState(97);
 
   const [displayCv, setDisplayCv] = useState("");
   const [displayCoverLetter, setDisplayCoverLetter] = useState("");
@@ -114,7 +114,7 @@ if (savedGenerated && savedCv && savedCover) {
   setDisplayCv(savedCv.substring(0, 900));
   setDisplayCoverLetter(savedCover.substring(0, 800));
   setKeywords(savedKeywords ? JSON.parse(savedKeywords) : []);
-  setAtsScore(savedAts ? Number(savedAts) : 94);
+  setAtsScore(savedAts ? Number(savedAts) : 97);
   setGenerated(true);
   setTyping(false);
   setShowUnlock(true);
@@ -773,7 +773,7 @@ const finalCv = cleanAiText(rawCv);
 const finalCoverLetter = cleanAiText(rawCoverLetter);
 
       const finalKeywords = data.keywords || [];
-      const finalAtsScore = data.atsScore || 94;
+      const finalAtsScore = data.atsScore || 97;
 
       setCv(finalCv);
 setCoverLetter(finalCoverLetter);
@@ -1499,7 +1499,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 4 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="💼 What job type do you want?"
     value={jobType}
     setValue={setJobType}
@@ -1571,7 +1571,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 8 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="💪 What is your strongest skill?"
     value={mainStrength}
     setValue={setMainStrength}
@@ -1591,7 +1591,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 9 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="🎯 What should your CV focus on?"
     value={cvGoal}
     setValue={setCvGoal}
@@ -1609,7 +1609,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 10 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="📜 Do you have any certificates?"
     value={certificates}
     setValue={setCertificates}
@@ -1625,7 +1625,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 11 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="💻 Do you have projects or portfolio?"
     value={portfolio}
     setValue={setPortfolio}
@@ -1642,7 +1642,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 12 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="🕒 What is your availability?"
     value={workAvailability}
     setValue={setWorkAvailability}
@@ -1659,7 +1659,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 13 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="📄 What CV style do you want?"
     value={toneStyle}
     setValue={setToneStyle}
@@ -1674,6 +1674,7 @@ const previousSetupStep = () => {
     ]}
   />
 )}
+
 
 {setupStep === 14 && (
   <QuestionButtons
@@ -1953,6 +1954,40 @@ const previousSetupStep = () => {
               </div>
             </div>
 
+<div className="rounded-[32px] border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-white to-blue-50 p-5 text-center shadow-2xl">
+  <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-600">
+    ATS success score
+  </p>
+
+  <h2 className="mt-3 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
+    {atsScore}% ATS
+  </h2>
+
+  <p className="mt-3 text-xl font-black leading-snug text-emerald-700 md:text-2xl">
+    Your CV and cover letter are strongly optimised for this job.
+  </p>
+
+  <p className="mx-auto mt-3 max-w-2xl text-sm font-bold leading-6 text-slate-600 md:text-base">
+    This gives you a much stronger chance of passing ATS checks and getting noticed by recruiters.
+  </p>
+
+  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="rounded-2xl border border-emerald-200 bg-white p-4">
+      <p className="text-2xl font-black text-emerald-600">✅</p>
+      <p className="mt-1 text-sm font-black text-slate-900">ATS keywords added</p>
+    </div>
+
+    <div className="rounded-2xl border border-blue-200 bg-white p-4">
+      <p className="text-2xl font-black text-blue-600">🎯</p>
+      <p className="mt-1 text-sm font-black text-slate-900">Matched to role</p>
+    </div>
+
+    <div className="rounded-2xl border border-purple-200 bg-white p-4">
+      <p className="text-2xl font-black text-purple-600">🚀</p>
+      <p className="mt-1 text-sm font-black text-slate-900">Ready to apply</p>
+    </div>
+  </div>
+</div>
             {/* KEYWORDS */}
             <div className="bg-white/90 backdrop-blur-xl border rounded-3xl p-5 shadow-sm">
               <h3 className="font-black text-lg mb-3">
@@ -1977,6 +2012,47 @@ const previousSetupStep = () => {
                 )}
               </div>
             </div>
+            {/* ATS RESULT BANNER */}
+<div className="rounded-[32px] border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-white to-blue-50 p-6 text-center shadow-2xl">
+  <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-600">
+    CV + Cover Letter Result
+  </p>
+
+  <h2 className="mt-3 text-5xl font-black tracking-tight text-emerald-600 md:text-7xl">
+    {atsScore}% ATS
+  </h2>
+
+  <p className="mt-3 text-2xl font-black leading-snug text-slate-950 md:text-3xl">
+    Very high chance of passing ATS screening
+  </p>
+
+  <p className="mx-auto mt-3 max-w-2xl text-base font-bold leading-7 text-slate-600">
+    Your CV and cover letter are strongly optimised for this job role with ATS keywords, better structure, and recruiter-focused wording.
+  </p>
+
+  <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm">
+      <p className="text-3xl">✅</p>
+      <p className="mt-2 text-sm font-black text-slate-900">
+        ATS keywords added
+      </p>
+    </div>
+
+    <div className="rounded-2xl border border-blue-200 bg-white p-4 shadow-sm">
+      <p className="text-3xl">🎯</p>
+      <p className="mt-2 text-sm font-black text-slate-900">
+        Matched to job role
+      </p>
+    </div>
+
+    <div className="rounded-2xl border border-purple-200 bg-white p-4 shadow-sm">
+      <p className="text-3xl">🚀</p>
+      <p className="mt-2 text-sm font-black text-slate-900">
+        Ready to apply
+      </p>
+    </div>
+  </div>
+</div>
 
             {/* DOCUMENT PREVIEW CARDS */}
             <div className="grid lg:grid-cols-2 gap-6">
@@ -3066,6 +3142,64 @@ function QuestionButtons({
             {option}
           </button>
         ))}
+      </div>
+    </div>
+  );
+}
+function MultiSelectQuestionButtons({
+  title,
+  value,
+  setValue,
+  options,
+}: {
+  title: string;
+  value: string;
+  setValue: (value: string) => void;
+  options: string[];
+}) {
+  const selectedValues = value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  const toggleOption = (option: string) => {
+    const alreadySelected = selectedValues.includes(option);
+
+    const updated = alreadySelected
+      ? selectedValues.filter((item) => item !== option)
+      : [...selectedValues, option];
+
+    setValue(updated.join(", "));
+  };
+
+  return (
+    <div>
+      <h3 className="text-lg font-black text-slate-950">{title}</h3>
+
+      <p className="mt-1 text-xs font-bold text-blue-600">
+        You can select more than one.
+      </p>
+
+      <div className="mt-4 grid grid-cols-1 gap-2">
+        {options.map((option) => {
+          const selected = selectedValues.includes(option);
+
+          return (
+            <button
+              key={option}
+              type="button"
+              onClick={() => toggleOption(option)}
+              className={
+                selected
+                  ? "rounded-2xl border border-blue-600 bg-blue-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] active:scale-95"
+                  : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 active:scale-95"
+              }
+            >
+              <span className="mr-2">{selected ? "✅" : "⬜"}</span>
+              {option}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
