@@ -63,7 +63,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-black text-white">
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
