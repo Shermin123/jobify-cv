@@ -290,6 +290,8 @@ useEffect(() => {
     return;
   }
 
+  const isCoverLetter = fileName.toLowerCase().includes("cover");
+
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -299,13 +301,11 @@ useEffect(() => {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
-  const margin = 15;
+  const margin = isCoverLetter ? 18 : 14;
   const maxWidth = pageWidth - margin * 2;
-  const lineHeight = 6;
+  const bottomLimit = pageHeight - 16;
 
-  let y = 15;
-
-  doc.setFontSize(11);
+  let y = isCoverLetter ? 22 : 16;
 
   const keywordList = keywords
     .filter(Boolean)
@@ -320,64 +320,121 @@ useEffect(() => {
       ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
       : null;
 
-  const cleanContent = content
-    .replace(/^Optimised CV\s*/gi, "")
-    .replace(/^Optimized CV\s*/gi, "")
-    .replace(/^Curriculum Vitae\s*/gi, "")
-    .replace(/^Resume\s*/gi, "")
-    .replace(/^Cover Letter\s*/gi, "")
-    .replace(/\*\*(.*?)\*\*/g, "$1")
-    .replace(/\*/g, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  const cleanContent = cleanAiText(content);
 
-  const paragraphs = cleanContent.split("\n");
+  const addPageIfNeeded = () => {
+    if (y > bottomLimit) {
+      doc.addPage();
+      y = 16;
+    }
+  };
 
-  paragraphs.forEach((paragraph) => {
-    const wrappedLines = doc.splitTextToSize(paragraph || " ", maxWidth);
+  const isHeading = (line: string) => {
+    const clean = line.trim();
+    return (
+      clean.length > 2 &&
+      clean.length < 40 &&
+      clean === clean.toUpperCase() &&
+      !clean.includes("|") &&
+      !clean.startsWith("-")
+    );
+  };
 
-    wrappedLines.forEach((line: string) => {
-      if (y > pageHeight - 20) {
-        doc.addPage();
-        y = 20;
-      }
+  const drawNormalLine = (
+    line: string,
+    xStart: number,
+    fontSize: number,
+    lineHeight: number,
+    baseBold = false
+  ) => {
+    const wrapped = doc.splitTextToSize(line, maxWidth - (xStart - margin));
+
+    wrapped.forEach((wrappedLine: string) => {
+      addPageIfNeeded();
 
       if (!keywordRegex) {
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(55, 65, 81);
-        doc.text(line, margin, y);
+        doc.setFont("helvetica", baseBold ? "bold" : "normal");
+        doc.setFontSize(fontSize);
+        doc.setTextColor(baseBold ? 15 : 55, baseBold ? 23 : 65, baseBold ? 42 : 81);
+        doc.text(wrappedLine, xStart, y);
         y += lineHeight;
         return;
       }
 
-      const parts = line.split(keywordRegex);
-      let x = margin;
+      const parts = wrappedLine.split(keywordRegex).filter(Boolean);
+      let x = xStart;
 
-      parts.forEach((part: string) => {
-        if (!part) return;
-
+      parts.forEach((part) => {
         const isKeyword = keywordList.some(
           (keyword) => keyword.toLowerCase() === part.toLowerCase()
         );
 
-        const textWidth = doc.getTextWidth(part);
+        doc.setFont("helvetica", isKeyword || baseBold ? "bold" : "normal");
+        doc.setFontSize(fontSize);
+        doc.setTextColor(isKeyword || baseBold ? 0 : 55, isKeyword || baseBold ? 0 : 65, isKeyword || baseBold ? 0 : 81);
 
-        if (isKeyword) {
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(0, 0, 0);
-        } else {
-          doc.setFont("helvetica", "normal");
-          doc.setTextColor(55, 65, 81);
-        }
-
+        const width = doc.getTextWidth(part);
         doc.text(part, x, y);
-        x += textWidth;
+        x += width;
       });
 
       y += lineHeight;
     });
+  };
 
-    y += 2;
+  const lines = cleanContent.split("\n");
+
+  lines.forEach((rawLine, index) => {
+    const line = rawLine.trimEnd();
+
+    if (!line.trim()) {
+      y += isCoverLetter ? 4 : 3;
+      return;
+    }
+
+    addPageIfNeeded();
+
+    const firstLine = index === 0 && !isCoverLetter;
+    const heading = isHeading(line);
+    const bullet = line.trim().startsWith("-");
+
+    if (firstLine) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(15);
+      doc.setTextColor(15, 23, 42);
+      doc.text(line.trim(), margin, y);
+      y += 7;
+      return;
+    }
+
+    if (heading) {
+      y += 2;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(37, 99, 235);
+      doc.text(line.trim(), margin, y);
+      y += 5.5;
+      return;
+    }
+
+    if (bullet) {
+      const bulletText = line.replace(/^-+\s*/, "");
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.4);
+      doc.setTextColor(55, 65, 81);
+      doc.text("•", margin, y);
+
+      drawNormalLine(bulletText, margin + 5, 9.4, 5.2);
+      return;
+    }
+
+    drawNormalLine(
+      line,
+      margin,
+      isCoverLetter ? 10.2 : 9.6,
+      isCoverLetter ? 6.2 : 5.4
+    );
   });
 
   doc.save(fileName);
@@ -392,6 +449,8 @@ useEffect(() => {
     return;
   }
 
+  const isCoverLetter = fileName.toLowerCase().includes("cover");
+
   const keywordList = keywords
     .filter(Boolean)
     .map((k) => k.trim())
@@ -405,24 +464,27 @@ useEffect(() => {
       ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
       : null;
 
-  const cleanContent = content
-    .replace(/^Optimised CV\s*/gi, "")
-    .replace(/^Optimized CV\s*/gi, "")
-    .replace(/^Curriculum Vitae\s*/gi, "")
-    .replace(/^Resume\s*/gi, "")
-    .replace(/^Cover Letter\s*/gi, "")
-    .replace(/\*\*(.*?)\*\*/g, "$1")
-    .replace(/\*/g, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  const cleanContent = cleanAiText(content);
 
-  const makeRuns = (line: string) => {
-    if (!keywordRegex) {
+  const isHeading = (line: string) => {
+    const clean = line.trim();
+    return (
+      clean.length > 2 &&
+      clean.length < 40 &&
+      clean === clean.toUpperCase() &&
+      !clean.includes("|") &&
+      !clean.startsWith("-")
+    );
+  };
+
+  const makeRuns = (line: string, forceBold = false) => {
+    if (!keywordRegex || forceBold) {
       return [
         new TextRun({
           text: line || " ",
-          size: 22,
-          color: "374151",
+          size: forceBold ? 24 : isCoverLetter ? 22 : 21,
+          bold: forceBold,
+          color: forceBold ? "2563EB" : "374151",
         }),
       ];
     }
@@ -437,27 +499,78 @@ useEffect(() => {
 
         return new TextRun({
           text: part,
-          size: 22,
+          size: isCoverLetter ? 22 : 21,
           bold: isKeyword,
           color: isKeyword ? "000000" : "374151",
         });
       });
   };
 
-  const paragraphs = cleanContent.split("\n").map(
-    (line) =>
-      new Paragraph({
-        children: makeRuns(line),
-        spacing: {
-          after: 160,
-        },
-      })
-  );
+  const paragraphs = cleanContent.split("\n").map((line, index) => {
+    const cleanLine = line.trimEnd();
+
+    if (!cleanLine.trim()) {
+      return new Paragraph({
+        children: [new TextRun({ text: " ", size: 8 })],
+        spacing: { after: 80 },
+      });
+    }
+
+    const firstLine = index === 0 && !isCoverLetter;
+    const heading = isHeading(cleanLine);
+    const bullet = cleanLine.trim().startsWith("-");
+
+    if (firstLine) {
+      return new Paragraph({
+        children: [
+          new TextRun({
+            text: cleanLine.trim(),
+            bold: true,
+            size: 30,
+            color: "0F172A",
+          }),
+        ],
+        spacing: { after: 180 },
+      });
+    }
+
+    if (heading) {
+      return new Paragraph({
+        children: makeRuns(cleanLine.trim(), true),
+        spacing: { before: 220, after: 100 },
+      });
+    }
+
+    if (bullet) {
+      return new Paragraph({
+        children: makeRuns(cleanLine.replace(/^-+\s*/, "")),
+        bullet: { level: 0 },
+        spacing: { after: 90 },
+      });
+    }
+
+    return new Paragraph({
+      children: makeRuns(cleanLine),
+      spacing: {
+        after: isCoverLetter ? 180 : 110,
+      },
+    });
+  });
 
   const doc = new Document({
     sections: [
       {
-        children: [...paragraphs],
+        properties: {
+          page: {
+            margin: {
+              top: isCoverLetter ? 900 : 650,
+              right: isCoverLetter ? 850 : 650,
+              bottom: isCoverLetter ? 900 : 650,
+              left: isCoverLetter ? 850 : 650,
+            },
+          },
+        },
+        children: paragraphs,
       },
     ],
   });
@@ -506,14 +619,19 @@ useEffect(() => {
     });
   };
   const cleanAiText = (value: string) => {
-  return value
+  return String(value || "")
     .replace(/^Optimised CV\s*/gi, "")
     .replace(/^Optimized CV\s*/gi, "")
     .replace(/^Curriculum Vitae\s*/gi, "")
     .replace(/^Resume\s*/gi, "")
     .replace(/^Cover Letter\s*/gi, "")
+    .replace(/\bOptimised CV\b/gi, "")
+    .replace(/\bOptimized CV\b/gi, "")
+    .replace(/\bCurriculum Vitae\b/gi, "")
+    .replace(/\bCover Letter\b/gi, "")
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/\*/g, "")
+    .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 };
