@@ -2026,23 +2026,44 @@ const previousSetupStep = () => {
                     </div>
 
                     {!isUnlocked && showUnlock && (
-  <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center animate-fadeUp">
-    <div className="text-center px-5">
-      <div className="mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 text-3xl font-black text-white shadow-2xl">
-        {atsScore}%
+  <div className="absolute inset-0 flex items-center justify-center bg-white/85 px-4 backdrop-blur-xl animate-fadeUp">
+    <div className="w-full max-w-[320px] overflow-hidden rounded-[28px] border border-blue-100 bg-white shadow-[0_25px_70px_rgba(37,99,235,0.22)]">
+      <div className="h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-500" />
+
+      <div className="p-5 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] bg-gradient-to-br from-blue-600 to-emerald-500 text-3xl font-black text-white shadow-xl animate-softPulse">
+          {atsScore}%
+        </div>
+
+        <p className="mt-4 text-[11px] font-black uppercase tracking-[0.22em] text-blue-600">
+          ATS score unlocked preview
+        </p>
+
+        <h4 className="mt-2 text-xl font-black tracking-tight text-slate-950">
+          High-match CV ready
+        </h4>
+
+        <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+          This CV is strongly optimised with recruiter-friendly wording and ATS keywords.
+        </p>
+
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl bg-blue-50 p-2 text-center">
+            <p className="text-lg">✅</p>
+            <p className="text-[10px] font-black text-blue-700">Keywords</p>
+          </div>
+
+          <div className="rounded-2xl bg-emerald-50 p-2 text-center">
+            <p className="text-lg">🎯</p>
+            <p className="text-[10px] font-black text-emerald-700">Matched</p>
+          </div>
+
+          <div className="rounded-2xl bg-purple-50 p-2 text-center">
+            <p className="text-lg">🔒</p>
+            <p className="text-[10px] font-black text-purple-700">Locked</p>
+          </div>
+        </div>
       </div>
-
-      <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-600">
-        ATS Optimised
-      </p>
-
-      <h4 className="mt-2 text-xl font-black text-slate-950">
-        Unlock full CV
-      </h4>
-
-      <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-        Strongly matched to this job. Subscribe to view, copy and download.
-      </p>
     </div>
   </div>
 )}
@@ -2135,26 +2156,46 @@ const previousSetupStep = () => {
                     </div>
 
                       {!isUnlocked && showUnlock && (
-  <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center animate-fadeUp">
-    <div className="text-center px-5">
-      <div className="mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-purple-600 text-3xl font-black text-white shadow-2xl">
-        {atsScore}%
+  <div className="absolute inset-0 flex items-center justify-center bg-white/85 px-4 backdrop-blur-xl animate-fadeUp">
+    <div className="w-full max-w-[320px] overflow-hidden rounded-[28px] border border-purple-100 bg-white shadow-[0_25px_70px_rgba(147,51,234,0.22)]">
+      <div className="h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-emerald-500" />
+
+      <div className="p-5 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] bg-gradient-to-br from-purple-600 to-emerald-500 text-3xl font-black text-white shadow-xl animate-softPulse">
+          {atsScore}%
+        </div>
+
+        <p className="mt-4 text-[11px] font-black uppercase tracking-[0.22em] text-purple-600">
+          ATS score unlocked preview
+        </p>
+
+        <h4 className="mt-2 text-xl font-black tracking-tight text-slate-950">
+          High-match letter ready
+        </h4>
+
+        <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+          This cover letter is tailored to the role with stronger professional wording.
+        </p>
+
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl bg-purple-50 p-2 text-center">
+            <p className="text-lg">✉️</p>
+            <p className="text-[10px] font-black text-purple-700">Tailored</p>
+          </div>
+
+          <div className="rounded-2xl bg-emerald-50 p-2 text-center">
+            <p className="text-lg">🎯</p>
+            <p className="text-[10px] font-black text-emerald-700">Matched</p>
+          </div>
+
+          <div className="rounded-2xl bg-blue-50 p-2 text-center">
+            <p className="text-lg">🔒</p>
+            <p className="text-[10px] font-black text-blue-700">Locked</p>
+          </div>
+        </div>
       </div>
-
-      <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-600">
-        ATS Optimised
-      </p>
-
-      <h4 className="mt-2 text-xl font-black text-slate-950">
-        Unlock cover letter
-      </h4>
-
-      <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-        Strongly matched to this job. Subscribe to view, copy and download.
-      </p>
     </div>
   </div>
-  
 )}
                   </div>
 
