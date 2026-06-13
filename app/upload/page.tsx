@@ -2039,6 +2039,14 @@ const previousSetupStep = () => {
       </p>
     </div>
 
+    <div className="absolute inset-0 z-20 flex items-center justify-center">
+      <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white/90 shadow-2xl">
+        <div className="absolute inset-0 rounded-full border-4 border-emerald-400/40 animate-ping" />
+        <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-900 to-slate-700 shadow-lg" />
+        <span className="relative text-4xl animate-bounce">🔒</span>
+      </div>
+    </div>
+
     <div className="absolute inset-x-0 bottom-4 z-20 flex justify-center">
       <div className="rounded-full bg-slate-900 px-4 py-2 text-xs font-black uppercase tracking-[0.15em] text-white shadow-md">
         Locked Preview
@@ -2145,6 +2153,14 @@ const previousSetupStep = () => {
       <p className="text-center text-2xl font-black text-emerald-600">
         {atsScore}%
       </p>
+    </div>
+
+    <div className="absolute inset-0 z-20 flex items-center justify-center">
+      <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white/90 shadow-2xl">
+        <div className="absolute inset-0 rounded-full border-4 border-emerald-400/40 animate-ping" />
+        <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-900 to-slate-700 shadow-lg" />
+        <span className="relative text-4xl animate-bounce">🔒</span>
+      </div>
     </div>
 
     <div className="absolute inset-x-0 bottom-4 z-20 flex justify-center">
