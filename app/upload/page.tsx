@@ -285,106 +285,110 @@ useEffect(() => {
 
 
   const downloadPDF = (title: string, content: string, fileName: string) => {
-    if (!content) {
-      alert(`${title} is empty`);
-      return;
-    }
+  if (!content) {
+    alert(`${title || "Document"} is empty`);
+    return;
+  }
 
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
 
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
 
-    const margin = 15;
-    const maxWidth = pageWidth - margin * 2;
-    const lineHeight = 6;
+  const margin = 15;
+  const maxWidth = pageWidth - margin * 2;
+  const lineHeight = 6;
 
-    let y = 20;
+  let y = 15;
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.setTextColor(15, 23, 42);
-    doc.text(title, margin, y);
+  doc.setFontSize(11);
 
-    y += 12;
+  const keywordList = keywords
+    .filter(Boolean)
+    .map((k) => k.trim())
+    .filter(Boolean);
 
-    doc.setFontSize(11);
+  const escapeRegex = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    const keywordList = keywords
-      .filter(Boolean)
-      .map((k) => k.trim())
-      .filter(Boolean);
+  const keywordRegex =
+    keywordList.length > 0
+      ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
+      : null;
 
-    const escapeRegex = (value: string) =>
-      value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const cleanContent = content
+    .replace(/^Optimised CV\s*/gi, "")
+    .replace(/^Optimized CV\s*/gi, "")
+    .replace(/^Curriculum Vitae\s*/gi, "")
+    .replace(/^Resume\s*/gi, "")
+    .replace(/^Cover Letter\s*/gi, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 
-    const keywordRegex =
-      keywordList.length > 0
-        ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
-        : null;
+  const paragraphs = cleanContent.split("\n");
 
-    const paragraphs = content.split("\n");
+  paragraphs.forEach((paragraph) => {
+    const wrappedLines = doc.splitTextToSize(paragraph || " ", maxWidth);
 
-    paragraphs.forEach((paragraph) => {
-      const wrappedLines = doc.splitTextToSize(paragraph || " ", maxWidth);
+    wrappedLines.forEach((line: string) => {
+      if (y > pageHeight - 20) {
+        doc.addPage();
+        y = 20;
+      }
 
-      wrappedLines.forEach((line: string) => {
-        if (y > pageHeight - 20) {
-          doc.addPage();
-          y = 20;
-        }
+      if (!keywordRegex) {
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(55, 65, 81);
+        doc.text(line, margin, y);
+        y += lineHeight;
+        return;
+      }
 
-        if (!keywordRegex) {
+      const parts = line.split(keywordRegex);
+      let x = margin;
+
+      parts.forEach((part: string) => {
+        if (!part) return;
+
+        const isKeyword = keywordList.some(
+          (keyword) => keyword.toLowerCase() === part.toLowerCase()
+        );
+
+        const textWidth = doc.getTextWidth(part);
+
+        if (isKeyword) {
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(0, 0, 0);
+        } else {
           doc.setFont("helvetica", "normal");
           doc.setTextColor(55, 65, 81);
-          doc.text(line, margin, y);
-          y += lineHeight;
-          return;
         }
 
-        const parts = line.split(keywordRegex);
-        let x = margin;
-
-        parts.forEach((part: string) => {
-          if (!part) return;
-
-          const isKeyword = keywordList.some(
-            (keyword) => keyword.toLowerCase() === part.toLowerCase()
-          );
-
-          const textWidth = doc.getTextWidth(part);
-
-if (isKeyword) {
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 0, 0);
-} else {
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(55, 65, 81);
-}
-
-doc.text(part, x, y);
-x += textWidth;
-        });
-
-        y += lineHeight;
+        doc.text(part, x, y);
+        x += textWidth;
       });
 
-      y += 2;
+      y += lineHeight;
     });
 
-    doc.save(fileName);
-  };
+    y += 2;
+  });
+
+  doc.save(fileName);
+};
   const downloadDOCX = async (
   title: string,
   content: string,
   fileName: string
 ) => {
   if (!content) {
-    alert(`${title} is empty`);
+    alert(`${title || "Document"} is empty`);
     return;
   }
 
@@ -401,32 +405,46 @@ x += textWidth;
       ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
       : null;
 
+  const cleanContent = content
+    .replace(/^Optimised CV\s*/gi, "")
+    .replace(/^Optimized CV\s*/gi, "")
+    .replace(/^Curriculum Vitae\s*/gi, "")
+    .replace(/^Resume\s*/gi, "")
+    .replace(/^Cover Letter\s*/gi, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
   const makeRuns = (line: string) => {
     if (!keywordRegex) {
       return [
         new TextRun({
           text: line || " ",
           size: 22,
+          color: "374151",
         }),
       ];
     }
 
-    return line.split(keywordRegex).filter(Boolean).map((part) => {
-      const isKeyword = keywordList.some(
-        (keyword) => keyword.toLowerCase() === part.toLowerCase()
-      );
+    return line
+      .split(keywordRegex)
+      .filter(Boolean)
+      .map((part) => {
+        const isKeyword = keywordList.some(
+          (keyword) => keyword.toLowerCase() === part.toLowerCase()
+        );
 
-      return new TextRun({
-        text: part,
-        size: 22,
-        bold: isKeyword,
-        color: isKeyword ? "000000" : "374151",
-highlight: undefined,
+        return new TextRun({
+          text: part,
+          size: 22,
+          bold: isKeyword,
+          color: isKeyword ? "000000" : "374151",
+        });
       });
-    });
   };
 
-  const paragraphs = content.split("\n").map(
+  const paragraphs = cleanContent.split("\n").map(
     (line) =>
       new Paragraph({
         children: makeRuns(line),
@@ -439,22 +457,7 @@ highlight: undefined,
   const doc = new Document({
     sections: [
       {
-        children: [
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: title,
-                bold: true,
-                size: 34,
-                color: "0F172A",
-              }),
-            ],
-            spacing: {
-              after: 320,
-            },
-          }),
-          ...paragraphs,
-        ],
+        children: [...paragraphs],
       },
     ],
   });
@@ -504,8 +507,15 @@ highlight: undefined,
   };
   const cleanAiText = (value: string) => {
   return value
+    .replace(/^Optimised CV\s*/gi, "")
+    .replace(/^Optimized CV\s*/gi, "")
+    .replace(/^Curriculum Vitae\s*/gi, "")
+    .replace(/^Resume\s*/gi, "")
+    .replace(/^Cover Letter\s*/gi, "")
     .replace(/\*\*(.*?)\*\*/g, "$1")
-    .replace(/\*/g, "");
+    .replace(/\*/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 };
 
   const generateAll = async () => {
@@ -594,14 +604,17 @@ Preparing your cover letter preview...`;
 
       if (!res.ok) throw new Error(data?.error || "Failed to generate");
 
-      const finalCv =
-        data.optimizedCV ||
-        data.cv ||
-        "Your ATS-optimised CV has been generated successfully.";
+      const rawCv =
+  data.optimizedCV ||
+  data.cv ||
+  "Your ATS-optimised CV has been generated successfully.";
 
-      const finalCoverLetter =
-        data.coverLetter ||
-        "Your personalised cover letter has been generated successfully.";
+const rawCoverLetter =
+  data.coverLetter ||
+  "Your personalised cover letter has been generated successfully.";
+
+const finalCv = cleanAiText(rawCv);
+const finalCoverLetter = cleanAiText(rawCoverLetter);
 
       const finalKeywords = data.keywords || [];
       const finalAtsScore = data.atsScore || 94;

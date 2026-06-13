@@ -21,9 +21,9 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
-        { error: "Missing GEMINI_API_KEY in .env.local" },
+        { error: "Missing OPENAI_API_KEY in Vercel environment variables" },
         { status: 500 }
       );
     }
@@ -31,7 +31,12 @@ export async function POST(req: Request) {
     const prompt = `
 You are an elite ATS CV writer, senior recruiter, hiring manager, and professional cover letter expert.
 
-Return ONLY valid JSON. No markdown. No backticks. No extra text.
+Return ONLY valid JSON.
+No markdown.
+No backticks.
+No asterisks.
+No fake information.
+No extra text outside JSON.
 
 JSON format:
 {
@@ -42,9 +47,27 @@ JSON format:
 }
 
 MAIN OBJECTIVE:
-Create the strongest possible ATS-friendly CV and cover letter for this candidate.
-The CV must look professional, clean, well-aligned, keyword-rich, and recruiter-ready.
-The CV should give the candidate a very high chance of being shortlisted, while staying 100% honest.
+Create a clean, premium, ATS-friendly CV and a tailored cover letter.
+The CV must look professional when exported to PDF/DOCX as plain text.
+The CV must be easy to read, well-spaced, recruiter-ready, and honest.
+
+ABSOLUTE FORMATTING RULES:
+- Do NOT write "Optimised CV", "Optimized CV", "Resume", or "Curriculum Vitae" at the top.
+- Start directly with the candidate name.
+- Do NOT use markdown.
+- Do NOT use asterisks.
+- Do NOT use **bold** markers.
+- Do NOT use tables.
+- Do NOT use columns.
+- Do NOT use emojis.
+- Do NOT use graphics.
+- Do NOT use decorative symbols.
+- Use clean section headings only.
+- Use simple hyphen bullet points only.
+- Keep each bullet concise.
+- Leave a blank line between sections.
+- Important ATS keywords must appear naturally in the CV text and also in the keywords array.
+- Do not bold anything in the CV text. The frontend will handle keyword bolding.
 
 CANDIDATE SETUP:
 - Target role: ${jobRole || "Not specified"}
@@ -56,74 +79,58 @@ CANDIDATE SETUP:
 - Application urgency: ${urgency || "Not specified"}
 
 USE THESE ANSWERS ACTIVELY:
-The CV and cover letter must clearly match:
-1. Target role
-2. Target country
-3. Experience level
-4. Job type
-5. Industry
-6. CV improvement goal
-7. Urgency/timeline
-8. Job description, if provided
+The CV and cover letter must clearly match the target role, country, experience level, job type, industry, CV goal, urgency, and job description if provided.
 
-STRICT CV RULES:
-- Create a clean, premium, ATS-safe layout.
-- Use strong alignment and readable spacing.
-- Do NOT use tables.
-- Do NOT use emojis.
-- Do NOT use graphics.
-- Do NOT use columns.
-- Do NOT use fake information.
-- Do NOT invent companies, degrees, certificates, dates, jobs, achievements, tools, or projects.
+STRICT HONESTY RULES:
+- Do NOT invent companies.
+- Do NOT invent degrees.
+- Do NOT invent certificates.
+- Do NOT invent dates.
+- Do NOT invent jobs.
+- Do NOT invent achievements.
+- Do NOT invent tools or projects.
 - Improve wording, structure, tone, and impact using only the candidate's real information.
-- If exact numbers are not provided, do not invent numbers.
-- If achievements are weak, rewrite them with stronger action verbs and clearer business value.
-- Make the CV easy for recruiters to scan in 6 seconds.
-- Use professional UK/international wording depending on the target country.
-
-VERY IMPORTANT KEYWORD RULE:
-Bold important ATS keywords using double asterisks like **Python**, **customer service**, **data analysis**, **stakeholder communication**.
-Use bold only for important skills, tools, responsibilities, achievements, role keywords, and industry terms.
-Do not bold every sentence.
+- If numbers are not provided, do not create fake numbers.
+- If information is missing, keep it professional and general.
 
 CV FORMAT:
-Use this exact structure when relevant:
+Start directly like this:
 
 FULL NAME
-Phone | Email | LinkedIn | Location
+Location | Phone | Email | LinkedIn | GitHub or Portfolio if provided
 
 PROFESSIONAL SUMMARY
-Write 3-4 powerful lines tailored to the target role.
+Write 3 to 4 clean lines tailored to the target role.
 Mention experience level, industry, strongest skills, and value to employer.
 
 CORE SKILLS
-Use 10-16 ATS keywords in a clean comma-separated list.
-Bold the most important keywords.
+Write one clean comma-separated line with 10 to 16 ATS-relevant skills.
+Do not use bullet points in Core Skills.
 
 WORK EXPERIENCE
 Job Title | Company | Location | Dates
 - Start each bullet with a strong action verb.
-- Focus on achievements, responsibilities, tools, impact, and role relevance.
-- Make each bullet concise and professional.
+- Keep each bullet short and clean.
+- Focus on responsibilities, tools, impact, and role relevance.
 - Include target-role keywords naturally.
+- Do not overuse keywords.
 
 PROJECTS
-Only include if useful or present in the original CV.
-Use this for students, freshers, tech applicants, data applicants, and career switchers.
+Only include this section if useful or present in the original CV.
+Use it for students, freshers, tech applicants, data applicants, and career switchers.
 
 EDUCATION
 Degree / Qualification | Institution | Dates
-Include relevant modules/coursework only if useful.
 
 CERTIFICATIONS
 Only include certificates mentioned by the user.
 
 ADDITIONAL INFORMATION
-Include languages, availability, right to work, driving licence, tools, or volunteering only if provided or clearly implied.
+Only include languages, availability, right to work, driving licence, tools, or volunteering if provided or clearly implied.
 
 SPECIAL ADAPTATION RULES:
 - If student/fresher: focus on education, projects, coursework, internships, transferable skills, volunteering, and potential.
-- If experienced: focus on measurable achievements, responsibilities, tools, leadership, outcomes, and business impact.
+- If experienced: focus on responsibilities, tools, leadership, outcomes, and business impact.
 - If part-time: highlight reliability, punctuality, communication, customer service, teamwork, flexibility, and availability.
 - If full-time: make the CV career-focused, polished, and growth-oriented.
 - If internship/graduate role: make the CV entry-level friendly and skills-focused.
@@ -138,11 +145,13 @@ Create a high-quality tailored cover letter with:
 - Strong confident opening
 - Why the candidate matches the role
 - Key skills and evidence from the CV
-- Motivation for the company/role
+- Motivation for the company or role
 - Confident closing
 - Natural human tone
 - No fake claims
-- Bold important keywords using **keyword** format
+- No markdown
+- No asterisks
+- No bold markers
 
 COVER LETTER STYLE:
 - Keep it between 250 and 380 words.
@@ -153,7 +162,8 @@ COVER LETTER STYLE:
 
 KEYWORDS:
 Return 12 to 20 high-value ATS keywords.
-Keywords must be real skills, tools, responsibilities, job-title keywords, or industry terms from the role/CV/job description.
+Keywords must be real skills, tools, responsibilities, job-title keywords, or industry terms from the role, CV, or job description.
+Return clean keyword strings only. No asterisks.
 
 ATS SCORE:
 Return a realistic atsScore between 88 and 98 if the rewritten CV is strong.
@@ -163,30 +173,35 @@ ORIGINAL CV:
 ${cvText}
 
 JOB DESCRIPTION:
-${jobDescription || "No job description provided. Optimise using the target role, country, job type, industry, and candidate setup."}
+${
+  jobDescription ||
+  "No job description provided. Optimise using the target role, country, job type, industry, and candidate setup."
+}
 `;
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: prompt }],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.25,
-            responseMimeType: "application/json",
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        temperature: 0.2,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an expert ATS CV writer. Return only valid JSON. Never use markdown, asterisks, bold markers, backticks, or document titles.",
           },
-        }),
-      }
-    );
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      }),
+    });
 
     const data = await res.json();
 
@@ -194,26 +209,33 @@ ${jobDescription || "No job description provided. Optimise using the target role
       const message =
         data?.error?.message || "AI service is busy. Please try again.";
 
-      if (
-        message.toLowerCase().includes("high demand") ||
-        message.toLowerCase().includes("busy") ||
-        message.toLowerCase().includes("overloaded")
-      ) {
-        return NextResponse.json(
-          {
-            error:
-              "AI is currently busy. Please wait 30 seconds and click Generate again.",
-          },
-          { status: 503 }
-        );
-      }
-
-      return NextResponse.json({ error: message }, { status: res.status });
+      return NextResponse.json(
+        {
+          error:
+            message.toLowerCase().includes("rate limit") ||
+            message.toLowerCase().includes("quota")
+              ? "AI is currently busy. Please wait 30 seconds and click Generate again."
+              : message,
+        },
+        { status: res.status }
+      );
     }
 
-    const content = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+    const content = data?.choices?.[0]?.message?.content || "{}";
 
-    let parsed;
+    const cleanAiText = (value: string) => {
+      return String(value || "")
+        .replace(/Optimised CV/gi, "")
+        .replace(/Optimized CV/gi, "")
+        .replace(/Curriculum Vitae/gi, "")
+        .replace(/^Resume\s*/gi, "")
+        .replace(/\*\*(.*?)\*\*/g, "$1")
+        .replace(/\*/g, "")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    };
+
+    let parsed: any;
 
     try {
       parsed = JSON.parse(content);
@@ -227,9 +249,14 @@ ${jobDescription || "No job description provided. Optimise using the target role
     }
 
     return NextResponse.json({
-      optimizedCV: parsed.optimizedCV || "",
-      coverLetter: parsed.coverLetter || "",
-      keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+      optimizedCV: cleanAiText(parsed.optimizedCV || ""),
+      coverLetter: cleanAiText(parsed.coverLetter || ""),
+      keywords: Array.isArray(parsed.keywords)
+        ? parsed.keywords
+            .map((keyword: string) => cleanAiText(keyword))
+            .filter(Boolean)
+            .slice(0, 20)
+        : [],
       atsScore:
         typeof parsed.atsScore === "number"
           ? parsed.atsScore
