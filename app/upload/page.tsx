@@ -34,6 +34,16 @@ const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
   const [industry, setIndustry] = useState("");
   const [cvGoal, setCvGoal] = useState("");
   const [urgency, setUrgency] = useState("");
+  const [fullName, setFullName] = useState("");
+const [educationLevel, setEducationLevel] = useState("");
+const [certificates, setCertificates] = useState("");
+const [portfolio, setPortfolio] = useState("");
+const [workAvailability, setWorkAvailability] = useState("");
+const [coverLetterNeed, setCoverLetterNeed] = useState("");
+  const [mainStrength, setMainStrength] = useState("");
+const [weaknessFix, setWeaknessFix] = useState("");
+const [toneStyle, setToneStyle] = useState("");
+const [cvLength, setCvLength] = useState("");
 
   const [cv, setCv] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
@@ -62,6 +72,16 @@ const [generated, setGenerated] = useState(false);
   const savedIndustry = sessionStorage.getItem("jobify_industry");
   const savedCvGoal = sessionStorage.getItem("jobify_cv_goal");
   const savedUrgency = sessionStorage.getItem("jobify_urgency");
+  const savedFullName = sessionStorage.getItem("jobify_full_name");
+const savedEducationLevel = sessionStorage.getItem("jobify_education_level");
+const savedCertificates = sessionStorage.getItem("jobify_certificates");
+const savedPortfolio = sessionStorage.getItem("jobify_portfolio");
+const savedWorkAvailability = sessionStorage.getItem("jobify_work_availability");
+const savedCoverLetterNeed = sessionStorage.getItem("jobify_cover_letter_need");
+  const savedMainStrength = sessionStorage.getItem("jobify_main_strength");
+const savedWeaknessFix = sessionStorage.getItem("jobify_weakness_fix");
+const savedToneStyle = sessionStorage.getItem("jobify_tone_style");
+const savedCvLength = sessionStorage.getItem("jobify_cv_length");
 
   if (savedCountry) setCountry(savedCountry);
   if (savedRole) setJobRole(savedRole);
@@ -72,6 +92,16 @@ const [generated, setGenerated] = useState(false);
   if (savedIndustry) setIndustry(savedIndustry);
   if (savedCvGoal) setCvGoal(savedCvGoal);
   if (savedUrgency) setUrgency(savedUrgency);
+  if (savedFullName) setFullName(savedFullName);
+if (savedEducationLevel) setEducationLevel(savedEducationLevel);
+if (savedCertificates) setCertificates(savedCertificates);
+if (savedPortfolio) setPortfolio(savedPortfolio);
+if (savedWorkAvailability) setWorkAvailability(savedWorkAvailability);
+if (savedCoverLetterNeed) setCoverLetterNeed(savedCoverLetterNeed);
+  if (savedMainStrength) setMainStrength(savedMainStrength);
+if (savedWeaknessFix) setWeaknessFix(savedWeaknessFix);
+if (savedToneStyle) setToneStyle(savedToneStyle);
+if (savedCvLength) setCvLength(savedCvLength);
   const savedGenerated = sessionStorage.getItem("jobify_generated_done");
 const savedCv = sessionStorage.getItem("jobify_generated_cv");
 const savedCover = sessionStorage.getItem("jobify_generated_cover");
@@ -706,15 +736,23 @@ Preparing your cover letter preview...`;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
   cvText: text,
+  fullName,
   jobRole,
   country,
   jobDescription,
   userEmail: session?.user?.email,
   experienceLevel,
   jobType,
+  educationLevel,
   industry,
-  cvGoal,
   urgency,
+  mainStrength,
+  cvGoal,
+  certificates,
+  portfolio,
+  workAvailability,
+  toneStyle,
+  coverLetterNeed,
 }),
       });
 
@@ -1225,16 +1263,24 @@ const filteredRoles = roleSuggestions
   .slice(0, 10);
 
 const setupAnswers = [
+  fullName,
   country,
   jobRole,
   experienceLevel,
   jobType,
+  educationLevel,
   industry,
-  cvGoal,
   urgency,
+  mainStrength,
+  cvGoal,
+  certificates,
+  portfolio,
+  workAvailability,
+  toneStyle,
+  coverLetterNeed,
 ];
 
-const canGoNext = Boolean(setupAnswers[setupStep]);
+const canGoNext = Boolean(setupAnswers[setupStep]?.trim());
 
 const saveSetupAndContinue = () => {
   sessionStorage.setItem("jobify_country", country);
@@ -1244,6 +1290,14 @@ const saveSetupAndContinue = () => {
   sessionStorage.setItem("jobify_industry", industry);
   sessionStorage.setItem("jobify_cv_goal", cvGoal);
   sessionStorage.setItem("jobify_urgency", urgency);
+  sessionStorage.setItem("jobify_full_name", fullName);
+sessionStorage.setItem("jobify_education_level", educationLevel);
+sessionStorage.setItem("jobify_certificates", certificates);
+sessionStorage.setItem("jobify_portfolio", portfolio);
+sessionStorage.setItem("jobify_work_availability", workAvailability);
+sessionStorage.setItem("jobify_cover_letter_need", coverLetterNeed);
+sessionStorage.setItem("jobify_main_strength", mainStrength);
+sessionStorage.setItem("jobify_tone_style", toneStyle);
   sessionStorage.setItem("jobify_setup_completed", "true");
 
   setShowSetupPopup(false);
@@ -1256,7 +1310,7 @@ const saveSetupAndContinue = () => {
 };
 
 const nextSetupStep = () => {
-  if (setupStep < 6) {
+  if (setupStep < 14) {
     setSetupStep((prev) => prev + 1);
     return;
   }
@@ -1303,7 +1357,7 @@ const previousSetupStep = () => {
             </div>
 
             <p className="text-xs font-black text-slate-400">
-              {setupStep + 1}/7
+              {setupStep + 1}/15
             </p>
           </div>
 
@@ -1326,7 +1380,7 @@ const previousSetupStep = () => {
           <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-100">
             <div
               className="h-full rounded-full bg-blue-600 transition-all duration-500 ease-out"
-              style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
+              style={{ width: `${((setupStep + 1) / 15) * 100}%` }}
             />
           </div>
 
@@ -1336,175 +1390,306 @@ const previousSetupStep = () => {
   className="mt-4 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
 >
             {setupStep === 0 && (
-              <div className="relative">
-                <h3 className="text-lg font-black text-slate-950">
-                  🌍 Applying in which country?
-                </h3>
+  <div>
+    <h3 className="text-lg font-black text-slate-950">
+      👤 What is your full name?
+    </h3>
 
-                <input
-                  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
-                  placeholder="Type country, e.g. United Kingdom"
-                  value={country}
-                  onFocus={() => setShowCountrySuggestions(true)}
-                  onChange={(e) => {
-                    setCountry(e.target.value);
-                    setShowCountrySuggestions(true);
-                  }}
-                />
+    <input
+      className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+      placeholder="Type your full name"
+      value={fullName}
+      onChange={(e) => setFullName(e.target.value)}
+    />
+  </div>
+)}
 
-                {showCountrySuggestions &&
-                  country &&
-                  filteredCountries.length > 0 && (
-                    <div className="absolute z-40 mt-2 max-h-36 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
-                      {filteredCountries.slice(0, 8).map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            setCountry(c);
-                            setShowCountrySuggestions(false);
-                          }}
-                          className="block w-full p-3 text-left text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
-                        >
-                          {c}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-              </div>
-            )}
+{setupStep === 1 && (
+  <div className="relative">
+    <h3 className="text-lg font-black text-slate-950">
+      🌍 Where are you applying?
+    </h3>
 
-            {setupStep === 1 && (
-              <div className="relative">
-                <h3 className="text-lg font-black text-slate-950">
-                  🎯 Target job role?
-                </h3>
+    <input
+      className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+      placeholder="Type country, e.g. United Kingdom"
+      value={country}
+      onFocus={() => setShowCountrySuggestions(true)}
+      onChange={(e) => {
+        setCountry(e.target.value);
+        setShowCountrySuggestions(true);
+      }}
+    />
 
-                <input
-                  className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
-                  placeholder="Type role, e.g. Software Engineer"
-                  value={jobRole}
-                  onFocus={() => setShowRoleSuggestions(true)}
-                  onChange={(e) => {
-                    setJobRole(e.target.value);
-                    setShowRoleSuggestions(true);
-                  }}
-                />
+    {showCountrySuggestions && country && filteredCountries.length > 0 && (
+      <div className="absolute z-40 mt-2 max-h-36 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        {filteredCountries.slice(0, 8).map((c) => (
+          <button
+            key={c}
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setCountry(c);
+              setShowCountrySuggestions(false);
+            }}
+            className="block w-full p-3 text-left text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+          >
+            {c}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+)}
 
-                {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
-                  <div className="absolute z-40 mt-2 max-h-36 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
-                    {filteredRoles.slice(0, 8).map((r, index) => (
-                      <button
-                        key={`${r}-${index}`}
-                        type="button"
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          setJobRole(r);
-                          setShowRoleSuggestions(false);
-                        }}
-                        className="block w-full p-3 text-left text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
-                      >
-                        {r}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+{setupStep === 2 && (
+  <div className="relative">
+    <h3 className="text-lg font-black text-slate-950">
+      🎯 What job role do you want?
+    </h3>
 
-            {setupStep === 2 && (
-              <QuestionButtons
-                title="📈 Experience level?"
-                value={experienceLevel}
-                setValue={setExperienceLevel}
-                options={[
-                  "Student / Fresher",
-                  "0-1 years",
-                  "1-3 years",
-                  "3-5 years",
-                  "5+ years",
-                  "No experience",
-                  "Internship experience",
-                  "Freelance experience",
-                ]}
-              />
-            )}
+    <input
+      className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3.5 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+      placeholder="Type role, e.g. Software Engineer"
+      value={jobRole}
+      onFocus={() => setShowRoleSuggestions(true)}
+      onChange={(e) => {
+        setJobRole(e.target.value);
+        setShowRoleSuggestions(true);
+      }}
+    />
 
-            {setupStep === 3 && (
-              <QuestionButtons
-                title="💼 Job type?"
-                value={jobType}
-                setValue={setJobType}
-                options={[
-                  "Full-time",
-                  "Part-time",
-                  "Internship",
-                  "Graduate role",
-                  "Remote job",
-                  "Career switch",
-                  "Contract",
-                  "Temporary",
-                ]}
-              />
-            )}
+    {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
+      <div className="absolute z-40 mt-2 max-h-36 w-full overflow-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        {filteredRoles.slice(0, 8).map((r, index) => (
+          <button
+            key={`${r}-${index}`}
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setJobRole(r);
+              setShowRoleSuggestions(false);
+            }}
+            className="block w-full p-3 text-left text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+          >
+            {r}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+)}
 
-            {setupStep === 4 && (
-              <QuestionButtons
-                title="🏢 Industry?"
-                value={industry}
-                setValue={setIndustry}
-                options={[
-                  "Technology",
-                  "Retail",
-                  "Hospitality",
-                  "Healthcare",
-                  "Finance",
-                  "Education",
-                  "Customer Service",
-                  "Warehouse",
-                  "Data / AI",
-                  "Software",
-                  "Administration",
-                ]}
-              />
-            )}
+{setupStep === 3 && (
+  <QuestionButtons
+    title="📈 How much experience do you have?"
+    value={experienceLevel}
+    setValue={setExperienceLevel}
+    options={[
+      "No experience",
+      "Less than 1 year",
+      "1-2 years",
+      "3-5 years",
+      "5+ years",
+      "Student / Fresher",
+      "Internship experience",
+      "Freelance experience",
+    ]}
+  />
+)}
 
-            {setupStep === 5 && (
-              <QuestionButtons
-                title="✨ Improve what most?"
-                value={cvGoal}
-                setValue={setCvGoal}
-                options={[
-                  "ATS keywords",
-                  "Professional wording",
-                  "Achievements",
-                  "Career switch",
-                  "CV structure",
-                  "Grammar",
-                  "Improve bullet points",
-                  "Highlight transferable skills",
-                ]}
-              />
-            )}
+{setupStep === 4 && (
+  <QuestionButtons
+    title="💼 What job type do you want?"
+    value={jobType}
+    setValue={setJobType}
+    options={[
+      "Full-time",
+      "Part-time",
+      "Internship",
+      "Remote",
+      "Hybrid",
+      "Temporary",
+      "Contract",
+      "Graduate role",
+    ]}
+  />
+)}
 
-            {setupStep === 6 && (
-              <QuestionButtons
-                title="⏳ Applying when?"
-                value={urgency}
-                setValue={setUrgency}
-                options={[
-                  "Today",
-                  "This week",
-                  "This month",
-                  "Just preparing",
-                  "Urgent application",
-                  "Interview tomorrow",
-                  "Applying after improving CV",
-                ]}
-              />
-            )}
-          </div>
+{setupStep === 5 && (
+  <QuestionButtons
+    title="🎓 What is your education level?"
+    value={educationLevel}
+    setValue={setEducationLevel}
+    options={[
+      "School",
+      "Diploma",
+      "Bachelor's degree",
+      "Master's degree",
+      "PhD",
+      "Certification only",
+      "Currently studying",
+      "No formal education",
+    ]}
+  />
+)}
+
+{setupStep === 6 && (
+  <QuestionButtons
+    title="🏢 What field are you applying for?"
+    value={industry}
+    setValue={setIndustry}
+    options={[
+      "Technology",
+      "Finance",
+      "Retail",
+      "Healthcare",
+      "Hospitality",
+      "Warehouse",
+      "Customer Service",
+      "Education",
+      "Admin",
+      "Other",
+    ]}
+  />
+)}
+
+{setupStep === 7 && (
+  <QuestionButtons
+    title="🚀 When can you start?"
+    value={urgency}
+    setValue={setUrgency}
+    options={[
+      "Immediately",
+      "This week",
+      "In 2 weeks",
+      "In 1 month",
+      "Flexible",
+      "Just preparing",
+    ]}
+  />
+)}
+
+{setupStep === 8 && (
+  <QuestionButtons
+    title="💪 What is your strongest skill?"
+    value={mainStrength}
+    setValue={setMainStrength}
+    options={[
+      "Communication",
+      "Customer service",
+      "Teamwork",
+      "Leadership",
+      "Technical skills",
+      "Problem solving",
+      "Sales",
+      "Administration",
+      "Data / IT skills",
+      "Attention to detail",
+    ]}
+  />
+)}
+
+{setupStep === 9 && (
+  <QuestionButtons
+    title="🎯 What should your CV focus on?"
+    value={cvGoal}
+    setValue={setCvGoal}
+    options={[
+      "Experience",
+      "Skills",
+      "Education",
+      "Projects",
+      "Achievements",
+      "Career change",
+      "ATS keywords",
+      "Professional wording",
+    ]}
+  />
+)}
+
+{setupStep === 10 && (
+  <QuestionButtons
+    title="📜 Do you have any certificates?"
+    value={certificates}
+    setValue={setCertificates}
+    options={[
+      "Yes",
+      "No",
+      "Currently studying",
+      "Planning to get one",
+      "Only online certificates",
+      "Professional certificate",
+    ]}
+  />
+)}
+
+{setupStep === 11 && (
+  <QuestionButtons
+    title="💻 Do you have projects or portfolio?"
+    value={portfolio}
+    setValue={setPortfolio}
+    options={[
+      "Yes",
+      "No",
+      "GitHub",
+      "Website",
+      "University projects",
+      "Freelance projects",
+      "Work projects",
+    ]}
+  />
+)}
+
+{setupStep === 12 && (
+  <QuestionButtons
+    title="🕒 What is your availability?"
+    value={workAvailability}
+    setValue={setWorkAvailability}
+    options={[
+      "Weekdays",
+      "Weekends",
+      "Evenings",
+      "Night shifts",
+      "Flexible",
+      "Remote only",
+      "Immediate availability",
+    ]}
+  />
+)}
+
+{setupStep === 13 && (
+  <QuestionButtons
+    title="📄 What CV style do you want?"
+    value={toneStyle}
+    setValue={setToneStyle}
+    options={[
+      "Simple",
+      "Professional",
+      "Modern",
+      "ATS-focused",
+      "Student friendly",
+      "Graduate style",
+      "Experienced style",
+    ]}
+  />
+)}
+
+{setupStep === 14 && (
+  <QuestionButtons
+    title="✉️ Do you need a cover letter?"
+    value={coverLetterNeed}
+    setValue={setCoverLetterNeed}
+    options={[
+      "Yes",
+      "No",
+      "Maybe",
+      "Only if job needs it",
+      "Yes, tailored to job",
+    ]}
+  />
+)}
+</div>
 
           {/* BUTTONS */}
           <div className="mt-5 flex gap-3">
@@ -1529,7 +1714,7 @@ const previousSetupStep = () => {
               disabled={!canGoNext}
               className="w-1/2 rounded-2xl bg-slate-950 py-3 text-sm font-black text-white transition hover:bg-blue-700 active:scale-95 disabled:bg-slate-400"
             >
-              {setupStep === 6 ? "Start →" : "Next →"}
+              {setupStep === 14 ? "Start →" : "Next →"}
                         </button>
           </div>
         </div>
@@ -1604,277 +1789,7 @@ const previousSetupStep = () => {
 }
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
-     {false && showSetupPopup && (
-  <div className="fixed inset-0 z-[9999] grid place-items-center overflow-hidden bg-slate-950/80 px-4 py-3 backdrop-blur-2xl">
-    <div
-  className="relative w-full max-w-md max-h-[calc(100svh-1.5rem)] overflow-y-auto overscroll-contain rounded-[28px] border border-white/20 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.45)] animate-cinemaIn"
-  style={{ WebkitOverflowScrolling: "touch" }}
->
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-20 left-[-40%] h-40 w-[180%] rotate-[-8deg] bg-gradient-to-r from-transparent via-blue-200/40 to-transparent animate-lightSweep" />
-        <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
-        <div className="absolute -left-20 -bottom-20 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
-      </div>
-
-      <div className="relative p-5">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            AI Setup
-          </div>
-
-          <p className="text-xs font-black text-slate-400">
-            {setupStep + 1}/7
-          </p>
-        </div>
-
-        <div className="mt-3 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-2xl text-white shadow-xl animate-float">
-            ✦
-          </div>
-
-          <h2 className="mt-4 text-2xl font-black tracking-tight text-slate-950">
-            Personalise your CV
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Answer a few quick questions for better AI results.
-          </p>
-        </div>
-
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-700 ease-out"
-            style={{ width: `${((setupStep + 1) / 7) * 100}%` }}
-          />
-        </div>
-
-        <div
-          key={setupStep}
-          className="mt-5 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionCut"
-        >
-          {setupStep === 0 && (
-            <div className="relative">
-              <h3 className="text-lg font-black text-slate-950">
-                🌍 Applying in which country?
-              </h3>
-
-              <input
-                className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Type country, e.g. United Kingdom"
-                value={country}
-                onFocus={() => setShowCountrySuggestions(true)}
-                onClick={(e) => {
-                  setTimeout(() => {
-                    e.currentTarget.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-                  }, 250);
-                }}
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                  setShowCountrySuggestions(true);
-                }}
-              />
-
-              {showCountrySuggestions &&
-                country &&
-                filteredCountries.length > 0 && (
-                  <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
-                    {filteredCountries.slice(0, 8).map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          setCountry(c);
-                          setShowCountrySuggestions(false);
-                        }}
-                        className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                )}
-            </div>
-          )}
-
-          {setupStep === 1 && (
-            <div className="relative">
-              <h3 className="text-lg font-black text-slate-950">
-                🎯 Target job role?
-              </h3>
-
-              <input
-                className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Type role, e.g. Software Engineer"
-                value={jobRole}
-                onFocus={() => setShowRoleSuggestions(true)}
-                onClick={(e) => {
-                  setTimeout(() => {
-                    e.currentTarget.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-                  }, 250);
-                }}
-                onChange={(e) => {
-                  setJobRole(e.target.value);
-                  setShowRoleSuggestions(true);
-                }}
-              />
-
-              {showRoleSuggestions && jobRole && filteredRoles.length > 0 && (
-                <div className="absolute z-30 mt-2 max-h-36 w-full overflow-auto rounded-2xl border bg-white shadow-2xl">
-                  {filteredRoles.slice(0, 8).map((r, index) => (
-                    <button
-                      key={`${r}-${index}`}
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setJobRole(r);
-                        setShowRoleSuggestions(false);
-                      }}
-                      className="block w-full p-3 text-left text-sm font-semibold hover:bg-blue-50"
-                    >
-                      {r}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {setupStep === 2 && (
-            <QuestionButtons
-              title="📈 Experience level?"
-              value={experienceLevel}
-              setValue={setExperienceLevel}
-              options={[
-                "Student / Fresher",
-                "0-1 years",
-                "1-3 years",
-                "3-5 years",
-                "5+ years",
-                "No experience",
-                "Internship experience",
-                "Freelance experience",
-              ]}
-            />
-          )}
-
-          {setupStep === 3 && (
-            <QuestionButtons
-              title="💼 Job type?"
-              value={jobType}
-              setValue={setJobType}
-              options={[
-                "Full-time",
-                "Part-time",
-                "Internship",
-                "Graduate role",
-                "Remote job",
-                "Career switch",
-                "Contract",
-                "Temporary",
-                "Night shift",
-                "Weekend job",
-              ]}
-            />
-          )}
-
-          {setupStep === 4 && (
-            <QuestionButtons
-              title="🏢 Industry?"
-              value={industry}
-              setValue={setIndustry}
-              options={[
-                "Technology",
-                "Retail",
-                "Hospitality",
-                "Healthcare",
-                "Finance",
-                "Education",
-                "Customer Service",
-                "Warehouse",
-                "Construction",
-                "Marketing",
-                "Data / AI",
-                "Software",
-                "Administration",
-              ]}
-            />
-          )}
-
-          {setupStep === 5 && (
-            <QuestionButtons
-              title="✨ Improve what most?"
-              value={cvGoal}
-              setValue={setCvGoal}
-              options={[
-                "ATS keywords",
-                "Professional wording",
-                "Achievements",
-                "Career switch",
-                "CV structure",
-                "Grammar",
-                "Shorten my CV",
-                "Make it sound confident",
-                "Improve bullet points",
-                "Highlight transferable skills",
-              ]}
-            />
-          )}
-
-          {setupStep === 6 && (
-            <QuestionButtons
-              title="⏳ Applying when?"
-              value={urgency}
-              setValue={setUrgency}
-              options={[
-                "Today",
-                "This week",
-                "This month",
-                "Just preparing",
-                "Urgent application",
-                "Interview tomorrow",
-                "Applying after improving CV",
-              ]}
-            />
-          )}
-        </div>
-
-        <div className="mt-5 flex gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              if (setupStep === 0) {
-                setShowSetupPopup(false);
-                return;
-              }
-
-              previousSetupStep();
-            }}
-            className="w-1/2 rounded-2xl border border-slate-200 py-3 text-sm font-black text-slate-600 transition hover:bg-slate-50"
-          >
-            {setupStep === 0 ? "Cancel" : "Back"}
-          </button>
-
-          <button
-            type="button"
-            onClick={nextSetupStep}
-            disabled={!canGoNext}
-            className="w-1/2 rounded-2xl bg-slate-950 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-blue-700 disabled:opacity-40 disabled:hover:scale-100"
-          >
-            {setupStep === 6 ? "Start →" : "Next →"}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+    
 
   {(loading || rephrasing) && (
   <div className="fixed left-0 top-0 z-[999999999] flex h-[100dvh] w-[100vw] items-center justify-center overflow-hidden bg-white/95 px-4 backdrop-blur-xl">
@@ -2366,7 +2281,21 @@ const previousSetupStep = () => {
             </div>
             
 
-            {(experienceLevel || jobType || industry || cvGoal || urgency) && (
+            {(fullName ||
+  country ||
+  jobRole ||
+  experienceLevel ||
+  jobType ||
+  educationLevel ||
+  industry ||
+  urgency ||
+  mainStrength ||
+  cvGoal ||
+  certificates ||
+  portfolio ||
+  workAvailability ||
+  toneStyle ||
+  coverLetterNeed) && (
               <div
   id="ai-setup-summary"
   className="rounded-3xl border border-blue-100 bg-blue-50 p-4"
@@ -2387,6 +2316,65 @@ const previousSetupStep = () => {
     Edit answers
   </button>
 </div>
+      {fullName && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Name: {fullName}
+  </span>
+)}
+
+{country && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Country: {country}
+  </span>
+)}
+
+{jobRole && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Role: {jobRole}
+  </span>
+)}
+
+{educationLevel && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Education: {educationLevel}
+  </span>
+)}
+
+{mainStrength && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Strength: {mainStrength}
+  </span>
+)}
+
+{certificates && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Certificates: {certificates}
+  </span>
+)}
+
+{portfolio && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Portfolio: {portfolio}
+  </span>
+)}
+
+{workAvailability && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Availability: {workAvailability}
+  </span>
+)}
+
+{toneStyle && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Style: {toneStyle}
+  </span>
+)}
+
+{coverLetterNeed && (
+  <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
+    Cover Letter: {coverLetterNeed}
+  </span>
+)}
 
                 <div className="mt-3 grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
                   {experienceLevel && (
