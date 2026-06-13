@@ -1,10 +1,14 @@
 import { supabase } from "@/lib/supabase";
 
 export async function checkSubscription(userEmail: string) {
+  const email = userEmail.toLowerCase().trim();
+
   const { data, error } = await supabase
     .from("subscriptions")
-    .select("status")
-    .eq("user_email", userEmail.toLowerCase().trim())
+    .select("status, plan, started_at")
+    .eq("user_email", email)
+    .order("started_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (error || !data) {
@@ -19,10 +23,14 @@ export async function checkSubscription(userEmail: string) {
 }
 
 export async function checkProSubscription(userEmail: string) {
+  const email = userEmail.toLowerCase().trim();
+
   const { data, error } = await supabase
     .from("subscriptions")
-    .select("status, plan")
-    .eq("user_email", userEmail.toLowerCase().trim())
+    .select("status, plan, started_at")
+    .eq("user_email", email)
+    .order("started_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (error || !data) {
