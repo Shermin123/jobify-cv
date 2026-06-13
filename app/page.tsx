@@ -25,6 +25,8 @@ const [cvIssues, setCvIssues] = useState<CvIssue[]>([]);
   const [analyzedScore, setAnalyzedScore] = useState<number | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [showScorePopup, setShowScorePopup] = useState(false);
+  const [showScoreAd, setShowScoreAd] = useState(false);
+const [scoreAdSeconds, setScoreAdSeconds] = useState(4);
 
   const router = useRouter();
   const { data: session } = useSession();
@@ -339,21 +341,38 @@ useEffect(() => {
 }
 
   setAnalyzing(true);
+setShowScoreAd(true);
+setScoreAdSeconds(4);
 
-  setTimeout(() => {
-    const result = calculateScore();
-setAnalyzedScore(result.score);
-setCvIssues(result.issues);
-setShowScorePopup(true);
+let seconds = 4;
 
-if (!isUnlocked) {
-  const newUsed = freeChecksUsed + 1;
-  setFreeChecksUsed(newUsed);
-  localStorage.setItem("jobify_free_checks_used", String(newUsed));
-}
+const countdown = setInterval(() => {
+  seconds -= 1;
+  setScoreAdSeconds(seconds);
 
-    setAnalyzing(false);
-  }, 1200);
+  if (seconds <= 0) {
+    clearInterval(countdown);
+  }
+}, 1000);
+
+setTimeout(() => {
+  clearInterval(countdown);
+
+  const result = calculateScore();
+
+  setAnalyzedScore(result.score);
+  setCvIssues(result.issues);
+  setShowScoreAd(false);
+  setShowScorePopup(true);
+
+  if (!isUnlocked) {
+    const newUsed = freeChecksUsed + 1;
+    setFreeChecksUsed(newUsed);
+    localStorage.setItem("jobify_free_checks_used", String(newUsed));
+  }
+
+  setAnalyzing(false);
+}, 4000);
 };
 
 const goToCVGenerator = () => {
@@ -1788,7 +1807,7 @@ const getRiskMessage = () => {
 
         <div className="mt-4 space-y-2 text-sm text-slate-500">
           <p>Email: support@jobify.cv</p>
-          <p>Location: Dubai, United Kingdom</p>
+          <p>Location: London, United Kingdom</p>
         </div>
 
         <div className="flex gap-3 mt-5">
