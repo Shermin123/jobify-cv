@@ -1954,40 +1954,7 @@ const previousSetupStep = () => {
               </div>
             </div>
 
-<div className="rounded-[32px] border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-white to-blue-50 p-5 text-center shadow-2xl">
-  <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-600">
-    ATS success score
-  </p>
 
-  <h2 className="mt-3 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
-    {atsScore}% ATS
-  </h2>
-
-  <p className="mt-3 text-xl font-black leading-snug text-emerald-700 md:text-2xl">
-    Your CV and cover letter are strongly optimised for this job.
-  </p>
-
-  <p className="mx-auto mt-3 max-w-2xl text-sm font-bold leading-6 text-slate-600 md:text-base">
-    This gives you a much stronger chance of passing ATS checks and getting noticed by recruiters.
-  </p>
-
-  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-    <div className="rounded-2xl border border-emerald-200 bg-white p-4">
-      <p className="text-2xl font-black text-emerald-600">✅</p>
-      <p className="mt-1 text-sm font-black text-slate-900">ATS keywords added</p>
-    </div>
-
-    <div className="rounded-2xl border border-blue-200 bg-white p-4">
-      <p className="text-2xl font-black text-blue-600">🎯</p>
-      <p className="mt-1 text-sm font-black text-slate-900">Matched to role</p>
-    </div>
-
-    <div className="rounded-2xl border border-purple-200 bg-white p-4">
-      <p className="text-2xl font-black text-purple-600">🚀</p>
-      <p className="mt-1 text-sm font-black text-slate-900">Ready to apply</p>
-    </div>
-  </div>
-</div>
             {/* KEYWORDS */}
             <div className="bg-white/90 backdrop-blur-xl border rounded-3xl p-5 shadow-sm">
               <h3 className="font-black text-lg mb-3">
@@ -2012,50 +1979,9 @@ const previousSetupStep = () => {
                 )}
               </div>
             </div>
-            {/* ATS RESULT BANNER */}
-<div className="rounded-[32px] border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-white to-blue-50 p-6 text-center shadow-2xl">
-  <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-600">
-    CV + Cover Letter Result
-  </p>
-
-  <h2 className="mt-3 text-5xl font-black tracking-tight text-emerald-600 md:text-7xl">
-    {atsScore}% ATS
-  </h2>
-
-  <p className="mt-3 text-2xl font-black leading-snug text-slate-950 md:text-3xl">
-    Very high chance of passing ATS screening
-  </p>
-
-  <p className="mx-auto mt-3 max-w-2xl text-base font-bold leading-7 text-slate-600">
-    Your CV and cover letter are strongly optimised for this job role with ATS keywords, better structure, and recruiter-focused wording.
-  </p>
-
-  <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-    <div className="rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm">
-      <p className="text-3xl">✅</p>
-      <p className="mt-2 text-sm font-black text-slate-900">
-        ATS keywords added
-      </p>
-    </div>
-
-    <div className="rounded-2xl border border-blue-200 bg-white p-4 shadow-sm">
-      <p className="text-3xl">🎯</p>
-      <p className="mt-2 text-sm font-black text-slate-900">
-        Matched to job role
-      </p>
-    </div>
-
-    <div className="rounded-2xl border border-purple-200 bg-white p-4 shadow-sm">
-      <p className="text-3xl">🚀</p>
-      <p className="mt-2 text-sm font-black text-slate-900">
-        Ready to apply
-      </p>
-    </div>
-  </div>
-</div>
 
             {/* DOCUMENT PREVIEW CARDS */}
-            <div className="grid lg:grid-cols-2 gap-6">
+<div className="grid lg:grid-cols-2 gap-6">
               {/* CV CARD */}
               <div className="group relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
@@ -2100,16 +2026,26 @@ const previousSetupStep = () => {
                     </div>
 
                     {!isUnlocked && showUnlock && (
-                      <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
-                        <div className="text-center px-5">
-                          <div className="text-5xl mb-3 animate-bounce">🔒</div>
-                          <h4 className="font-black text-lg">Unlock full CV</h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            View, copy and download your full CV.
-                          </p>
-                        </div>
-                      </div>
-                    )}
+  <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center animate-fadeUp">
+    <div className="text-center px-5">
+      <div className="mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 text-3xl font-black text-white shadow-2xl">
+        {atsScore}%
+      </div>
+
+      <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-600">
+        ATS Optimised
+      </p>
+
+      <h4 className="mt-2 text-xl font-black text-slate-950">
+        Unlock full CV
+      </h4>
+
+      <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+        Strongly matched to this job. Subscribe to view, copy and download.
+      </p>
+    </div>
+  </div>
+)}
                   </div>
 
                   {showUnlock && (
@@ -2198,19 +2134,28 @@ const previousSetupStep = () => {
                       )}
                     </div>
 
-                    {!isUnlocked && showUnlock && (
-                      <div className="absolute inset-0 bg-white/75 backdrop-blur-md flex items-center justify-center animate-fadeUp">
-                        <div className="text-center px-5">
-                          <div className="text-5xl mb-3 animate-bounce">🔒</div>
-                          <h4 className="font-black text-lg">
-                            Unlock cover letter
-                          </h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Copy and send your personalised letter.
-                          </p>
-                        </div>
-                      </div>
-                    )}
+                      {!isUnlocked && showUnlock && (
+  <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center animate-fadeUp">
+    <div className="text-center px-5">
+      <div className="mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-purple-600 text-3xl font-black text-white shadow-2xl">
+        {atsScore}%
+      </div>
+
+      <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-600">
+        ATS Optimised
+      </p>
+
+      <h4 className="mt-2 text-xl font-black text-slate-950">
+        Unlock cover letter
+      </h4>
+
+      <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+        Strongly matched to this job. Subscribe to view, copy and download.
+      </p>
+    </div>
+  </div>
+  
+)}
                   </div>
 
                   {showUnlock && (
