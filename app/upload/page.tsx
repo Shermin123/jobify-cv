@@ -2376,7 +2376,7 @@ const previousSetupStep = () => {
   </span>
 )}
 
-                <div className="mt-3 grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+                <div className="mt-3 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 text-xs">
                   {experienceLevel && (
                     <span className="rounded-full bg-white border px-3 py-2 font-bold text-slate-600">
                       Level: {experienceLevel}
