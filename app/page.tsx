@@ -48,6 +48,15 @@ useEffect(() => {
 
   checkAccess();
 }, [session?.user?.email]);
+useEffect(() => {
+  if (!showScoreAd) return;
+
+  try {
+    ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+  } catch (error) {
+    console.error("AdSense error:", error);
+  }
+}, [showScoreAd]);
   // ================= CV SCORE ENGINE =================
   const calculateScore = () => {
   const raw = cvText.trim();
@@ -419,28 +428,36 @@ const getRiskMessage = () => {
           Advertisement
         </p>
 
-        <div className="mt-3 flex h-[250px] w-full items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
-          <div className="text-center">
-            <p className="text-sm font-black text-slate-500">
-              Ad Space
-            </p>
-            <p className="mt-1 text-xs font-semibold text-slate-400">
-              300 × 250 display ad
-            </p>
-          </div>
-        </div>
+        <div className="mt-3 flex h-[250px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+  <ins
+    className="adsbygoogle"
+    style={{ display: "inline-block", width: "300px", height: "250px" }}
+    data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+    data-ad-slot="YOUR_AD_SLOT_ID"
+  />
+</div>
 
-        <p className="mt-4 text-sm font-black text-slate-900">
-          Checking your CV score...
-        </p>
+        <div className="mt-5 rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-5 text-center shadow-sm">
+  <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
+    CV score loading
+  </p>
 
-        <p className="mt-1 text-xs font-semibold text-slate-500">
-          Result showing in {scoreAdSeconds}s
-        </p>
+  <h2 className="mt-2 text-2xl font-black leading-tight text-slate-950">
+    Your CV score will be shown in
+  </h2>
 
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-          <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-blue-600 to-indigo-600" />
-        </div>
+  <div className="mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-5xl font-black text-white shadow-2xl">
+    {scoreAdSeconds}
+  </div>
+
+  <p className="mt-3 text-lg font-black text-slate-800">
+    seconds
+  </p>
+
+  <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
+    <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-blue-600 to-indigo-600" />
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -783,6 +800,17 @@ const getRiskMessage = () => {
         </p>
       </div>
     </div>
+    <button
+  onClick={analyseFreeCV}
+  disabled={analyzing}
+  className="mt-4 w-full rounded-2xl bg-black py-4 text-base font-black text-white shadow-lg transition hover:bg-slate-800 disabled:opacity-50"
+>
+  {analyzing
+    ? "Checking your CV..."
+    : isUnlocked || freeChecksLeft > 0
+    ? "Check My CV Score"
+    : "Free Limit Reached — Upgrade"}
+</button>
 
     <div className="mt-4 rounded-[22px] border border-red-200 bg-red-50 p-3">
       {analyzedScore === null ? (
@@ -1071,18 +1099,7 @@ const getRiskMessage = () => {
       </div>
     </div>
 
-    <button
-      onClick={analyseFreeCV}
-      disabled={analyzing}
-      className="mt-4 w-full rounded-2xl bg-black py-3.5 text-sm font-black text-white transition hover:bg-slate-800 disabled:opacity-50"
-    >
-      {analyzing
-        ? "Checking your CV..."
-        : isUnlocked || freeChecksLeft > 0
-        ? "Check My CV Score"
-        : "Free Limit Reached — Upgrade"}
-    </button>
-
+    
     {analyzedScore !== null && (
       <div className="mt-3 rounded-2xl border border-blue-100 bg-blue-50 p-3 text-center shadow-sm">
         <p className="text-sm font-black text-slate-900">
