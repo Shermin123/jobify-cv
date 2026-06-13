@@ -38,7 +38,7 @@ export default function Navbar() {
             className="flex shrink-0 items-center gap-2 transition active:scale-[0.98]"
           >
             <img
-              src="/j-logo.png"
+              src="/jobify-logo-new.png"
               alt="Jobifycv logo"
               className="h-12 w-12 shrink-0 object-contain"
             />
