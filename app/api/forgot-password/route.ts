@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jobifycv.co";
     const resetLink = `${appUrl}/reset-password?token=${token}`;
     if (!resendApiKey) {
   return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
 const resend = new Resend(resendApiKey);
 
     await resend.emails.send({
-      from: "Jobify <onboarding@resend.dev>",
+      from: "Jobifycv.co <no-reply@jobifycv.co>",
       to: cleanEmail,
       subject: "Reset your Jobify password",
       html: `
