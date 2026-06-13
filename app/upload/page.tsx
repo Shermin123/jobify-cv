@@ -2007,7 +2007,7 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[320px] md:h-[340px] overflow-hidden shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
@@ -2025,44 +2025,54 @@ const previousSetupStep = () => {
                       )}
                     </div>
 
-                    {!isUnlocked && showUnlock && (
-  <div className="absolute inset-0 flex items-center justify-center bg-white/85 px-4 backdrop-blur-xl animate-fadeUp">
-    <div className="w-full max-w-[320px] overflow-hidden rounded-[28px] border border-blue-100 bg-white shadow-[0_25px_70px_rgba(37,99,235,0.22)]">
-      <div className="h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-500" />
+                    
+                      {!isUnlocked && showUnlock && (
+  <div className="absolute inset-0 overflow-hidden bg-white/95 backdrop-blur-xl animate-fadeUp">
+    <div className="absolute -left-20 -top-20 h-52 w-52 rounded-full bg-blue-200/50 blur-3xl" />
+    <div className="absolute -bottom-24 -right-20 h-56 w-56 rounded-full bg-cyan-200/60 blur-3xl" />
 
-      <div className="p-5 text-center">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] bg-gradient-to-br from-blue-600 to-emerald-500 text-3xl font-black text-white shadow-xl animate-softPulse">
-          {atsScore}%
+    <div className="relative flex h-full items-center justify-center px-5">
+      <div className="w-full max-w-[360px] rounded-[30px] border border-slate-200 bg-white p-5 text-center shadow-[0_24px_70px_rgba(15,23,42,0.14)]">
+        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-cyan-500 to-emerald-400 p-[5px] shadow-[0_18px_45px_rgba(37,99,235,0.35)]">
+          <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
+            <span className="text-3xl font-black tracking-tight text-slate-950">
+              {atsScore}%
+            </span>
+          </div>
         </div>
 
         <p className="mt-4 text-[11px] font-black uppercase tracking-[0.22em] text-blue-600">
-          ATS score unlocked preview
+          ATS score preview
         </p>
 
-        <h4 className="mt-2 text-xl font-black tracking-tight text-slate-950">
+        <h4 className="mt-2 text-2xl font-black tracking-tight text-slate-950">
           High-match CV ready
         </h4>
 
-        <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-          This CV is strongly optimised with recruiter-friendly wording and ATS keywords.
+        <p className="mx-auto mt-2 max-w-[290px] text-sm font-semibold leading-6 text-slate-600">
+          Your CV is optimised with stronger wording, ATS keywords, and a recruiter-friendly structure.
         </p>
 
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <div className="rounded-2xl bg-blue-50 p-2 text-center">
-            <p className="text-lg">✅</p>
-            <p className="text-[10px] font-black text-blue-700">Keywords</p>
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-3">
+            <p className="text-xl">✅</p>
+            <p className="mt-1 text-[10px] font-black text-blue-700">Keywords</p>
           </div>
 
-          <div className="rounded-2xl bg-emerald-50 p-2 text-center">
-            <p className="text-lg">🎯</p>
-            <p className="text-[10px] font-black text-emerald-700">Matched</p>
+          <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3">
+            <p className="text-xl">🎯</p>
+            <p className="mt-1 text-[10px] font-black text-emerald-700">Matched</p>
           </div>
 
-          <div className="rounded-2xl bg-purple-50 p-2 text-center">
-            <p className="text-lg">🔒</p>
-            <p className="text-[10px] font-black text-purple-700">Locked</p>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+            <p className="text-xl">🔒</p>
+            <p className="mt-1 text-[10px] font-black text-slate-700">Locked</p>
           </div>
         </div>
+
+        <p className="mt-4 text-xs font-bold leading-5 text-slate-500">
+          Subscribe to unlock, copy, edit, and download the full CV.
+        </p>
       </div>
     </div>
   </div>
@@ -2137,7 +2147,7 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[230px] md:h-[280px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[320px] md:h-[340px] overflow-hidden shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
@@ -2156,43 +2166,54 @@ const previousSetupStep = () => {
                     </div>
 
                       {!isUnlocked && showUnlock && (
-  <div className="absolute inset-0 flex items-center justify-center bg-white/85 px-4 backdrop-blur-xl animate-fadeUp">
-    <div className="w-full max-w-[320px] overflow-hidden rounded-[28px] border border-purple-100 bg-white shadow-[0_25px_70px_rgba(147,51,234,0.22)]">
-      <div className="h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-emerald-500" />
+  <div className="absolute inset-0 overflow-hidden bg-white/90 backdrop-blur-xl animate-fadeUp">
+    <div className="absolute -left-20 -top-20 h-56 w-56 rounded-full bg-purple-200/50 blur-3xl" />
+    <div className="absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-pink-200/50 blur-3xl" />
 
-      <div className="p-5 text-center">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] bg-gradient-to-br from-purple-600 to-emerald-500 text-3xl font-black text-white shadow-xl animate-softPulse">
+    <div className="relative flex h-full items-center justify-center p-5">
+      <div className="w-full max-w-[420px] rounded-[32px] border border-purple-100 bg-white p-5 text-center shadow-[0_28px_80px_rgba(147,51,234,0.20)]">
+        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[28px] bg-gradient-to-br from-purple-600 via-pink-500 to-emerald-500 text-4xl font-black text-white shadow-[0_20px_45px_rgba(147,51,234,0.35)] transition duration-500 hover:scale-105">
           {atsScore}%
         </div>
 
-        <p className="mt-4 text-[11px] font-black uppercase tracking-[0.22em] text-purple-600">
-          ATS score unlocked preview
+        <p className="mt-5 text-[11px] font-black uppercase tracking-[0.24em] text-purple-600">
+          ATS score preview
         </p>
 
-        <h4 className="mt-2 text-xl font-black tracking-tight text-slate-950">
+        <h4 className="mt-2 text-2xl font-black tracking-tight text-slate-950">
           High-match letter ready
         </h4>
 
-        <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-          This cover letter is tailored to the role with stronger professional wording.
+        <p className="mx-auto mt-3 max-w-[300px] text-sm font-semibold leading-6 text-slate-600">
+          Your cover letter is tailored to the job with stronger wording, role focus, and a professional tone.
         </p>
 
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <div className="rounded-2xl bg-purple-50 p-2 text-center">
-            <p className="text-lg">✉️</p>
-            <p className="text-[10px] font-black text-purple-700">Tailored</p>
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          <div className="rounded-2xl bg-purple-50 p-3">
+            <p className="text-xl">✉️</p>
+            <p className="mt-1 text-[10px] font-black text-purple-700">
+              Tailored
+            </p>
           </div>
 
-          <div className="rounded-2xl bg-emerald-50 p-2 text-center">
-            <p className="text-lg">🎯</p>
-            <p className="text-[10px] font-black text-emerald-700">Matched</p>
+          <div className="rounded-2xl bg-emerald-50 p-3">
+            <p className="text-xl">🎯</p>
+            <p className="mt-1 text-[10px] font-black text-emerald-700">
+              Matched
+            </p>
           </div>
 
-          <div className="rounded-2xl bg-blue-50 p-2 text-center">
-            <p className="text-lg">🔒</p>
-            <p className="text-[10px] font-black text-blue-700">Locked</p>
+          <div className="rounded-2xl bg-slate-100 p-3">
+            <p className="text-xl">🔒</p>
+            <p className="mt-1 text-[10px] font-black text-slate-700">
+              Locked
+            </p>
           </div>
         </div>
+
+        <p className="mt-5 rounded-2xl border border-purple-100 bg-purple-50 px-4 py-3 text-xs font-bold leading-5 text-slate-700">
+          Subscribe to unlock the full cover letter, copy it, edit it, and download PDF/DOCX.
+        </p>
       </div>
     </div>
   </div>
