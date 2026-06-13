@@ -800,17 +800,7 @@ const getRiskMessage = () => {
         </p>
       </div>
     </div>
-    <button
-  onClick={analyseFreeCV}
-  disabled={analyzing}
-  className="mt-4 w-full rounded-2xl bg-black py-4 text-base font-black text-white shadow-lg transition hover:bg-slate-800 disabled:opacity-50"
->
-  {analyzing
-    ? "Checking your CV..."
-    : isUnlocked || freeChecksLeft > 0
-    ? "Check My CV Score"
-    : "Free Limit Reached — Upgrade"}
-</button>
+    
 
     <div className="mt-4 rounded-[22px] border border-red-200 bg-red-50 p-3">
       {analyzedScore === null ? (
@@ -891,7 +881,19 @@ const getRiskMessage = () => {
             : "Free scan limit reached"}
         </span>
       </div>
-    </div>
+          </div>
+
+    <button
+      onClick={analyseFreeCV}
+      disabled={analyzing}
+      className="mt-4 w-full rounded-2xl bg-black py-4 text-base font-black text-white shadow-lg transition hover:bg-slate-800 disabled:opacity-50"
+    >
+      {analyzing
+        ? "Checking your CV..."
+        : isUnlocked || freeChecksLeft > 0
+        ? "Check My CV Score"
+        : "Free Limit Reached — Upgrade"}
+    </button>
 
     <div className="mt-4 grid gap-4 lg:grid-cols-[0.72fr_1fr]">
       <div className="rounded-[22px] border border-red-500/20 bg-slate-950 p-4 text-white">
