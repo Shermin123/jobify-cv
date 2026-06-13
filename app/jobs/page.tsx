@@ -557,6 +557,12 @@ const [autoApplyCount, setAutoApplyCount] = useState(0);
   const [cardAction, setCardAction] = useState<"left" | "right" | "up" | null>(
     null
   );
+  const [applyNotice, setApplyNotice] = useState<{
+  company: string;
+  title: string;
+  location: string;
+  logo?: string;
+} | null>(null);
   
 
   const currentJob = jobs[currentIndex];
@@ -727,6 +733,39 @@ const increaseFreeAutoApplyUsage = () => {
   localStorage.setItem(key, String(nextCount));
   setAutoApplyCount(nextCount);
 };
+const playApplySound = () => {
+  try {
+    const AudioContextClass =
+      window.AudioContext || (window as any).webkitAudioContext;
+
+    const audioContext = new AudioContextClass();
+    const now = audioContext.currentTime;
+
+    const playTone = (frequency: number, start: number, duration: number) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, now + start);
+
+      gain.gain.setValueAtTime(0, now + start);
+      gain.gain.linearRampToValueAtTime(0.12, now + start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + start + duration);
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start(now + start);
+      oscillator.stop(now + start + duration);
+    };
+
+    playTone(660, 0, 0.16);
+    playTone(880, 0.12, 0.18);
+    playTone(1040, 0.26, 0.22);
+
+    setTimeout(() => audioContext.close(), 700);
+  } catch {}
+};
 
 const handleApply = () => {
   if (!session?.user?.email) {
@@ -757,9 +796,22 @@ const handleApply = () => {
 
   const jobSnapshot = currentJob;
 
-  setCardAction("right");
-  setMessage(`Applied to ${jobSnapshot.company}`);
-  moveToNextJob();
+playApplySound();
+
+setApplyNotice({
+  company: jobSnapshot.company,
+  title: jobSnapshot.title,
+  location: jobSnapshot.location,
+  logo: jobSnapshot.logo,
+});
+
+setTimeout(() => {
+  setApplyNotice(null);
+}, 4500);
+
+setCardAction("right");
+setMessage(`Applied to ${jobSnapshot.company}`);
+moveToNextJob();
   if (!isSubscribed) {
   increaseFreeAutoApplyUsage();
 }
@@ -814,6 +866,51 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
+      {applyNotice && (
+  <div className="fixed inset-x-3 top-20 z-[999] mx-auto max-w-md animate-jobifyApplyToast rounded-[28px] border border-emerald-200 bg-white/95 p-4 shadow-[0_24px_80px_rgba(16,185,129,0.35)] backdrop-blur-2xl">
+    <div className="flex items-start gap-4">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 p-2 ring-1 ring-emerald-100">
+        <img
+          src={getCompanyLogo(applyNotice.company, applyNotice.logo)}
+          alt={`${applyNotice.company} logo`}
+          className="h-9 w-9 object-contain"
+          onError={(e) => {
+            e.currentTarget.src =
+              "https://www.google.com/s2/favicons?domain=google.com&sz=128";
+          }}
+        />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-sm font-black text-white">
+            ✓
+          </span>
+
+          <p className="text-sm font-black uppercase tracking-[0.16em] text-emerald-600">
+            Application sent
+          </p>
+        </div>
+
+        <p className="mt-2 text-lg font-black leading-tight text-slate-950">
+          {applyNotice.company}
+        </p>
+
+        <p className="mt-1 line-clamp-2 text-sm font-bold text-slate-700">
+          {applyNotice.title}
+        </p>
+
+        <p className="mt-1 text-xs font-semibold text-slate-500">
+          {applyNotice.location}
+        </p>
+
+        <p className="mt-3 rounded-2xl bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">
+          CV and cover letter recorded successfully
+        </p>
+      </div>
+    </div>
+  </div>
+)}
          <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
   <div className="absolute inset-0 bg-[#f3f2ef]" />
 
@@ -1206,6 +1303,27 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
 </section>
 
       <style>{`
+        @keyframes jobifyApplyToast {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.94);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0) scale(1.02);
+  }
+  25% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-jobifyApplyToast {
+  animation: jobifyApplyToast 0.45s ease-out both;
+}
         @keyframes jobifyBar {
           0% {
             transform: translateX(-120%);
