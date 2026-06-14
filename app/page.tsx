@@ -690,7 +690,7 @@ const getRiskMessage = () => {
 </div>
 
       {/* ================= HERO ================= */}
-      <section className="relative z-10 px-4 sm:px-6 pt-4 md:pt-6 pb-6 md:pb-8">
+      <section className="relative z-10 -mt-10 px-4 sm:px-6 pb-6 md:-mt-14 md:pb-8">
 
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
 
