@@ -434,29 +434,13 @@ const getRiskMessage = () => {
 
   return (
   <main className="relative min-h-screen overflow-x-hidden bg-white text-gray-900">
-  <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-  <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50" />
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
+      <div className="absolute top-40 -right-32 h-96 w-96 rounded-full bg-indigo-200/40 blur-3xl" />
+      <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl" />
 
-  {/* TOP ROW */}
-  <div className="absolute left-[5%] top-[10%] text-3xl opacity-40">📄</div>
-  <div className="absolute left-[24%] top-[14%] text-3xl opacity-35">💼</div>
-  <div className="absolute left-[46%] top-[9%] text-3xl opacity-35">🤖</div>
-  <div className="absolute right-[24%] top-[15%] text-3xl opacity-35">📝</div>
-  <div className="absolute right-[5%] top-[10%] text-3xl opacity-40">🎯</div>
-
-  {/* MIDDLE ROW */}
-  <div className="absolute left-[8%] top-[43%] text-3xl opacity-35">📊</div>
-  <div className="absolute left-[30%] top-[50%] text-3xl opacity-30">✨</div>
-  <div className="absolute right-[30%] top-[50%] text-3xl opacity-30">⚡</div>
-  <div className="absolute right-[8%] top-[43%] text-3xl opacity-35">🚀</div>
-
-  {/* BOTTOM ROW */}
-  <div className="absolute left-[6%] bottom-[12%] text-3xl opacity-35">✅</div>
-  <div className="absolute left-[27%] bottom-[8%] text-3xl opacity-30">💡</div>
-  <div className="absolute left-[48%] bottom-[13%] text-3xl opacity-30">🔍</div>
-  <div className="absolute right-[27%] bottom-[8%] text-3xl opacity-30">📌</div>
-  <div className="absolute right-[6%] bottom-[12%] text-3xl opacity-35">📈</div>
-</div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
+    </div>
 
     {showScoreAd && (
   <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-4 py-4 backdrop-blur-xl">
@@ -636,7 +620,7 @@ const getRiskMessage = () => {
 
       
       {/* ================= STATS MARQUEE ================= */}
-      <div className="relative z-10 bg-white border-b overflow-hidden py-2 text-xs md:text-sm">
+      <div className="bg-white border-b overflow-hidden py-2 text-xs md:text-sm relative z-0">
   <div className="marquee-slow whitespace-nowrap pointer-events-none text-gray-700 font-medium">
     {statsLine.repeat(2)}
   </div>
@@ -645,7 +629,7 @@ const getRiskMessage = () => {
       {/* ================= AI LOGOS (FIXED OPENAI) ================= */}
       {/* ================= TRUSTED BY / AI PARTNERS ================= */}
 {/* ================= TRUSTED AI PARTNERS ================= */}
-<div className="relative z-10 bg-white border-b py-4">
+<div className="bg-white border-b py-4">
   <div className="max-w-6xl mx-auto px-4">
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
 
@@ -690,9 +674,9 @@ const getRiskMessage = () => {
 </div>
 
       {/* ================= HERO ================= */}
-      <section className="relative z-10 -mt-10 px-4 sm:px-6 pb-6 md:-mt-14 md:pb-8">
+      <section className="relative z-10 px-4 sm:px-6 pt-4 md:pt-6 pb-6 md:pb-8">
 
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-2 lg:grid-cols-[0.9fr_0.8fr] lg:gap-8">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
 
   {/* LEFT HERO */}
   <div className="text-center lg:text-left">
@@ -763,7 +747,7 @@ const getRiskMessage = () => {
         {/* ================= CV SCORE ================= */}
 <div
   id="cv-score"
-  className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-[24px] border border-red-100 bg-white p-3 text-left shadow-xl sm:p-4 lg:max-w-[520px]"
+  className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[24px] border border-red-100 bg-white p-3 text-left shadow-xl sm:p-4 lg:max-w-none"
 >
   <div className="absolute -right-20 -top-20 h-44 w-44 rounded-full bg-red-100 opacity-70 blur-3xl" />
   <div className="absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-orange-100 opacity-70 blur-3xl" />
@@ -888,7 +872,7 @@ const getRiskMessage = () => {
         : "Free Limit Reached — Upgrade"}
     </button>
 
-    <div className="mt-4 grid gap-4">
+    <div className="mt-4 grid gap-4 lg:grid-cols-[0.72fr_1fr]">
       <div className="rounded-[22px] border border-red-500/20 bg-slate-950 p-4 text-white">
         <p className="text-xs font-black uppercase tracking-wide text-white/40">
           CV Job-Readiness Score
