@@ -1,22 +1,126 @@
 import { NextResponse } from "next/server";
 
+type GenerateCvRequest = {
+  cvText?: string;
+  fullName?: string;
+  jobRole?: string;
+  country?: string;
+  jobDescription?: string;
+  userEmail?: string;
+  experienceLevel?: string;
+  jobType?: string;
+  educationLevel?: string;
+  industry?: string;
+  urgency?: string;
+  mainStrength?: string;
+  cvGoal?: string;
+  certificates?: string;
+  portfolio?: string;
+  workAvailability?: string;
+  toneStyle?: string;
+  coverLetterNeed?: string;
+  weaknessFix?: string;
+  cvLength?: string;
+  qualityInstructions?: string;
+};
+
+const cleanAiText = (value: string) => {
+  return String(value || "")
+    .replace(/^Optimised CV\s*/gi, "")
+    .replace(/^Optimized CV\s*/gi, "")
+    .replace(/^Curriculum Vitae\s*/gi, "")
+    .replace(/^Resume\s*/gi, "")
+    .replace(/^Cover Letter\s*/gi, "")
+    .replace(/\bOptimised CV\b/gi, "")
+    .replace(/\bOptimized CV\b/gi, "")
+    .replace(/\bCurriculum Vitae\b/gi, "")
+    .replace(/\bCover Letter\b/gi, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*/g, "")
+    .replace(/#{1,6}\s?/g, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+};
+
+const cleanKeyword = (value: string) => {
+  return cleanAiText(value)
+    .replace(/^-+/, "")
+    .replace(/,+$/, "")
+    .trim();
+};
+
+const parseJsonSafely = (content: string) => {
+  try {
+    return JSON.parse(content);
+  } catch {
+    const cleaned = content
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    try {
+      return JSON.parse(cleaned);
+    } catch {
+      const firstBrace = cleaned.indexOf("{");
+      const lastBrace = cleaned.lastIndexOf("}");
+
+      if (firstBrace === -1 || lastBrace === -1) {
+        throw new Error("AI returned invalid JSON");
+      }
+
+      return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1));
+    }
+  }
+};
+
+const clampAtsScore = (score: unknown) => {
+  const parsedScore =
+    typeof score === "number" ? score : Number(String(score || "").trim());
+
+  if (!Number.isFinite(parsedScore)) return 94;
+
+  return Math.max(70, Math.min(98, Math.round(parsedScore)));
+};
+
 export async function POST(req: Request) {
   try {
     const {
       cvText,
+      fullName,
       jobRole,
       country,
       jobDescription,
+      userEmail,
       experienceLevel,
       jobType,
+      educationLevel,
       industry,
-      cvGoal,
       urgency,
-    } = await req.json();
+      mainStrength,
+      cvGoal,
+      certificates,
+      portfolio,
+      workAvailability,
+      toneStyle,
+      coverLetterNeed,
+      weaknessFix,
+      cvLength,
+      qualityInstructions,
+    }: GenerateCvRequest = await req.json();
 
-    if (!cvText) {
+    const originalCv = String(cvText || "").trim();
+
+    if (!originalCv) {
       return NextResponse.json(
         { error: "CV text is required" },
+        { status: 400 }
+      );
+    }
+
+    if (originalCv.split(/\s+/).filter(Boolean).length < 80) {
+      return NextResponse.json(
+        { error: "Please paste at least 80 words from your CV." },
         { status: 400 }
       );
     }
@@ -35,7 +139,6 @@ Return ONLY valid JSON.
 No markdown.
 No backticks.
 No asterisks.
-No fake information.
 No extra text outside JSON.
 
 JSON format:
@@ -47,39 +150,49 @@ JSON format:
 }
 
 MAIN OBJECTIVE:
-Create a clean, premium, ATS-friendly CV and a tailored cover letter.
-The CV must look professional when exported to PDF/DOCX as plain text.
-The CV must be easy to read, well-spaced, recruiter-ready, and honest.
+Create a premium, honest, ATS-friendly CV and a tailored cover letter.
+The output must be stronger than the original CV, but must not invent fake jobs, fake degrees, fake companies, fake certificates, fake dates, fake tools, or fake achievements.
 
 ABSOLUTE FORMATTING RULES:
 - Do NOT write "Optimised CV", "Optimized CV", "Resume", or "Curriculum Vitae" at the top.
-- Start directly with the candidate name.
+- Do NOT write "Cover Letter" at the top of the cover letter.
+- Start the CV directly with the candidate name.
+- Start the cover letter directly with "Dear Hiring Manager,".
 - Do NOT use markdown.
 - Do NOT use asterisks.
-- Do NOT use **bold** markers.
+- Do NOT use bold markers.
 - Do NOT use tables.
 - Do NOT use columns.
 - Do NOT use emojis.
-- Do NOT use graphics.
 - Do NOT use decorative symbols.
-- Use clean section headings only.
-- Use simple hyphen bullet points only.
-- Keep each bullet concise.
-- Leave a blank line between sections.
-- Important ATS keywords must appear naturally in the CV text and also in the keywords array.
-- Do not bold anything in the CV text. The frontend will handle keyword bolding.
+- Use clean uppercase section headings only.
+- Use simple hyphen bullet points only in the CV.
+- Do NOT use bullet points in the cover letter.
+- Leave one blank line between sections.
+- Use plain text only.
 
 CANDIDATE SETUP:
+- Full name: ${fullName || "Use the name from the CV if available"}
+- User email: ${userEmail || "Not provided"}
 - Target role: ${jobRole || "Not specified"}
 - Target country: ${country || "Not specified"}
 - Experience level: ${experienceLevel || "Not specified"}
 - Job type: ${jobType || "Not specified"}
+- Education level: ${educationLevel || "Not specified"}
 - Industry: ${industry || "Not specified"}
-- Main CV improvement goal: ${cvGoal || "Not specified"}
 - Application urgency: ${urgency || "Not specified"}
+- Main strengths: ${mainStrength || "Not specified"}
+- CV improvement goal: ${cvGoal || "Not specified"}
+- Certificates: ${certificates || "Not specified"}
+- Portfolio/projects: ${portfolio || "Not specified"}
+- Availability: ${workAvailability || "Not specified"}
+- Preferred CV tone/style: ${toneStyle || "Professional, modern, ATS-focused"}
+- Cover letter need: ${coverLetterNeed || "Yes, tailored to the role"}
+- Weaknesses to fix: ${weaknessFix || "Improve weak wording, missing keywords, poor structure, and lack of measurable impact"}
+- Preferred CV length: ${cvLength || "1 to 2 pages"}
 
-USE THESE ANSWERS ACTIVELY:
-The CV and cover letter must clearly match the target role, country, experience level, job type, industry, CV goal, urgency, and job description if provided.
+QUALITY INSTRUCTIONS FROM FRONTEND:
+${qualityInstructions || "Create a premium ATS-ready CV with grouped skills, stronger work bullets, project details, and a less generic summary."}
 
 STRICT HONESTY RULES:
 - Do NOT invent companies.
@@ -87,46 +200,97 @@ STRICT HONESTY RULES:
 - Do NOT invent certificates.
 - Do NOT invent dates.
 - Do NOT invent jobs.
-- Do NOT invent achievements.
-- Do NOT invent tools or projects.
-- Improve wording, structure, tone, and impact using only the candidate's real information.
-- If numbers are not provided, do not create fake numbers.
-- If information is missing, keep it professional and general.
+- Do NOT invent fake numbers.
+- Do NOT invent tools unless clearly present in the CV or setup.
+- You may improve wording, structure, clarity, tone, and impact using only real information.
+- If numbers already exist in the CV, keep and use them.
+- If numbers are missing, describe impact honestly without making up percentages.
+- If the candidate is currently studying or the education date is ongoing/future, use "candidate", "student", or "currently pursuing", not "graduate".
+- If graduation is clearly completed, then "graduate" is allowed.
+
+CV QUALITY RULES:
+- The CV must feel premium and recruiter-ready.
+- The professional summary must be specific, not generic.
+- The summary must be 3 to 4 lines.
+- Group the skills section into categories instead of one messy list.
+- Add 3 to 5 strong bullet points for each work experience where possible.
+- Each bullet must start with a strong action verb.
+- Each bullet must be short, clear, and relevant.
+- Improve weak job descriptions into stronger recruiter language.
+- For technical roles, include tools, programming languages, frameworks, cloud, databases, APIs, and projects only when present or clearly implied.
+- For non-technical roles, focus on reliability, customer service, operations, teamwork, communication, problem-solving, and results.
+- For projects, include purpose, tech stack, actions taken, and outcome.
+- Keep the CV concise and ATS-readable.
+- Avoid repetitive phrases.
+- Avoid vague claims like "hardworking" unless backed by evidence.
+- Avoid saying "proven ability" unless the CV gives proof.
+- Avoid overclaiming experience.
 
 CV FORMAT:
-Start directly like this:
+Use this structure when information is available:
 
 FULL NAME
-Location | Phone | Email | LinkedIn | GitHub or Portfolio if provided
+Location | Phone | Email | LinkedIn | GitHub or Portfolio
 
 PROFESSIONAL SUMMARY
-Write 3 to 4 clean lines tailored to the target role.
-Mention experience level, industry, strongest skills, and value to employer.
+3 to 4 clean lines tailored to the target role, country, experience level, industry, and candidate strengths.
 
 CORE SKILLS
-Write one clean comma-separated line with 10 to 16 ATS-relevant skills.
-Do not use bullet points in Core Skills.
+Programming: relevant languages only
+AI, Data & Machine Learning: relevant AI/data skills only
+Cloud, Tools & Platforms: relevant cloud/tools only
+Software & Development: relevant development methods only
+Professional Skills: relevant soft skills only
 
 WORK EXPERIENCE
 Job Title | Company | Location | Dates
-- Start each bullet with a strong action verb.
-- Keep each bullet short and clean.
-- Focus on responsibilities, tools, impact, and role relevance.
-- Include target-role keywords naturally.
-- Do not overuse keywords.
+- Strong action verb + responsibility + relevant tool/skill + impact.
+- Strong action verb + responsibility + relevant tool/skill + impact.
+- Strong action verb + responsibility + relevant tool/skill + impact.
 
 PROJECTS
-Only include this section if useful or present in the original CV.
-Use it for students, freshers, tech applicants, data applicants, and career switchers.
+Project Name
+- Explain what the project did, the tools used, and the outcome.
+- Make projects strong for students, freshers, tech applicants, AI applicants, and career switchers.
 
 EDUCATION
-Degree / Qualification | Institution | Dates
+Degree / Qualification | Institution | Location | Dates
+Relevant dissertation, final project, coursework, or grade if provided.
 
 CERTIFICATIONS
-Only include certificates mentioned by the user.
+Only include named certificates clearly provided by the candidate.
 
 ADDITIONAL INFORMATION
-Only include languages, availability, right to work, driving licence, tools, or volunteering if provided or clearly implied.
+Only include languages, right to work, availability, driving licence, volunteering, or portfolio if provided or clearly implied.
+
+COVER LETTER FORMAT:
+Start directly with:
+
+Dear Hiring Manager,
+
+Then write 4 clean paragraphs:
+Paragraph 1: Confident opening and target role.
+Paragraph 2: Why the candidate is suitable, using real experience from the CV.
+Paragraph 3: Relevant skills, motivation, and value to the employer.
+Paragraph 4: Confident closing and availability or interest.
+
+End with:
+
+Yours sincerely,
+Candidate Name
+
+COVER LETTER RULES:
+- No title.
+- No markdown.
+- No asterisks.
+- No bullet points.
+- No fake claims.
+- Natural human tone.
+- Do not repeat the CV word-for-word.
+- Keep it between 250 and 380 words.
+- Make it specific, not generic.
+- Match the country, job type, industry, and target role.
+- Sound confident but not arrogant.
 
 SPECIAL ADAPTATION RULES:
 - If student/fresher: focus on education, projects, coursework, internships, transferable skills, volunteering, and potential.
@@ -137,45 +301,27 @@ SPECIAL ADAPTATION RULES:
 - If remote: highlight communication, independence, tools, ownership, documentation, and remote collaboration.
 - If night/weekend job: highlight stamina, reliability, availability, responsibility, and time management.
 - If career switch: reframe past experience into transferable skills for the target role.
-- If urgency is Today, This week, Urgent application, or Interview tomorrow: make it direct, polished, concise, and ready to send immediately.
-
-COVER LETTER RULES:
-Create a high-quality tailored cover letter with:
-- Professional greeting
-- Strong confident opening
-- Why the candidate matches the role
-- Key skills and evidence from the CV
-- Motivation for the company or role
-- Confident closing
-- Natural human tone
-- No fake claims
-- No markdown
-- No asterisks
-- No bold markers
-
-COVER LETTER STYLE:
-- Keep it between 250 and 380 words.
-- Make it specific, not generic.
-- Match the country and job type.
-- Sound confident but not arrogant.
-- Do not repeat the CV word-for-word.
+- If urgency is urgent, today, this week, or interview tomorrow: make it direct, polished, concise, and ready to send immediately.
 
 KEYWORDS:
 Return 12 to 20 high-value ATS keywords.
-Keywords must be real skills, tools, responsibilities, job-title keywords, or industry terms from the role, CV, or job description.
-Return clean keyword strings only. No asterisks.
+Keywords must be real skills, tools, responsibilities, job-title keywords, or industry terms from the role, CV, setup, or job description.
+Return clean keyword strings only.
 
 ATS SCORE:
 Return a realistic atsScore between 88 and 98 if the rewritten CV is strong.
 Return lower only if the original CV lacks enough information.
+Do not always return 97.
+The score must reflect CV completeness, keyword match, structure, role relevance, achievements, and clarity.
 
 ORIGINAL CV:
-${cvText}
+${originalCv}
 
 JOB DESCRIPTION:
 ${
-  jobDescription ||
-  "No job description provided. Optimise using the target role, country, job type, industry, and candidate setup."
+  jobDescription?.trim()
+    ? jobDescription.trim()
+    : "No job description provided. Optimise using the target role, country, job type, industry, and candidate setup."
 }
 `;
 
@@ -186,14 +332,14 @@ ${
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        temperature: 0.2,
+        model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+        temperature: 0.12,
         response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
             content:
-              "You are an expert ATS CV writer. Return only valid JSON. Never use markdown, asterisks, bold markers, backticks, or document titles.",
+              "You are an expert ATS CV and cover letter writer. Return only valid JSON. Never use markdown, asterisks, bold markers, backticks, CV titles, cover letter titles, fake claims, fake dates, fake numbers, or fake companies.",
           },
           {
             role: "user",
@@ -207,60 +353,48 @@ ${
 
     if (!res.ok) {
       const message =
-        data?.error?.message || "AI service is busy. Please try again.";
+        data?.error?.message || "AI service failed. Please try again.";
 
       return NextResponse.json(
         {
-          error:
-            message.toLowerCase().includes("rate limit") ||
-            message.toLowerCase().includes("quota")
-              ? "AI is currently busy. Please wait 30 seconds and click Generate again."
-              : message,
+          error: `OpenAI error: ${message}`,
         },
         { status: res.status }
       );
     }
 
     const content = data?.choices?.[0]?.message?.content || "{}";
+    const parsed = parseJsonSafely(content);
 
-    const cleanAiText = (value: string) => {
-      return String(value || "")
-        .replace(/Optimised CV/gi, "")
-        .replace(/Optimized CV/gi, "")
-        .replace(/Curriculum Vitae/gi, "")
-        .replace(/^Resume\s*/gi, "")
-        .replace(/\*\*(.*?)\*\*/g, "$1")
-        .replace(/\*/g, "")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
-    };
+    const optimizedCV = cleanAiText(parsed.optimizedCV || "");
+    const coverLetter = cleanAiText(parsed.coverLetter || "");
 
-    let parsed: any;
-
-    try {
-      parsed = JSON.parse(content);
-    } catch {
-      const cleaned = content
-        .replace(/```json/g, "")
-        .replace(/```/g, "")
-        .trim();
-
-      parsed = JSON.parse(cleaned);
+    if (!optimizedCV || !coverLetter) {
+      return NextResponse.json(
+        { error: "AI returned an incomplete CV package. Please try again." },
+        { status: 500 }
+      );
     }
 
+    const keywords = Array.isArray(parsed.keywords)
+      ? parsed.keywords
+          .map((keyword: string) => cleanKeyword(keyword))
+          .filter(Boolean)
+          .filter((keyword: string, index: number, arr: string[]) => {
+            return (
+              arr.findIndex(
+                (item) => item.toLowerCase() === keyword.toLowerCase()
+              ) === index
+            );
+          })
+          .slice(0, 20)
+      : [];
+
     return NextResponse.json({
-      optimizedCV: cleanAiText(parsed.optimizedCV || ""),
-      coverLetter: cleanAiText(parsed.coverLetter || ""),
-      keywords: Array.isArray(parsed.keywords)
-        ? parsed.keywords
-            .map((keyword: string) => cleanAiText(keyword))
-            .filter(Boolean)
-            .slice(0, 20)
-        : [],
-      atsScore:
-        typeof parsed.atsScore === "number"
-          ? parsed.atsScore
-          : Number(parsed.atsScore) || 94,
+      optimizedCV,
+      coverLetter,
+      keywords,
+      atsScore: clampAtsScore(parsed.atsScore),
     });
   } catch (err: any) {
     return NextResponse.json(
