@@ -51,11 +51,15 @@ useEffect(() => {
 useEffect(() => {
   if (!showScoreAd) return;
 
-  try {
-    ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-  } catch (error) {
-    console.error("AdSense error:", error);
-  }
+  const timer = setTimeout(() => {
+    try {
+      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+    } catch (error) {
+      console.error("AdSense error:", error);
+    }
+  }, 500);
+
+  return () => clearTimeout(timer);
 }, [showScoreAd]);
   // ================= CV SCORE ENGINE =================
   const calculateScore = () => {
