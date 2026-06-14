@@ -10,8 +10,71 @@ if (!stripeSecretKey) {
 const stripe = new Stripe(stripeSecretKey);
 
 function normalizeCountry(country: string) {
-  if (country === "LOW") return "LOW";
-  if (country === "UK") return "UK";
+  const value = String(country || "").trim().toUpperCase();
+
+  const ukCountries = [
+    "UK",
+    "GB",
+    "UNITED KINGDOM",
+    "ENGLAND",
+    "SCOTLAND",
+    "WALES",
+    "NORTHERN IRELAND",
+  ];
+
+  const lowPriceCountries = [
+    "LOW",
+
+    // South Asia
+    "IN",
+    "INDIA",
+    "PK",
+    "PAKISTAN",
+    "BD",
+    "BANGLADESH",
+    "LK",
+    "SRI LANKA",
+    "NP",
+    "NEPAL",
+
+    // Southeast Asia
+    "PH",
+    "PHILIPPINES",
+    "ID",
+    "INDONESIA",
+    "VN",
+    "VIETNAM",
+    "KH",
+    "CAMBODIA",
+    "MM",
+    "MYANMAR",
+
+    // Africa
+    "NG",
+    "NIGERIA",
+    "KE",
+    "KENYA",
+    "GH",
+    "GHANA",
+    "UG",
+    "UGANDA",
+    "TZ",
+    "TANZANIA",
+    "ZA",
+    "SOUTH AFRICA",
+
+    // Other price-sensitive markets
+    "EG",
+    "EGYPT",
+    "MA",
+    "MOROCCO",
+    "TR",
+    "TURKEY",
+  ];
+
+  if (ukCountries.includes(value)) return "UK";
+  if (lowPriceCountries.includes(value)) return "LOW";
+
   return "DEFAULT";
 }
 
@@ -68,7 +131,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jobifycv.co";
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
