@@ -31,13 +31,24 @@ const [scoreAdSeconds, setScoreAdSeconds] = useState(6);
   const router = useRouter();
   const { data: session } = useSession();
 const [isUnlocked, setIsUnlocked] = useState(false);
+const getTodayKey = () => {
+  const today = new Date().toISOString().split("T")[0];
+
+  return session?.user?.email
+    ? `jobify_free_checks_used_${session.user.email}_${today}`
+    : `jobify_free_checks_used_guest_${today}`;
+};
   
   useEffect(() => {
-  const savedChecks = localStorage.getItem("jobify_free_checks_used");
+  const storageKey = getTodayKey();
+  const savedChecks = localStorage.getItem(storageKey);
+
   if (savedChecks) {
     setFreeChecksUsed(Number(savedChecks));
+  } else {
+    setFreeChecksUsed(0);
   }
-}, []);
+}, [session?.user?.email]);
 useEffect(() => {
   const checkAccess = async () => {
     if (!session?.user?.email) return;
@@ -381,12 +392,12 @@ setTimeout(() => {
   if (!isUnlocked) {
     const newUsed = freeChecksUsed + 1;
     setFreeChecksUsed(newUsed);
-    localStorage.setItem("jobify_free_checks_used", String(newUsed));
+    localStorage.setItem(getTodayKey(), String(newUsed));
   }
 
   setAnalyzing(false);
 }, 6000);
-};
+};   
 
 const goToCVGenerator = () => {
   sessionStorage.setItem("jobify_free_cv_text", cvText);
