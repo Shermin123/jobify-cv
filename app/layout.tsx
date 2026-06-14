@@ -4,6 +4,7 @@ import "./globals.css";
 import AuthProvider from "./providers/AuthProvider";
 import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,6 +76,8 @@ export default function RootLayout({
             <PageTransition>{children}</PageTransition>
           </main>
         </AuthProvider>
+
+        <Analytics />
       </body>
     </html>
   );
