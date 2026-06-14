@@ -38,6 +38,20 @@ const cleanAiText = (value: string) => {
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/\*/g, "")
     .replace(/#{1,6}\s?/g, "")
+    .replace(/\bSpearheaded\b/g, "Managed")
+    .replace(/\bspearheaded\b/g, "managed")
+    .replace(/\bArchitected\b/g, "Designed")
+    .replace(/\barchitected\b/g, "designed")
+    .replace(/\bRobust\b/g, "Reliable")
+    .replace(/\brobust\b/g, "reliable")
+    .replace(/\bAdvanced\b/g, "Practical")
+    .replace(/\badvanced\b/g, "practical")
+    .replace(/\bMeticulous\b/g, "Careful")
+    .replace(/\bmeticulous\b/g, "careful")
+    .replace(/\bComprehensive\b/g, "Complete")
+    .replace(/\bcomprehensive\b/g, "complete")
+    .replace(/\bcutting-edge\b/gi, "modern")
+    .replace(/\bdemonstrated success in\b/gi, "experience in")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
@@ -151,7 +165,7 @@ JSON format:
 
 MAIN OBJECTIVE:
 Create a premium, honest, ATS-friendly CV and a tailored cover letter.
-The output must be stronger than the original CV, but must not invent fake jobs, fake degrees, fake companies, fake certificates, fake dates, fake tools, or fake achievements.
+The output must be stronger than the original CV, but must not invent fake jobs, fake degrees, fake companies, fake certificates, fake dates, fake tools, fake numbers, or fake achievements.
 
 ABSOLUTE FORMATTING RULES:
 - Do NOT write "Optimised CV", "Optimized CV", "Resume", or "Curriculum Vitae" at the top.
@@ -171,6 +185,14 @@ ABSOLUTE FORMATTING RULES:
 - Leave one blank line between sections.
 - Use plain text only.
 
+LANGUAGE STYLE RULES:
+- Use natural recruiter-friendly language.
+- Avoid overused AI words such as spearheaded, architected, robust, advanced, meticulous, comprehensive, demonstrated success, and cutting-edge.
+- Do not make the CV sound fake, inflated, or robotic.
+- Do not exaggerate junior, student, fresher, or internship experience.
+- Use clear verbs such as managed, developed, built, improved, supported, created, analysed, coordinated, tested, delivered, maintained, and collaborated.
+- Keep sentences short, direct, and human.
+
 CANDIDATE SETUP:
 - Full name: ${fullName || "Use the name from the CV if available"}
 - User email: ${userEmail || "Not provided"}
@@ -188,11 +210,17 @@ CANDIDATE SETUP:
 - Availability: ${workAvailability || "Not specified"}
 - Preferred CV tone/style: ${toneStyle || "Professional, modern, ATS-focused"}
 - Cover letter need: ${coverLetterNeed || "Yes, tailored to the role"}
-- Weaknesses to fix: ${weaknessFix || "Improve weak wording, missing keywords, poor structure, and lack of measurable impact"}
+- Weaknesses to fix: ${
+      weaknessFix ||
+      "Improve weak wording, missing keywords, poor structure, and lack of measurable impact"
+    }
 - Preferred CV length: ${cvLength || "1 to 2 pages"}
 
 QUALITY INSTRUCTIONS FROM FRONTEND:
-${qualityInstructions || "Create a premium ATS-ready CV with grouped skills, stronger work bullets, project details, and a less generic summary."}
+${
+  qualityInstructions ||
+  "Create a premium ATS-ready CV with grouped skills, stronger work bullets, project details, and a less generic summary."
+}
 
 STRICT HONESTY RULES:
 - Do NOT invent companies.
@@ -206,6 +234,7 @@ STRICT HONESTY RULES:
 - If numbers already exist in the CV, keep and use them.
 - If numbers are missing, describe impact honestly without making up percentages.
 - If the candidate is currently studying or the education date is ongoing/future, use "candidate", "student", or "currently pursuing", not "graduate".
+- If MSc is ongoing, expected, or dated in the future, call the person "MSc Artificial Intelligence Technology candidate", not "graduate".
 - If graduation is clearly completed, then "graduate" is allowed.
 
 CV QUALITY RULES:
@@ -213,8 +242,10 @@ CV QUALITY RULES:
 - The professional summary must be specific, not generic.
 - The summary must be 3 to 4 lines.
 - Group the skills section into categories instead of one messy list.
-- Add 3 to 5 strong bullet points for each work experience where possible.
-- Each bullet must start with a strong action verb.
+- Write minimum 3 bullet points per work experience role.
+- Write 3 to 5 strong bullet points for each work experience where possible.
+- If information is limited, create honest transferable-skill bullets from the original role without inventing fake tools or fake numbers.
+- Each bullet must start with a strong natural action verb.
 - Each bullet must be short, clear, and relevant.
 - Improve weak job descriptions into stronger recruiter language.
 - For technical roles, include tools, programming languages, frameworks, cloud, databases, APIs, and projects only when present or clearly implied.
@@ -244,9 +275,9 @@ Professional Skills: relevant soft skills only
 
 WORK EXPERIENCE
 Job Title | Company | Location | Dates
-- Strong action verb + responsibility + relevant tool/skill + impact.
-- Strong action verb + responsibility + relevant tool/skill + impact.
-- Strong action verb + responsibility + relevant tool/skill + impact.
+- Strong natural action verb + responsibility + relevant tool/skill + honest impact.
+- Strong natural action verb + responsibility + relevant tool/skill + honest impact.
+- Strong natural action verb + responsibility + relevant tool/skill + honest impact.
 
 PROJECTS
 Project Name
@@ -333,13 +364,13 @@ ${
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-        temperature: 0.12,
+        temperature: 0.1,
         response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
             content:
-              "You are an expert ATS CV and cover letter writer. Return only valid JSON. Never use markdown, asterisks, bold markers, backticks, CV titles, cover letter titles, fake claims, fake dates, fake numbers, or fake companies.",
+              "You are an expert ATS CV and cover letter writer. Return only valid JSON. Never use markdown, asterisks, bold markers, backticks, CV titles, cover letter titles, fake claims, fake dates, fake numbers, fake companies, exaggerated language, or robotic AI wording.",
           },
           {
             role: "user",
