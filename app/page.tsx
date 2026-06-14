@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
-import EmojiBackground from "@/app/components/EmojiBackground";
+
 type CvIssue = {
   title: string;
   detail: string;
@@ -433,9 +433,16 @@ const getRiskMessage = () => {
   `;
 
   return (
-    <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
-      <EmojiBackground />
-      {showScoreAd && (
+  <main className="relative min-h-screen overflow-x-hidden bg-white text-gray-900">
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
+      <div className="absolute top-40 -right-32 h-96 w-96 rounded-full bg-indigo-200/40 blur-3xl" />
+      <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl" />
+
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
+    </div>
+
+    {showScoreAd && (
   <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-4 py-4 backdrop-blur-xl">
     <div className="w-full max-w-[390px] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)]">
       <div className="p-4 text-center">
