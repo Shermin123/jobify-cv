@@ -431,9 +431,11 @@ const getRiskMessage = () => {
         <div className="mt-3 flex h-[250px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
   <ins
     className="adsbygoogle"
-    style={{ display: "inline-block", width: "300px", height: "250px" }}
-    data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-    data-ad-slot="YOUR_AD_SLOT_ID"
+    style={{ display: "block", width: "300px", height: "250px" }}
+    data-ad-client="ca-pub-7648291083196313"
+    data-ad-slot="7090386055"
+    data-ad-format="auto"
+    data-full-width-responsive="true"
   />
 </div>
 
