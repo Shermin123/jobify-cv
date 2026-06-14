@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
-
+import EmojiBackground from "@/app/components/EmojiBackground";
 type CvIssue = {
   title: string;
   detail: string;
@@ -433,16 +433,9 @@ const getRiskMessage = () => {
   `;
 
   return (
-  <main className="relative min-h-screen overflow-x-hidden bg-white text-gray-900">
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
-      <div className="absolute top-40 -right-32 h-96 w-96 rounded-full bg-indigo-200/40 blur-3xl" />
-      <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl" />
-
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
-    </div>
-
-    {showScoreAd && (
+    <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+      <EmojiBackground />
+      {showScoreAd && (
   <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-4 py-4 backdrop-blur-xl">
     <div className="w-full max-w-[390px] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)]">
       <div className="p-4 text-center">
@@ -617,7 +610,54 @@ const getRiskMessage = () => {
     </div>,
     document.body
   )}
+{/* FLOATING BACKGROUND ELEMENTS */}
+<div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+  
+{/* Small Floating Emojis */}
 
+<div className="absolute top-10 left-10 text-3xl opacity-10">🚀</div>
+<div className="absolute top-20 right-20 text-2xl opacity-10">💼</div>
+<div className="absolute top-40 left-1/4 text-3xl opacity-10">📄</div>
+<div className="absolute top-52 right-1/3 text-2xl opacity-10">✨</div>
+<div className="absolute top-72 left-16 text-3xl opacity-10">🎯</div>
+<div className="absolute top-96 right-12 text-2xl opacity-10">🤖</div>
+
+<div className="absolute top-[20%] left-[60%] text-3xl opacity-10">💡</div>
+<div className="absolute top-[25%] left-[80%] text-2xl opacity-10">🔥</div>
+<div className="absolute top-[35%] left-[10%] text-3xl opacity-10">📈</div>
+<div className="absolute top-[45%] left-[75%] text-2xl opacity-10">⚡</div>
+
+<div className="absolute top-[50%] left-[20%] text-3xl opacity-10">🌟</div>
+<div className="absolute top-[55%] left-[50%] text-2xl opacity-10">🏆</div>
+<div className="absolute top-[60%] right-[15%] text-3xl opacity-10">💰</div>
+
+<div className="absolute top-[70%] left-[5%] text-2xl opacity-10">🧠</div>
+<div className="absolute top-[72%] left-[40%] text-3xl opacity-10">📊</div>
+<div className="absolute top-[78%] right-[30%] text-2xl opacity-10">🎓</div>
+
+<div className="absolute bottom-32 left-12 text-3xl opacity-10">🌍</div>
+<div className="absolute bottom-24 right-20 text-2xl opacity-10">💻</div>
+<div className="absolute bottom-16 left-1/3 text-3xl opacity-10">📋</div>
+<div className="absolute bottom-10 right-1/2 text-2xl opacity-10">⭐</div>
+
+  {/* FLOATING LAYER 1 */}
+  <div className="absolute text-7xl opacity-5 top-10 left-10 animate-pulse">🚀</div>
+  <div className="absolute text-8xl opacity-5 top-40 right-20 animate-bounce">📄</div>
+  <div className="absolute text-7xl opacity-5 bottom-40 left-20">💼</div>
+  <div className="absolute text-8xl opacity-5 bottom-10 right-10 animate-pulse">✨</div>
+
+  {/* FLOATING LAYER 2 (NEW) */}
+  <div className="absolute text-6xl opacity-5 top-1/3 left-1/4 animate-bounce">🧠</div>
+  <div className="absolute text-7xl opacity-5 top-1/2 right-1/3">📊</div>
+  <div className="absolute text-6xl opacity-5 bottom-1/3 right-1/4 animate-pulse">🎯</div>
+  <div className="absolute text-7xl opacity-5 top-20 right-1/2">💡</div>
+
+  {/* FLOATING LAYER 3 (NEW PREMIUM FEEL) */}
+  <div className="absolute text-6xl opacity-5 bottom-20 left-1/3">📈</div>
+  <div className="absolute text-7xl opacity-5 top-1/4 left-1/2">🧾</div>
+  <div className="absolute text-6xl opacity-5 bottom-1/2 left-10 animate-pulse">⚡</div>
+
+</div>
       
       {/* ================= STATS MARQUEE ================= */}
       <div className="bg-white border-b overflow-hidden py-2 text-xs md:text-sm relative z-0">
