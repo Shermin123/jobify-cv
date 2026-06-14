@@ -692,7 +692,7 @@ const getRiskMessage = () => {
       {/* ================= HERO ================= */}
       <section className="relative z-10 -mt-10 px-4 sm:px-6 pb-6 md:-mt-14 md:pb-8">
 
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-2 lg:grid-cols-[0.9fr_0.8fr] lg:gap-8">
 
   {/* LEFT HERO */}
   <div className="text-center lg:text-left">
@@ -763,7 +763,7 @@ const getRiskMessage = () => {
         {/* ================= CV SCORE ================= */}
 <div
   id="cv-score"
-  className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[24px] border border-red-100 bg-white p-3 text-left shadow-xl sm:p-4 lg:max-w-none"
+  className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-[24px] border border-red-100 bg-white p-3 text-left shadow-xl sm:p-4 lg:max-w-[520px]"
 >
   <div className="absolute -right-20 -top-20 h-44 w-44 rounded-full bg-red-100 opacity-70 blur-3xl" />
   <div className="absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-orange-100 opacity-70 blur-3xl" />
@@ -888,7 +888,7 @@ const getRiskMessage = () => {
         : "Free Limit Reached — Upgrade"}
     </button>
 
-    <div className="mt-4 grid gap-4 lg:grid-cols-[0.72fr_1fr]">
+    <div className="mt-4 grid gap-4">
       <div className="rounded-[22px] border border-red-500/20 bg-slate-950 p-4 text-white">
         <p className="text-xs font-black uppercase tracking-wide text-white/40">
           CV Job-Readiness Score
