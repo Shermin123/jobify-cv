@@ -86,13 +86,23 @@ export default function PricingPage() {
     const params = new URLSearchParams(window.location.search);
     setUpgrade(params.get("upgrade"));
 
+    const countryFromUrl = params.get("country");
+
+    if (countryFromUrl) {
+      setCountry(normalizePricingRegion(countryFromUrl));
+      setDetectingRegion(false);
+      return;
+    }
+
     const detectRegion = async () => {
       try {
         const res = await fetch("/api/region");
         const data = await res.json();
 
-        if (data?.region) {
-          setCountry(normalizePricingRegion(data.region));
+        const detectedCountry = data?.country || data?.region;
+
+        if (detectedCountry) {
+          setCountry(normalizePricingRegion(detectedCountry));
         } else {
           setCountry("UK");
         }
