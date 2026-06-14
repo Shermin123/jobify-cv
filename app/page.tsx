@@ -437,32 +437,40 @@ const getRiskMessage = () => {
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
   <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50" />
 
-  <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />
-  <div className="absolute -right-24 top-44 h-72 w-72 rounded-full bg-indigo-200/30 blur-3xl" />
-  <div className="absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-emerald-100/40 blur-3xl" />
+  <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-200/35 blur-3xl" />
+  <div className="absolute top-32 -right-24 h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
+  <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/40 blur-3xl" />
 
-  <div className="absolute left-[7%] top-[14%] flex h-14 w-14 items-center justify-center rounded-3xl border border-white/70 bg-white/45 text-2xl shadow-sm backdrop-blur-xl">
+  <div className="absolute left-[8%] top-[14%] text-4xl opacity-[0.16] blur-[0.2px]">
     📄
   </div>
 
-  <div className="absolute right-[9%] top-[18%] flex h-14 w-14 items-center justify-center rounded-3xl border border-white/70 bg-white/45 text-2xl shadow-sm backdrop-blur-xl">
+  <div className="absolute right-[10%] top-[16%] text-4xl opacity-[0.16] blur-[0.2px]">
     💼
   </div>
 
-  <div className="absolute left-[14%] top-[48%] flex h-12 w-12 items-center justify-center rounded-2xl border border-white/70 bg-white/40 text-xl shadow-sm backdrop-blur-xl">
+  <div className="absolute left-[18%] top-[48%] text-3xl opacity-[0.14] blur-[0.2px]">
     ✨
   </div>
 
-  <div className="absolute right-[16%] top-[52%] flex h-12 w-12 items-center justify-center rounded-2xl border border-white/70 bg-white/40 text-xl shadow-sm backdrop-blur-xl">
+  <div className="absolute right-[18%] top-[52%] text-3xl opacity-[0.14] blur-[0.2px]">
     🎯
   </div>
 
-  <div className="absolute left-[8%] bottom-[18%] flex h-14 w-14 items-center justify-center rounded-3xl border border-white/70 bg-white/45 text-2xl shadow-sm backdrop-blur-xl">
+  <div className="absolute left-[9%] bottom-[18%] text-4xl opacity-[0.15] blur-[0.2px]">
     📊
   </div>
 
-  <div className="absolute right-[8%] bottom-[16%] flex h-14 w-14 items-center justify-center rounded-3xl border border-white/70 bg-white/45 text-2xl shadow-sm backdrop-blur-xl">
+  <div className="absolute right-[9%] bottom-[16%] text-4xl opacity-[0.15] blur-[0.2px]">
     🚀
+  </div>
+
+  <div className="absolute left-[44%] top-[20%] text-3xl opacity-[0.12] blur-[0.2px]">
+    🤖
+  </div>
+
+  <div className="absolute left-[48%] bottom-[14%] text-3xl opacity-[0.12] blur-[0.2px]">
+    📝
   </div>
 </div>
 
