@@ -434,13 +434,16 @@ const getRiskMessage = () => {
 
   return (
   <main className="relative min-h-screen overflow-x-hidden bg-white text-gray-900">
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
-      <div className="absolute top-40 -right-32 h-96 w-96 rounded-full bg-indigo-200/40 blur-3xl" />
-      <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/50 blur-3xl" />
-
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
-    </div>
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+  <div className="absolute left-[5%] top-[10%] text-6xl opacity-15">📄</div>
+  <div className="absolute right-[7%] top-[14%] text-6xl opacity-15">💼</div>
+  <div className="absolute left-[16%] top-[38%] text-5xl opacity-15">✨</div>
+  <div className="absolute right-[15%] top-[45%] text-5xl opacity-15">🎯</div>
+  <div className="absolute left-[7%] bottom-[24%] text-6xl opacity-15">📊</div>
+  <div className="absolute right-[7%] bottom-[20%] text-6xl opacity-15">🚀</div>
+  <div className="absolute left-[43%] top-[18%] text-5xl opacity-15">🤖</div>
+  <div className="absolute left-[48%] bottom-[14%] text-5xl opacity-15">📝</div>
+</div>
 
     {showScoreAd && (
   <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-4 py-4 backdrop-blur-xl">
