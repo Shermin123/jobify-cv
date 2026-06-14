@@ -434,44 +434,29 @@ const getRiskMessage = () => {
 
   return (
   <main className="relative min-h-screen overflow-x-hidden bg-white text-gray-900">
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
   <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50" />
 
-  <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-200/35 blur-3xl" />
-  <div className="absolute top-32 -right-24 h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
-  <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/40 blur-3xl" />
+  <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
+  <div className="absolute top-32 -right-24 h-96 w-96 rounded-full bg-indigo-200/25 blur-3xl" />
+  <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-emerald-100/35 blur-3xl" />
 
-  <div className="absolute left-[8%] top-[14%] text-4xl opacity-[0.16] blur-[0.2px]">
-    📄
-  </div>
+  <div className="absolute left-[6%] top-[12%] text-2xl opacity-[0.22]">📄</div>
+  <div className="absolute left-[22%] top-[18%] text-xl opacity-[0.18]">✨</div>
+  <div className="absolute left-[42%] top-[10%] text-2xl opacity-[0.16]">🤖</div>
+  <div className="absolute right-[28%] top-[20%] text-xl opacity-[0.18]">📝</div>
+  <div className="absolute right-[8%] top-[14%] text-2xl opacity-[0.22]">💼</div>
 
-  <div className="absolute right-[10%] top-[16%] text-4xl opacity-[0.16] blur-[0.2px]">
-    💼
-  </div>
+  <div className="absolute left-[10%] top-[42%] text-xl opacity-[0.18]">🎯</div>
+  <div className="absolute left-[30%] top-[52%] text-2xl opacity-[0.14]">📊</div>
+  <div className="absolute right-[34%] top-[46%] text-xl opacity-[0.16]">⚡</div>
+  <div className="absolute right-[12%] top-[55%] text-2xl opacity-[0.18]">🚀</div>
 
-  <div className="absolute left-[18%] top-[48%] text-3xl opacity-[0.14] blur-[0.2px]">
-    ✨
-  </div>
-
-  <div className="absolute right-[18%] top-[52%] text-3xl opacity-[0.14] blur-[0.2px]">
-    🎯
-  </div>
-
-  <div className="absolute left-[9%] bottom-[18%] text-4xl opacity-[0.15] blur-[0.2px]">
-    📊
-  </div>
-
-  <div className="absolute right-[9%] bottom-[16%] text-4xl opacity-[0.15] blur-[0.2px]">
-    🚀
-  </div>
-
-  <div className="absolute left-[44%] top-[20%] text-3xl opacity-[0.12] blur-[0.2px]">
-    🤖
-  </div>
-
-  <div className="absolute left-[48%] bottom-[14%] text-3xl opacity-[0.12] blur-[0.2px]">
-    📝
-  </div>
+  <div className="absolute left-[7%] bottom-[16%] text-2xl opacity-[0.18]">✅</div>
+  <div className="absolute left-[24%] bottom-[10%] text-xl opacity-[0.16]">💡</div>
+  <div className="absolute left-[48%] bottom-[18%] text-2xl opacity-[0.14]">📌</div>
+  <div className="absolute right-[26%] bottom-[12%] text-xl opacity-[0.16]">🔍</div>
+  <div className="absolute right-[7%] bottom-[18%] text-2xl opacity-[0.18]">📈</div>
 </div>
 
     {showScoreAd && (
