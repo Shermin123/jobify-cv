@@ -5,35 +5,106 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import EmojiBackground from "@/app/components/EmojiBackground";
 
+function normalizePricingRegion(country: string) {
+  const value = String(country || "").trim().toUpperCase();
+
+  const ukCountries = [
+    "UK",
+    "GB",
+    "UNITED KINGDOM",
+    "ENGLAND",
+    "SCOTLAND",
+    "WALES",
+    "NORTHERN IRELAND",
+  ];
+
+  const lowPriceCountries = [
+    "LOW",
+
+    // South Asia
+    "IN",
+    "INDIA",
+    "PK",
+    "PAKISTAN",
+    "BD",
+    "BANGLADESH",
+    "LK",
+    "SRI LANKA",
+    "NP",
+    "NEPAL",
+
+    // Southeast Asia
+    "PH",
+    "PHILIPPINES",
+    "ID",
+    "INDONESIA",
+    "VN",
+    "VIETNAM",
+    "KH",
+    "CAMBODIA",
+    "MM",
+    "MYANMAR",
+
+    // Africa
+    "NG",
+    "NIGERIA",
+    "KE",
+    "KENYA",
+    "GH",
+    "GHANA",
+    "UG",
+    "UGANDA",
+    "TZ",
+    "TANZANIA",
+    "ZA",
+    "SOUTH AFRICA",
+
+    // Other price-sensitive markets
+    "EG",
+    "EGYPT",
+    "MA",
+    "MOROCCO",
+    "TR",
+    "TURKEY",
+  ];
+
+  if (ukCountries.includes(value)) return "UK";
+  if (lowPriceCountries.includes(value)) return "LOW";
+
+  return "DEFAULT";
+}
+
 export default function PricingPage() {
   const router = useRouter();
   const { data: session } = useSession();
 
   const [upgrade, setUpgrade] = useState<string | null>(null);
   const [country, setCountry] = useState("UK");
-const [detectingRegion, setDetectingRegion] = useState(true);
+  const [detectingRegion, setDetectingRegion] = useState(true);
 
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  setUpgrade(params.get("upgrade"));
+    const params = new URLSearchParams(window.location.search);
+    setUpgrade(params.get("upgrade"));
 
-  const detectRegion = async () => {
-    try {
-      const res = await fetch("/api/region");
-      const data = await res.json();
+    const detectRegion = async () => {
+      try {
+        const res = await fetch("/api/region");
+        const data = await res.json();
 
-      if (data?.region) {
-        setCountry(data.region);
+        if (data?.region) {
+          setCountry(normalizePricingRegion(data.region));
+        } else {
+          setCountry("UK");
+        }
+      } catch {
+        setCountry("UK");
+      } finally {
+        setDetectingRegion(false);
       }
-    } catch {
-      setCountry("UK");
-    } finally {
-      setDetectingRegion(false);
-    }
-  };
+    };
 
-  detectRegion();
-}, []);
+    detectRegion();
+  }, []);
 
   const pricingByCountry: Record<
     string,
@@ -53,7 +124,7 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       trialNote: "Then £9.99/month unless cancelled.",
     },
     LOW: {
-      countryLabel: "Low-cost countries",
+      countryLabel: "Starter pricing region",
       trialPrice: "£0",
       basicPrice: "£1.99",
       proPrice: "£4.99",
@@ -68,8 +139,9 @@ const [detectingRegion, setDetectingRegion] = useState(true);
     },
   };
 
+  const selectedCountry = normalizePricingRegion(country);
   const selectedPricing =
-    pricingByCountry[country] || pricingByCountry.DEFAULT;
+    pricingByCountry[selectedCountry] || pricingByCountry.DEFAULT;
 
   const startCheckout = (plan: string) => {
     if (!session) {
@@ -77,7 +149,7 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       return;
     }
 
-    router.push(`/checkout?plan=${plan}&country=${country}`);
+    router.push(`/checkout?plan=${plan}&country=${selectedCountry}`);
   };
 
   const plans = [
@@ -95,7 +167,7 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       features: [
         "Full CV generator access",
         "Free AI Auto Apply included",
-"10 free AI Auto Apply applications per day",
+        "10 free AI Auto Apply applications per day",
         "Generate tailored cover letters",
         "ATS keyword suggestions included",
         "CV score checker included",
@@ -119,7 +191,7 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       features: [
         "30 CV generations per month",
         "AI Auto Apply included",
-"Apply faster with saved CV and cover letter",
+        "Apply faster with saved CV and cover letter",
         "30 cover letters per month",
         "ATS optimisation for each CV",
         "Keyword suggestions for job descriptions",
@@ -143,7 +215,7 @@ const [detectingRegion, setDetectingRegion] = useState(true);
       features: [
         "Unlimited CV generations",
         "Unlimited AI Auto Apply",
-"Best for daily job applications",
+        "Best for daily job applications",
         "Unlimited cover letters",
         "Advanced ATS optimisation",
         "Document Editor included",
@@ -208,12 +280,20 @@ const [detectingRegion, setDetectingRegion] = useState(true);
           Start free today and access your ATS-optimised CV, personalised cover
           letter, keyword list, and PDF download.
         </p>
+
+        <p className="mt-2 text-xs font-bold text-blue-600">
+          {detectingRegion
+            ? "Detecting your region..."
+            : `Showing ${selectedPricing.countryLabel} prices`}
+        </p>
+
         {upgrade === "auto-apply-limit" && (
-  <div className="mt-4 mx-auto max-w-xl rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-bold text-orange-700">
-    You used your 10 free AI Auto Apply applications today. Upgrade to continue applying without waiting.
-  </div>
-)}
-        
+          <div className="mt-4 mx-auto max-w-xl rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-bold text-orange-700">
+            You used your 10 free AI Auto Apply applications today. Upgrade to
+            continue applying without waiting.
+          </div>
+        )}
+
         <div className="mt-5 flex flex-col sm:flex-row justify-center gap-3">
           <button
             onClick={() => startCheckout("trial")}
