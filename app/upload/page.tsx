@@ -1333,11 +1333,11 @@ const previousSetupStep = () => {
   if (showSetupPopup) {
   return (
     <main
-  className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-[#303647] px-3 pt-4 pb-[160px] text-slate-950 [@media_(min-width:768px)_and_(max-height:850px)]:pt-12"
+  className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 px-3 py-5 text-slate-950"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
-  <div className="flex min-h-[calc(100dvh-32px)] items-start justify-center pt-4 [@media_(min-width:768px)_and_(max-height:850px)]:pt-8">
-    <div className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] bg-white shadow-[0_35px_100px_rgba(0,0,0,0.35)] animate-popupIn">
+  <div className="flex min-h-[calc(100dvh-40px)] items-start justify-center pt-2 sm:items-center">
+  <div className="relative w-full max-w-[520px] overflow-hidden rounded-[34px] border border-white/20 bg-white shadow-[0_40px_120px_rgba(0,0,0,0.45)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
   <div className="pointer-events-none absolute inset-0 overflow-hidden">
     <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
@@ -1346,7 +1346,7 @@ const previousSetupStep = () => {
   </div>
 
   <div
-  className="relative max-h-[calc(100dvh-24px)] overflow-y-auto p-4 overscroll-contain sm:p-5 [@media_(min-width:768px)_and_(max-height:850px)]:max-h-[calc(100dvh-120px)]"
+  className="relative max-h-[calc(100dvh-42px)] overflow-y-auto p-5 overscroll-contain sm:p-6"
   style={{ WebkitOverflowScrolling: "touch" }}
 >
           {/* TOP ROW */}
@@ -1535,7 +1535,7 @@ const previousSetupStep = () => {
 )}
 
 {setupStep === 6 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="🏢 What field are you applying for?"
     value={industry}
     setValue={setIndustry}
@@ -1549,13 +1549,15 @@ const previousSetupStep = () => {
       "Customer Service",
       "Education",
       "Admin",
+      "Data / AI",
+      "Software",
       "Other",
     ]}
   />
 )}
 
 {setupStep === 7 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="🚀 When can you start?"
     value={urgency}
     setValue={setUrgency}
@@ -1566,10 +1568,11 @@ const previousSetupStep = () => {
       "In 1 month",
       "Flexible",
       "Just preparing",
+      "Urgent application",
+      "Interview tomorrow",
     ]}
   />
 )}
-
 {setupStep === 8 && (
   <MultiSelectQuestionButtons
     title="💪 What is your strongest skill?"
@@ -1677,7 +1680,7 @@ const previousSetupStep = () => {
 
 
 {setupStep === 14 && (
-  <QuestionButtons
+  <MultiSelectQuestionButtons
     title="✉️ Do you need a cover letter?"
     value={coverLetterNeed}
     setValue={setCoverLetterNeed}
@@ -1687,6 +1690,8 @@ const previousSetupStep = () => {
       "Maybe",
       "Only if job needs it",
       "Yes, tailored to job",
+      "Make it short",
+      "Make it professional",
     ]}
   />
 )}
@@ -3084,27 +3089,39 @@ function QuestionButtons({
 }) {
   return (
     <div>
-      <h3 className="text-lg font-black text-slate-950">{title}</h3>
+      <h3 className="text-xl font-black leading-tight text-slate-950">
+        {title}
+      </h3>
 
-      <div className="mt-4 grid grid-cols-1 gap-2">
-        {options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => setValue(option)}
-            className={
-              value === option
-                ? "rounded-2xl border border-blue-600 bg-blue-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] active:scale-95"
-                : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 active:scale-95"
-            }
-          >
-            {option}
-          </button>
-        ))}
+      <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">
+        Select one answer
+      </p>
+
+      <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        {options.map((option) => {
+          const selected = value === option;
+
+          return (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setValue(option)}
+              className={
+                selected
+                  ? "group rounded-2xl border border-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_16px_34px_rgba(37,99,235,0.28)] transition active:scale-95"
+                  : "group rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
+              }
+            >
+              <span className="mr-2">{selected ? "✅" : "○"}</span>
+              {option}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 function MultiSelectQuestionButtons({
   title,
   value,
@@ -3131,15 +3148,48 @@ function MultiSelectQuestionButtons({
     setValue(updated.join(", "));
   };
 
+  const clearAll = () => {
+    setValue("");
+  };
+
   return (
     <div>
-      <h3 className="text-lg font-black text-slate-950">{title}</h3>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-xl font-black leading-tight text-slate-950">
+            {title}
+          </h3>
 
-      <p className="mt-1 text-xs font-bold text-blue-600">
-        You can select more than one.
-      </p>
+          <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-blue-600">
+            Select all that apply
+          </p>
+        </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-2">
+        {selectedValues.length > 0 && (
+          <button
+            type="button"
+            onClick={clearAll}
+            className="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-black text-slate-500 shadow-sm active:scale-95"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
+      {selectedValues.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {selectedValues.map((item) => (
+            <span
+              key={item}
+              className="rounded-full bg-blue-600 px-3 py-1 text-xs font-black text-white shadow-sm"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {options.map((option) => {
           const selected = selectedValues.includes(option);
 
@@ -3150,8 +3200,8 @@ function MultiSelectQuestionButtons({
               onClick={() => toggleOption(option)}
               className={
                 selected
-                  ? "rounded-2xl border border-blue-600 bg-blue-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] active:scale-95"
-                  : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 active:scale-95"
+                  ? "rounded-2xl border border-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_16px_34px_rgba(37,99,235,0.28)] transition active:scale-95"
+                  : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
               }
             >
               <span className="mr-2">{selected ? "✅" : "⬜"}</span>
