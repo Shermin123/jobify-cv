@@ -781,6 +781,30 @@ const getRiskMessage = () => {
       </div>
     </div>
     <HiredAtBox />
+    <div className="mt-8 flex justify-center">
+  <div className="relative w-full max-w-[760px] overflow-hidden rounded-[32px] border border-slate-200 bg-white/85 p-1 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur-xl">
+    <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-blue-200/40 blur-3xl" />
+    <div className="absolute -right-20 -bottom-20 h-40 w-40 rounded-full bg-indigo-200/40 blur-3xl" />
+
+    <div className="relative flex h-[220px] flex-col items-center justify-center rounded-[28px] border border-dashed border-slate-300 bg-gradient-to-br from-slate-50 via-white to-blue-50 text-center">
+      <p className="text-[11px] font-black uppercase tracking-[0.28em] text-slate-400">
+        Advertisement
+      </p>
+
+      <h3 className="mt-3 text-xl font-black text-slate-900">
+        Premium Ad Space
+      </h3>
+
+      <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-500">
+        A clean display area for sponsored content.
+      </p>
+
+      <div className="mt-5 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-400 shadow-sm">
+        728 × 220
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 
         
