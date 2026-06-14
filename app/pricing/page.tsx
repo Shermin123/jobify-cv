@@ -66,12 +66,26 @@ function normalizePricingRegion(country: string) {
     "MOROCCO",
     "TR",
     "TURKEY",
+    "BR",
+    "BRAZIL",
+    "MX",
+    "MEXICO",
   ];
 
   if (ukCountries.includes(value)) return "UK";
   if (lowPriceCountries.includes(value)) return "LOW";
 
   return "DEFAULT";
+}
+
+function getBrowserRegionFallback() {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  if (timeZone === "Asia/Kolkata" || timeZone === "Asia/Calcutta") {
+    return "LOW";
+  }
+
+  return null;
 }
 
 export default function PricingPage() {
@@ -94,20 +108,32 @@ export default function PricingPage() {
       return;
     }
 
+    const browserFallbackRegion = getBrowserRegionFallback();
+
     const detectRegion = async () => {
       try {
-        const res = await fetch("/api/region");
+        const res = await fetch("/api/region", {
+          cache: "no-store",
+        });
+
         const data = await res.json();
 
-        const detectedCountry = data?.country || data?.region;
+        const detectedCountry =
+          data?.country || data?.countryCode || data?.region;
 
-        if (detectedCountry) {
-          setCountry(normalizePricingRegion(detectedCountry));
+        const detectedRegion = normalizePricingRegion(detectedCountry);
+
+        if (detectedRegion === "DEFAULT" && browserFallbackRegion) {
+          setCountry(browserFallbackRegion);
+        } else {
+          setCountry(detectedRegion);
+        }
+      } catch {
+        if (browserFallbackRegion) {
+          setCountry(browserFallbackRegion);
         } else {
           setCountry("UK");
         }
-      } catch {
-        setCountry("UK");
       } finally {
         setDetectingRegion(false);
       }
