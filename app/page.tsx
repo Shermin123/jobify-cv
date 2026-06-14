@@ -434,7 +434,7 @@ const getRiskMessage = () => {
 
   return (
   <main className="relative min-h-screen overflow-x-hidden bg-white text-gray-900">
-  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+  <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
   <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50" />
 
   {/* TOP ROW */}
@@ -636,7 +636,7 @@ const getRiskMessage = () => {
 
       
       {/* ================= STATS MARQUEE ================= */}
-      <div className="bg-white border-b overflow-hidden py-2 text-xs md:text-sm relative z-0">
+      <div className="relative z-10 bg-white border-b overflow-hidden py-2 text-xs md:text-sm">
   <div className="marquee-slow whitespace-nowrap pointer-events-none text-gray-700 font-medium">
     {statsLine.repeat(2)}
   </div>
@@ -645,7 +645,7 @@ const getRiskMessage = () => {
       {/* ================= AI LOGOS (FIXED OPENAI) ================= */}
       {/* ================= TRUSTED BY / AI PARTNERS ================= */}
 {/* ================= TRUSTED AI PARTNERS ================= */}
-<div className="bg-white border-b py-4">
+<div className="relative z-10 bg-white border-b py-4">
   <div className="max-w-6xl mx-auto px-4">
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
 
