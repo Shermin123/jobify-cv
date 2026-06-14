@@ -5,6 +5,75 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import EmojiBackground from "@/app/components/EmojiBackground";
 
+function normalizePricingRegion(country: string) {
+  const value = String(country || "").trim().toUpperCase();
+
+  const ukCountries = [
+    "UK",
+    "GB",
+    "UNITED KINGDOM",
+    "ENGLAND",
+    "SCOTLAND",
+    "WALES",
+    "NORTHERN IRELAND",
+  ];
+
+  const lowPriceCountries = [
+    "LOW",
+
+    // South Asia
+    "IN",
+    "INDIA",
+    "PK",
+    "PAKISTAN",
+    "BD",
+    "BANGLADESH",
+    "LK",
+    "SRI LANKA",
+    "NP",
+    "NEPAL",
+
+    // Southeast Asia
+    "PH",
+    "PHILIPPINES",
+    "ID",
+    "INDONESIA",
+    "VN",
+    "VIETNAM",
+    "KH",
+    "CAMBODIA",
+    "MM",
+    "MYANMAR",
+
+    // Africa
+    "NG",
+    "NIGERIA",
+    "KE",
+    "KENYA",
+    "GH",
+    "GHANA",
+    "UG",
+    "UGANDA",
+    "TZ",
+    "TANZANIA",
+    "ZA",
+    "SOUTH AFRICA",
+
+    // Other price-sensitive markets
+    "EG",
+    "EGYPT",
+    "MA",
+    "MOROCCO",
+    "TR",
+    "TURKEY",
+  ];
+
+  if (ukCountries.includes(value)) return "UK";
+  if (lowPriceCountries.includes(value)) return "LOW";
+
+  return "DEFAULT";
+}
+
 function CheckoutContent() {
   const params = useSearchParams();
   const router = useRouter();
@@ -13,7 +82,8 @@ function CheckoutContent() {
   const [loading, setLoading] = useState(false);
 
   const plan = params.get("plan") || "basic";
-  const country = params.get("country") || "UK";
+  const rawCountry = params.get("country") || "UK";
+  const country = normalizePricingRegion(rawCountry);
 
   const pricingByCountry: Record<
     string,
@@ -31,7 +101,7 @@ function CheckoutContent() {
       pro: "£19.99/month",
     },
     LOW: {
-      countryLabel: "Low-cost countries",
+      countryLabel: "Starter pricing region",
       trial: "£0 today",
       basic: "£1.99/month",
       pro: "£4.99/month",
