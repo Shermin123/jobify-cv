@@ -88,3 +88,6 @@ select {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+h1 {
+  font-weight: 700;
+}
