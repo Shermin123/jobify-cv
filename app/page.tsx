@@ -478,9 +478,9 @@ const getRiskMessage = () => {
       {showScorePopup &&
   typeof document !== "undefined" &&
   createPortal(
-    <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/85 px-4 py-4 backdrop-blur-xl">
-      <div className="relative flex max-h-[calc(100svh-32px)] w-full max-w-[350px] flex-col overflow-hidden rounded-[26px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)] sm:max-w-[420px]">
-        <div className="relative flex flex-col p-4 text-center">
+    <div className="fixed inset-0 z-[2147483647] flex h-[100dvh] w-screen items-start justify-center overflow-y-auto bg-slate-950/85 px-3 py-4 backdrop-blur-xl sm:items-center sm:px-4">
+      <div className="relative flex w-full max-w-[350px] flex-col overflow-hidden rounded-[26px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)] sm:max-h-[calc(100svh-32px)] sm:max-w-[420px]">
+        <div className="relative flex max-h-[calc(100dvh-32px)] flex-col overflow-y-auto p-4 text-center sm:max-h-none sm:overflow-visible">
           <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-red-600 text-lg text-white shadow-lg">
             ⚠️
           </div>
