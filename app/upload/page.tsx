@@ -44,6 +44,16 @@ const [coverLetterNeed, setCoverLetterNeed] = useState("");
 const [weaknessFix, setWeaknessFix] = useState("");
 const [toneStyle, setToneStyle] = useState("");
 const [cvLength, setCvLength] = useState("");
+const getStored = (key: string) => {
+  if (typeof window === "undefined") return null;
+  return sessionStorage.getItem(key) || localStorage.getItem(key);
+};
+
+const setStored = (key: string, value: string) => {
+  if (typeof window === "undefined") return;
+  sessionStorage.setItem(key, value);
+  localStorage.setItem(key, value);
+};
 
   const [cv, setCv] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
@@ -63,25 +73,25 @@ const [generated, setGenerated] = useState(false);
   useEffect(() => {
   
 
-  const savedCountry = sessionStorage.getItem("jobify_country");
-  const savedRole = sessionStorage.getItem("jobify_role");
-  const savedFreeCvText = sessionStorage.getItem("jobify_free_cv_text");
+  const savedCountry = getStored("jobify_country");
+const savedRole = getStored("jobify_role");
+const savedFreeCvText = getStored("jobify_free_cv_text");
 
-  const savedExperienceLevel = sessionStorage.getItem("jobify_experience_level");
-  const savedJobType = sessionStorage.getItem("jobify_job_type");
-  const savedIndustry = sessionStorage.getItem("jobify_industry");
-  const savedCvGoal = sessionStorage.getItem("jobify_cv_goal");
-  const savedUrgency = sessionStorage.getItem("jobify_urgency");
-  const savedFullName = sessionStorage.getItem("jobify_full_name");
-const savedEducationLevel = sessionStorage.getItem("jobify_education_level");
-const savedCertificates = sessionStorage.getItem("jobify_certificates");
-const savedPortfolio = sessionStorage.getItem("jobify_portfolio");
-const savedWorkAvailability = sessionStorage.getItem("jobify_work_availability");
-const savedCoverLetterNeed = sessionStorage.getItem("jobify_cover_letter_need");
-  const savedMainStrength = sessionStorage.getItem("jobify_main_strength");
-const savedWeaknessFix = sessionStorage.getItem("jobify_weakness_fix");
-const savedToneStyle = sessionStorage.getItem("jobify_tone_style");
-const savedCvLength = sessionStorage.getItem("jobify_cv_length");
+const savedExperienceLevel = getStored("jobify_experience_level");
+const savedJobType = getStored("jobify_job_type");
+const savedIndustry = getStored("jobify_industry");
+const savedCvGoal = getStored("jobify_cv_goal");
+const savedUrgency = getStored("jobify_urgency");
+const savedFullName = getStored("jobify_full_name");
+const savedEducationLevel = getStored("jobify_education_level");
+const savedCertificates = getStored("jobify_certificates");
+const savedPortfolio = getStored("jobify_portfolio");
+const savedWorkAvailability = getStored("jobify_work_availability");
+const savedCoverLetterNeed = getStored("jobify_cover_letter_need");
+const savedMainStrength = getStored("jobify_main_strength");
+const savedWeaknessFix = getStored("jobify_weakness_fix");
+const savedToneStyle = getStored("jobify_tone_style");
+const savedCvLength = getStored("jobify_cv_length");
 
   if (savedCountry) setCountry(savedCountry);
   if (savedRole) setJobRole(savedRole);
@@ -120,9 +130,14 @@ if (savedGenerated && savedCv && savedCover) {
   setShowUnlock(true);
 }
 
-  const setupCompleted = sessionStorage.getItem("jobify_setup_completed");
+  const setupCompleted = getStored("jobify_setup_completed");
+const forceSetup = sessionStorage.getItem("jobify_force_setup");
 
-  if (!setupCompleted) {
+if (forceSetup === "true") {
+  sessionStorage.removeItem("jobify_force_setup");
+  setSetupStep(0);
+  setShowSetupPopup(true);
+} else if (!setupCompleted) {
   setSetupStep(0);
   setShowSetupPopup(true);
 }
@@ -1283,22 +1298,24 @@ const setupAnswers = [
 const canGoNext = Boolean(setupAnswers[setupStep]?.trim());
 
 const saveSetupAndContinue = () => {
-  sessionStorage.setItem("jobify_country", country);
-  sessionStorage.setItem("jobify_role", jobRole);
-  sessionStorage.setItem("jobify_experience_level", experienceLevel);
-  sessionStorage.setItem("jobify_job_type", jobType);
-  sessionStorage.setItem("jobify_industry", industry);
-  sessionStorage.setItem("jobify_cv_goal", cvGoal);
-  sessionStorage.setItem("jobify_urgency", urgency);
-  sessionStorage.setItem("jobify_full_name", fullName);
-sessionStorage.setItem("jobify_education_level", educationLevel);
-sessionStorage.setItem("jobify_certificates", certificates);
-sessionStorage.setItem("jobify_portfolio", portfolio);
-sessionStorage.setItem("jobify_work_availability", workAvailability);
-sessionStorage.setItem("jobify_cover_letter_need", coverLetterNeed);
-sessionStorage.setItem("jobify_main_strength", mainStrength);
-sessionStorage.setItem("jobify_tone_style", toneStyle);
-  sessionStorage.setItem("jobify_setup_completed", "true");
+  setStored("jobify_country", country);
+  setStored("jobify_role", jobRole);
+  setStored("jobify_experience_level", experienceLevel);
+  setStored("jobify_job_type", jobType);
+  setStored("jobify_industry", industry);
+  setStored("jobify_cv_goal", cvGoal);
+  setStored("jobify_urgency", urgency);
+  setStored("jobify_full_name", fullName);
+  setStored("jobify_education_level", educationLevel);
+  setStored("jobify_certificates", certificates);
+  setStored("jobify_portfolio", portfolio);
+  setStored("jobify_work_availability", workAvailability);
+  setStored("jobify_cover_letter_need", coverLetterNeed);
+  setStored("jobify_main_strength", mainStrength);
+  setStored("jobify_weakness_fix", weaknessFix);
+  setStored("jobify_tone_style", toneStyle);
+  setStored("jobify_cv_length", cvLength);
+  setStored("jobify_setup_completed", "true");
 
   setShowSetupPopup(false);
 
