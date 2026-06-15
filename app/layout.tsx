@@ -6,11 +6,12 @@ import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
 import { Analytics } from "@vercel/analytics/next";
 
-
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-inter",
 });
+
 export const metadata: Metadata = {
   title: "Jobifycv.co",
   description:
@@ -51,10 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.className} h-full antialiased`}
-    >
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
         <script
           async
