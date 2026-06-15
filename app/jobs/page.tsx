@@ -563,6 +563,7 @@ const [autoApplyCount, setAutoApplyCount] = useState(0);
   location: string;
   logo?: string;
 } | null>(null);
+const [appliedJobs, setAppliedJobs] = useState<Job[]>([]);
   
 
   const currentJob = jobs[currentIndex];
@@ -795,6 +796,14 @@ const handleApply = () => {
   if (!currentJob) return;
 
   const jobSnapshot = currentJob;
+
+setAppliedJobs((prev) => {
+  const alreadyExists = prev.some((job) => job.id === jobSnapshot.id);
+
+  if (alreadyExists) return prev;
+
+  return [jobSnapshot, ...prev].slice(0, 10);
+});
 
 playApplySound();
 
@@ -1299,6 +1308,94 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       </button>
     </div>
     )}
+</section>
+
+{/* AUTO APPLIED JOBS LIST */}
+<section className="relative z-10 mx-auto mt-6 max-w-3xl rounded-[28px] border border-slate-200 bg-white/95 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:p-6">
+  <div className="flex items-start justify-between gap-4">
+    <div>
+      <p className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-600">
+        Auto applied jobs
+      </p>
+
+      <h2 className="mt-1 text-2xl font-black text-slate-950">
+        Applications sent
+      </h2>
+
+      <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+        Jobs you applied to in this session.
+      </p>
+    </div>
+
+    <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-center ring-1 ring-emerald-100">
+      <p className="text-2xl font-black text-emerald-600">
+        {appliedJobs.length}
+      </p>
+      <p className="text-[10px] font-black uppercase text-emerald-700">
+        Applied
+      </p>
+    </div>
+  </div>
+
+  <div className="mt-5 space-y-3">
+    {appliedJobs.length === 0 ? (
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center">
+        <p className="text-sm font-black text-slate-700">
+          No applications sent yet
+        </p>
+        <p className="mt-1 text-xs font-semibold text-slate-500">
+          Press Apply on a job and it will appear here.
+        </p>
+      </div>
+    ) : (
+      appliedJobs.map((job, index) => (
+        <div
+          key={`${job.id}-${index}`}
+          className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+        >
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white p-2 shadow-sm ring-1 ring-slate-200">
+            <img
+              src={getCompanyLogo(job.company, job.logo)}
+              alt={`${job.company} logo`}
+              className="h-8 w-8 object-contain"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://www.google.com/s2/favicons?domain=google.com&sz=128";
+              }}
+            />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-xs font-black text-white">
+                ✓
+              </span>
+
+              <p className="text-xs font-black uppercase tracking-wide text-emerald-600">
+                Applied
+              </p>
+            </div>
+
+            <p className="mt-1 truncate text-base font-black text-slate-950">
+              {job.company}
+            </p>
+
+            <p className="mt-0.5 line-clamp-1 text-sm font-bold text-slate-700">
+              {job.title}
+            </p>
+
+            <p className="mt-1 text-xs font-semibold text-slate-500">
+              {job.location}
+            </p>
+          </div>
+
+          <div className="shrink-0 rounded-full bg-white px-3 py-1 text-[10px] font-black text-slate-500 ring-1 ring-slate-200">
+            {job.source || "Jobify"}
+          </div>
+        </div>
+      ))
+    )}
+  </div>
 </section>
 </section>
 
