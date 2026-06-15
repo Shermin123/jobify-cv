@@ -91,3 +91,19 @@ select {
 h1 {
   font-weight: 700;
 }
+h2 {
+  font-weight: 700;
+}
+.font-black {
+  font-weight: 650 !important;
+}
+
+.font-extrabold {
+  font-weight: 650 !important;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 650;
+}
