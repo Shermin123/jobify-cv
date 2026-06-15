@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import EmojiBackground from "@/app/components/EmojiBackground";
 
-  type JobApplication = {
+type JobApplication = {
   id: string;
   job_title: string;
   company: string | null;
@@ -15,22 +15,23 @@ import EmojiBackground from "@/app/components/EmojiBackground";
   status: "applied" | "skipped" | "declined";
   created_at: string;
 };
+
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const [applications, setApplications] = useState<JobApplication[]>([]);
-const [appsLoading, setAppsLoading] = useState(false);
-useEffect(() => {
-  if (status !== "authenticated") return;
+  const [appsLoading, setAppsLoading] = useState(false);
 
-  const redirectAfterLogin = sessionStorage.getItem("redirect_after_login");
-  const generatedDone = sessionStorage.getItem("jobify_generated_done");
+  useEffect(() => {
+    if (status !== "authenticated") return;
 
-  if (redirectAfterLogin === "/upload" || generatedDone === "true") {
-    sessionStorage.removeItem("redirect_after_login");
-    router.replace("/upload");
-  }
-}, [status, router]);
+    const redirectAfterLogin = sessionStorage.getItem("redirect_after_login");
+
+    if (redirectAfterLogin === "/upload") {
+      sessionStorage.removeItem("redirect_after_login");
+    }
+  }, [status]);
 
   const handleManageSubscription = async () => {
     if (!session?.user?.email) {
@@ -55,36 +56,36 @@ useEffect(() => {
   };
 
   useEffect(() => {
-  const loadApplications = async () => {
-    if (!session?.user?.email) return;
+    const loadApplications = async () => {
+      if (!session?.user?.email) return;
 
-    setAppsLoading(true);
+      setAppsLoading(true);
 
-    try {
-      const res = await fetch("/api/applications");
-      const data = await res.json();
+      try {
+        const res = await fetch("/api/applications");
+        const data = await res.json();
 
-      if (res.ok) {
-        setApplications(data.applications || []);
+        if (res.ok) {
+          setApplications(data.applications || []);
+        }
+      } catch (error) {
+        console.error("Failed to load applications:", error);
+      } finally {
+        setAppsLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to load applications:", error);
-    } finally {
-      setAppsLoading(false);
-    }
-  };
+    };
 
-  loadApplications();
-}, [session?.user?.email]);
+    loadApplications();
+  }, [session?.user?.email]);
 
-if (status === "loading") {
-  return (
-    <main className="min-h-screen flex items-center justify-center text-gray-500">
-      <EmojiBackground />
-      Loading...
-    </main>
-  );
-}
+  if (status === "loading") {
+    return (
+      <main className="min-h-screen flex items-center justify-center text-gray-500">
+        <EmojiBackground />
+        Loading...
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white text-slate-900">
@@ -95,62 +96,62 @@ if (status === "loading") {
       </div>
 
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* TOP HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-3xl border bg-white/90 backdrop-blur-xl p-5 shadow-sm">
           <div>
             <p className="text-sm font-black text-blue-600 uppercase tracking-widest">
               Dashboard
             </p>
+
             <h1 className="text-2xl md:text-4xl font-black mt-1">
               Welcome back 👋
             </h1>
+
             <p className="text-sm text-slate-500 mt-1 max-w-xl">
               {session?.user?.email}
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-  <button
-    onClick={() => router.push("/jobs")}
-    className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-emerald-700 transition"
-  >
-    Auto Job Apply
-  </button>
+            <button
+              onClick={() => router.push("/jobs")}
+              className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-emerald-700 transition"
+            >
+              Auto Job Apply
+            </button>
 
-  <button
-    onClick={() => router.push("/#cv-score")}
-    className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-orange-600 transition"
-  >
-    Check CV Score
-  </button>
+            <button
+              onClick={() => router.push("/#cv-score")}
+              className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-orange-600 transition"
+            >
+              Check CV Score
+            </button>
 
-  <button
-    onClick={() => {
-      sessionStorage.setItem("jobify_force_setup", "true");
-      router.push("/upload");
-    }}
-    className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-blue-700 transition"
-  >
-    Create CV
-  </button>
+            <button
+              onClick={() => {
+                sessionStorage.setItem("jobify_force_setup", "true");
+                router.push("/upload");
+              }}
+              className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-blue-700 transition"
+            >
+              Create CV
+            </button>
 
-  <button
-    onClick={handleManageSubscription}
-    className="rounded-2xl bg-black px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-slate-800 transition"
-  >
-    Billing Portal
-  </button>
+            <button
+              onClick={handleManageSubscription}
+              className="rounded-2xl bg-black px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-slate-800 transition"
+            >
+              Billing Portal
+            </button>
 
-  <button
-    onClick={() => signOut({ callbackUrl: "/login" })}
-    className="rounded-2xl border bg-white px-5 py-3 text-sm font-black text-slate-700 hover:border-red-400 hover:text-red-600 transition"
-  >
-    Logout
-  </button>
-</div>
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="rounded-2xl border bg-white px-5 py-3 text-sm font-black text-slate-700 hover:border-red-400 hover:text-red-600 transition"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
-        {/* HERO */}
         <div className="mt-6 overflow-hidden rounded-[2rem] bg-slate-950 text-white shadow-2xl">
           <div className="relative p-7 md:p-10">
             <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500 blur-3xl opacity-30" />
@@ -174,9 +175,9 @@ if (status === "loading") {
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => {
-  sessionStorage.setItem("jobify_force_setup", "true");
-  router.push("/upload");
-}}
+                      sessionStorage.setItem("jobify_force_setup", "true");
+                      router.push("/upload");
+                    }}
                     className="rounded-2xl bg-white px-6 py-4 font-black text-slate-950 hover:scale-[1.02] transition"
                   >
                     🚀 Generate New CV
@@ -211,7 +212,6 @@ if (status === "loading") {
           </div>
         </div>
 
-        {/* STATS */}
         <div className="grid md:grid-cols-4 gap-4 mt-6">
           {[
             ["+72%", "Higher interview potential"],
@@ -229,7 +229,6 @@ if (status === "loading") {
           ))}
         </div>
 
-        {/* ACTION CARDS */}
         <div className="grid lg:grid-cols-3 gap-5 mt-8">
           <div className="rounded-[2rem] border bg-white p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
             <div className="text-4xl">🚀</div>
@@ -239,9 +238,9 @@ if (status === "loading") {
             </p>
             <button
               onClick={() => {
-  sessionStorage.setItem("jobify_force_setup", "true");
-  router.push("/upload");
-}}
+                sessionStorage.setItem("jobify_force_setup", "true");
+                router.push("/upload");
+              }}
               className="mt-5 w-full rounded-2xl bg-blue-600 py-3 font-black text-white hover:bg-blue-700 transition"
             >
               Start Generating
@@ -276,101 +275,102 @@ if (status === "loading") {
             </button>
           </div>
         </div>
-          {/* RECENT JOB APPLICATIONS */}
-<div className="mt-8 rounded-[2rem] border bg-white p-6 md:p-8 shadow-sm">
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <div>
-      <p className="text-sm font-black text-blue-600 uppercase tracking-widest">
-        Job Applications
-      </p>
-      <h2 className="mt-2 text-3xl font-black text-slate-900">
-        Recent Job Applications
-      </h2>
-      <p className="mt-2 text-sm text-slate-500">
-        Track jobs you applied, skipped, or declined from One-Tap Apply.
-      </p>
-    </div>
 
-    <button
-      onClick={() => router.push("/jobs")}
-      className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-black text-white hover:bg-slate-800 transition"
-    >
-      Find More Jobs
-    </button>
-  </div>
+        <div className="mt-8 rounded-[2rem] border bg-white p-6 md:p-8 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <p className="text-sm font-black text-blue-600 uppercase tracking-widest">
+                Job Applications
+              </p>
 
-  <div className="mt-6">
-    {appsLoading ? (
-      <div className="rounded-3xl bg-slate-50 border p-6 text-center text-sm font-bold text-slate-500">
-        Loading applications...
-      </div>
-    ) : applications.length === 0 ? (
-      <div className="rounded-3xl bg-slate-50 border p-6 text-center">
-        <div className="text-4xl">💼</div>
-        <h3 className="mt-3 text-xl font-black text-slate-900">
-          No job applications yet
-        </h3>
-        <p className="mt-2 text-sm text-slate-500">
-          Start using One-Tap Apply to save your job activity here.
-        </p>
-        <button
-          onClick={() => router.push("/jobs")}
-          className="mt-5 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white hover:bg-blue-700 transition"
-        >
-          Start Applying
-        </button>
-      </div>
-    ) : (
-      <div className="grid gap-3">
-        {applications.map((app) => {
-          const statusStyle =
-            app.status === "applied"
-              ? "bg-green-50 text-green-700 border-green-200"
-              : app.status === "skipped"
-              ? "bg-slate-50 text-slate-700 border-slate-200"
-              : "bg-red-50 text-red-700 border-red-200";
+              <h2 className="mt-2 text-3xl font-black text-slate-900">
+                Recent Job Applications
+              </h2>
 
-          return (
-            <div
-              key={app.id}
-              className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-3xl border bg-slate-50 p-5"
-            >
-              <div>
-                <h3 className="text-lg font-black text-slate-900">
-                  {app.job_title}
-                </h3>
-
-                <p className="mt-1 text-sm font-semibold text-slate-500">
-                  {app.company || "Company not specified"} •{" "}
-                  {app.location || "Location not specified"}
-                </p>
-
-                <p className="mt-1 text-xs text-slate-400">
-                  {app.salary || "Salary not listed"} •{" "}
-                  {app.job_type || "Job type not listed"}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span
-                  className={`rounded-full border px-4 py-2 text-xs font-black capitalize ${statusStyle}`}
-                >
-                  {app.status}
-                </span>
-
-                <span className="text-xs font-semibold text-slate-400">
-                  {new Date(app.created_at).toLocaleDateString()}
-                </span>
-              </div>
+              <p className="mt-2 text-sm text-slate-500">
+                Track jobs you applied, skipped, or declined from One-Tap Apply.
+              </p>
             </div>
-          );
-        })}
-      </div>
-    )}
-  </div>
-</div>
 
-        {/* WHY IT WORKS */}
+            <button
+              onClick={() => router.push("/jobs")}
+              className="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-black text-white hover:bg-slate-800 transition"
+            >
+              Find More Jobs
+            </button>
+          </div>
+
+          <div className="mt-6">
+            {appsLoading ? (
+              <div className="rounded-3xl bg-slate-50 border p-6 text-center text-sm font-bold text-slate-500">
+                Loading applications...
+              </div>
+            ) : applications.length === 0 ? (
+              <div className="rounded-3xl bg-slate-50 border p-6 text-center">
+                <div className="text-4xl">💼</div>
+                <h3 className="mt-3 text-xl font-black text-slate-900">
+                  No job applications yet
+                </h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Start using One-Tap Apply to save your job activity here.
+                </p>
+                <button
+                  onClick={() => router.push("/jobs")}
+                  className="mt-5 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-black text-white hover:bg-blue-700 transition"
+                >
+                  Start Applying
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-3">
+                {applications.map((app) => {
+                  const statusStyle =
+                    app.status === "applied"
+                      ? "bg-green-50 text-green-700 border-green-200"
+                      : app.status === "skipped"
+                      ? "bg-slate-50 text-slate-700 border-slate-200"
+                      : "bg-red-50 text-red-700 border-red-200";
+
+                  return (
+                    <div
+                      key={app.id}
+                      className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-3xl border bg-slate-50 p-5"
+                    >
+                      <div>
+                        <h3 className="text-lg font-black text-slate-900">
+                          {app.job_title}
+                        </h3>
+
+                        <p className="mt-1 text-sm font-semibold text-slate-500">
+                          {app.company || "Company not specified"} •{" "}
+                          {app.location || "Location not specified"}
+                        </p>
+
+                        <p className="mt-1 text-xs text-slate-400">
+                          {app.salary || "Salary not listed"} •{" "}
+                          {app.job_type || "Job type not listed"}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`rounded-full border px-4 py-2 text-xs font-black capitalize ${statusStyle}`}
+                        >
+                          {app.status}
+                        </span>
+
+                        <span className="text-xs font-semibold text-slate-400">
+                          {new Date(app.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="mt-8 rounded-[2rem] border bg-white p-6 md:p-8 shadow-sm">
           <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-8 items-center">
             <div>
@@ -403,7 +403,6 @@ if (status === "loading") {
           </div>
         </div>
 
-        {/* GOOGLE STYLE REVIEWS */}
         <div className="mt-8 rounded-[2rem] border bg-white p-6 md:p-8 shadow-sm">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
@@ -500,7 +499,6 @@ if (status === "loading") {
           </div>
         </div>
 
-        {/* FINAL CTA */}
         <div className="mt-10 rounded-[2rem] bg-gradient-to-r from-blue-600 to-indigo-600 p-8 md:p-12 text-center text-white shadow-2xl">
           <h2 className="text-3xl md:text-5xl font-black">
             Ready to create your next job-ready CV?
@@ -513,9 +511,9 @@ if (status === "loading") {
           <div className="mt-7 flex flex-col sm:flex-row justify-center gap-3">
             <button
               onClick={() => {
-  sessionStorage.setItem("jobify_force_setup", "true");
-  router.push("/upload");
-}}
+                sessionStorage.setItem("jobify_force_setup", "true");
+                router.push("/upload");
+              }}
               className="rounded-2xl bg-white px-8 py-4 font-black text-blue-600 hover:scale-[1.03] transition"
             >
               Generate CV Now →
@@ -531,7 +529,6 @@ if (status === "loading") {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="relative z-10 mt-10 border-t bg-white/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-10">
           <div className="grid md:grid-cols-4 gap-8">
