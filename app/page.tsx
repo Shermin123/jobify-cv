@@ -435,45 +435,44 @@ const getRiskMessage = () => {
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
       {showScoreAd && (
-  <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-4 py-4 backdrop-blur-xl">
-    <div className="w-full max-w-[390px] overflow-hidden rounded-[28px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)]">
-      <div className="p-4 text-center">
+  <div className="fixed inset-0 z-[2147483647] flex min-h-[100dvh] w-screen items-center justify-center overflow-y-auto bg-slate-950/90 px-3 py-4 backdrop-blur-xl sm:h-[100svh] sm:overflow-hidden sm:px-4">
+    <div className="w-full max-w-[360px] overflow-hidden rounded-[24px] bg-white shadow-[0_30px_90px_rgba(0,0,0,0.55)] sm:max-w-[390px] sm:rounded-[28px]">
+      <div className="p-3 text-center sm:p-4">
         <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
           Advertisement
         </p>
 
         <div className="mt-3 flex h-[250px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-  <ins
-    className="adsbygoogle"
-    style={{ display: "block", width: "300px", height: "250px" }}
-    data-ad-client="ca-pub-7648291083196313"
-    data-ad-slot="7090386055"
-    data-ad-format="auto"
-    data-full-width-responsive="true"
-  />
-</div>
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block", width: "300px", height: "250px" }}
+            data-ad-client="ca-pub-7648291083196313"
+            data-ad-slot="7090386055"
+            data-ad-format="rectangle"
+          />
+        </div>
 
-        <div className="mt-5 rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-5 text-center shadow-sm">
-  <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
-    CV score loading
-  </p>
+        <div className="mt-3 rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-4 text-center shadow-sm sm:mt-5 sm:p-5">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 sm:text-xs">
+            CV score loading
+          </p>
 
-  <h2 className="mt-2 text-2xl font-black leading-tight text-slate-950">
-    Your CV score will be shown in
-  </h2>
+          <h2 className="mt-2 text-xl font-black leading-tight text-slate-950 sm:text-2xl">
+            Your CV score will be shown in
+          </h2>
 
-  <div className="mx-auto mt-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-5xl font-black text-white shadow-2xl">
-    {scoreAdSeconds}
-  </div>
+          <div className="mx-auto mt-3 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl font-black text-white shadow-2xl sm:mt-4 sm:h-24 sm:w-24 sm:text-5xl">
+            {scoreAdSeconds}
+          </div>
 
-  <p className="mt-3 text-lg font-black text-slate-800">
-    seconds
-  </p>
+          <p className="mt-2 text-base font-black text-slate-800 sm:mt-3 sm:text-lg">
+            seconds
+          </p>
 
-  <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
-    <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-blue-600 to-indigo-600" />
-  </div>
-</div>
+          <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-100 sm:mt-5 sm:h-3">
+            <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-blue-600 to-indigo-600" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
