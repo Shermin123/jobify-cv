@@ -14,6 +14,7 @@ type CvIssue = {
   severity: "high" | "medium" | "low";
 };
 
+
 export default function Home() {
   
   
@@ -684,20 +685,31 @@ const getRiskMessage = () => {
   <div className="text-center lg:text-left">
     
     
-    <div className="mt-6 flex w-full max-w-md flex-col gap-3 mx-auto lg:mx-0">
-      <div className="mb-4 text-center lg:text-left">
-  <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-600">
-    AI-powered CV builder
-  </p>
+    <div className="mt-2 flex w-full max-w-xl flex-col gap-2 mx-auto lg:mx-0">
 
-  <h1 className="mt-2 text-3xl font-black leading-tight tracking-[-0.05em] text-slate-950 sm:text-4xl">
-    Build a CV that gets noticed
+
+
+<div className="group relative origin-center transition-all duration-500 ease-out hover:scale-[1.015] hover:drop-shadow-[0_18px_35px_rgba(37,99,235,0.12)]">
+  <h1 className="text-4xl font-black leading-tight tracking-[-0.05em] text-slate-950 sm:text-5xl">
+    Build a CV that gets you
+    <span className="mt-1 block bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent transition-all duration-500 group-hover:scale-[1.04] group-hover:tracking-[-0.03em]">
+      more INTERVIEWS.
+    </span>
   </h1>
+  
 
-  <p className="mt-2 text-sm font-bold leading-6 text-slate-500">
-    Improve your ATS keywords, rewrite weak lines, and create a job-ready CV in minutes.
+  <p className="mx-auto mt-4 max-w-lg text-sm font-semibold leading-6 text-slate-600 transition-all duration-500 group-hover:text-slate-700 sm:text-base lg:mx-0">
+    Create a focused, ATS-ready CV with stronger wording, relevant keywords and
+    achievements recruiters notice.
   </p>
+
+  
+
+  
 </div>
+
+
+
   <button
     type="button"
     onClick={() => {
@@ -735,20 +747,7 @@ const getRiskMessage = () => {
 </button>
 </div>
 
-    <div className="mt-5 grid grid-cols-3 gap-3 text-center max-w-md mx-auto lg:mx-0">
-      <div className="bg-white border rounded-2xl p-3 shadow-sm">
-        <p className="font-bold text-blue-600">ATS</p>
-        <p className="text-xs text-gray-500">Ready</p>
-      </div>
-      <div className="bg-white border rounded-2xl p-3 shadow-sm">
-        <p className="font-bold text-emerald-600">AI</p>
-        <p className="text-xs text-gray-500">Rewrite</p>
-      </div>
-      <div className="bg-white border rounded-2xl p-3 shadow-sm">
-        <p className="font-bold text-purple-600">PDF</p>
-        <p className="text-xs text-gray-500">Download</p>
-      </div>
-    </div>
+    
     
     <div className="mt-8 flex justify-center">
   <div className="relative w-full max-w-[760px] overflow-hidden rounded-[32px] border border-slate-200 bg-white/85 p-1 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur-xl">
@@ -779,6 +778,39 @@ const getRiskMessage = () => {
 
 <div className="mt-10">
   <HiredAtBox />
+</div>
+
+
+{/* AD BELOW LOGOS — FILLS LEFT-SIDE EMPTY SPACE */}
+<div className="mt-6 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl">
+  <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+    <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
+      Advertisement
+    </p>
+
+    <span className="rounded-full bg-slate-100 px-3 py-1 text-[9px] font-bold text-slate-400">
+      Ad space
+    </span>
+  </div>
+
+  <div className="relative flex min-h-[500px] items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 px-6 py-10 text-center">
+    <div className="pointer-events-none absolute -left-24 -top-24 h-56 w-56 rounded-full bg-blue-200/30 blur-3xl" />
+    <div className="pointer-events-none absolute -bottom-24 -right-24 h-56 w-56 rounded-full bg-indigo-200/30 blur-3xl" />
+
+    <div className="relative z-10">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-2xl shadow-sm">
+        📢
+      </div>
+
+      <h3 className="mt-4 text-xl font-black text-slate-900">
+        Advertisement space
+      </h3>
+
+      <p className="mx-auto mt-2 max-w-xs text-sm font-semibold leading-6 text-slate-500">
+        This area will display a responsive advertisement after AdSense approval.
+      </p>
+    </div>
+  </div>
 </div>
   </div>
 
@@ -1151,8 +1183,9 @@ const getRiskMessage = () => {
 </div>
 
 </section>
-      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pb-10">
-  <div className="rounded-[28px] border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur-xl">
+ 
+<section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+  <div className="rounded-[28px] border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur-xl md:p-8">
     <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-600">
       Trusted by job seekers
     </p>
@@ -1161,20 +1194,144 @@ const getRiskMessage = () => {
       Our users apply to top companies
     </h2>
 
-    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {["Google", "Amazon", "Microsoft", "Meta", "Netflix", "Apple", "IBM", "Deloitte"].map(
-        (company) => (
+    <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {[
+        {
+          name: "Google",
+          domain: "google.com",
+        },
+        {
+          name: "Amazon",
+          domain: "amazon.com",
+        },
+        {
+          name: "Microsoft",
+          domain: "microsoft.com",
+        },
+        {
+          name: "Meta",
+          domain: "meta.com",
+        },
+        {
+          name: "Netflix",
+          domain: "netflix.com",
+        },
+        {
+          name: "Apple",
+          domain: "apple.com",
+        },
+        {
+          name: "IBM",
+          domain: "ibm.com",
+        },
+        {
+          name: "Deloitte",
+          domain: "deloitte.com",
+        },
+      ].map((company) => {
+        const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
+        const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
+
+        return (
           <div
-            key={company}
-            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-700 shadow-sm"
+            key={company.name}
+            className="group flex min-h-[100px] items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
           >
-            {company}
+            <div className="flex flex-col items-center justify-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
+                <img
+                  src={googleLogo}
+                  alt={`${company.name} logo`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="h-9 w-9 object-contain transition-transform duration-300 group-hover:scale-110"
+                  data-fallback-used="false"
+                  onError={(event) => {
+                    const image = event.currentTarget;
+
+                    if (image.dataset.fallbackUsed === "false") {
+                      image.dataset.fallbackUsed = "true";
+                      image.src = duckDuckGoLogo;
+                      return;
+                    }
+
+                    image.style.display = "none";
+
+                    const fallback =
+                      image.nextElementSibling as HTMLElement | null;
+
+                    if (fallback) {
+                      fallback.style.display = "flex";
+                    }
+                  }}
+                />
+
+                <span
+                  className="hidden h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-sm font-black text-white"
+                  aria-hidden="true"
+                >
+                  {company.name.charAt(0)}
+                </span>
+              </div>
+
+              <span className="text-xs font-black text-slate-700">
+                {company.name}
+              </span>
+            </div>
           </div>
-        )
-      )}
+        );
+      })}
+    </div>
+
+    <p className="mt-5 text-[10px] font-semibold text-slate-400">
+      Company names and logos are trademarks of their respective owners.
+    </p>
+  </div>
+</section>
+
+
+{/* NEW AD PLACEHOLDER GOES HERE */}
+<section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+  <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)]">
+    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 sm:px-6">
+      <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
+        Advertisement
+      </p>
+
+      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[9px] font-bold text-slate-400">
+        Ad space
+      </span>
+    </div>
+
+    <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 px-5 py-10 text-center sm:min-h-[320px]">
+      <div className="pointer-events-none absolute -left-20 -top-20 h-48 w-48 rounded-full bg-blue-200/35 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-indigo-200/35 blur-3xl" />
+
+      <div className="relative z-10">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-2xl shadow-sm">
+          📢
+        </div>
+
+        <p className="mt-4 text-[10px] font-black uppercase tracking-[0.24em] text-blue-600">
+          Sponsored placement
+        </p>
+
+        <h3 className="mt-2 text-xl font-black text-slate-900 sm:text-2xl">
+          Advertisement space
+        </h3>
+
+        <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
+          This area is reserved for responsive advertising after the site is approved.
+        </p>
+
+        <div className="mx-auto mt-5 w-fit rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-wider text-slate-400 shadow-sm">
+          Responsive display unit
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
 
 
       {/* ================= HOW IT WORKS ================= */}
