@@ -2030,7 +2030,7 @@ const previousSetupStep = () => {
 
                     <div
                       className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-sm select-none"
+                        isUnlocked ? "" : "blur-[1.5px] select-none opacity-80"
                       }`}
                     >
                       {highlightKeywords(displayCv, "blue")}
@@ -2043,32 +2043,11 @@ const previousSetupStep = () => {
 
                     
                       {!isUnlocked && showUnlock && (
-  <>
-    <div className="absolute inset-0 z-10 bg-white/25 backdrop-blur-sm" />
-
-    <div className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full border border-emerald-200 bg-white/95 px-5 py-2 shadow-lg">
-      <p className="text-center text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-        ATS SCORE
-      </p>
-      <p className="text-center text-2xl font-black text-emerald-600">
-        {atsScore}%
-      </p>
-    </div>
-
-    <div className="absolute inset-0 z-20 flex items-center justify-center">
-      <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white/90 shadow-2xl">
-        <div className="absolute inset-0 rounded-full border-4 border-emerald-400/40 animate-ping" />
-        <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-900 to-slate-700 shadow-lg" />
-        <span className="relative text-4xl animate-bounce">🔒</span>
-      </div>
-    </div>
-
-    <div className="absolute inset-x-0 bottom-4 z-20 flex justify-center">
-      <div className="rounded-full bg-slate-900 px-4 py-2 text-xs font-black uppercase tracking-[0.15em] text-white shadow-md">
-        Locked Preview
-      </div>
-    </div>
-  </>
+  <PremiumLockedOverlay
+    atsScore={atsScore}
+    keywordsCount={keywords.length}
+    onUnlock={handleUnlockClick}
+  />
 )}
                   </div>
 
@@ -2097,14 +2076,14 @@ const previousSetupStep = () => {
     
 
     <button
-      onClick={() => rephraseDocument("cv")}
+      onClick={() => (isUnlocked ? rephraseDocument("cv") : handleUnlockClick())}
       disabled={rephrasing === "cv" || typing}
       className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
     >
       {rephrasing === "cv" ? "Rephrasing..." : "✨ Rephrase CV"}
     </button>
       <button
-  onClick={() => openEditor("cv")}
+  onClick={() => (isUnlocked ? openEditor("cv") : handleUnlockClick())}
   className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50"
 >
   ✏️ Edit CV
@@ -2147,7 +2126,7 @@ const previousSetupStep = () => {
 
                     <div
                       className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-sm select-none"
+                        isUnlocked ? "" : "blur-[1.5px] select-none opacity-80"
                       }`}
                     >
                       {highlightKeywords(displayCoverLetter, "purple")}
@@ -2159,32 +2138,11 @@ const previousSetupStep = () => {
                     </div>
 
                       {!isUnlocked && showUnlock && (
-  <>
-    <div className="absolute inset-0 z-10 bg-white/25 backdrop-blur-sm" />
-
-    <div className="absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full border border-emerald-200 bg-white/95 px-5 py-2 shadow-lg">
-      <p className="text-center text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-        ATS SCORE
-      </p>
-      <p className="text-center text-2xl font-black text-emerald-600">
-        {atsScore}%
-      </p>
-    </div>
-
-    <div className="absolute inset-0 z-20 flex items-center justify-center">
-      <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white/90 shadow-2xl">
-        <div className="absolute inset-0 rounded-full border-4 border-emerald-400/40 animate-ping" />
-        <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-900 to-slate-700 shadow-lg" />
-        <span className="relative text-4xl animate-bounce">🔒</span>
-      </div>
-    </div>
-
-    <div className="absolute inset-x-0 bottom-4 z-20 flex justify-center">
-      <div className="rounded-full bg-slate-900 px-4 py-2 text-xs font-black uppercase tracking-[0.15em] text-white shadow-md">
-        Locked Preview
-      </div>
-    </div>
-  </>
+  <PremiumLockedOverlay
+    atsScore={atsScore}
+    keywordsCount={keywords.length}
+    onUnlock={handleUnlockClick}
+  />
 )}
                   </div>
 
@@ -2221,14 +2179,14 @@ const previousSetupStep = () => {
     </button>
 
     <button
-      onClick={() => rephraseDocument("cover")}
+      onClick={() => (isUnlocked ? rephraseDocument("cover") : handleUnlockClick())}
       disabled={rephrasing === "cover" || typing}
       className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50 disabled:opacity-50"
     >
       {rephrasing === "cover" ? "Rephrasing..." : "✨ Rephrase"}
     </button>
       <button
-  onClick={() => openEditor("cover")}
+  onClick={() => (isUnlocked ? openEditor("cover") : handleUnlockClick())}
   className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
 >
   ✏️ Edit Letter
@@ -3083,6 +3041,79 @@ Company requirements"
 .animate-cookBar {
   animation: cookBar 1.15s ease-in-out infinite;
 }
+  @keyframes unlockCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+    filter: blur(8px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes lockFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+}
+
+@keyframes premiumSweep {
+  0% {
+    transform: translateX(-120%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(320%) rotate(12deg);
+  }
+}
+
+@keyframes orbOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, 30px) scale(1.18);
+  }
+}
+
+@keyframes orbTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-25px, -20px) scale(1.15);
+  }
+}
+
+.animate-unlockCardIn {
+  animation: unlockCardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-lockFloat {
+  animation: lockFloat 2.6s ease-in-out infinite;
+}
+
+.animate-premiumSweep {
+  animation: premiumSweep 2.8s ease-in-out infinite;
+}
+
+.animate-orbOne {
+  animation: orbOne 4s ease-in-out infinite;
+}
+
+.animate-orbTwo {
+  animation: orbTwo 4.5s ease-in-out infinite;
+}
       `}</style>
     </main>
   );
@@ -3224,5 +3255,88 @@ function MultiSelectQuestionButtons({
         })}
       </div>
     </div>
+  );
+}
+function PremiumLockedOverlay({
+  atsScore,
+  keywordsCount,
+  onUnlock,
+}: {
+  atsScore: number;
+  keywordsCount: number;
+  onUnlock: () => void;
+}) {
+  return (
+    <>
+      <div className="absolute inset-0 z-10 bg-white/20 backdrop-blur-[2px]" />
+
+      <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+        <div className="absolute -left-24 top-10 h-40 w-40 rounded-full bg-blue-400/25 blur-3xl animate-orbOne" />
+        <div className="absolute -right-24 bottom-10 h-40 w-40 rounded-full bg-purple-400/25 blur-3xl animate-orbTwo" />
+        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-premiumSweep" />
+      </div>
+
+      <div className="absolute inset-0 z-30 flex items-center justify-center px-4">
+        <div className="relative w-full max-w-[315px] overflow-hidden rounded-[30px] border border-white/70 bg-white/90 p-5 text-center shadow-[0_30px_80px_rgba(15,23,42,0.28)] backdrop-blur-2xl animate-unlockCardIn">
+          <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500 bg-[length:220%_100%] animate-gradientMove" />
+
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-slate-950 to-slate-700 text-3xl shadow-2xl animate-lockFloat">
+            🔒
+          </div>
+
+          <p className="mt-4 text-[11px] font-black uppercase tracking-[0.22em] text-blue-600">
+            Premium result ready
+          </p>
+
+          <h4 className="mt-2 text-xl font-black leading-tight text-slate-950">
+            Your tailored CV package is generated
+          </h4>
+
+          <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+            The full document is hidden, but your AI result is ready to unlock.
+          </p>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-2 shadow-sm">
+              <p className="text-xl font-black text-emerald-600">
+                {atsScore}%
+              </p>
+              <p className="text-[10px] font-black uppercase text-emerald-700">
+                ATS
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-2 shadow-sm">
+              <p className="text-xl font-black text-blue-600">2</p>
+              <p className="text-[10px] font-black uppercase text-blue-700">
+                Docs
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-2 shadow-sm">
+              <p className="text-xl font-black text-purple-600">
+                {keywordsCount || 8}
+              </p>
+              <p className="text-[10px] font-black uppercase text-purple-700">
+                Keys
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onUnlock}
+            className="mt-5 w-full rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-[length:200%_100%] py-3.5 text-sm font-black text-white shadow-[0_16px_35px_rgba(37,99,235,0.35)] transition hover:scale-[1.02] active:scale-95 animate-gradientMove"
+          >
+            Unlock Full Result →
+          </button>
+
+          <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-bold text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-dotPulse" />
+            PDF, DOCX, edit and rephrase included
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
