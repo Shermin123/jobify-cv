@@ -1914,7 +1914,7 @@ const previousSetupStep = () => {
         
         {/* RESULTS */}
         {generated && (
-          <section ref={resultRef} className="relative z-[90] space-y-5 overflow-visible">
+          <section ref={resultRef} className="relative z-[9999] space-y-5 overflow-visible">
             <div className="rounded-3xl bg-slate-950 text-white p-4 md:p-6 shadow-2xl overflow-hidden relative">
               <div className="absolute right-6 top-5 text-6xl opacity-10">
                 {typing ? "✍️" : isUnlocked ? "✅" : "🔒"}
@@ -1997,7 +1997,7 @@ const previousSetupStep = () => {
             </div>
 
             {/* DOCUMENT PREVIEW CARDS */}
-<div className="relative z-[100] grid overflow-visible lg:grid-cols-2 gap-6">
+<div className="relative z-[10000] grid overflow-visible lg:grid-cols-2 gap-6">
               {/* CV CARD */}
               <div className="group relative overflow-visible rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
@@ -3590,31 +3590,60 @@ Company requirements"
   }
 }
 
-@keyframes burstOut {
+@keyframes celebrationExplode {
   0% {
     opacity: 0;
-    transform: translate(0, -12px) scale(0.35) rotate(0deg);
+    transform: translate(0, 0) scale(0.35) rotate(0deg);
   }
 
-  8% {
+  7% {
     opacity: 1;
+    transform: translate(calc(var(--x) * 0.12), -70px) scale(1.1) rotate(60deg);
   }
 
-  82% {
+  30% {
     opacity: 1;
+    transform: translate(calc(var(--x) * 0.55), calc(var(--y) * 0.25)) scale(var(--s)) rotate(calc(var(--r) * 0.45));
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate(calc(var(--x) * 0.85), calc(var(--y) * 0.72)) scale(var(--s)) rotate(calc(var(--r) * 0.8));
   }
 
   100% {
     opacity: 0;
-    transform: translate(var(--x), var(--y)) scale(var(--s)) rotate(var(--r));
+    transform: translate(var(--x), var(--y)) scale(calc(var(--s) * 0.75)) rotate(var(--r));
   }
 }
 
-.burst-piece {
+@keyframes celebrationGlow {
+  0%, 100% {
+    box-shadow:
+      0 22px 70px rgba(15, 23, 42, 0.22),
+      0 0 0 rgba(59, 130, 246, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 26px 90px rgba(15, 23, 42, 0.28),
+      0 0 45px rgba(59, 130, 246, 0.35),
+      0 0 70px rgba(168, 85, 247, 0.22);
+  }
+}
+
+.celebration-zone:hover .framer-unlock-bar {
+  animation:
+    framerBarIn 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    celebrationGlow 1.8s ease-in-out infinite;
+  transform: translateY(-2px) scale(1.012);
+}
+
+.celebration-piece {
   pointer-events: none;
   position: absolute;
   left: 50%;
-  top: 62%;
+  top: 70%;
   z-index: 2147483647;
   height: 10px;
   width: 10px;
@@ -3626,131 +3655,63 @@ Company requirements"
     0 0 30px rgba(6, 182, 212, 0.75),
     0 0 46px rgba(168, 85, 247, 0.6),
     0 18px 34px rgba(15, 23, 42, 0.3);
-  animation-name: burstOut;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-fill-mode: both;
   will-change: transform, opacity;
 }
 
-.burst-piece:nth-of-type(odd) {
-  border-radius: 44% 56% 50% 50%;
-  background: linear-gradient(135deg, #0ea5e9, #22c55e, #2563eb);
+.celebration-piece:nth-child(3n) {
+  border-radius: 3px;
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
 }
 
-.burst-piece:nth-of-type(even) {
+.celebration-piece:nth-child(3n + 1) {
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.celebration-piece:nth-child(3n + 2) {
   border-radius: 40% 60% 58% 42%;
-  background: linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b);
+  background: linear-gradient(135deg, #ec4899, #f59e0b);
 }
 
-/* non-stop slow falling particles */
-.burst-piece-1 {
-  --x: -190px;
-  --y: 720px;
-  --s: 1.15;
-  --r: 180deg;
-  animation-duration: 5.8s;
-  animation-delay: -0.2s;
+.celebration-zone:hover .celebration-piece {
+  animation-name: celebrationExplode;
+  animation-timing-function: cubic-bezier(0.18, 0.88, 0.28, 1);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
 }
 
-.burst-piece-2 {
-  --x: -135px;
-  --y: 780px;
-  --s: 0.9;
-  --r: 260deg;
-  animation-duration: 6.4s;
-  animation-delay: -1.4s;
-}
+/* advanced smooth celebration burst */
+.celebration-piece-1 { --x: -260px; --y: 760px; --s: 1.1; --r: 520deg; animation-duration: 3.8s; animation-delay: 0s; }
+.celebration-piece-2 { --x: -210px; --y: 850px; --s: 0.85; --r: 680deg; animation-duration: 4.4s; animation-delay: 0.1s; }
+.celebration-piece-3 { --x: -155px; --y: 720px; --s: 1.25; --r: 460deg; animation-duration: 3.9s; animation-delay: 0.18s; }
+.celebration-piece-4 { --x: -90px; --y: 900px; --s: 0.9; --r: 740deg; animation-duration: 4.7s; animation-delay: 0.04s; }
+.celebration-piece-5 { --x: -35px; --y: 790px; --s: 1.2; --r: 580deg; animation-duration: 4.1s; animation-delay: 0.24s; }
+.celebration-piece-6 { --x: 35px; --y: 880px; --s: 0.95; --r: 700deg; animation-duration: 4.6s; animation-delay: 0.14s; }
+.celebration-piece-7 { --x: 95px; --y: 740px; --s: 1.3; --r: 530deg; animation-duration: 3.95s; animation-delay: 0.28s; }
+.celebration-piece-8 { --x: 155px; --y: 910px; --s: 0.9; --r: 760deg; animation-duration: 4.8s; animation-delay: 0.09s; }
+.celebration-piece-9 { --x: 215px; --y: 810px; --s: 1.1; --r: 620deg; animation-duration: 4.2s; animation-delay: 0.2s; }
+.celebration-piece-10 { --x: 270px; --y: 860px; --s: 0.82; --r: 720deg; animation-duration: 4.55s; animation-delay: 0.32s; }
 
-.burst-piece-3 {
-  --x: -75px;
-  --y: 740px;
-  --s: 1.25;
-  --r: 120deg;
-  animation-duration: 5.9s;
-  animation-delay: -2.2s;
-}
+.celebration-piece-11 { --x: -300px; --y: 980px; --s: 0.95; --r: 820deg; animation-duration: 5s; animation-delay: 0.44s; }
+.celebration-piece-12 { --x: 310px; --y: 960px; --s: 1.05; --r: 780deg; animation-duration: 4.95s; animation-delay: 0.36s; }
+.celebration-piece-13 { --x: -240px; --y: 690px; --s: 0.75; --r: 480deg; animation-duration: 3.7s; animation-delay: 0.52s; }
+.celebration-piece-14 { --x: 240px; --y: 700px; --s: 0.78; --r: 500deg; animation-duration: 3.75s; animation-delay: 0.58s; }
+.celebration-piece-15 { --x: -125px; --y: 1010px; --s: 1.15; --r: 850deg; animation-duration: 5.15s; animation-delay: 0.66s; }
+.celebration-piece-16 { --x: 125px; --y: 1030px; --s: 1.12; --r: 810deg; animation-duration: 5.25s; animation-delay: 0.72s; }
+.celebration-piece-17 { --x: -20px; --y: 950px; --s: 0.82; --r: 620deg; animation-duration: 4.7s; animation-delay: 0.8s; }
+.celebration-piece-18 { --x: 20px; --y: 920px; --s: 1.22; --r: 660deg; animation-duration: 4.65s; animation-delay: 0.86s; }
 
-.burst-piece-4 {
-  --x: -25px;
-  --y: 820px;
-  --s: 0.85;
-  --r: 300deg;
-  animation-duration: 6.8s;
-  animation-delay: -0.8s;
-}
+.celebration-piece-19 { --x: -330px; --y: 820px; --s: 0.7; --r: 720deg; animation-duration: 4.35s; animation-delay: 0.95s; }
+.celebration-piece-20 { --x: 330px; --y: 835px; --s: 0.72; --r: 760deg; animation-duration: 4.4s; animation-delay: 1.05s; }
+.celebration-piece-21 { --x: -175px; --y: 1080px; --s: 0.88; --r: 900deg; animation-duration: 5.45s; animation-delay: 1.12s; }
+.celebration-piece-22 { --x: 175px; --y: 1070px; --s: 0.9; --r: 880deg; animation-duration: 5.35s; animation-delay: 1.2s; }
+.celebration-piece-23 { --x: -70px; --y: 1110px; --s: 1; --r: 920deg; animation-duration: 5.55s; animation-delay: 1.28s; }
+.celebration-piece-24 { --x: 70px; --y: 1120px; --s: 1.05; --r: 940deg; animation-duration: 5.6s; animation-delay: 1.34s; }
 
-.burst-piece-5 {
-  --x: 35px;
-  --y: 760px;
-  --s: 1.2;
-  --r: 210deg;
-  animation-duration: 6.1s;
-  animation-delay: -2.8s;
-}
-
-.burst-piece-6 {
-  --x: 95px;
-  --y: 830px;
-  --s: 0.95;
-  --r: 340deg;
-  animation-duration: 7s;
-  animation-delay: -1.7s;
-}
-
-.burst-piece-7 {
-  --x: 155px;
-  --y: 750px;
-  --s: 1.25;
-  --r: 160deg;
-  animation-duration: 6.2s;
-  animation-delay: -3.1s;
-}
-
-.burst-piece-8 {
-  --x: 205px;
-  --y: 860px;
-  --s: 0.9;
-  --r: 280deg;
-  animation-duration: 7.2s;
-  animation-delay: -2.4s;
-}
-
-.burst-piece-9 {
-  --x: -215px;
-  --y: 835px;
-  --s: 1;
-  --r: 240deg;
-  animation-duration: 6.9s;
-  animation-delay: -4s;
-}
-
-.burst-piece-10 {
-  --x: 220px;
-  --y: 800px;
-  --s: 1.15;
-  --r: 140deg;
-  animation-duration: 6.6s;
-  animation-delay: -3.5s;
-}
-
-.burst-piece-11 {
-  --x: -50px;
-  --y: 890px;
-  --s: 0.85;
-  --r: 320deg;
-  animation-duration: 7.4s;
-  animation-delay: -1.1s;
-}
-
-.burst-piece-12 {
-  --x: 60px;
-  --y: 880px;
-  --s: 1.1;
-  --r: 190deg;
-  animation-duration: 7.1s;
-  animation-delay: -4.4s;
-}
+.celebration-piece-25 { --x: -280px; --y: 620px; --s: 0.65; --r: 480deg; animation-duration: 3.6s; animation-delay: 1.45s; }
+.celebration-piece-26 { --x: 285px; --y: 630px; --s: 0.68; --r: 500deg; animation-duration: 3.65s; animation-delay: 1.52s; }
+.celebration-piece-27 { --x: -10px; --y: 1160px; --s: 0.8; --r: 980deg; animation-duration: 5.8s; animation-delay: 1.6s; }
+.celebration-piece-28 { --x: 10px; --y: 1180px; --s: 0.82; --r: 1000deg; animation-duration: 5.9s; animation-delay: 1.68s; }
 
 `}</style>
     </main>
@@ -3905,13 +3866,23 @@ function PremiumLockedOverlay({
   onUnlock: () => void;
 }) {
   return (
-    <>
-      <div className="absolute inset-0 z-10 bg-white/10 backdrop-blur-[1px]" />
+    <div className="celebration-zone absolute inset-0 z-[99999] overflow-visible">
+      <div className="pointer-events-none absolute inset-0 z-10 bg-white/10 backdrop-blur-[1px]" />
 
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
         <div className="absolute -left-24 top-16 h-52 w-52 rounded-full bg-blue-400/20 blur-3xl animate-framerOrbOne" />
         <div className="absolute -right-24 bottom-10 h-52 w-52 rounded-full bg-purple-400/20 blur-3xl animate-framerOrbTwo" />
         <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent animate-framerSweep" />
+      </div>
+
+      {/* ADVANCED CELEBRATION PARTICLES */}
+      <div className="pointer-events-none absolute inset-0 z-[999999] overflow-visible">
+        {Array.from({ length: 28 }).map((_, index) => (
+          <span
+            key={index}
+            className={`celebration-piece celebration-piece-${index + 1}`}
+          />
+        ))}
       </div>
 
       <div className="absolute inset-x-4 top-4 z-30 flex items-center justify-between">
@@ -3924,24 +3895,10 @@ function PremiumLockedOverlay({
         </div>
       </div>
 
-      <div className="absolute inset-x-4 bottom-4 z-30">
+      <div className="absolute inset-x-4 bottom-4 z-40">
         <div className="framer-unlock-bar group relative overflow-visible rounded-[28px] border border-white/70 bg-white/75 p-3 shadow-[0_22px_70px_rgba(15,23,42,0.22)] backdrop-blur-2xl animate-framerBarIn">
           <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/95 via-white/55 to-white/25" />
           <div className="pointer-events-none absolute inset-x-5 top-0 h-16 rounded-full bg-white/80 blur-2xl" />
-
-          {/* hover burst particles */}
-          <span className="burst-piece burst-piece-1" />
-          <span className="burst-piece burst-piece-2" />
-          <span className="burst-piece burst-piece-3" />
-          <span className="burst-piece burst-piece-4" />
-          <span className="burst-piece burst-piece-5" />
-          <span className="burst-piece burst-piece-6" />
-          <span className="burst-piece burst-piece-7" />
-          <span className="burst-piece burst-piece-8" />
-          <span className="burst-piece burst-piece-9" />
-          <span className="burst-piece burst-piece-10" />
-          <span className="burst-piece burst-piece-11" />
-          <span className="burst-piece burst-piece-12" />
 
           <div className="relative flex items-center gap-3">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/80 bg-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_12px_32px_rgba(37,99,235,0.18)] backdrop-blur-xl">
@@ -3975,23 +3932,29 @@ function PremiumLockedOverlay({
           <div className="relative mt-3 grid grid-cols-3 gap-2">
             <div className="rounded-2xl border border-emerald-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
               <p className="text-lg font-black text-emerald-600">{atsScore}%</p>
-              <p className="text-[9px] font-black uppercase text-slate-400">ATS</p>
+              <p className="text-[9px] font-black uppercase text-slate-400">
+                ATS
+              </p>
             </div>
 
             <div className="rounded-2xl border border-blue-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
               <p className="text-lg font-black text-blue-600">2</p>
-              <p className="text-[9px] font-black uppercase text-slate-400">Docs</p>
+              <p className="text-[9px] font-black uppercase text-slate-400">
+                Docs
+              </p>
             </div>
 
             <div className="rounded-2xl border border-purple-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
               <p className="text-lg font-black text-purple-600">
                 {keywordsCount || 8}
               </p>
-              <p className="text-[9px] font-black uppercase text-slate-400">Keys</p>
+              <p className="text-[9px] font-black uppercase text-slate-400">
+                Keys
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
