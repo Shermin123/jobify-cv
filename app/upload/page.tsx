@@ -2119,7 +2119,7 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 hh-[390px] md:h-[420px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[390px] md:h-[420px] overflow-hidden shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
@@ -3226,6 +3226,197 @@ Company requirements"
   .animate-vaultStatThree {
     animation: vaultStat 0.45s ease-out 0.35s both;
   }
+    @keyframes appleCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.92);
+    filter: blur(14px);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.025);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes appleFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+}
+
+@keyframes appleSweep {
+  0% {
+    transform: translateX(-140%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(420%) rotate(12deg);
+  }
+}
+
+@keyframes appleOrbOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(36px, 28px) scale(1.2);
+  }
+}
+
+@keyframes appleOrbTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-34px, -24px) scale(1.18);
+  }
+}
+
+@keyframes appleStat {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glassDropFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(240px) scale(1);
+  }
+}
+
+.apple-glass-card:hover .glass-drop {
+  animation-name: glassDropFall;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-iteration-count: infinite;
+}
+
+.glass-drop {
+  pointer-events: none;
+  position: absolute;
+  top: -18px;
+  z-index: 5;
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 0 14px rgba(255, 255, 255, 0.9),
+    0 0 26px rgba(96, 165, 250, 0.5);
+  opacity: 0;
+}
+
+.glass-drop-1 {
+  left: 9%;
+  animation-duration: 1.7s;
+  animation-delay: 0s;
+}
+
+.glass-drop-2 {
+  left: 19%;
+  animation-duration: 2.1s;
+  animation-delay: 0.2s;
+}
+
+.glass-drop-3 {
+  left: 29%;
+  animation-duration: 1.8s;
+  animation-delay: 0.4s;
+}
+
+.glass-drop-4 {
+  left: 39%;
+  animation-duration: 2.3s;
+  animation-delay: 0.1s;
+}
+
+.glass-drop-5 {
+  left: 49%;
+  animation-duration: 1.9s;
+  animation-delay: 0.35s;
+}
+
+.glass-drop-6 {
+  left: 59%;
+  animation-duration: 2.2s;
+  animation-delay: 0.15s;
+}
+
+.glass-drop-7 {
+  left: 69%;
+  animation-duration: 1.8s;
+  animation-delay: 0.5s;
+}
+
+.glass-drop-8 {
+  left: 79%;
+  animation-duration: 2.4s;
+  animation-delay: 0.25s;
+}
+
+.glass-drop-9 {
+  left: 88%;
+  animation-duration: 1.9s;
+  animation-delay: 0.45s;
+}
+
+.glass-drop-10 {
+  left: 95%;
+  animation-duration: 2.2s;
+  animation-delay: 0.05s;
+}
+
+.animate-appleCardIn {
+  animation: appleCardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-appleFloat {
+  animation: appleFloat 3s ease-in-out infinite;
+}
+
+.animate-appleSweep {
+  animation: appleSweep 2.9s ease-in-out infinite;
+}
+
+.animate-appleOrbOne {
+  animation: appleOrbOne 4.2s ease-in-out infinite;
+}
+
+.animate-appleOrbTwo {
+  animation: appleOrbTwo 4.6s ease-in-out infinite;
+}
+
+.animate-appleStatOne {
+  animation: appleStat 0.45s ease-out 0.15s both;
+}
+
+.animate-appleStatTwo {
+  animation: appleStat 0.45s ease-out 0.25s both;
+}
+
+.animate-appleStatThree {
+  animation: appleStat 0.45s ease-out 0.35s both;
+}
 `}</style>
     </main>
   );
@@ -3380,84 +3571,100 @@ function PremiumLockedOverlay({
 }) {
   return (
     <>
-      <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-950/35 via-blue-950/20 to-purple-950/30 backdrop-blur-[1px]" />
+      <div className="absolute inset-0 z-10 bg-white/20 backdrop-blur-[1.5px]" />
 
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <div className="absolute left-[-60px] top-[-40px] h-40 w-40 rounded-full bg-cyan-400/35 blur-3xl animate-vaultOrbOne" />
-        <div className="absolute right-[-70px] bottom-[-50px] h-44 w-44 rounded-full bg-purple-500/35 blur-3xl animate-vaultOrbTwo" />
-
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-cyan-300/80 shadow-[0_0_30px_rgba(34,211,238,0.9)] animate-vaultScanLine" />
-        <div className="absolute inset-y-0 -left-1/3 w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent animate-vaultSweep" />
-
-        <div className="absolute left-7 top-8 h-1.5 w-1.5 rounded-full bg-white/80 animate-vaultSparkOne" />
-        <div className="absolute right-10 top-16 h-1.5 w-1.5 rounded-full bg-cyan-200/90 animate-vaultSparkTwo" />
-        <div className="absolute bottom-12 left-14 h-1.5 w-1.5 rounded-full bg-purple-200/90 animate-vaultSparkThree" />
+        <div className="absolute -left-20 -top-16 h-56 w-56 rounded-full bg-blue-300/35 blur-3xl animate-appleOrbOne" />
+        <div className="absolute -right-20 bottom-[-70px] h-56 w-56 rounded-full bg-purple-300/35 blur-3xl animate-appleOrbTwo" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.9),transparent_32%)]" />
+        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-appleSweep" />
       </div>
 
       <div className="absolute inset-0 z-30 flex items-center justify-center p-4">
-        <div className="relative w-full max-w-[330px] overflow-hidden rounded-[28px] border border-white/30 bg-slate-950/72 p-4 text-white shadow-[0_28px_90px_rgba(15,23,42,0.55)] backdrop-blur-2xl animate-vaultCardIn">
-          <div className="absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/12 via-transparent to-white/5" />
-          <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-[length:220%_100%] animate-gradientMove" />
+        <div className="apple-glass-card group/apple relative w-full max-w-[342px] overflow-hidden rounded-[34px] border border-white/75 bg-white/70 p-5 text-center shadow-[0_32px_90px_rgba(15,23,42,0.24)] backdrop-blur-2xl animate-appleCardIn">
+          <div className="pointer-events-none absolute inset-0 rounded-[34px] bg-gradient-to-br from-white/95 via-white/45 to-white/20" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-white/95" />
+          <div className="pointer-events-none absolute inset-x-8 top-0 h-20 rounded-full bg-white/70 blur-2xl" />
 
-          <div className="relative flex items-center gap-3">
-            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
-              <div className="absolute inset-0 rounded-2xl bg-cyan-400/20 blur-xl animate-vaultGlow" />
-              <div className="absolute inset-0 rounded-2xl border border-cyan-300/50 animate-vaultRing" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-600 to-purple-600 text-2xl shadow-[0_14px_35px_rgba(59,130,246,0.45)] animate-vaultLock">
-                🔐
+          {/* falling hover particles */}
+          <span className="glass-drop glass-drop-1" />
+          <span className="glass-drop glass-drop-2" />
+          <span className="glass-drop glass-drop-3" />
+          <span className="glass-drop glass-drop-4" />
+          <span className="glass-drop glass-drop-5" />
+          <span className="glass-drop glass-drop-6" />
+          <span className="glass-drop glass-drop-7" />
+          <span className="glass-drop glass-drop-8" />
+          <span className="glass-drop glass-drop-9" />
+          <span className="glass-drop glass-drop-10" />
+
+          <div className="relative">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[24px] border border-white/80 bg-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_45px_rgba(37,99,235,0.22)] backdrop-blur-xl animate-appleFloat">
+              <div className="flex h-11 w-11 items-center justify-center rounded-[17px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-xl text-white shadow-[0_12px_30px_rgba(79,70,229,0.35)]">
+                ✦
               </div>
             </div>
 
-            <div className="min-w-0 text-left">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-cyan-200">
-                AI result generated
-              </p>
-              <h4 className="mt-1 text-xl font-black leading-tight tracking-[-0.04em] text-white">
-                Unlock your full CV package
-              </h4>
-              <p className="mt-1 text-xs font-semibold leading-5 text-white/65">
-                Tailored CV, cover letter, ATS keywords, PDF/DOCX export.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative mt-4 grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-emerald-300/20 bg-white/10 p-2 text-center shadow-inner animate-vaultStatOne">
-              <p className="text-xl font-black text-emerald-300">{atsScore}%</p>
-              <p className="text-[9px] font-black uppercase tracking-wide text-white/55">
-                ATS
-              </p>
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/70 px-3 py-1.5 shadow-sm backdrop-blur-xl">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.9)] animate-dotPulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
+                Premium result ready
+              </span>
             </div>
 
-            <div className="rounded-2xl border border-cyan-300/20 bg-white/10 p-2 text-center shadow-inner animate-vaultStatTwo">
-              <p className="text-xl font-black text-cyan-300">2</p>
-              <p className="text-[9px] font-black uppercase tracking-wide text-white/55">
-                Docs
-              </p>
+            <h4 className="mt-3 text-[24px] font-black leading-tight tracking-[-0.045em] text-slate-950">
+              Your AI-tailored CV is ready
+            </h4>
+
+            <p className="mx-auto mt-2 max-w-[270px] text-sm font-semibold leading-6 text-slate-500">
+              Unlock the full polished CV, cover letter, ATS keywords, edits and exports.
+            </p>
+
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <div className="rounded-2xl border border-emerald-100 bg-white/75 p-2.5 shadow-[0_10px_25px_rgba(15,23,42,0.06)] backdrop-blur-xl animate-appleStatOne">
+                <p className="text-2xl font-black text-emerald-600">
+                  {atsScore}%
+                </p>
+                <p className="text-[9px] font-black uppercase tracking-wide text-slate-400">
+                  ATS
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-blue-100 bg-white/75 p-2.5 shadow-[0_10px_25px_rgba(15,23,42,0.06)] backdrop-blur-xl animate-appleStatTwo">
+                <p className="text-2xl font-black text-blue-600">2</p>
+                <p className="text-[9px] font-black uppercase tracking-wide text-slate-400">
+                  Docs
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-purple-100 bg-white/75 p-2.5 shadow-[0_10px_25px_rgba(15,23,42,0.06)] backdrop-blur-xl animate-appleStatThree">
+                <p className="text-2xl font-black text-purple-600">
+                  {keywordsCount || 8}
+                </p>
+                <p className="text-[9px] font-black uppercase tracking-wide text-slate-400">
+                  Keys
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-purple-300/20 bg-white/10 p-2 text-center shadow-inner animate-vaultStatThree">
-              <p className="text-xl font-black text-purple-300">
-                {keywordsCount || 8}
-              </p>
-              <p className="text-[9px] font-black uppercase tracking-wide text-white/55">
-                Keys
-              </p>
+            <button
+              type="button"
+              onClick={onUnlock}
+              className="group/btn relative mt-5 w-full overflow-hidden rounded-[20px] bg-slate-950 py-3.5 text-sm font-black text-white shadow-[0_18px_45px_rgba(15,23,42,0.28)] transition hover:scale-[1.025] hover:bg-blue-700 active:scale-95"
+            >
+              <span className="relative z-10">Unlock Full Result →</span>
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition duration-700 group-hover/btn:translate-x-full" />
+            </button>
+
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-black uppercase tracking-wide text-slate-400">
+              <span>PDF</span>
+              <span>•</span>
+              <span>DOCX</span>
+              <span>•</span>
+              <span>Edit</span>
+              <span>•</span>
+              <span>AI Rephrase</span>
             </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={onUnlock}
-            className="group relative mt-4 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 bg-[length:220%_100%] py-3 text-sm font-black text-white shadow-[0_16px_45px_rgba(59,130,246,0.45)] transition hover:scale-[1.025] active:scale-95 animate-gradientMove"
-          >
-            <span className="relative z-10">Unlock Full Result →</span>
-            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover:translate-x-full" />
-          </button>
-
-          <div className="relative mt-3 flex items-center justify-center gap-2 text-[10px] font-bold text-white/55">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.9)] animate-dotPulse" />
-            Premium export and editing tools included
           </div>
         </div>
       </div>
