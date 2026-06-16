@@ -17,7 +17,7 @@ export default function UploadPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const resultRef = useRef<HTMLDivElement | null>(null);
+  const resultRef = useRef<HTMLElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [text, setText] = useState("");
@@ -1415,7 +1415,7 @@ const previousSetupStep = () => {
   <span className="athletic-question-streak athletic-question-streak-one" />
   <span className="athletic-question-streak athletic-question-streak-two" />
 
-  <div className="relative z-10"></div>
+  <div className="relative z-10 h-full">
             {setupStep === 0 && (
   <div>
     <h3 className="text-lg font-black text-slate-950">
@@ -1722,7 +1722,10 @@ const previousSetupStep = () => {
     ]}
   />
 )}
-</div>
+
+</div> {/* closes relative z-10 content */}
+
+</div> {/* closes athletic-question-card */}
 
           {/* BUTTONS */}
           <div className="mt-5 flex gap-3">
@@ -1755,7 +1758,8 @@ const previousSetupStep = () => {
       </div>
     </div>
 
-      <style jsx>{`
+      <style jsx global>{`
+
         @keyframes popupIn {
           0% {
             opacity: 0;
@@ -1817,6 +1821,266 @@ const previousSetupStep = () => {
         .animate-dotPulse {
           animation: dotPulse 2s ease-in-out infinite;
         }
+          .athletic-question-card {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(
+      circle at 12% 8%,
+      rgba(255, 255, 255, 1),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 88% 78%,
+      rgba(37, 99, 235, 0.13),
+      transparent 42%
+    ),
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fafc 48%,
+      #eef2ff 100%
+    );
+}
+
+.athletic-question-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      118deg,
+      transparent 0,
+      transparent 27px,
+      rgba(15, 23, 42, 0.035) 27px,
+      rgba(15, 23, 42, 0.035) 29px
+    );
+  background-size: 180% 180%;
+  animation: athleticPatternMove 12s linear infinite;
+}
+
+.athletic-question-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(
+      rgba(37, 99, 235, 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.12) 1px,
+      transparent 1px
+    );
+  background-size: 34px 34px;
+  animation: athleticGridMove 16s linear infinite;
+}
+
+.athletic-question-ribbon {
+  position: absolute;
+  right: -22%;
+  bottom: -84px;
+  z-index: 1;
+  height: 145px;
+  width: 105%;
+  pointer-events: none;
+  border-radius: 9999px;
+  background:
+    linear-gradient(
+      90deg,
+      #020617 0%,
+      #111827 42%,
+      #1d4ed8 72%,
+      #bef264 100%
+    );
+  box-shadow:
+    0 -16px 42px rgba(15, 23, 42, 0.18),
+    0 0 44px rgba(37, 99, 235, 0.18);
+  transform: rotate(-10deg) translate3d(0, 0, 0);
+  transform-origin: center;
+  will-change: transform;
+  animation: athleticRibbonFloat 4.8s
+    cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+}
+
+.athletic-question-ribbon::after {
+  content: "";
+  position: absolute;
+  inset: 8px 12%;
+  border-radius: inherit;
+  border-top: 1px solid rgba(255, 255, 255, 0.32);
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.12),
+      transparent
+    );
+}
+
+.athletic-question-orb {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(26px);
+  will-change: transform, opacity;
+}
+
+.athletic-question-orb-one {
+  left: -70px;
+  top: -75px;
+  height: 180px;
+  width: 180px;
+  background: rgba(37, 99, 235, 0.18);
+  animation: athleticOrbOne 5.2s ease-in-out infinite;
+}
+
+.athletic-question-orb-two {
+  right: -55px;
+  top: 20%;
+  height: 150px;
+  width: 150px;
+  background: rgba(190, 242, 100, 0.18);
+  animation: athleticOrbTwo 5.8s ease-in-out infinite;
+}
+
+.athletic-question-streak {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  height: 3px;
+  border-radius: 9999px;
+  opacity: 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #2563eb,
+      #bef264,
+      transparent
+    );
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.42);
+  will-change: transform, opacity;
+}
+
+.athletic-question-streak-one {
+  left: -160px;
+  top: 28%;
+  width: 150px;
+  animation: athleticSpeedLine 3.4s ease-in-out infinite;
+}
+
+.athletic-question-streak-two {
+  left: -220px;
+  top: 68%;
+  width: 210px;
+  animation: athleticSpeedLine 4.1s ease-in-out infinite 0.8s;
+}
+
+@keyframes athleticPatternMove {
+  from {
+    background-position: 0% 0%;
+  }
+
+  to {
+    background-position: 180% 180%;
+  }
+}
+
+@keyframes athleticGridMove {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 68px 34px;
+  }
+}
+
+@keyframes athleticRibbonFloat {
+  from {
+    transform: rotate(-10deg) translate3d(-8px, 8px, 0);
+  }
+
+  to {
+    transform: rotate(-8deg) translate3d(16px, -7px, 0);
+  }
+}
+
+@keyframes athleticOrbOne {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: translate3d(32px, 18px, 0) scale(1.18);
+  }
+}
+
+@keyframes athleticOrbTwo {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: translate3d(-28px, 22px, 0) scale(1.15);
+  }
+}
+
+@keyframes athleticSpeedLine {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) skewX(-28deg);
+  }
+
+  18% {
+    opacity: 0.85;
+  }
+
+  68% {
+    opacity: 0.65;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(760px, -34px, 0) skewX(-28deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .athletic-question-ribbon {
+    right: -34%;
+    bottom: -92px;
+    width: 135%;
+  }
+
+  .athletic-question-streak-one,
+  .athletic-question-streak-two {
+    animation-duration: 4.5s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .athletic-question-card::before,
+  .athletic-question-grid,
+  .athletic-question-ribbon,
+  .athletic-question-orb,
+  .athletic-question-streak {
+    animation: none !important;
+  }
+}
       `}</style>
     </main>
   );
@@ -5414,266 +5678,7 @@ Company requirements"
     animation: none !important;
   }
 }
-  .athletic-question-card {
-  position: relative;
-  isolation: isolate;
-  background:
-    radial-gradient(
-      circle at 12% 8%,
-      rgba(255, 255, 255, 1),
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 88% 78%,
-      rgba(37, 99, 235, 0.13),
-      transparent 42%
-    ),
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f8fafc 48%,
-      #eef2ff 100%
-    );
-}
-
-.athletic-question-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      118deg,
-      transparent 0,
-      transparent 27px,
-      rgba(15, 23, 42, 0.035) 27px,
-      rgba(15, 23, 42, 0.035) 29px
-    );
-  background-size: 180% 180%;
-  animation: athleticPatternMove 12s linear infinite;
-}
-
-.athletic-question-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.18;
-  background-image:
-    linear-gradient(
-      rgba(37, 99, 235, 0.12) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(37, 99, 235, 0.12) 1px,
-      transparent 1px
-    );
-  background-size: 34px 34px;
-  animation: athleticGridMove 16s linear infinite;
-}
-
-.athletic-question-ribbon {
-  position: absolute;
-  right: -22%;
-  bottom: -84px;
-  z-index: 1;
-  height: 145px;
-  width: 105%;
-  pointer-events: none;
-  border-radius: 9999px;
-  background:
-    linear-gradient(
-      90deg,
-      #020617 0%,
-      #111827 42%,
-      #1d4ed8 72%,
-      #bef264 100%
-    );
-  box-shadow:
-    0 -16px 42px rgba(15, 23, 42, 0.18),
-    0 0 44px rgba(37, 99, 235, 0.18);
-  transform: rotate(-10deg) translate3d(0, 0, 0);
-  transform-origin: center;
-  will-change: transform;
-  animation: athleticRibbonFloat 4.8s
-    cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
-}
-
-.athletic-question-ribbon::after {
-  content: "";
-  position: absolute;
-  inset: 8px 12%;
-  border-radius: inherit;
-  border-top: 1px solid rgba(255, 255, 255, 0.32);
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.12),
-      transparent
-    );
-}
-
-.athletic-question-orb {
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  border-radius: 9999px;
-  filter: blur(26px);
-  will-change: transform, opacity;
-}
-
-.athletic-question-orb-one {
-  left: -70px;
-  top: -75px;
-  height: 180px;
-  width: 180px;
-  background: rgba(37, 99, 235, 0.18);
-  animation: athleticOrbOne 5.2s ease-in-out infinite;
-}
-
-.athletic-question-orb-two {
-  right: -55px;
-  top: 20%;
-  height: 150px;
-  width: 150px;
-  background: rgba(190, 242, 100, 0.18);
-  animation: athleticOrbTwo 5.8s ease-in-out infinite;
-}
-
-.athletic-question-streak {
-  position: absolute;
-  z-index: 2;
-  pointer-events: none;
-  height: 3px;
-  border-radius: 9999px;
-  opacity: 0;
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #2563eb,
-      #bef264,
-      transparent
-    );
-  box-shadow: 0 0 18px rgba(37, 99, 235, 0.42);
-  will-change: transform, opacity;
-}
-
-.athletic-question-streak-one {
-  left: -160px;
-  top: 28%;
-  width: 150px;
-  animation: athleticSpeedLine 3.4s ease-in-out infinite;
-}
-
-.athletic-question-streak-two {
-  left: -220px;
-  top: 68%;
-  width: 210px;
-  animation: athleticSpeedLine 4.1s ease-in-out infinite 0.8s;
-}
-
-@keyframes athleticPatternMove {
-  from {
-    background-position: 0% 0%;
-  }
-
-  to {
-    background-position: 180% 180%;
-  }
-}
-
-@keyframes athleticGridMove {
-  from {
-    background-position: 0 0;
-  }
-
-  to {
-    background-position: 68px 34px;
-  }
-}
-
-@keyframes athleticRibbonFloat {
-  from {
-    transform: rotate(-10deg) translate3d(-8px, 8px, 0);
-  }
-
-  to {
-    transform: rotate(-8deg) translate3d(16px, -7px, 0);
-  }
-}
-
-@keyframes athleticOrbOne {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  50% {
-    opacity: 0.9;
-    transform: translate3d(32px, 18px, 0) scale(1.18);
-  }
-}
-
-@keyframes athleticOrbTwo {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  50% {
-    opacity: 0.85;
-    transform: translate3d(-28px, 22px, 0) scale(1.15);
-  }
-}
-
-@keyframes athleticSpeedLine {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) skewX(-28deg);
-  }
-
-  18% {
-    opacity: 0.85;
-  }
-
-  68% {
-    opacity: 0.65;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate3d(760px, -34px, 0) skewX(-28deg);
-  }
-}
-
-@media (max-width: 640px) {
-  .athletic-question-ribbon {
-    right: -34%;
-    bottom: -92px;
-    width: 135%;
-  }
-
-  .athletic-question-streak-one,
-  .athletic-question-streak-two {
-    animation-duration: 4.5s;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .athletic-question-card::before,
-  .athletic-question-grid,
-  .athletic-question-ribbon,
-  .athletic-question-orb,
-  .athletic-question-streak {
-    animation: none !important;
-  }
-}
+  
 
 `}</style>
     </main>
