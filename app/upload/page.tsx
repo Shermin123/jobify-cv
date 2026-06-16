@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import EmojiBackground from "@/app/components/EmojiBackground";
 import HiredAtBox from "@/app/components/HiredAtBox";
 import mammoth from "mammoth";
-import { createPortal } from "react-dom";
+
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -4317,6 +4317,757 @@ Company requirements"
     padding: 12px 14px;
   }
 }
+  /* FAST HIGH-END PREMIUM HOVER OVERRIDE */
+.premium-unlock-overlay {
+  pointer-events: auto;
+}
+
+.premium-mesh {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(34px);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+.premium-mesh-one {
+  left: -80px;
+  bottom: -90px;
+  height: 260px;
+  width: 260px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.34), transparent 65%);
+  animation: premiumMeshFloat 4.8s ease-in-out infinite;
+}
+
+.premium-mesh-two {
+  right: -90px;
+  bottom: -80px;
+  height: 280px;
+  width: 280px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.32), transparent 65%);
+  animation: premiumMeshFloat 5.4s ease-in-out infinite reverse;
+}
+
+@keyframes premiumMeshFloat {
+  0%, 100% {
+    opacity: 0.45;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: translate3d(24px, -18px, 0) scale(1.14);
+  }
+}
+
+.premium-light-beam {
+  position: absolute;
+  left: 50%;
+  bottom: -240px;
+  height: 420px;
+  width: 620px;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.22), transparent 68%);
+  filter: blur(18px);
+  transform: translateX(-50%);
+}
+
+.premium-pill,
+.premium-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.76);
+  padding: 7px 12px;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgb(71, 85, 105);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 32px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.premium-score-pill {
+  color: rgb(5, 150, 105);
+  letter-spacing: 0.03em;
+}
+
+.premium-live-dot {
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: rgb(34, 197, 94);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.85);
+}
+
+.premium-unlock-dock {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: visible;
+  border: 0;
+  border-radius: 30px;
+  padding: 14px;
+  cursor: pointer;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.64)),
+    radial-gradient(circle at 18% 0%, rgba(37, 99, 235, 0.14), transparent 38%),
+    radial-gradient(circle at 92% 18%, rgba(168, 85, 247, 0.14), transparent 42%);
+  box-shadow:
+    0 24px 72px rgba(15, 23, 42, 0.24),
+    0 10px 28px rgba(37, 99, 235, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(28px);
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
+  animation: premiumDockEnter 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes premiumDockEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.97);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.premium-unlock-overlay:hover .premium-unlock-dock {
+  transform: translate3d(0, -7px, 0) scale(1.018);
+  box-shadow:
+    0 34px 95px rgba(15, 23, 42, 0.32),
+    0 0 54px rgba(37, 99, 235, 0.26),
+    0 0 74px rgba(168, 85, 247, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.premium-dock-border {
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  border-radius: 31px;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.85),
+    rgba(6, 182, 212, 0.65),
+    rgba(168, 85, 247, 0.85),
+    rgba(236, 72, 153, 0.5),
+    rgba(37, 99, 235, 0.85)
+  );
+  background-size: 260% 100%;
+  opacity: 0.72;
+  animation: premiumBorderFlow 3.8s linear infinite;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+}
+
+@keyframes premiumBorderFlow {
+  to {
+    background-position: 260% 50%;
+  }
+}
+
+.premium-dock-shine {
+  position: absolute;
+  top: -45%;
+  bottom: -45%;
+  left: -120px;
+  z-index: 1;
+  width: 80px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent);
+  filter: blur(1px);
+  transform: translateX(0) rotate(15deg);
+  opacity: 0;
+}
+
+.premium-unlock-overlay:hover .premium-dock-shine {
+  animation: premiumShineFast 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes premiumShineFast {
+  0% {
+    opacity: 0;
+    transform: translateX(0) rotate(15deg);
+  }
+
+  18% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(620px) rotate(15deg);
+  }
+}
+
+.premium-dock-noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 30px;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.56) 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.4) 0 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.2;
+}
+
+.premium-icon-wrap {
+  position: relative;
+  display: flex;
+  height: 54px;
+  width: 54px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.premium-icon-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.35), transparent 66%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.25), transparent 74%);
+  filter: blur(12px);
+  opacity: 0.85;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.premium-unlock-overlay:hover .premium-icon-glow {
+  opacity: 1;
+  transform: scale(1.16);
+}
+
+.premium-icon {
+  position: relative;
+  display: flex;
+  height: 46px;
+  width: 46px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.28), transparent 34%),
+    linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  font-size: 20px;
+  font-weight: 950;
+  box-shadow:
+    0 16px 34px rgba(37, 99, 235, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-unlock-overlay:hover .premium-icon {
+  transform: translateY(-2px) rotate(-6deg) scale(1.06);
+}
+
+.premium-eyebrow {
+  display: block;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgb(37, 99, 235);
+}
+
+.premium-unlock-btn {
+  position: relative;
+  display: inline-flex;
+  min-width: 92px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.18), transparent 36%),
+    linear-gradient(135deg, #020617, #172554 46%, #2563eb);
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 950;
+  color: white;
+  box-shadow:
+    0 17px 38px rgba(15, 23, 42, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-unlock-overlay:hover .premium-unlock-btn {
+  transform: translate3d(0, -2px, 0) scale(1.04);
+  box-shadow:
+    0 22px 48px rgba(37, 99, 235, 0.34),
+    0 0 36px rgba(37, 99, 235, 0.24);
+}
+
+.premium-stat {
+  display: block;
+  border-radius: 19px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.62);
+  padding: 10px 8px;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 24px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 200ms ease;
+}
+
+.premium-unlock-overlay:hover .premium-stat {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.premium-stat strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.premium-stat small {
+  margin-top: 4px;
+  display: block;
+  font-size: 9px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(100, 116, 139);
+}
+
+.premium-stat-green strong {
+  color: rgb(5, 150, 105);
+}
+
+.premium-stat-blue strong {
+  color: rgb(37, 99, 235);
+}
+
+.premium-stat-purple strong {
+  color: rgb(124, 58, 237);
+}
+
+.premium-outside-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -62px;
+  z-index: -1;
+  height: 105px;
+  width: 76%;
+  pointer-events: none;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.32), transparent 64%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 72%);
+  filter: blur(24px);
+  opacity: 0;
+  transform: translateX(-50%) translateY(0) scale(0.92);
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-unlock-overlay:hover .premium-outside-glow {
+  opacity: 1;
+  transform: translateX(-50%) translateY(16px) scale(1.08);
+}
+
+/* smooth premium particles */
+.premium-spark-field {
+  pointer-events: none;
+  position: absolute;
+  inset: -90px;
+  z-index: 2;
+  overflow: visible;
+}
+
+.premium-spark {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  height: var(--h);
+  width: var(--w);
+  border-radius: var(--br);
+  opacity: 0;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  transform: translate3d(0, 0, 0) scale(0.4) rotate(0deg);
+  will-change: transform, opacity;
+}
+
+.premium-unlock-overlay:hover .premium-spark {
+  animation: premiumSparkFly var(--dur) cubic-bezier(0.16, 0.84, 0.24, 1) var(--delay) infinite both;
+}
+
+@keyframes premiumSparkFly {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.35) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  72% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--x), var(--y), 0) scale(var(--s)) rotate(var(--r));
+  }
+}
+
+.premium-spark-1 {
+  --l: 12%;
+  --t: 72%;
+  --x: -62px;
+  --y: -86px;
+  --s: 1;
+  --r: 140deg;
+  --dur: 980ms;
+  --delay: 0ms;
+  --h: 6px;
+  --w: 6px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #60a5fa);
+  --shadow: 0 0 16px rgba(96, 165, 250, 0.85);
+}
+
+.premium-spark-2 {
+  --l: 22%;
+  --t: 78%;
+  --x: -28px;
+  --y: -116px;
+  --s: 0.9;
+  --r: 210deg;
+  --dur: 1180ms;
+  --delay: 80ms;
+  --h: 4px;
+  --w: 18px;
+  --br: 9999px;
+  --bg: linear-gradient(90deg, #38bdf8, #a855f7);
+  --shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+}
+
+.premium-spark-3 {
+  --l: 34%;
+  --t: 74%;
+  --x: -8px;
+  --y: -96px;
+  --s: 1;
+  --r: 260deg;
+  --dur: 1040ms;
+  --delay: 150ms;
+  --h: 7px;
+  --w: 7px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #a855f7);
+  --shadow: 0 0 18px rgba(168, 85, 247, 0.8);
+}
+
+.premium-spark-4 {
+  --l: 48%;
+  --t: 80%;
+  --x: 22px;
+  --y: -128px;
+  --s: 0.95;
+  --r: 310deg;
+  --dur: 1220ms;
+  --delay: 40ms;
+  --h: 5px;
+  --w: 20px;
+  --br: 9999px;
+  --bg: linear-gradient(90deg, #2563eb, #ec4899);
+  --shadow: 0 0 18px rgba(236, 72, 153, 0.7);
+}
+
+.premium-spark-5 {
+  --l: 60%;
+  --t: 72%;
+  --x: 52px;
+  --y: -94px;
+  --s: 1.05;
+  --r: 380deg;
+  --dur: 1080ms;
+  --delay: 120ms;
+  --h: 6px;
+  --w: 6px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #22c55e);
+  --shadow: 0 0 16px rgba(34, 197, 94, 0.76);
+}
+
+.premium-spark-6 {
+  --l: 76%;
+  --t: 78%;
+  --x: 76px;
+  --y: -122px;
+  --s: 0.92;
+  --r: 460deg;
+  --dur: 1260ms;
+  --delay: 190ms;
+  --h: 4px;
+  --w: 18px;
+  --br: 9999px;
+  --bg: linear-gradient(90deg, #06b6d4, #7c3aed);
+  --shadow: 0 0 16px rgba(124, 58, 237, 0.72);
+}
+
+.premium-spark-7 {
+  --l: 88%;
+  --t: 70%;
+  --x: 96px;
+  --y: -80px;
+  --s: 0.9;
+  --r: 520deg;
+  --dur: 980ms;
+  --delay: 240ms;
+  --h: 6px;
+  --w: 6px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #f59e0b);
+  --shadow: 0 0 16px rgba(245, 158, 11, 0.78);
+}
+
+.premium-spark-8 {
+  --l: 18%;
+  --t: 45%;
+  --x: -72px;
+  --y: -30px;
+  --s: 0.85;
+  --r: 220deg;
+  --dur: 1180ms;
+  --delay: 300ms;
+  --h: 5px;
+  --w: 5px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #38bdf8);
+  --shadow: 0 0 14px rgba(56, 189, 248, 0.75);
+}
+
+.premium-spark-9 {
+  --l: 82%;
+  --t: 45%;
+  --x: 72px;
+  --y: -34px;
+  --s: 0.85;
+  --r: 360deg;
+  --dur: 1160ms;
+  --delay: 360ms;
+  --h: 5px;
+  --w: 5px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #a855f7);
+  --shadow: 0 0 14px rgba(168, 85, 247, 0.75);
+}
+
+.premium-spark-10 {
+  --l: 50%;
+  --t: 62%;
+  --x: 0px;
+  --y: -150px;
+  --s: 1;
+  --r: 480deg;
+  --dur: 1320ms;
+  --delay: 210ms;
+  --h: 4px;
+  --w: 22px;
+  --br: 9999px;
+  --bg: linear-gradient(90deg, #ffffff, #2563eb);
+  --shadow: 0 0 18px rgba(37, 99, 235, 0.75);
+}
+
+.premium-spark-11 {
+  --l: 8%;
+  --t: 90%;
+  --x: -42px;
+  --y: -68px;
+  --s: 0.82;
+  --r: 190deg;
+  --dur: 1020ms;
+  --delay: 420ms;
+  --h: 5px;
+  --w: 5px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #2563eb);
+  --shadow: 0 0 14px rgba(37, 99, 235, 0.75);
+}
+
+.premium-spark-12 {
+  --l: 92%;
+  --t: 90%;
+  --x: 42px;
+  --y: -68px;
+  --s: 0.82;
+  --r: 420deg;
+  --dur: 1020ms;
+  --delay: 500ms;
+  --h: 5px;
+  --w: 5px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #ec4899);
+  --shadow: 0 0 14px rgba(236, 72, 153, 0.75);
+}
+
+.premium-spark-13 {
+  --l: 38%;
+  --t: 88%;
+  --x: -26px;
+  --y: -82px;
+  --s: 0.88;
+  --r: 300deg;
+  --dur: 1120ms;
+  --delay: 560ms;
+  --h: 3px;
+  --w: 16px;
+  --br: 9999px;
+  --bg: linear-gradient(90deg, #22c55e, #06b6d4);
+  --shadow: 0 0 14px rgba(6, 182, 212, 0.65);
+}
+
+.premium-spark-14 {
+  --l: 64%;
+  --t: 88%;
+  --x: 28px;
+  --y: -82px;
+  --s: 0.88;
+  --r: 340deg;
+  --dur: 1120ms;
+  --delay: 620ms;
+  --h: 3px;
+  --w: 16px;
+  --br: 9999px;
+  --bg: linear-gradient(90deg, #a855f7, #f472b6);
+  --shadow: 0 0 14px rgba(244, 114, 182, 0.65);
+}
+
+.premium-spark-15 {
+  --l: 28%;
+  --t: 34%;
+  --x: -38px;
+  --y: -42px;
+  --s: 0.78;
+  --r: 260deg;
+  --dur: 1280ms;
+  --delay: 690ms;
+  --h: 4px;
+  --w: 4px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #60a5fa);
+  --shadow: 0 0 14px rgba(96, 165, 250, 0.72);
+}
+
+.premium-spark-16 {
+  --l: 72%;
+  --t: 34%;
+  --x: 38px;
+  --y: -42px;
+  --s: 0.78;
+  --r: 420deg;
+  --dur: 1280ms;
+  --delay: 760ms;
+  --h: 4px;
+  --w: 4px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #c084fc);
+  --shadow: 0 0 14px rgba(192, 132, 252, 0.72);
+}
+
+.premium-spark-17 {
+  --l: 44%;
+  --t: 28%;
+  --x: -18px;
+  --y: -54px;
+  --s: 0.74;
+  --r: 240deg;
+  --dur: 1320ms;
+  --delay: 830ms;
+  --h: 4px;
+  --w: 4px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #38bdf8);
+  --shadow: 0 0 14px rgba(56, 189, 248, 0.72);
+}
+
+.premium-spark-18 {
+  --l: 56%;
+  --t: 28%;
+  --x: 18px;
+  --y: -54px;
+  --s: 0.74;
+  --r: 390deg;
+  --dur: 1320ms;
+  --delay: 900ms;
+  --h: 4px;
+  --w: 4px;
+  --br: 9999px;
+  --bg: radial-gradient(circle, #ffffff, #a855f7);
+  --shadow: 0 0 14px rgba(168, 85, 247, 0.72);
+}
+
+@media (max-width: 640px) {
+  .premium-unlock-dock {
+    padding: 12px;
+    border-radius: 26px;
+  }
+
+  .premium-dock-border,
+  .premium-dock-noise {
+    border-radius: 27px;
+  }
+
+  .premium-icon-wrap {
+    height: 48px;
+    width: 48px;
+  }
+
+  .premium-icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 15px;
+  }
+
+  .premium-unlock-btn {
+    min-width: 78px;
+    padding: 12px 13px;
+    font-size: 12px;
+  }
+}
 
 `}</style>
     </main>
@@ -4470,165 +5221,87 @@ function PremiumLockedOverlay({
   keywordsCount: number;
   onUnlock: () => void;
 }) {
-  const [mounted, setMounted] = useState(false);
-  const [celebrating, setCelebrating] = useState(false);
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const updateOrigin = (element: HTMLElement) => {
-    const rect = element.getBoundingClientRect();
-
-    setOrigin({
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2,
-    });
-  };
-
-  const confettiCount = 56;
-
-  const celebrationLayer =
-    mounted && celebrating
-      ? createPortal(
-          <div
-            className="premium-celebration-layer"
-            style={
-              {
-                "--premium-celebrate-x": `${origin.x}px`,
-                "--premium-celebrate-y": `${origin.y}px`,
-              } as CSSProperties
-            }
-          >
-            <span className="premium-shockwave" />
-            <span className="premium-shockwave premium-shockwave-2" />
-            <span className="premium-shockwave premium-shockwave-3" />
-
-            {Array.from({ length: confettiCount }).map((_, index) => {
-              const angle = (index / confettiCount) * Math.PI * 2;
-              const distance = 260 + (index % 9) * 42;
-              const gravity = 340 + (index % 7) * 70;
-
-              const x = Math.cos(angle) * distance;
-              const y = Math.sin(angle) * distance + gravity;
-
-              return (
-                <span
-                  key={index}
-                  className={`premium-confetti premium-confetti-shape-${
-                    index % 5
-                  } premium-confetti-color-${index % 6}`}
-                  style={
-                    {
-                      "--x": `${x}px`,
-                      "--y": `${y}px`,
-                      "--d": `${3.4 + (index % 8) * 0.22}s`,
-                      "--delay": `${(index % 18) * 0.045}s`,
-                      "--s": `${0.75 + (index % 6) * 0.08}`,
-                      "--r1": `${120 + index * 13}deg`,
-                      "--r2": `${420 + index * 19}deg`,
-                      "--r3": `${760 + index * 23}deg`,
-                    } as CSSProperties
-                  }
-                />
-              );
-            })}
-          </div>,
-          document.body
-        )
-      : null;
-
   return (
-    <>
-      <div
-        className="premium-unlock-overlay absolute inset-0 z-[999999] overflow-visible"
-        onMouseEnter={(event) => {
-          updateOrigin(event.currentTarget);
-          setCelebrating(true);
-        }}
-        onMouseMove={(event) => {
-          setOrigin({
-            x: event.clientX,
-            y: event.clientY,
-          });
-        }}
-        onMouseLeave={() => setCelebrating(false)}
-      >
-        <div className="absolute inset-0 z-10 bg-white/5 backdrop-blur-[1.5px]" />
+    <div className="premium-unlock-overlay absolute inset-0 z-[999999] overflow-hidden">
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-white/5 via-white/10 to-white/35 backdrop-blur-[1.2px]" />
 
-        <div className="pointer-events-none absolute inset-0 z-20 overflow-visible">
-          <div className="premium-aurora premium-aurora-one" />
-          <div className="premium-aurora premium-aurora-two" />
-          <div className="premium-spotlight" />
-        </div>
-
-        <div className="absolute inset-x-4 top-4 z-40 flex items-center justify-between">
-          <div className="premium-pill">
-            <span className="premium-live-dot" />
-            Preview locked
-          </div>
-
-          <div className="premium-score-pill">{atsScore}% ATS</div>
-        </div>
-
-        <div className="absolute inset-x-4 bottom-4 z-50">
-          <div className="premium-unlock-dock">
-            <div className="premium-dock-border" />
-            <div className="premium-dock-shine" />
-            <div className="premium-dock-noise" />
-
-            <div className="relative z-10 flex items-center gap-4">
-              <div className="premium-icon-wrap">
-                <div className="premium-icon-glow" />
-                <div className="premium-icon">✦</div>
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <p className="premium-eyebrow">Full result ready</p>
-
-                <h4 className="truncate text-[16px] font-black tracking-[-0.03em] text-slate-950 md:text-[18px]">
-                  Unlock your complete CV pack
-                </h4>
-
-                <p className="mt-0.5 truncate text-xs font-bold text-slate-500 md:text-sm">
-                  PDF, DOCX, edit, rephrase and full text.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={onUnlock}
-                className="premium-unlock-btn"
-              >
-                <span className="relative z-10">Unlock</span>
-                <span className="relative z-10">→</span>
-              </button>
-            </div>
-
-            <div className="relative z-10 mt-4 grid grid-cols-3 gap-2">
-              <div className="premium-stat premium-stat-green">
-                <p>{atsScore}%</p>
-                <span>ATS</span>
-              </div>
-
-              <div className="premium-stat premium-stat-blue">
-                <p>2</p>
-                <span>Docs</span>
-              </div>
-
-              <div className="premium-stat premium-stat-purple">
-                <p>{keywordsCount || 8}</p>
-                <span>Keys</span>
-              </div>
-            </div>
-
-            <div className="premium-outside-glow" />
-          </div>
-        </div>
+      <div className="pointer-events-none absolute inset-0 z-20">
+        <div className="premium-mesh premium-mesh-one" />
+        <div className="premium-mesh premium-mesh-two" />
+        <div className="premium-light-beam" />
       </div>
 
-      {celebrationLayer}
-    </>
+      <div className="absolute inset-x-4 top-4 z-40 flex items-center justify-between">
+        <div className="premium-pill">
+          <span className="premium-live-dot" />
+          Preview locked
+        </div>
+
+        <div className="premium-score-pill">{atsScore}% ATS</div>
+      </div>
+
+      <div className="absolute inset-x-4 bottom-4 z-50">
+        <button
+          type="button"
+          onClick={onUnlock}
+          className="premium-unlock-dock group"
+        >
+          <span className="premium-dock-border" />
+          <span className="premium-dock-shine" />
+          <span className="premium-dock-noise" />
+
+          <span className="premium-spark-field">
+            {Array.from({ length: 18 }).map((_, index) => (
+              <span
+                key={index}
+                className={`premium-spark premium-spark-${index + 1}`}
+              />
+            ))}
+          </span>
+
+          <span className="relative z-10 flex items-center gap-4">
+            <span className="premium-icon-wrap">
+              <span className="premium-icon-glow" />
+              <span className="premium-icon">✦</span>
+            </span>
+
+            <span className="min-w-0 flex-1 text-left">
+              <span className="premium-eyebrow">Full result ready</span>
+
+              <span className="block truncate text-[16px] font-black tracking-[-0.03em] text-slate-950 md:text-[18px]">
+                Unlock complete CV pack
+              </span>
+
+              <span className="mt-0.5 block truncate text-xs font-bold text-slate-500 md:text-sm">
+                PDF, DOCX, edit, rephrase and full text.
+              </span>
+            </span>
+
+            <span className="premium-unlock-btn">
+              Unlock <span>→</span>
+            </span>
+          </span>
+
+          <span className="relative z-10 mt-4 grid grid-cols-3 gap-2">
+            <span className="premium-stat premium-stat-green">
+              <strong>{atsScore}%</strong>
+              <small>ATS</small>
+            </span>
+
+            <span className="premium-stat premium-stat-blue">
+              <strong>2</strong>
+              <small>Docs</small>
+            </span>
+
+            <span className="premium-stat premium-stat-purple">
+              <strong>{keywordsCount || 8}</strong>
+              <small>Keys</small>
+            </span>
+          </span>
+
+          <span className="premium-outside-glow" />
+        </button>
+      </div>
+    </div>
   );
 }
