@@ -3417,6 +3417,140 @@ Company requirements"
 .animate-appleStatThree {
   animation: appleStat 0.45s ease-out 0.35s both;
 }
+  @keyframes framerPanelIn {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.92);
+    filter: blur(16px);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.025);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes framerSheetFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(var(--r));
+  }
+  50% {
+    transform: translateY(-7px) rotate(var(--r));
+  }
+}
+
+@keyframes framerOrbOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(34px, 28px) scale(1.18);
+  }
+}
+
+@keyframes framerOrbTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-34px, -28px) scale(1.16);
+  }
+}
+
+@keyframes framerSweep {
+  0% {
+    transform: translateX(-140%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(420%) rotate(12deg);
+  }
+}
+
+@keyframes framerDropFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.45);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(280px) scale(1);
+  }
+}
+
+.animate-framerPanelIn {
+  animation: framerPanelIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-framerOrbOne {
+  animation: framerOrbOne 4.2s ease-in-out infinite;
+}
+
+.animate-framerOrbTwo {
+  animation: framerOrbTwo 4.6s ease-in-out infinite;
+}
+
+.animate-framerSweep {
+  animation: framerSweep 3s ease-in-out infinite;
+}
+
+.framer-sheet-back {
+  --r: -8deg;
+  animation: framerSheetFloat 3.8s ease-in-out infinite;
+}
+
+.framer-sheet-mid {
+  --r: 7deg;
+  animation: framerSheetFloat 4.2s ease-in-out infinite;
+}
+
+.framer-sheet-front {
+  --r: 0deg;
+  animation: framerSheetFloat 3.5s ease-in-out infinite;
+}
+
+.framer-drop {
+  pointer-events: none;
+  position: absolute;
+  top: -22px;
+  z-index: 20;
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 0 12px rgba(255, 255, 255, 0.95),
+    0 0 26px rgba(96, 165, 250, 0.55);
+  opacity: 0;
+}
+
+.framer-glass:hover .framer-drop {
+  animation-name: framerDropFall;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-iteration-count: infinite;
+}
+
+.framer-drop-1 { left: 5%; animation-duration: 1.6s; animation-delay: 0s; }
+.framer-drop-2 { left: 12%; animation-duration: 2.1s; animation-delay: 0.15s; }
+.framer-drop-3 { left: 20%; animation-duration: 1.8s; animation-delay: 0.35s; }
+.framer-drop-4 { left: 29%; animation-duration: 2.3s; animation-delay: 0.05s; }
+.framer-drop-5 { left: 38%; animation-duration: 1.7s; animation-delay: 0.25s; }
+.framer-drop-6 { left: 47%; animation-duration: 2.2s; animation-delay: 0.4s; }
+.framer-drop-7 { left: 56%; animation-duration: 1.9s; animation-delay: 0.1s; }
+.framer-drop-8 { left: 65%; animation-duration: 2.4s; animation-delay: 0.3s; }
+.framer-drop-9 { left: 74%; animation-duration: 1.8s; animation-delay: 0.5s; }
+.framer-drop-10 { left: 82%; animation-duration: 2.2s; animation-delay: 0.2s; }
+.framer-drop-11 { left: 88%; animation-duration: 1.7s; animation-delay: 0.45s; }
+.framer-drop-12 { left: 93%; animation-duration: 2.5s; animation-delay: 0.15s; }
+.framer-drop-13 { left: 35%; animation-duration: 2.6s; animation-delay: 0.55s; }
+.framer-drop-14 { left: 61%; animation-duration: 2s; animation-delay: 0.65s; }
 `}</style>
     </main>
   );
@@ -3571,100 +3705,95 @@ function PremiumLockedOverlay({
 }) {
   return (
     <>
-      <div className="absolute inset-0 z-10 bg-white/20 backdrop-blur-[1.5px]" />
+      <div className="absolute inset-0 z-10 bg-white/15 backdrop-blur-[1.2px]" />
 
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <div className="absolute -left-20 -top-16 h-56 w-56 rounded-full bg-blue-300/35 blur-3xl animate-appleOrbOne" />
-        <div className="absolute -right-20 bottom-[-70px] h-56 w-56 rounded-full bg-purple-300/35 blur-3xl animate-appleOrbTwo" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.9),transparent_32%)]" />
-        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-appleSweep" />
+        <div className="absolute left-[-70px] top-[-50px] h-56 w-56 rounded-full bg-blue-400/25 blur-3xl animate-framerOrbOne" />
+        <div className="absolute right-[-80px] bottom-[-70px] h-60 w-60 rounded-full bg-purple-400/25 blur-3xl animate-framerOrbTwo" />
+        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-framerSweep" />
       </div>
 
       <div className="absolute inset-0 z-30 flex items-center justify-center p-4">
-        <div className="apple-glass-card group/apple relative w-full max-w-[342px] overflow-hidden rounded-[34px] border border-white/75 bg-white/70 p-5 text-center shadow-[0_32px_90px_rgba(15,23,42,0.24)] backdrop-blur-2xl animate-appleCardIn">
-          <div className="pointer-events-none absolute inset-0 rounded-[34px] bg-gradient-to-br from-white/95 via-white/45 to-white/20" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-white/95" />
-          <div className="pointer-events-none absolute inset-x-8 top-0 h-20 rounded-full bg-white/70 blur-2xl" />
+        <div className="framer-glass group/framer relative w-full max-w-[360px] overflow-hidden rounded-[34px] border border-white/70 bg-white/72 p-4 shadow-[0_30px_90px_rgba(15,23,42,0.25)] backdrop-blur-2xl animate-framerPanelIn">
+          <div className="pointer-events-none absolute inset-0 rounded-[34px] bg-gradient-to-br from-white/95 via-white/55 to-white/25" />
+          <div className="pointer-events-none absolute inset-x-8 top-0 h-24 rounded-full bg-white/80 blur-2xl" />
 
-          {/* falling hover particles */}
-          <span className="glass-drop glass-drop-1" />
-          <span className="glass-drop glass-drop-2" />
-          <span className="glass-drop glass-drop-3" />
-          <span className="glass-drop glass-drop-4" />
-          <span className="glass-drop glass-drop-5" />
-          <span className="glass-drop glass-drop-6" />
-          <span className="glass-drop glass-drop-7" />
-          <span className="glass-drop glass-drop-8" />
-          <span className="glass-drop glass-drop-9" />
-          <span className="glass-drop glass-drop-10" />
+          {/* hover falling glass particles */}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <span key={i} className={`framer-drop framer-drop-${i + 1}`} />
+          ))}
 
           <div className="relative">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[24px] border border-white/80 bg-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_45px_rgba(37,99,235,0.22)] backdrop-blur-xl animate-appleFloat">
-              <div className="flex h-11 w-11 items-center justify-center rounded-[17px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-xl text-white shadow-[0_12px_30px_rgba(79,70,229,0.35)]">
-                ✦
-              </div>
-            </div>
-
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/70 px-3 py-1.5 shadow-sm backdrop-blur-xl">
+            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/75 px-3 py-1.5 shadow-sm backdrop-blur-xl">
               <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.9)] animate-dotPulse" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
-                Premium result ready
+                AI package ready
               </span>
             </div>
 
-            <h4 className="mt-3 text-[24px] font-black leading-tight tracking-[-0.045em] text-slate-950">
-              Your AI-tailored CV is ready
+            {/* floating document stack */}
+            <div className="relative mx-auto mt-4 h-[132px] w-[230px]">
+              <div className="framer-sheet framer-sheet-back absolute left-7 top-5 h-[104px] w-[170px] rotate-[-8deg] rounded-[22px] border border-purple-100 bg-white/65 shadow-xl backdrop-blur-xl" />
+              <div className="framer-sheet framer-sheet-mid absolute left-4 top-3 h-[112px] w-[185px] rotate-[7deg] rounded-[24px] border border-blue-100 bg-white/75 shadow-xl backdrop-blur-xl" />
+
+              <div className="framer-sheet framer-sheet-front absolute left-1/2 top-0 h-[125px] w-[200px] -translate-x-1/2 rounded-[26px] border border-white/80 bg-white/90 p-4 shadow-[0_22px_55px_rgba(37,99,235,0.18)] backdrop-blur-2xl">
+                <div className="flex items-center justify-between">
+                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600" />
+                  <div className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-600">
+                    {atsScore}% ATS
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-2">
+                  <div className="h-2 w-28 rounded-full bg-slate-300/70" />
+                  <div className="h-2 w-40 rounded-full bg-slate-200" />
+                  <div className="h-2 w-36 rounded-full bg-slate-200" />
+                  <div className="h-2 w-44 rounded-full bg-slate-200" />
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <div className="h-5 w-12 rounded-full bg-blue-100" />
+                  <div className="h-5 w-12 rounded-full bg-purple-100" />
+                  <div className="h-5 w-12 rounded-full bg-emerald-100" />
+                </div>
+              </div>
+            </div>
+
+            <h4 className="mt-3 text-center text-[23px] font-black leading-tight tracking-[-0.045em] text-slate-950">
+              Unlock your complete CV pack
             </h4>
 
-            <p className="mx-auto mt-2 max-w-[270px] text-sm font-semibold leading-6 text-slate-500">
-              Unlock the full polished CV, cover letter, ATS keywords, edits and exports.
+            <p className="mx-auto mt-2 max-w-[290px] text-center text-sm font-semibold leading-6 text-slate-500">
+              Your polished CV, cover letter, ATS keywords, PDF/DOCX export and edit tools are ready.
             </p>
 
             <div className="mt-4 grid grid-cols-3 gap-2">
-              <div className="rounded-2xl border border-emerald-100 bg-white/75 p-2.5 shadow-[0_10px_25px_rgba(15,23,42,0.06)] backdrop-blur-xl animate-appleStatOne">
-                <p className="text-2xl font-black text-emerald-600">
-                  {atsScore}%
-                </p>
-                <p className="text-[9px] font-black uppercase tracking-wide text-slate-400">
-                  ATS
-                </p>
+              <div className="rounded-2xl border border-emerald-100 bg-white/70 p-2 text-center shadow-sm backdrop-blur-xl">
+                <p className="text-xl font-black text-emerald-600">{atsScore}%</p>
+                <p className="text-[9px] font-black uppercase text-slate-400">ATS</p>
               </div>
 
-              <div className="rounded-2xl border border-blue-100 bg-white/75 p-2.5 shadow-[0_10px_25px_rgba(15,23,42,0.06)] backdrop-blur-xl animate-appleStatTwo">
-                <p className="text-2xl font-black text-blue-600">2</p>
-                <p className="text-[9px] font-black uppercase tracking-wide text-slate-400">
-                  Docs
-                </p>
+              <div className="rounded-2xl border border-blue-100 bg-white/70 p-2 text-center shadow-sm backdrop-blur-xl">
+                <p className="text-xl font-black text-blue-600">2</p>
+                <p className="text-[9px] font-black uppercase text-slate-400">Docs</p>
               </div>
 
-              <div className="rounded-2xl border border-purple-100 bg-white/75 p-2.5 shadow-[0_10px_25px_rgba(15,23,42,0.06)] backdrop-blur-xl animate-appleStatThree">
-                <p className="text-2xl font-black text-purple-600">
+              <div className="rounded-2xl border border-purple-100 bg-white/70 p-2 text-center shadow-sm backdrop-blur-xl">
+                <p className="text-xl font-black text-purple-600">
                   {keywordsCount || 8}
                 </p>
-                <p className="text-[9px] font-black uppercase tracking-wide text-slate-400">
-                  Keys
-                </p>
+                <p className="text-[9px] font-black uppercase text-slate-400">Keys</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={onUnlock}
-              className="group/btn relative mt-5 w-full overflow-hidden rounded-[20px] bg-slate-950 py-3.5 text-sm font-black text-white shadow-[0_18px_45px_rgba(15,23,42,0.28)] transition hover:scale-[1.025] hover:bg-blue-700 active:scale-95"
+              className="group/btn relative mt-4 w-full overflow-hidden rounded-[21px] bg-slate-950 py-3.5 text-sm font-black text-white shadow-[0_18px_45px_rgba(15,23,42,0.32)] transition hover:scale-[1.025] hover:bg-blue-700 active:scale-95"
             >
               <span className="relative z-10">Unlock Full Result →</span>
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition duration-700 group-hover/btn:translate-x-full" />
             </button>
-
-            <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-black uppercase tracking-wide text-slate-400">
-              <span>PDF</span>
-              <span>•</span>
-              <span>DOCX</span>
-              <span>•</span>
-              <span>Edit</span>
-              <span>•</span>
-              <span>AI Rephrase</span>
-            </div>
           </div>
         </div>
       </div>
