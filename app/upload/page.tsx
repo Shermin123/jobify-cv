@@ -1999,7 +1999,7 @@ const previousSetupStep = () => {
             {/* DOCUMENT PREVIEW CARDS */}
 <div className="grid lg:grid-cols-2 gap-6">
               {/* CV CARD */}
-              <div className="group relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
+              <div className="group relative overflow-visible rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
                 <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-blue-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
 
@@ -2023,7 +2023,7 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[390px] md:h-[420px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[390px] md:h-[420px] overflow-visible shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
@@ -2095,7 +2095,7 @@ const previousSetupStep = () => {
               </div>
 
               {/* COVER LETTER CARD */}
-              <div className="group relative overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
+              <div className="group relative overflow-visible rounded-[2rem] border border-purple-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
                 <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-purple-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
 
@@ -2119,7 +2119,7 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[390px] md:h-[420px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[390px] md:h-[420px] overflow-visible shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
@@ -3593,47 +3593,49 @@ Company requirements"
 @keyframes burstOut {
   0% {
     opacity: 0;
-    transform: translate(0, 0) scale(0.45) rotate(0deg);
+    transform: translate(0, -8px) scale(0.35) rotate(0deg);
   }
-  15% {
+
+  10% {
     opacity: 1;
   }
+
+  70% {
+    opacity: 1;
+  }
+
   100% {
     opacity: 0;
-    transform: translate(var(--x), var(--y)) scale(1) rotate(var(--r));
+    transform: translate(var(--x), var(--y)) scale(var(--s)) rotate(var(--r));
   }
-}
-
-.animate-framerBarIn {
-  animation: framerBarIn 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-framerSweep {
-  animation: framerSweep 3s ease-in-out infinite;
-}
-
-.animate-framerOrbOne {
-  animation: framerOrbOne 4.2s ease-in-out infinite;
-}
-
-.animate-framerOrbTwo {
-  animation: framerOrbTwo 4.6s ease-in-out infinite;
 }
 
 .burst-piece {
   pointer-events: none;
   position: absolute;
   left: 50%;
-  top: 50%;
-  z-index: 50;
-  height: 8px;
-  width: 8px;
+  top: 62%;
+  z-index: 999999;
+  height: 10px;
+  width: 10px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow:
-    0 0 14px rgba(255, 255, 255, 0.95),
-    0 0 30px rgba(96, 165, 250, 0.65);
   opacity: 0;
+  background: linear-gradient(135deg, #2563eb, #06b6d4, #a855f7);
+  box-shadow:
+    0 0 12px rgba(37, 99, 235, 0.9),
+    0 0 26px rgba(6, 182, 212, 0.7),
+    0 0 38px rgba(168, 85, 247, 0.55),
+    0 12px 26px rgba(15, 23, 42, 0.28);
+}
+
+.burst-piece:nth-of-type(odd) {
+  border-radius: 44% 56% 50% 50%;
+  background: linear-gradient(135deg, #0ea5e9, #22c55e, #2563eb);
+}
+
+.burst-piece:nth-of-type(even) {
+  border-radius: 40% 60% 58% 42%;
+  background: linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b);
 }
 
 .framer-unlock-bar:hover .burst-piece {
@@ -3642,18 +3644,113 @@ Company requirements"
   animation-iteration-count: infinite;
 }
 
-.burst-piece-1 { --x: -150px; --y: -95px; --r: 160deg; animation-duration: 1.4s; animation-delay: 0s; }
-.burst-piece-2 { --x: -95px; --y: -135px; --r: 220deg; animation-duration: 1.7s; animation-delay: 0.1s; }
-.burst-piece-3 { --x: -35px; --y: -155px; --r: 90deg; animation-duration: 1.5s; animation-delay: 0.2s; }
-.burst-piece-4 { --x: 45px; --y: -150px; --r: 260deg; animation-duration: 1.8s; animation-delay: 0.05s; }
-.burst-piece-5 { --x: 110px; --y: -120px; --r: 180deg; animation-duration: 1.6s; animation-delay: 0.25s; }
-.burst-piece-6 { --x: 160px; --y: -70px; --r: 300deg; animation-duration: 1.9s; animation-delay: 0.15s; }
-.burst-piece-7 { --x: -165px; --y: 45px; --r: 140deg; animation-duration: 1.8s; animation-delay: 0.3s; }
-.burst-piece-8 { --x: 165px; --y: 50px; --r: 240deg; animation-duration: 1.5s; animation-delay: 0.35s; }
-.burst-piece-9 { --x: -120px; --y: 105px; --r: 280deg; animation-duration: 1.7s; animation-delay: 0.18s; }
-.burst-piece-10 { --x: 120px; --y: 110px; --r: 200deg; animation-duration: 1.9s; animation-delay: 0.28s; }
-.burst-piece-11 { --x: -45px; --y: 135px; --r: 120deg; animation-duration: 1.6s; animation-delay: 0.38s; }
-.burst-piece-12 { --x: 45px; --y: 140px; --r: 310deg; animation-duration: 1.8s; animation-delay: 0.08s; }
+.burst-piece-1 {
+  --x: -190px;
+  --y: 360px;
+  --s: 1.15;
+  --r: 180deg;
+  animation-duration: 2.1s;
+  animation-delay: 0s;
+}
+
+.burst-piece-2 {
+  --x: -135px;
+  --y: 430px;
+  --s: 0.9;
+  --r: 260deg;
+  animation-duration: 2.4s;
+  animation-delay: 0.12s;
+}
+
+.burst-piece-3 {
+  --x: -75px;
+  --y: 390px;
+  --s: 1.25;
+  --r: 120deg;
+  animation-duration: 2.15s;
+  animation-delay: 0.24s;
+}
+
+.burst-piece-4 {
+  --x: -25px;
+  --y: 500px;
+  --s: 0.85;
+  --r: 300deg;
+  animation-duration: 2.65s;
+  animation-delay: 0.08s;
+}
+
+.burst-piece-5 {
+  --x: 35px;
+  --y: 410px;
+  --s: 1.2;
+  --r: 210deg;
+  animation-duration: 2.25s;
+  animation-delay: 0.2s;
+}
+
+.burst-piece-6 {
+  --x: 95px;
+  --y: 470px;
+  --s: 0.95;
+  --r: 340deg;
+  animation-duration: 2.55s;
+  animation-delay: 0.14s;
+}
+
+.burst-piece-7 {
+  --x: 155px;
+  --y: 380px;
+  --s: 1.25;
+  --r: 160deg;
+  animation-duration: 2.2s;
+  animation-delay: 0.32s;
+}
+
+.burst-piece-8 {
+  --x: 205px;
+  --y: 520px;
+  --s: 0.9;
+  --r: 280deg;
+  animation-duration: 2.75s;
+  animation-delay: 0.18s;
+}
+
+.burst-piece-9 {
+  --x: -215px;
+  --y: 500px;
+  --s: 1;
+  --r: 240deg;
+  animation-duration: 2.7s;
+  animation-delay: 0.28s;
+}
+
+.burst-piece-10 {
+  --x: 220px;
+  --y: 445px;
+  --s: 1.15;
+  --r: 140deg;
+  animation-duration: 2.5s;
+  animation-delay: 0.36s;
+}
+
+.burst-piece-11 {
+  --x: -50px;
+  --y: 565px;
+  --s: 0.85;
+  --r: 320deg;
+  animation-duration: 2.9s;
+  animation-delay: 0.42s;
+}
+
+.burst-piece-12 {
+  --x: 60px;
+  --y: 555px;
+  --s: 1.1;
+  --r: 190deg;
+  animation-duration: 2.85s;
+  animation-delay: 0.06s;
+}
 `}</style>
     </main>
   );
