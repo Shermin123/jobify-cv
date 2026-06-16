@@ -2023,14 +2023,14 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[320px] md:h-[340px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[390px] md:h-[420px] overflow-hidden shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
 
                     <div
                       className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-[1px] select-none opacity-90"
+                        isUnlocked ? "" : "blur-[1.2px] select-none opacity-85"
                       }`}
                     >
                       {highlightKeywords(displayCv, "blue")}
@@ -2119,14 +2119,14 @@ const previousSetupStep = () => {
                     </span>
                   </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[320px] md:h-[340px] overflow-hidden shadow-inner">
+                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 hh-[390px] md:h-[420px] overflow-hidden shadow-inner">
                     {typing && (
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
                     )}
 
                     <div
                       className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-[1px] select-none opacity-90"
+                        isUnlocked ? "" : "blur-[1.2px] select-none opacity-85"
                       }`}
                     >
                       {highlightKeywords(displayCoverLetter, "purple")}
@@ -2839,422 +2839,394 @@ Company requirements"
         <HiredAtBox />
       </section>
 
-      <style jsx>{`
-        @keyframes stepPulse {
-  0%, 100% {
-    transform: scale(1);
-    letter-spacing: -0.03em;
+      <style jsx global>{`
+  @keyframes stepPulse {
+    0%, 100% {
+      transform: scale(1);
+      letter-spacing: -0.03em;
+    }
+    50% {
+      transform: scale(1.04);
+      letter-spacing: 0.01em;
+    }
   }
-  50% {
-    transform: scale(1.04);
-    letter-spacing: 0.01em;
-  }
-}
 
-.animate-stepPulse {
-  animation: stepPulse 2.2s ease-in-out infinite;
-}
-        @keyframes shimmer {
-          100% {
-            transform: translateX(100%);
-          }
-        }
-        @keyframes cinemaIn {
-  0% {
-    opacity: 0;
-    transform: perspective(900px) rotateX(8deg) scale(0.92) translateY(24px);
-    filter: blur(10px);
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
   }
-  60% {
-    opacity: 1;
-    transform: perspective(900px) rotateX(0deg) scale(1.02) translateY(0);
-    filter: blur(0px);
+
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
   }
-  100% {
-    opacity: 1;
-    transform: perspective(900px) rotateX(0deg) scale(1) translateY(0);
-    filter: blur(0px);
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-}
 
-@keyframes questionCut {
-  0% {
-    opacity: 0;
-    transform: translateY(18px) scale(0.98);
-    filter: blur(8px);
+  @keyframes softPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.04);
+      opacity: 0.85;
+    }
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+
+  @keyframes dotPulse {
+    0%, 100% {
+      opacity: 0.45;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.35);
+    }
   }
-}
 
-@keyframes lightSweep {
-  0% {
-    transform: translateX(-40%) rotate(-8deg);
+  @keyframes cookIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
-  100% {
-    transform: translateX(40%) rotate(-8deg);
+
+  @keyframes cookPot {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-5px) rotate(-3deg);
+    }
+    50% {
+      transform: translateY(0) rotate(3deg);
+    }
+    75% {
+      transform: translateY(-3px) rotate(-2deg);
+    }
   }
-}
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+  @keyframes cookDot {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 0.35;
+    }
+    50% {
+      transform: translateY(-7px);
+      opacity: 1;
+    }
   }
-  50% {
-    transform: translateY(-6px);
+
+  @keyframes cookBar {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(220%);
+    }
   }
-}
 
-.animate-cinemaIn {
-  animation: cinemaIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-questionCut {
-  animation: questionCut 0.42s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-lightSweep {
-  animation: lightSweep 2.8s ease-in-out infinite alternate;
-}
-
-.animate-float {
-  animation: float 2.6s ease-in-out infinite;
-}
-        @keyframes gradientMove {
-          0% {
-            background-position: 0% 50%;
-          }
-          100% {
-            background-position: 200% 50%;
-          }
-        }
-
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes softPulse {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.04);
-            opacity: 0.85;
-          }
-        }
-
-        .animate-shimmer {
-          animation: shimmer 1.4s infinite;
-        }
-
-        .animate-gradientMove {
-          animation: gradientMove 3s linear infinite;
-        }
-
-        .animate-fadeUp {
-          animation: fadeUp 0.5s ease-out;
-        }
-
-        .animate-softPulse {
-          animation: softPulse 1.6s ease-in-out infinite;
-        }
-        
-    
-      @keyframes cookIn {
-  from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.96);
+  @keyframes cinemaIn {
+    0% {
+      opacity: 0;
+      transform: perspective(900px) rotateX(8deg) scale(0.92) translateY(24px);
+      filter: blur(10px);
+    }
+    60% {
+      opacity: 1;
+      transform: perspective(900px) rotateX(0deg) scale(1.02) translateY(0);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 1;
+      transform: perspective(900px) rotateX(0deg) scale(1) translateY(0);
+      filter: blur(0);
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
 
-@keyframes cookPot {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+  @keyframes questionCut {
+    0% {
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+      filter: blur(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
   }
-  25% {
-    transform: translateY(-5px) rotate(-3deg);
-  }
-  50% {
-    transform: translateY(0) rotate(3deg);
-  }
-  75% {
-    transform: translateY(-3px) rotate(-2deg);
-  }
-}
 
-@keyframes cookDot {
-  0%, 100% {
-    transform: translateY(0);
-    opacity: 0.35;
+  @keyframes lightSweep {
+    0% {
+      transform: translateX(-40%) rotate(-8deg);
+    }
+    100% {
+      transform: translateX(40%) rotate(-8deg);
+    }
   }
-  50% {
-    transform: translateY(-7px);
-    opacity: 1;
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
   }
-}
 
-@keyframes cookBar {
-  0% {
-    transform: translateX(-120%);
+  /* Premium locked vault animations */
+  @keyframes vaultCardIn {
+    0% {
+      opacity: 0;
+      transform: translateY(18px) scale(0.92);
+      filter: blur(14px);
+    }
+    65% {
+      opacity: 1;
+      transform: translateY(-3px) scale(1.025);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
   }
-  100% {
-    transform: translateX(220%);
+
+  @keyframes vaultLock {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-5px) rotate(-4deg) scale(1.05);
+    }
   }
-}
 
-.animate-cookIn {
-  animation: cookIn 0.35s ease-out;
-}
-
-.animate-cookPot {
-  animation: cookPot 1.4s ease-in-out infinite;
-}
-
-.animate-cookDotOne {
-  animation: cookDot 0.9s ease-in-out infinite;
-}
-
-.animate-cookDotTwo {
-  animation: cookDot 0.9s ease-in-out infinite 0.15s;
-}
-
-.animate-cookDotThree {
-  animation: cookDot 0.9s ease-in-out infinite 0.3s;
-}
-
-.animate-cookBar {
-  animation: cookBar 1.15s ease-in-out infinite;
-}
-  @keyframes unlockCardIn {
-  0% {
-    opacity: 0;
-    transform: translateY(18px) scale(0.94);
-    filter: blur(8px);
+  @keyframes vaultRing {
+    0% {
+      transform: rotate(0deg) scale(1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: rotate(360deg) scale(1.12);
+      opacity: 0.25;
+    }
   }
-  70% {
-    opacity: 1;
-    transform: translateY(-2px) scale(1.02);
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-  @keyframes premiumCardIn {
-  0% {
-    opacity: 0;
-    transform: translateY(22px) scale(0.9);
-    filter: blur(14px);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-4px) scale(1.03);
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
 
-@keyframes lockFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+  @keyframes vaultGlow {
+    0%, 100% {
+      opacity: 0.45;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.25);
+    }
   }
-  50% {
-    transform: translateY(-7px) rotate(-4deg);
+
+  @keyframes vaultScanLine {
+    0% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(360px);
+      opacity: 0;
+    }
   }
-}
 
-@keyframes premiumRing {
-  0% {
-    transform: rotate(0deg) scale(1);
+  @keyframes vaultSweep {
+    0% {
+      transform: translateX(-130%) rotate(12deg);
+    }
+    100% {
+      transform: translateX(420%) rotate(12deg);
+    }
   }
-  100% {
-    transform: rotate(360deg) scale(1.04);
+
+  @keyframes vaultOrbOne {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(40px, 28px) scale(1.25);
+    }
   }
-}
 
-@keyframes premiumRingReverse {
-  0% {
-    transform: rotate(360deg) scale(1);
+  @keyframes vaultOrbTwo {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(-38px, -28px) scale(1.22);
+    }
   }
-  100% {
-    transform: rotate(0deg) scale(1.08);
+
+  @keyframes vaultSpark {
+    0%, 100% {
+      opacity: 0.25;
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-10px) scale(1.5);
+    }
   }
-}
 
-@keyframes premiumSweep {
-  0% {
-    transform: translateX(-130%) rotate(12deg);
+  @keyframes vaultStat {
+    0% {
+      opacity: 0;
+      transform: translateY(8px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
-  100% {
-    transform: translateX(350%) rotate(12deg);
+
+  .animate-stepPulse {
+    animation: stepPulse 2.2s ease-in-out infinite;
   }
-}
 
-@keyframes premiumScan {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
+  .animate-shimmer {
+    animation: shimmer 1.4s infinite;
   }
-  35% {
-    opacity: 1;
+
+  .animate-gradientMove {
+    animation: gradientMove 3s linear infinite;
   }
-  100% {
-    transform: translateY(100%);
-    opacity: 0;
+
+  .animate-fadeUp {
+    animation: fadeUp 0.5s ease-out;
   }
-}
 
-@keyframes premiumOrbOne {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
+  .animate-softPulse {
+    animation: softPulse 1.6s ease-in-out infinite;
   }
-  50% {
-    transform: translate(45px, 35px) scale(1.25);
+
+  .animate-dotPulse {
+    animation: dotPulse 2s ease-in-out infinite;
   }
-}
 
-@keyframes premiumOrbTwo {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
+  .animate-cookIn {
+    animation: cookIn 0.35s ease-out;
   }
-  50% {
-    transform: translate(-45px, -35px) scale(1.25);
+
+  .animate-cookPot {
+    animation: cookPot 1.4s ease-in-out infinite;
   }
-}
 
-@keyframes statPop {
-  0% {
-    opacity: 0;
-    transform: translateY(8px) scale(0.92);
+  .animate-cookDotOne {
+    animation: cookDot 0.9s ease-in-out infinite;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  .animate-cookDotTwo {
+    animation: cookDot 0.9s ease-in-out infinite 0.15s;
   }
-}
 
-.animate-premiumCardIn {
-  animation: premiumCardIn 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-lockFloat {
-  animation: lockFloat 2.5s ease-in-out infinite;
-}
-
-.animate-premiumRing {
-  animation: premiumRing 4s linear infinite;
-}
-
-.animate-premiumRingReverse {
-  animation: premiumRingReverse 5s linear infinite;
-}
-
-.animate-premiumSweep {
-  animation: premiumSweep 2.4s ease-in-out infinite;
-}
-
-.animate-premiumScan {
-  animation: premiumScan 3.2s ease-in-out infinite;
-}
-
-.animate-premiumOrbOne {
-  animation: premiumOrbOne 4s ease-in-out infinite;
-}
-
-.animate-premiumOrbTwo {
-  animation: premiumOrbTwo 4.4s ease-in-out infinite;
-}
-
-.animate-statPop {
-  animation: statPop 0.45s ease-out 0.15s both;
-}
-
-.animate-statPopTwo {
-  animation: statPop 0.45s ease-out 0.25s both;
-}
-
-.animate-statPopThree {
-  animation: statPop 0.45s ease-out 0.35s both;
-}
-
-@keyframes lockFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+  .animate-cookDotThree {
+    animation: cookDot 0.9s ease-in-out infinite 0.3s;
   }
-  50% {
-    transform: translateY(-6px) rotate(-3deg);
+
+  .animate-cookBar {
+    animation: cookBar 1.15s ease-in-out infinite;
   }
-}
 
-@keyframes premiumSweep {
-  0% {
-    transform: translateX(-120%) rotate(12deg);
+  .animate-cinemaIn {
+    animation: cinemaIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  100% {
-    transform: translateX(320%) rotate(12deg);
+
+  .animate-questionCut {
+    animation: questionCut 0.42s cubic-bezier(0.16, 1, 0.3, 1);
   }
-}
 
-@keyframes orbOne {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
+  .animate-lightSweep {
+    animation: lightSweep 2.8s ease-in-out infinite alternate;
   }
-  50% {
-    transform: translate(20px, 30px) scale(1.18);
+
+  .animate-float {
+    animation: float 2.6s ease-in-out infinite;
   }
-}
 
-@keyframes orbTwo {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
+  .animate-vaultCardIn {
+    animation: vaultCardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  50% {
-    transform: translate(-25px, -20px) scale(1.15);
+
+  .animate-vaultLock {
+    animation: vaultLock 2.6s ease-in-out infinite;
   }
-}
 
-.animate-unlockCardIn {
-  animation: unlockCardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
+  .animate-vaultRing {
+    animation: vaultRing 3.5s linear infinite;
+  }
 
-.animate-lockFloat {
-  animation: lockFloat 2.6s ease-in-out infinite;
-}
+  .animate-vaultGlow {
+    animation: vaultGlow 2.4s ease-in-out infinite;
+  }
 
-.animate-premiumSweep {
-  animation: premiumSweep 2.8s ease-in-out infinite;
-}
+  .animate-vaultScanLine {
+    animation: vaultScanLine 3s ease-in-out infinite;
+  }
 
-.animate-orbOne {
-  animation: orbOne 4s ease-in-out infinite;
-}
+  .animate-vaultSweep {
+    animation: vaultSweep 2.6s ease-in-out infinite;
+  }
 
-.animate-orbTwo {
-  animation: orbTwo 4.5s ease-in-out infinite;
-}
-      `}</style>
+  .animate-vaultOrbOne {
+    animation: vaultOrbOne 4s ease-in-out infinite;
+  }
+
+  .animate-vaultOrbTwo {
+    animation: vaultOrbTwo 4.4s ease-in-out infinite;
+  }
+
+  .animate-vaultSparkOne {
+    animation: vaultSpark 2.2s ease-in-out infinite;
+  }
+
+  .animate-vaultSparkTwo {
+    animation: vaultSpark 2.6s ease-in-out infinite 0.35s;
+  }
+
+  .animate-vaultSparkThree {
+    animation: vaultSpark 2.8s ease-in-out infinite 0.7s;
+  }
+
+  .animate-vaultStatOne {
+    animation: vaultStat 0.45s ease-out 0.15s both;
+  }
+
+  .animate-vaultStatTwo {
+    animation: vaultStat 0.45s ease-out 0.25s both;
+  }
+
+  .animate-vaultStatThree {
+    animation: vaultStat 0.45s ease-out 0.35s both;
+  }
+`}</style>
     </main>
   );
 }
@@ -3408,65 +3380,68 @@ function PremiumLockedOverlay({
 }) {
   return (
     <>
-      <div className="absolute inset-0 z-10 bg-slate-950/10 backdrop-blur-[1.5px]" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-950/35 via-blue-950/20 to-purple-950/30 backdrop-blur-[1px]" />
 
-      {/* animated background effects */}
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <div className="absolute left-[-80px] top-10 h-40 w-40 rounded-full bg-blue-500/30 blur-3xl animate-premiumOrbOne" />
-        <div className="absolute right-[-80px] bottom-8 h-40 w-40 rounded-full bg-purple-500/30 blur-3xl animate-premiumOrbTwo" />
-        <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-transparent via-white/35 to-transparent animate-premiumScan" />
-        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-premiumSweep" />
+        <div className="absolute left-[-60px] top-[-40px] h-40 w-40 rounded-full bg-cyan-400/35 blur-3xl animate-vaultOrbOne" />
+        <div className="absolute right-[-70px] bottom-[-50px] h-44 w-44 rounded-full bg-purple-500/35 blur-3xl animate-vaultOrbTwo" />
+
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-cyan-300/80 shadow-[0_0_30px_rgba(34,211,238,0.9)] animate-vaultScanLine" />
+        <div className="absolute inset-y-0 -left-1/3 w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent animate-vaultSweep" />
+
+        <div className="absolute left-7 top-8 h-1.5 w-1.5 rounded-full bg-white/80 animate-vaultSparkOne" />
+        <div className="absolute right-10 top-16 h-1.5 w-1.5 rounded-full bg-cyan-200/90 animate-vaultSparkTwo" />
+        <div className="absolute bottom-12 left-14 h-1.5 w-1.5 rounded-full bg-purple-200/90 animate-vaultSparkThree" />
       </div>
 
-      <div className="absolute inset-0 z-30 flex items-center justify-center px-4">
-        <div className="relative w-full max-w-[340px] overflow-hidden rounded-[32px] border border-white/70 bg-white/80 p-5 text-center shadow-[0_35px_100px_rgba(15,23,42,0.35)] backdrop-blur-2xl animate-premiumCardIn">
-          <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 bg-[length:220%_100%] animate-gradientMove" />
+      <div className="absolute inset-0 z-30 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-[330px] overflow-hidden rounded-[28px] border border-white/30 bg-slate-950/72 p-4 text-white shadow-[0_28px_90px_rgba(15,23,42,0.55)] backdrop-blur-2xl animate-vaultCardIn">
+          <div className="absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/12 via-transparent to-white/5" />
+          <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-[length:220%_100%] animate-gradientMove" />
 
-          {/* lock icon */}
-          <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-blue-500/30 animate-premiumRing" />
-            <div className="absolute inset-2 rounded-full border-4 border-purple-500/25 animate-premiumRingReverse" />
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-800 text-3xl shadow-2xl animate-lockFloat">
-              🔒
+          <div className="relative flex items-center gap-3">
+            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
+              <div className="absolute inset-0 rounded-2xl bg-cyan-400/20 blur-xl animate-vaultGlow" />
+              <div className="absolute inset-0 rounded-2xl border border-cyan-300/50 animate-vaultRing" />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-600 to-purple-600 text-2xl shadow-[0_14px_35px_rgba(59,130,246,0.45)] animate-vaultLock">
+                🔐
+              </div>
+            </div>
+
+            <div className="min-w-0 text-left">
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-cyan-200">
+                AI result generated
+              </p>
+              <h4 className="mt-1 text-xl font-black leading-tight tracking-[-0.04em] text-white">
+                Unlock your full CV package
+              </h4>
+              <p className="mt-1 text-xs font-semibold leading-5 text-white/65">
+                Tailored CV, cover letter, ATS keywords, PDF/DOCX export.
+              </p>
             </div>
           </div>
 
-          <p className="mt-3 text-[11px] font-black uppercase tracking-[0.24em] text-blue-600">
-            Premium CV is ready
-          </p>
-
-          <h4 className="mt-2 text-[23px] font-black leading-tight tracking-[-0.04em] text-slate-950">
-            Your AI-tailored result is waiting
-          </h4>
-
-          <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-            We found your strongest keywords, improved the structure, and prepared
-            your full CV package.
-          </p>
-
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50/90 p-2 shadow-sm animate-statPop">
-              <p className="text-2xl font-black text-emerald-600">
-                {atsScore}%
-              </p>
-              <p className="text-[10px] font-black uppercase text-emerald-700">
-                ATS Score
+          <div className="relative mt-4 grid grid-cols-3 gap-2">
+            <div className="rounded-2xl border border-emerald-300/20 bg-white/10 p-2 text-center shadow-inner animate-vaultStatOne">
+              <p className="text-xl font-black text-emerald-300">{atsScore}%</p>
+              <p className="text-[9px] font-black uppercase tracking-wide text-white/55">
+                ATS
               </p>
             </div>
 
-            <div className="rounded-2xl border border-blue-200 bg-blue-50/90 p-2 shadow-sm animate-statPopTwo">
-              <p className="text-2xl font-black text-blue-600">2</p>
-              <p className="text-[10px] font-black uppercase text-blue-700">
-                Documents
+            <div className="rounded-2xl border border-cyan-300/20 bg-white/10 p-2 text-center shadow-inner animate-vaultStatTwo">
+              <p className="text-xl font-black text-cyan-300">2</p>
+              <p className="text-[9px] font-black uppercase tracking-wide text-white/55">
+                Docs
               </p>
             </div>
 
-            <div className="rounded-2xl border border-purple-200 bg-purple-50/90 p-2 shadow-sm animate-statPopThree">
-              <p className="text-2xl font-black text-purple-600">
+            <div className="rounded-2xl border border-purple-300/20 bg-white/10 p-2 text-center shadow-inner animate-vaultStatThree">
+              <p className="text-xl font-black text-purple-300">
                 {keywordsCount || 8}
               </p>
-              <p className="text-[10px] font-black uppercase text-purple-700">
-                Keywords
+              <p className="text-[9px] font-black uppercase tracking-wide text-white/55">
+                Keys
               </p>
             </div>
           </div>
@@ -3474,15 +3449,15 @@ function PremiumLockedOverlay({
           <button
             type="button"
             onClick={onUnlock}
-            className="group relative mt-5 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-[length:220%_100%] py-4 text-sm font-black text-white shadow-[0_18px_45px_rgba(37,99,235,0.45)] transition hover:scale-[1.025] active:scale-95 animate-gradientMove"
+            className="group relative mt-4 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 bg-[length:220%_100%] py-3 text-sm font-black text-white shadow-[0_16px_45px_rgba(59,130,246,0.45)] transition hover:scale-[1.025] active:scale-95 animate-gradientMove"
           >
-            <span className="relative z-10">Unlock Full CV Package →</span>
+            <span className="relative z-10">Unlock Full Result →</span>
             <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover:translate-x-full" />
           </button>
 
-          <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-black text-slate-400">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-dotPulse" />
-            PDF • DOCX • Edit • Rephrase
+          <div className="relative mt-3 flex items-center justify-center gap-2 text-[10px] font-bold text-white/55">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.9)] animate-dotPulse" />
+            Premium export and editing tools included
           </div>
         </div>
       </div>
