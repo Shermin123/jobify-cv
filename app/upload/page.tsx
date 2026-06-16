@@ -2030,7 +2030,7 @@ const previousSetupStep = () => {
 
                     <div
                       className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-[1.5px] select-none opacity-80"
+                        isUnlocked ? "" : "blur-[1px] select-none opacity-90"
                       }`}
                     >
                       {highlightKeywords(displayCv, "blue")}
@@ -2126,7 +2126,7 @@ const previousSetupStep = () => {
 
                     <div
                       className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-[1.5px] select-none opacity-80"
+                        isUnlocked ? "" : "blur-[1px] select-none opacity-90"
                       }`}
                     >
                       {highlightKeywords(displayCoverLetter, "purple")}
@@ -3058,6 +3058,146 @@ Company requirements"
     filter: blur(0);
   }
 }
+  @keyframes premiumCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.9);
+    filter: blur(14px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.03);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes lockFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-4deg);
+  }
+}
+
+@keyframes premiumRing {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.04);
+  }
+}
+
+@keyframes premiumRingReverse {
+  0% {
+    transform: rotate(360deg) scale(1);
+  }
+  100% {
+    transform: rotate(0deg) scale(1.08);
+  }
+}
+
+@keyframes premiumSweep {
+  0% {
+    transform: translateX(-130%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(350%) rotate(12deg);
+  }
+}
+
+@keyframes premiumScan {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes premiumOrbOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(45px, 35px) scale(1.25);
+  }
+}
+
+@keyframes premiumOrbTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-45px, -35px) scale(1.25);
+  }
+}
+
+@keyframes statPop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-premiumCardIn {
+  animation: premiumCardIn 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-lockFloat {
+  animation: lockFloat 2.5s ease-in-out infinite;
+}
+
+.animate-premiumRing {
+  animation: premiumRing 4s linear infinite;
+}
+
+.animate-premiumRingReverse {
+  animation: premiumRingReverse 5s linear infinite;
+}
+
+.animate-premiumSweep {
+  animation: premiumSweep 2.4s ease-in-out infinite;
+}
+
+.animate-premiumScan {
+  animation: premiumScan 3.2s ease-in-out infinite;
+}
+
+.animate-premiumOrbOne {
+  animation: premiumOrbOne 4s ease-in-out infinite;
+}
+
+.animate-premiumOrbTwo {
+  animation: premiumOrbTwo 4.4s ease-in-out infinite;
+}
+
+.animate-statPop {
+  animation: statPop 0.45s ease-out 0.15s both;
+}
+
+.animate-statPopTwo {
+  animation: statPop 0.45s ease-out 0.25s both;
+}
+
+.animate-statPopThree {
+  animation: statPop 0.45s ease-out 0.35s both;
+}
 
 @keyframes lockFloat {
   0%, 100% {
@@ -3268,57 +3408,65 @@ function PremiumLockedOverlay({
 }) {
   return (
     <>
-      <div className="absolute inset-0 z-10 bg-white/20 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 z-10 bg-slate-950/10 backdrop-blur-[1.5px]" />
 
+      {/* animated background effects */}
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <div className="absolute -left-24 top-10 h-40 w-40 rounded-full bg-blue-400/25 blur-3xl animate-orbOne" />
-        <div className="absolute -right-24 bottom-10 h-40 w-40 rounded-full bg-purple-400/25 blur-3xl animate-orbTwo" />
-        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-premiumSweep" />
+        <div className="absolute left-[-80px] top-10 h-40 w-40 rounded-full bg-blue-500/30 blur-3xl animate-premiumOrbOne" />
+        <div className="absolute right-[-80px] bottom-8 h-40 w-40 rounded-full bg-purple-500/30 blur-3xl animate-premiumOrbTwo" />
+        <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-transparent via-white/35 to-transparent animate-premiumScan" />
+        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-premiumSweep" />
       </div>
 
       <div className="absolute inset-0 z-30 flex items-center justify-center px-4">
-        <div className="relative w-full max-w-[315px] overflow-hidden rounded-[30px] border border-white/70 bg-white/90 p-5 text-center shadow-[0_30px_80px_rgba(15,23,42,0.28)] backdrop-blur-2xl animate-unlockCardIn">
-          <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500 bg-[length:220%_100%] animate-gradientMove" />
+        <div className="relative w-full max-w-[340px] overflow-hidden rounded-[32px] border border-white/70 bg-white/80 p-5 text-center shadow-[0_35px_100px_rgba(15,23,42,0.35)] backdrop-blur-2xl animate-premiumCardIn">
+          <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 bg-[length:220%_100%] animate-gradientMove" />
 
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-slate-950 to-slate-700 text-3xl shadow-2xl animate-lockFloat">
-            🔒
+          {/* lock icon */}
+          <div className="relative mx-auto flex h-20 w-20 items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-4 border-blue-500/30 animate-premiumRing" />
+            <div className="absolute inset-2 rounded-full border-4 border-purple-500/25 animate-premiumRingReverse" />
+            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-800 text-3xl shadow-2xl animate-lockFloat">
+              🔒
+            </div>
           </div>
 
-          <p className="mt-4 text-[11px] font-black uppercase tracking-[0.22em] text-blue-600">
-            Premium result ready
+          <p className="mt-3 text-[11px] font-black uppercase tracking-[0.24em] text-blue-600">
+            Premium CV is ready
           </p>
 
-          <h4 className="mt-2 text-xl font-black leading-tight text-slate-950">
-            Your tailored CV package is generated
+          <h4 className="mt-2 text-[23px] font-black leading-tight tracking-[-0.04em] text-slate-950">
+            Your AI-tailored result is waiting
           </h4>
 
-          <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
-            The full document is hidden, but your AI result is ready to unlock.
+          <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+            We found your strongest keywords, improved the structure, and prepared
+            your full CV package.
           </p>
 
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-2 shadow-sm">
-              <p className="text-xl font-black text-emerald-600">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50/90 p-2 shadow-sm animate-statPop">
+              <p className="text-2xl font-black text-emerald-600">
                 {atsScore}%
               </p>
               <p className="text-[10px] font-black uppercase text-emerald-700">
-                ATS
+                ATS Score
               </p>
             </div>
 
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-2 shadow-sm">
-              <p className="text-xl font-black text-blue-600">2</p>
+            <div className="rounded-2xl border border-blue-200 bg-blue-50/90 p-2 shadow-sm animate-statPopTwo">
+              <p className="text-2xl font-black text-blue-600">2</p>
               <p className="text-[10px] font-black uppercase text-blue-700">
-                Docs
+                Documents
               </p>
             </div>
 
-            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-2 shadow-sm">
-              <p className="text-xl font-black text-purple-600">
+            <div className="rounded-2xl border border-purple-200 bg-purple-50/90 p-2 shadow-sm animate-statPopThree">
+              <p className="text-2xl font-black text-purple-600">
                 {keywordsCount || 8}
               </p>
               <p className="text-[10px] font-black uppercase text-purple-700">
-                Keys
+                Keywords
               </p>
             </div>
           </div>
@@ -3326,14 +3474,15 @@ function PremiumLockedOverlay({
           <button
             type="button"
             onClick={onUnlock}
-            className="mt-5 w-full rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-[length:200%_100%] py-3.5 text-sm font-black text-white shadow-[0_16px_35px_rgba(37,99,235,0.35)] transition hover:scale-[1.02] active:scale-95 animate-gradientMove"
+            className="group relative mt-5 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-[length:220%_100%] py-4 text-sm font-black text-white shadow-[0_18px_45px_rgba(37,99,235,0.45)] transition hover:scale-[1.025] active:scale-95 animate-gradientMove"
           >
-            Unlock Full Result →
+            <span className="relative z-10">Unlock Full CV Package →</span>
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover:translate-x-full" />
           </button>
 
-          <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-bold text-slate-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-dotPulse" />
-            PDF, DOCX, edit and rephrase included
+          <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-black text-slate-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-dotPulse" />
+            PDF • DOCX • Edit • Rephrase
           </div>
         </div>
       </div>
