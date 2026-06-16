@@ -1,5 +1,6 @@
 "use client";
 import HiredAtBox from "./components/HiredAtBox";
+import AtsCvTransform from "./components/AtsCvTransform";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
@@ -681,15 +682,22 @@ const getRiskMessage = () => {
 
   {/* LEFT HERO */}
   <div className="text-center lg:text-left">
-    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
-      Build a <span className="text-blue-600">Keyword-Highlighted CV</span> with AI
-    </h1>
-
-    <p className="mt-4 text-base md:text-lg text-gray-600 max-w-xl mx-auto lg:mx-0">
-      Check your CV score, improve ATS keywords, and generate a better CV in minutes.
-    </p>
-
+    
+    
     <div className="mt-6 flex w-full max-w-md flex-col gap-3 mx-auto lg:mx-0">
+      <div className="mb-4 text-center lg:text-left">
+  <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-600">
+    AI-powered CV builder
+  </p>
+
+  <h1 className="mt-2 text-3xl font-black leading-tight tracking-[-0.05em] text-slate-950 sm:text-4xl">
+    Build a CV that gets noticed
+  </h1>
+
+  <p className="mt-2 text-sm font-bold leading-6 text-slate-500">
+    Improve your ATS keywords, rewrite weak lines, and create a job-ready CV in minutes.
+  </p>
+</div>
   <button
     type="button"
     onClick={() => {
@@ -741,7 +749,7 @@ const getRiskMessage = () => {
         <p className="text-xs text-gray-500">Download</p>
       </div>
     </div>
-    <HiredAtBox />
+    
     <div className="mt-8 flex justify-center">
   <div className="relative w-full max-w-[760px] overflow-hidden rounded-[32px] border border-slate-200 bg-white/85 p-1 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur-xl">
     <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-blue-200/40 blur-3xl" />
@@ -763,17 +771,25 @@ const getRiskMessage = () => {
       <div className="mt-5 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-400 shadow-sm">
         728 × 220
       </div>
-    </div>
+        </div>
   </div>
+</div>
+
+
+
+<div className="mt-10">
+  <HiredAtBox />
 </div>
   </div>
 
         
-        {/* ================= CV SCORE ================= */}
-<div
-  id="cv-score"
-  className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[24px] border border-red-100 bg-white p-3 text-left shadow-xl sm:p-4 lg:max-w-none"
->
+        {/* ================= RIGHT COLUMN ================= */}
+<div className="w-full min-w-0">
+  {/* ================= CV SCORE ================= */}
+  <div
+    id="cv-score"
+    className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[24px] border border-red-100 bg-white p-3 text-left shadow-xl sm:p-4 lg:max-w-none"
+  >
   <div className="absolute -right-20 -top-20 h-44 w-44 rounded-full bg-red-100 opacity-70 blur-3xl" />
   <div className="absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-orange-100 opacity-70 blur-3xl" />
 
@@ -1104,7 +1120,7 @@ const getRiskMessage = () => {
     </div>
 
     
-    {analyzedScore !== null && (
+        {analyzedScore !== null && (
       <div className="mt-3 rounded-2xl border border-blue-100 bg-blue-50 p-3 text-center shadow-sm">
         <p className="text-sm font-black text-slate-900">
           ✨ Highlight the missing keywords and make your CV job-ready.
@@ -1119,10 +1135,47 @@ const getRiskMessage = () => {
       </div>
     )}
   </div>
+
+  {/* CLOSE CV SCORE CARD */}
+  </div>
+
+  {/* CV TRANSFORMATION BELOW CV SCORE CARD */}
+  <div className="mt-8 w-full">
+    <AtsCvTransform />
+  </div>
+
+{/* CLOSE RIGHT COLUMN */}
 </div>
 
+{/* CLOSE HERO GRID */}
 </div>
-      </section>
+
+</section>
+      <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pb-10">
+  <div className="rounded-[28px] border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur-xl">
+    <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-600">
+      Trusted by job seekers
+    </p>
+
+    <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-slate-950 md:text-3xl">
+      Our users apply to top companies
+    </h2>
+
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {["Google", "Amazon", "Microsoft", "Meta", "Netflix", "Apple", "IBM", "Deloitte"].map(
+        (company) => (
+          <div
+            key={company}
+            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-700 shadow-sm"
+          >
+            {company}
+          </div>
+        )
+      )}
+    </div>
+  </div>
+</section>
+
 
       {/* ================= HOW IT WORKS ================= */}
       <section className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pb-12">
