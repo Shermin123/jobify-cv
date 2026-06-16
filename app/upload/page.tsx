@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
@@ -1998,205 +1998,205 @@ const previousSetupStep = () => {
             </div>
 
             {/* DOCUMENT PREVIEW CARDS */}
-<div className="relative z-[10000] grid overflow-visible lg:grid-cols-2 gap-6">
-              {/* CV CARD */}
-              <div className="group relative overflow-visible rounded-[2rem] border border-blue-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
-                <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
-                <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-blue-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
+<div className="relative z-[10000] grid gap-6 overflow-visible lg:grid-cols-2">
+  {/* CV CARD */}
+  <div className="group relative z-[10000] overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
+    <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
+    <div className="absolute -right-24 -top-24 h-52 w-52 rounded-full bg-blue-200 opacity-40 blur-3xl transition group-hover:opacity-70" />
 
-                <div className="relative p-5">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
-                        📄
-                      </div>
+    <div className="relative p-5">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-xl text-white shadow-lg transition duration-500 group-hover:scale-110">
+            📄
+          </div>
 
-                      <div>
-                        <h3 className="font-black text-lg">Generated CV</h3>
-                        <p className="text-xs text-gray-500">
-                          ATS-ready resume preview
-                        </p>
-                      </div>
-                    </div>
+          <div>
+            <h3 className="font-black text-lg">Generated CV</h3>
+            <p className="text-xs text-gray-500">ATS-ready resume preview</p>
+          </div>
+        </div>
 
-                    <span className="rounded-full bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 text-xs font-black animate-softPulse">
-                      {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
-                    </span>
-                  </div>
+        <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-black text-blue-700 animate-softPulse">
+          {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
+        </span>
+      </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-blue-100 p-4 h-[390px] md:h-[420px] overflow-visible shadow-inner">
-                    {typing && (
-                      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-blue-100/40 to-transparent -translate-x-full animate-shimmer" />
-                    )}
+      <div className="relative mt-5 h-[390px] overflow-hidden rounded-3xl border border-blue-100 bg-slate-50/90 p-4 shadow-inner md:h-[420px]">
+        {typing && (
+          <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-blue-100/40 to-transparent animate-shimmer" />
+        )}
 
-                    <div
-                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-[1.2px] select-none opacity-85"
-                      }`}
-                    >
-                      {highlightKeywords(displayCv, "blue")}
-                      {typing && (
-                        <span className="animate-pulse font-black text-blue-600">
-                          |
-                        </span>
-                      )}
-                    </div>
+        <div
+          className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
+            isUnlocked ? "" : "blur-[1.2px] select-none opacity-85"
+          }`}
+        >
+          {highlightKeywords(displayCv, "blue")}
+          {typing && (
+            <span className="animate-pulse font-black text-blue-600">|</span>
+          )}
+        </div>
 
-                    
-                      {!isUnlocked && showUnlock && (
-  <PremiumLockedOverlay
-    atsScore={atsScore}
-    keywordsCount={keywords.length}
-    onUnlock={handleUnlockClick}
-  />
-)}
-                  </div>
+        {!isUnlocked && showUnlock && (
+          <PremiumLockedOverlay
+            atsScore={atsScore}
+            keywordsCount={keywords.length}
+            onUnlock={handleUnlockClick}
+          />
+        )}
+      </div>
 
-                  {showUnlock && (
-  <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
-    <button
-      onClick={() =>
-        isUnlocked
-          ? downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
-          : handleUnlockClick()
-      }
-      className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
-    >
-      {isUnlocked ? "Download CV PDF" : "Subscribe to Unlock CV"}
-    </button>
-    <button
-  onClick={() =>
-    isUnlocked
-      ? downloadDOCX("Optimised CV", cv, "jobify-optimised-cv.docx")
-      : handleUnlockClick()
-  }
-  className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
->
-  {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
-</button>
-    
+      {showUnlock && (
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            onClick={() =>
+              isUnlocked
+                ? downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
+                : handleUnlockClick()
+            }
+            className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 py-3 font-black text-white shadow-lg transition hover:scale-[1.02]"
+          >
+            {isUnlocked ? "Download CV PDF" : "Subscribe to Unlock CV"}
+          </button>
 
-    <button
-      onClick={() => (isUnlocked ? rephraseDocument("cv") : handleUnlockClick())}
-      disabled={rephrasing === "cv" || typing}
-      className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
-    >
-      {rephrasing === "cv" ? "Rephrasing..." : "✨ Rephrase CV"}
-    </button>
-      <button
-  onClick={() => (isUnlocked ? openEditor("cv") : handleUnlockClick())}
-  className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50"
->
-  ✏️ Edit CV
-</button>
-   
+          <button
+            onClick={() =>
+              isUnlocked
+                ? downloadDOCX("Optimised CV", cv, "jobify-optimised-cv.docx")
+                : handleUnlockClick()
+            }
+            className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
+          >
+            {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
+          </button>
+
+          <button
+            onClick={() =>
+              isUnlocked ? rephraseDocument("cv") : handleUnlockClick()
+            }
+            disabled={rephrasing === "cv" || typing}
+            className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
+          >
+            {rephrasing === "cv" ? "Rephrasing..." : "✨ Rephrase CV"}
+          </button>
+
+          <button
+            onClick={() => (isUnlocked ? openEditor("cv") : handleUnlockClick())}
+            className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50"
+          >
+            ✏️ Edit CV
+          </button>
+        </div>
+      )}
+    </div>
   </div>
-)}
-                </div>
-              </div>
 
-              {/* COVER LETTER CARD */}
-              <div className="group relative overflow-visible rounded-[2rem] border border-purple-100 bg-white/90 backdrop-blur-xl shadow-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
-                <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
-                <div className="absolute -top-24 -right-24 h-52 w-52 rounded-full bg-purple-200 blur-3xl opacity-40 group-hover:opacity-70 transition" />
+  {/* COVER LETTER CARD */}
+  <div className="group relative z-[10000] overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
+    <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
+    <div className="absolute -right-24 -top-24 h-52 w-52 rounded-full bg-purple-200 opacity-40 blur-3xl transition group-hover:opacity-70" />
 
-                <div className="relative p-5">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition duration-500">
-                        ✉️
-                      </div>
+    <div className="relative p-5">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 text-xl text-white shadow-lg transition duration-500 group-hover:scale-110">
+            ✉️
+          </div>
 
-                      <div>
-                        <h3 className="font-black text-lg">Cover Letter</h3>
-                        <p className="text-xs text-gray-500">
-                          Personalised application letter
-                        </p>
-                      </div>
-                    </div>
+          <div>
+            <h3 className="font-black text-lg">Cover Letter</h3>
+            <p className="text-xs text-gray-500">
+              Personalised application letter
+            </p>
+          </div>
+        </div>
 
-                    <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-100 px-3 py-1 text-xs font-black animate-softPulse">
-                      {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
-                    </span>
-                  </div>
+        <span className="rounded-full border border-purple-100 bg-purple-50 px-3 py-1 text-xs font-black text-purple-700 animate-softPulse">
+          {typing ? "WRITING" : isUnlocked ? "UNLOCKED" : "LOCKED"}
+        </span>
+      </div>
 
-                  <div className="relative mt-5 rounded-3xl bg-slate-50/90 border border-purple-100 p-4 h-[390px] md:h-[420px] overflow-visible shadow-inner">
-                    {typing && (
-                      <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-purple-100/40 to-transparent -translate-x-full animate-shimmer" />
-                    )}
+      <div className="relative mt-5 h-[390px] overflow-hidden rounded-3xl border border-purple-100 bg-slate-50/90 p-4 shadow-inner md:h-[420px]">
+        {typing && (
+          <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-100/40 to-transparent animate-shimmer" />
+        )}
 
-                    <div
-                      className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
-                        isUnlocked ? "" : "blur-[1.2px] select-none opacity-85"
-                      }`}
-                    >
-                      {highlightKeywords(displayCoverLetter, "purple")}
-                      {typing && (
-                        <span className="animate-pulse font-black text-purple-600">
-                          |
-                        </span>
-                      )}
-                    </div>
+        <div
+          className={`text-xs md:text-sm text-gray-700 whitespace-pre-line leading-5 md:leading-6 transition-all duration-700 ${
+            isUnlocked ? "" : "blur-[1.2px] select-none opacity-85"
+          }`}
+        >
+          {highlightKeywords(displayCoverLetter, "purple")}
+          {typing && (
+            <span className="animate-pulse font-black text-purple-600">|</span>
+          )}
+        </div>
 
-                      {!isUnlocked && showUnlock && (
-  <PremiumLockedOverlay
-    atsScore={atsScore}
-    keywordsCount={keywords.length}
-    onUnlock={handleUnlockClick}
-  />
-)}
-                  </div>
+        {!isUnlocked && showUnlock && (
+          <PremiumLockedOverlay
+            atsScore={atsScore}
+            keywordsCount={keywords.length}
+            onUnlock={handleUnlockClick}
+          />
+        )}
+      </div>
 
-                  {showUnlock && (
-  <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
-    <button
-      onClick={() =>
-        isUnlocked
-          ? downloadPDF(
-              "Cover Letter",
-              coverLetter,
-              "jobify-cover-letter.pdf"
-            )
-          : handleUnlockClick()
-      }
-      className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-2xl font-black hover:scale-[1.02] transition shadow-lg"
-    >
-      {isUnlocked ? "Download PDF" : "Subscribe"}
-    </button>
+      {showUnlock && (
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            onClick={() =>
+              isUnlocked
+                ? downloadPDF(
+                    "Cover Letter",
+                    coverLetter,
+                    "jobify-cover-letter.pdf"
+                  )
+                : handleUnlockClick()
+            }
+            className="w-full rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 py-3 font-black text-white shadow-lg transition hover:scale-[1.02]"
+          >
+            {isUnlocked ? "Download PDF" : "Subscribe"}
+          </button>
 
-    <button
-      onClick={() =>
-        isUnlocked
-          ? downloadDOCX(
-              "Cover Letter",
-              coverLetter,
-              "jobify-cover-letter.docx"
-            )
-          : handleUnlockClick()
-      }
-      className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
-    >
-      {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
-    </button>
+          <button
+            onClick={() =>
+              isUnlocked
+                ? downloadDOCX(
+                    "Cover Letter",
+                    coverLetter,
+                    "jobify-cover-letter.docx"
+                  )
+                : handleUnlockClick()
+            }
+            className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
+          >
+            {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
+          </button>
 
-    <button
-      onClick={() => (isUnlocked ? rephraseDocument("cover") : handleUnlockClick())}
-      disabled={rephrasing === "cover" || typing}
-      className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50 disabled:opacity-50"
-    >
-      {rephrasing === "cover" ? "Rephrasing..." : "✨ Rephrase"}
-    </button>
-      <button
-  onClick={() => (isUnlocked ? openEditor("cover") : handleUnlockClick())}
-  className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
->
-  ✏️ Edit Letter
-</button>
+          <button
+            onClick={() =>
+              isUnlocked ? rephraseDocument("cover") : handleUnlockClick()
+            }
+            disabled={rephrasing === "cover" || typing}
+            className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50 disabled:opacity-50"
+          >
+            {rephrasing === "cover" ? "Rephrasing..." : "✨ Rephrase"}
+          </button>
+
+          <button
+            onClick={() =>
+              isUnlocked ? openEditor("cover") : handleUnlockClick()
+            }
+            className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
+          >
+            ✏️ Edit Letter
+          </button>
+        </div>
+      )}
+    </div>
   </div>
-)}
-                </div>
-              </div>
-            </div>
+</div>
 
             {/* COPY BUTTONS */}
             {isUnlocked && showUnlock && (
@@ -3869,7 +3869,455 @@ Company requirements"
   background: linear-gradient(135deg, #a855f7, #f472b6);
   box-shadow: 0 0 18px rgba(236, 72, 153, 0.75);
 }
-  
+  @keyframes premiumDockEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.94);
+    filter: blur(14px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.012);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes premiumAuroraFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(28px, -18px, 0) scale(1.18);
+    opacity: 0.85;
+  }
+}
+
+@keyframes premiumShineMove {
+  0% {
+    transform: translateX(-160%) rotate(14deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(260%) rotate(14deg);
+    opacity: 0;
+  }
+}
+
+@keyframes premiumBorderFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 240% 50%;
+  }
+}
+
+@keyframes premiumIconFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-4deg);
+  }
+}
+
+@keyframes premiumGlowPulse {
+  0%, 100% {
+    opacity: 0.42;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.28);
+  }
+}
+
+@keyframes premiumSpotlight {
+  0%, 100% {
+    opacity: 0.15;
+    transform: translateY(20px) scale(0.95);
+  }
+  50% {
+    opacity: 0.45;
+    transform: translateY(-20px) scale(1.08);
+  }
+}
+
+.premium-unlock-overlay {
+  pointer-events: auto;
+}
+
+.premium-aurora {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(42px);
+  will-change: transform, opacity;
+}
+
+.premium-aurora-one {
+  left: -90px;
+  bottom: -80px;
+  width: 260px;
+  height: 260px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.42), transparent 62%),
+    radial-gradient(circle, rgba(6, 182, 212, 0.34), transparent 68%);
+  animation: premiumAuroraFloat 5.6s ease-in-out infinite;
+}
+
+.premium-aurora-two {
+  right: -100px;
+  bottom: -70px;
+  width: 280px;
+  height: 280px;
+  background:
+    radial-gradient(circle, rgba(168, 85, 247, 0.42), transparent 62%),
+    radial-gradient(circle, rgba(236, 72, 153, 0.28), transparent 68%);
+  animation: premiumAuroraFloat 6.4s ease-in-out infinite reverse;
+}
+
+.premium-spotlight {
+  position: absolute;
+  left: 50%;
+  bottom: -220px;
+  width: 620px;
+  height: 420px;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.26), transparent 64%);
+  transform: translateX(-50%);
+  filter: blur(16px);
+  animation: premiumSpotlight 4.8s ease-in-out infinite;
+}
+
+.premium-pill,
+.premium-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 7px 12px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgb(71, 85, 105);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 34px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.premium-score-pill {
+  color: rgb(5, 150, 105);
+  letter-spacing: 0.02em;
+}
+
+.premium-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgb(34, 197, 94);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.85);
+}
+
+.premium-unlock-dock {
+  position: relative;
+  overflow: visible;
+  border-radius: 30px;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.58)),
+    radial-gradient(circle at 20% 0%, rgba(37, 99, 235, 0.14), transparent 36%),
+    radial-gradient(circle at 90% 20%, rgba(168, 85, 247, 0.14), transparent 40%);
+  box-shadow:
+    0 30px 90px rgba(15, 23, 42, 0.28),
+    0 10px 30px rgba(37, 99, 235, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(28px);
+  transform-origin: center;
+  animation: premiumDockEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-unlock-overlay:hover .premium-unlock-dock {
+  transform: translateY(-10px) scale(1.025);
+  box-shadow:
+    0 48px 130px rgba(15, 23, 42, 0.36),
+    0 0 90px rgba(37, 99, 235, 0.28),
+    0 0 120px rgba(168, 85, 247, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.premium-dock-border {
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  border-radius: 31px;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.8),
+    rgba(6, 182, 212, 0.7),
+    rgba(168, 85, 247, 0.8),
+    rgba(236, 72, 153, 0.55),
+    rgba(37, 99, 235, 0.8)
+  );
+  background-size: 240% 100%;
+  animation: premiumBorderFlow 5.8s linear infinite;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  opacity: 0.7;
+}
+
+.premium-dock-shine {
+  position: absolute;
+  top: -40%;
+  bottom: -40%;
+  left: 0;
+  z-index: 1;
+  width: 90px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+  filter: blur(1px);
+  animation: premiumShineMove 4.2s ease-in-out infinite;
+}
+
+.premium-dock-noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 30px;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55) 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.42) 0 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.24;
+}
+
+.premium-outside-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -70px;
+  z-index: -1;
+  width: 78%;
+  height: 120px;
+  pointer-events: none;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.35), transparent 62%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%);
+  transform: translateX(-50%);
+  filter: blur(26px);
+  opacity: 0;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.premium-unlock-overlay:hover .premium-outside-glow {
+  opacity: 1;
+  transform: translateX(-50%) translateY(18px) scale(1.12);
+}
+
+.premium-icon-wrap {
+  position: relative;
+  display: flex;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.premium-icon-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.34), transparent 65%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.28), transparent 72%);
+  filter: blur(12px);
+  animation: premiumGlowPulse 3s ease-in-out infinite;
+}
+
+.premium-icon {
+  position: relative;
+  display: flex;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow:
+    0 18px 36px rgba(37, 99, 235, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  animation: premiumIconFloat 3.4s ease-in-out infinite;
+}
+
+.premium-eyebrow {
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgb(37, 99, 235);
+}
+
+.premium-unlock-btn {
+  position: relative;
+  display: inline-flex;
+  min-width: 94px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.18), transparent 36%),
+    linear-gradient(135deg, #020617, #172554 45%, #2563eb);
+  padding: 14px 17px;
+  font-size: 13px;
+  font-weight: 950;
+  color: white;
+  box-shadow:
+    0 18px 42px rgba(15, 23, 42, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-unlock-btn::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.58),
+    transparent
+  );
+  transform: translateX(-120%) rotate(18deg);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-unlock-btn:hover {
+  transform: translateY(-3px) scale(1.045);
+  box-shadow:
+    0 24px 56px rgba(37, 99, 235, 0.38),
+    0 0 44px rgba(37, 99, 235, 0.26);
+}
+
+.premium-unlock-btn:hover::before {
+  transform: translateX(120%) rotate(18deg);
+}
+
+.premium-stat {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.6);
+  padding: 10px 8px;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 26px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.35s ease;
+}
+
+.premium-unlock-overlay:hover .premium-stat {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.premium-stat p {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.premium-stat span {
+  margin-top: 4px;
+  display: block;
+  font-size: 9px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(100, 116, 139);
+}
+
+.premium-stat-green p {
+  color: rgb(5, 150, 105);
+}
+
+.premium-stat-blue p {
+  color: rgb(37, 99, 235);
+}
+
+.premium-stat-purple p {
+  color: rgb(124, 58, 237);
+}
+
+@media (max-width: 640px) {
+  .premium-unlock-dock {
+    padding: 12px;
+    border-radius: 26px;
+  }
+
+  .premium-dock-border,
+  .premium-dock-noise {
+    border-radius: 26px;
+  }
+
+  .premium-icon-wrap {
+    width: 48px;
+    height: 48px;
+  }
+
+  .premium-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 15px;
+  }
+
+  .premium-unlock-btn {
+    min-width: 82px;
+    padding: 12px 14px;
+  }
+}
+
 `}</style>
     </main>
   );
@@ -4024,162 +4472,163 @@ function PremiumLockedOverlay({
 }) {
   const [mounted, setMounted] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const moveCelebration = (event: { clientX: number; clientY: number }) => {
-    document.documentElement.style.setProperty(
-      "--premium-celebrate-x",
-      `${event.clientX}px`
-    );
-    document.documentElement.style.setProperty(
-      "--premium-celebrate-y",
-      `${event.clientY}px`
-    );
+  const updateOrigin = (element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+
+    setOrigin({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
   };
 
-  const pieces = Array.from({ length: 72 }, (_, index) => {
-    const angle = ((index * 137.5) % 360) * (Math.PI / 180);
-    const distance = 180 + (index % 9) * 34;
-    const fall = 520 + (index % 10) * 54;
-
-    return {
-      x: `${Math.cos(angle) * distance}px`,
-      y: `${Math.sin(angle) * 120 + fall}px`,
-      r1: `${120 + ((index * 43) % 260)}deg`,
-      r2: `${320 + ((index * 59) % 520)}deg`,
-      r3: `${680 + ((index * 71) % 900)}deg`,
-      s: `${0.72 + (index % 7) * 0.08}`,
-      d: `${3.4 + (index % 8) * 0.18}s`,
-      delay: `${(index % 18) * 0.045}s`,
-    };
-  });
+  const confettiCount = 56;
 
   const celebrationLayer =
     mounted && celebrating
       ? createPortal(
-          <div className="premium-celebration-layer" aria-hidden="true">
-            <span className="premium-shockwave premium-shockwave-1" />
+          <div
+            className="premium-celebration-layer"
+            style={
+              {
+                "--premium-celebrate-x": `${origin.x}px`,
+                "--premium-celebrate-y": `${origin.y}px`,
+              } as CSSProperties
+            }
+          >
+            <span className="premium-shockwave" />
             <span className="premium-shockwave premium-shockwave-2" />
             <span className="premium-shockwave premium-shockwave-3" />
 
-            {pieces.map((piece, index) => (
-              <span
-                key={index}
-                className={`premium-confetti premium-confetti-color-${
-                  index % 6
-                } premium-confetti-shape-${index % 5}`}
-                style={
-                  {
-                    "--x": piece.x,
-                    "--y": piece.y,
-                    "--r1": piece.r1,
-                    "--r2": piece.r2,
-                    "--r3": piece.r3,
-                    "--s": piece.s,
-                    "--d": piece.d,
-                    "--delay": piece.delay,
-                  } as any
-                }
-              />
-            ))}
+            {Array.from({ length: confettiCount }).map((_, index) => {
+              const angle = (index / confettiCount) * Math.PI * 2;
+              const distance = 260 + (index % 9) * 42;
+              const gravity = 340 + (index % 7) * 70;
+
+              const x = Math.cos(angle) * distance;
+              const y = Math.sin(angle) * distance + gravity;
+
+              return (
+                <span
+                  key={index}
+                  className={`premium-confetti premium-confetti-shape-${
+                    index % 5
+                  } premium-confetti-color-${index % 6}`}
+                  style={
+                    {
+                      "--x": `${x}px`,
+                      "--y": `${y}px`,
+                      "--d": `${3.4 + (index % 8) * 0.22}s`,
+                      "--delay": `${(index % 18) * 0.045}s`,
+                      "--s": `${0.75 + (index % 6) * 0.08}`,
+                      "--r1": `${120 + index * 13}deg`,
+                      "--r2": `${420 + index * 19}deg`,
+                      "--r3": `${760 + index * 23}deg`,
+                    } as CSSProperties
+                  }
+                />
+              );
+            })}
           </div>,
           document.body
         )
       : null;
 
   return (
-    <div
-      className="premium-overlay-root absolute inset-0 z-[99999] overflow-visible"
-      onPointerEnter={(event) => {
-        moveCelebration(event);
-        setCelebrating(true);
-      }}
-      onPointerMove={moveCelebration}
-      onPointerLeave={() => setCelebrating(false)}
-    >
-      {celebrationLayer}
+    <>
+      <div
+        className="premium-unlock-overlay absolute inset-0 z-[999999] overflow-visible"
+        onMouseEnter={(event) => {
+          updateOrigin(event.currentTarget);
+          setCelebrating(true);
+        }}
+        onMouseMove={(event) => {
+          setOrigin({
+            x: event.clientX,
+            y: event.clientY,
+          });
+        }}
+        onMouseLeave={() => setCelebrating(false)}
+      >
+        <div className="absolute inset-0 z-10 bg-white/5 backdrop-blur-[1.5px]" />
 
-      <div className="pointer-events-none absolute inset-0 z-10 bg-white/10 backdrop-blur-[1px]" />
-
-      <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <div className="absolute -left-24 top-16 h-52 w-52 rounded-full bg-blue-400/20 blur-3xl animate-framerOrbOne" />
-        <div className="absolute -right-24 bottom-10 h-52 w-52 rounded-full bg-purple-400/20 blur-3xl animate-framerOrbTwo" />
-        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent animate-framerSweep" />
-      </div>
-
-      <div className="absolute inset-x-4 top-4 z-30 flex items-center justify-between">
-        <div className="rounded-full border border-white/70 bg-white/70 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-slate-600 shadow-sm backdrop-blur-2xl">
-          Preview locked
+        <div className="pointer-events-none absolute inset-0 z-20 overflow-visible">
+          <div className="premium-aurora premium-aurora-one" />
+          <div className="premium-aurora premium-aurora-two" />
+          <div className="premium-spotlight" />
         </div>
 
-        <div className="rounded-full border border-emerald-100 bg-white/75 px-3 py-1.5 text-[10px] font-black text-emerald-600 shadow-sm backdrop-blur-2xl">
-          {atsScore}% ATS
+        <div className="absolute inset-x-4 top-4 z-40 flex items-center justify-between">
+          <div className="premium-pill">
+            <span className="premium-live-dot" />
+            Preview locked
+          </div>
+
+          <div className="premium-score-pill">{atsScore}% ATS</div>
         </div>
-      </div>
 
-      <div className="absolute inset-x-4 bottom-4 z-40">
-        <div className="framer-unlock-bar group relative overflow-visible rounded-[28px] border border-white/70 bg-white/75 p-3 shadow-[0_22px_70px_rgba(15,23,42,0.22)] backdrop-blur-2xl transition-all duration-500 ease-out animate-framerBarIn">
-          <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/95 via-white/55 to-white/25" />
-          <div className="pointer-events-none absolute inset-x-5 top-0 h-16 rounded-full bg-white/80 blur-2xl" />
+        <div className="absolute inset-x-4 bottom-4 z-50">
+          <div className="premium-unlock-dock">
+            <div className="premium-dock-border" />
+            <div className="premium-dock-shine" />
+            <div className="premium-dock-noise" />
 
-          <div className="relative flex items-center gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/80 bg-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_12px_32px_rgba(37,99,235,0.18)] backdrop-blur-xl">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-lg">
-                ✦
+            <div className="relative z-10 flex items-center gap-4">
+              <div className="premium-icon-wrap">
+                <div className="premium-icon-glow" />
+                <div className="premium-icon">✦</div>
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p className="premium-eyebrow">Full result ready</p>
+
+                <h4 className="truncate text-[16px] font-black tracking-[-0.03em] text-slate-950 md:text-[18px]">
+                  Unlock your complete CV pack
+                </h4>
+
+                <p className="mt-0.5 truncate text-xs font-bold text-slate-500 md:text-sm">
+                  PDF, DOCX, edit, rephrase and full text.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={onUnlock}
+                className="premium-unlock-btn"
+              >
+                <span className="relative z-10">Unlock</span>
+                <span className="relative z-10">→</span>
+              </button>
+            </div>
+
+            <div className="relative z-10 mt-4 grid grid-cols-3 gap-2">
+              <div className="premium-stat premium-stat-green">
+                <p>{atsScore}%</p>
+                <span>ATS</span>
+              </div>
+
+              <div className="premium-stat premium-stat-blue">
+                <p>2</p>
+                <span>Docs</span>
+              </div>
+
+              <div className="premium-stat premium-stat-purple">
+                <p>{keywordsCount || 8}</p>
+                <span>Keys</span>
               </div>
             </div>
 
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-blue-600">
-                Full result ready
-              </p>
-              <h4 className="truncate text-[15px] font-black text-slate-950">
-                Unlock CV package
-              </h4>
-              <p className="truncate text-xs font-semibold text-slate-500">
-                PDF, DOCX, edit, rephrase and full text.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={onUnlock}
-              className="group/btn relative shrink-0 overflow-hidden rounded-2xl bg-slate-950 px-4 py-3 text-xs font-black text-white shadow-[0_14px_35px_rgba(15,23,42,0.28)] transition hover:scale-[1.05] hover:bg-blue-700 active:scale-95"
-            >
-              <span className="relative z-10">Unlock →</span>
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover/btn:translate-x-full" />
-            </button>
-          </div>
-
-          <div className="relative mt-3 grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-emerald-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
-              <p className="text-lg font-black text-emerald-600">{atsScore}%</p>
-              <p className="text-[9px] font-black uppercase text-slate-400">
-                ATS
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-blue-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
-              <p className="text-lg font-black text-blue-600">2</p>
-              <p className="text-[9px] font-black uppercase text-slate-400">
-                Docs
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-purple-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
-              <p className="text-lg font-black text-purple-600">
-                {keywordsCount || 8}
-              </p>
-              <p className="text-[9px] font-black uppercase text-slate-400">
-                Keys
-              </p>
-            </div>
+            <div className="premium-outside-glow" />
           </div>
         </div>
       </div>
-    </div>
+
+      {celebrationLayer}
+    </>
   );
 }
