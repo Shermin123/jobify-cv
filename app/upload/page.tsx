@@ -2223,14 +2223,7 @@ const previousSetupStep = () => {
               </div>
             )}
 
-            {!isUnlocked && showUnlock && (
-              <button
-                onClick={() => router.push("/pricing")}
-                className="w-full bg-black text-white py-4 rounded-2xl font-black text-lg hover:bg-gray-800 shadow-xl"
-              >
-                Subscribe to Unlock Full Result
-              </button>
-            )}
+            
           </section>
         )}
        
@@ -3551,6 +3544,116 @@ Company requirements"
 .framer-drop-12 { left: 93%; animation-duration: 2.5s; animation-delay: 0.15s; }
 .framer-drop-13 { left: 35%; animation-duration: 2.6s; animation-delay: 0.55s; }
 .framer-drop-14 { left: 61%; animation-duration: 2s; animation-delay: 0.65s; }
+
+@keyframes framerBarIn {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+    filter: blur(12px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.01);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes framerSweep {
+  0% {
+    transform: translateX(-140%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(420%) rotate(12deg);
+  }
+}
+
+@keyframes framerOrbOne {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(34px, 24px) scale(1.18);
+  }
+}
+
+@keyframes framerOrbTwo {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-34px, -24px) scale(1.16);
+  }
+}
+
+@keyframes burstOut {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.45) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(1) rotate(var(--r));
+  }
+}
+
+.animate-framerBarIn {
+  animation: framerBarIn 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-framerSweep {
+  animation: framerSweep 3s ease-in-out infinite;
+}
+
+.animate-framerOrbOne {
+  animation: framerOrbOne 4.2s ease-in-out infinite;
+}
+
+.animate-framerOrbTwo {
+  animation: framerOrbTwo 4.6s ease-in-out infinite;
+}
+
+.burst-piece {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  height: 8px;
+  width: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 0 14px rgba(255, 255, 255, 0.95),
+    0 0 30px rgba(96, 165, 250, 0.65);
+  opacity: 0;
+}
+
+.framer-unlock-bar:hover .burst-piece {
+  animation-name: burstOut;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-iteration-count: infinite;
+}
+
+.burst-piece-1 { --x: -150px; --y: -95px; --r: 160deg; animation-duration: 1.4s; animation-delay: 0s; }
+.burst-piece-2 { --x: -95px; --y: -135px; --r: 220deg; animation-duration: 1.7s; animation-delay: 0.1s; }
+.burst-piece-3 { --x: -35px; --y: -155px; --r: 90deg; animation-duration: 1.5s; animation-delay: 0.2s; }
+.burst-piece-4 { --x: 45px; --y: -150px; --r: 260deg; animation-duration: 1.8s; animation-delay: 0.05s; }
+.burst-piece-5 { --x: 110px; --y: -120px; --r: 180deg; animation-duration: 1.6s; animation-delay: 0.25s; }
+.burst-piece-6 { --x: 160px; --y: -70px; --r: 300deg; animation-duration: 1.9s; animation-delay: 0.15s; }
+.burst-piece-7 { --x: -165px; --y: 45px; --r: 140deg; animation-duration: 1.8s; animation-delay: 0.3s; }
+.burst-piece-8 { --x: 165px; --y: 50px; --r: 240deg; animation-duration: 1.5s; animation-delay: 0.35s; }
+.burst-piece-9 { --x: -120px; --y: 105px; --r: 280deg; animation-duration: 1.7s; animation-delay: 0.18s; }
+.burst-piece-10 { --x: 120px; --y: 110px; --r: 200deg; animation-duration: 1.9s; animation-delay: 0.28s; }
+.burst-piece-11 { --x: -45px; --y: 135px; --r: 120deg; animation-duration: 1.6s; animation-delay: 0.38s; }
+.burst-piece-12 { --x: 45px; --y: 140px; --r: 310deg; animation-duration: 1.8s; animation-delay: 0.08s; }
 `}</style>
     </main>
   );
@@ -3705,95 +3808,89 @@ function PremiumLockedOverlay({
 }) {
   return (
     <>
-      <div className="absolute inset-0 z-10 bg-white/15 backdrop-blur-[1.2px]" />
+      <div className="absolute inset-0 z-10 bg-white/10 backdrop-blur-[1px]" />
 
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-        <div className="absolute left-[-70px] top-[-50px] h-56 w-56 rounded-full bg-blue-400/25 blur-3xl animate-framerOrbOne" />
-        <div className="absolute right-[-80px] bottom-[-70px] h-60 w-60 rounded-full bg-purple-400/25 blur-3xl animate-framerOrbTwo" />
-        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-framerSweep" />
+        <div className="absolute -left-24 top-16 h-52 w-52 rounded-full bg-blue-400/20 blur-3xl animate-framerOrbOne" />
+        <div className="absolute -right-24 bottom-10 h-52 w-52 rounded-full bg-purple-400/20 blur-3xl animate-framerOrbTwo" />
+        <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent animate-framerSweep" />
       </div>
 
-      <div className="absolute inset-0 z-30 flex items-center justify-center p-4">
-        <div className="framer-glass group/framer relative w-full max-w-[360px] overflow-hidden rounded-[34px] border border-white/70 bg-white/72 p-4 shadow-[0_30px_90px_rgba(15,23,42,0.25)] backdrop-blur-2xl animate-framerPanelIn">
-          <div className="pointer-events-none absolute inset-0 rounded-[34px] bg-gradient-to-br from-white/95 via-white/55 to-white/25" />
-          <div className="pointer-events-none absolute inset-x-8 top-0 h-24 rounded-full bg-white/80 blur-2xl" />
+      <div className="absolute inset-x-4 top-4 z-30 flex items-center justify-between">
+        <div className="rounded-full border border-white/70 bg-white/70 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-slate-600 shadow-sm backdrop-blur-2xl">
+          Preview locked
+        </div>
 
-          {/* hover falling glass particles */}
-          {Array.from({ length: 14 }).map((_, i) => (
-            <span key={i} className={`framer-drop framer-drop-${i + 1}`} />
-          ))}
+        <div className="rounded-full border border-emerald-100 bg-white/75 px-3 py-1.5 text-[10px] font-black text-emerald-600 shadow-sm backdrop-blur-2xl">
+          {atsScore}% ATS
+        </div>
+      </div>
 
-          <div className="relative">
-            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/75 px-3 py-1.5 shadow-sm backdrop-blur-xl">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.9)] animate-dotPulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
-                AI package ready
-              </span>
-            </div>
+      <div className="absolute inset-x-4 bottom-4 z-30">
+        <div className="framer-unlock-bar group relative overflow-visible rounded-[28px] border border-white/70 bg-white/75 p-3 shadow-[0_22px_70px_rgba(15,23,42,0.22)] backdrop-blur-2xl animate-framerBarIn">
+          <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/95 via-white/55 to-white/25" />
+          <div className="pointer-events-none absolute inset-x-5 top-0 h-16 rounded-full bg-white/80 blur-2xl" />
 
-            {/* floating document stack */}
-            <div className="relative mx-auto mt-4 h-[132px] w-[230px]">
-              <div className="framer-sheet framer-sheet-back absolute left-7 top-5 h-[104px] w-[170px] rotate-[-8deg] rounded-[22px] border border-purple-100 bg-white/65 shadow-xl backdrop-blur-xl" />
-              <div className="framer-sheet framer-sheet-mid absolute left-4 top-3 h-[112px] w-[185px] rotate-[7deg] rounded-[24px] border border-blue-100 bg-white/75 shadow-xl backdrop-blur-xl" />
+          {/* hover burst particles */}
+          <span className="burst-piece burst-piece-1" />
+          <span className="burst-piece burst-piece-2" />
+          <span className="burst-piece burst-piece-3" />
+          <span className="burst-piece burst-piece-4" />
+          <span className="burst-piece burst-piece-5" />
+          <span className="burst-piece burst-piece-6" />
+          <span className="burst-piece burst-piece-7" />
+          <span className="burst-piece burst-piece-8" />
+          <span className="burst-piece burst-piece-9" />
+          <span className="burst-piece burst-piece-10" />
+          <span className="burst-piece burst-piece-11" />
+          <span className="burst-piece burst-piece-12" />
 
-              <div className="framer-sheet framer-sheet-front absolute left-1/2 top-0 h-[125px] w-[200px] -translate-x-1/2 rounded-[26px] border border-white/80 bg-white/90 p-4 shadow-[0_22px_55px_rgba(37,99,235,0.18)] backdrop-blur-2xl">
-                <div className="flex items-center justify-between">
-                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600" />
-                  <div className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-600">
-                    {atsScore}% ATS
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-2">
-                  <div className="h-2 w-28 rounded-full bg-slate-300/70" />
-                  <div className="h-2 w-40 rounded-full bg-slate-200" />
-                  <div className="h-2 w-36 rounded-full bg-slate-200" />
-                  <div className="h-2 w-44 rounded-full bg-slate-200" />
-                </div>
-
-                <div className="mt-4 flex gap-2">
-                  <div className="h-5 w-12 rounded-full bg-blue-100" />
-                  <div className="h-5 w-12 rounded-full bg-purple-100" />
-                  <div className="h-5 w-12 rounded-full bg-emerald-100" />
-                </div>
+          <div className="relative flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/80 bg-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_12px_32px_rgba(37,99,235,0.18)] backdrop-blur-xl">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-lg">
+                ✦
               </div>
             </div>
 
-            <h4 className="mt-3 text-center text-[23px] font-black leading-tight tracking-[-0.045em] text-slate-950">
-              Unlock your complete CV pack
-            </h4>
-
-            <p className="mx-auto mt-2 max-w-[290px] text-center text-sm font-semibold leading-6 text-slate-500">
-              Your polished CV, cover letter, ATS keywords, PDF/DOCX export and edit tools are ready.
-            </p>
-
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              <div className="rounded-2xl border border-emerald-100 bg-white/70 p-2 text-center shadow-sm backdrop-blur-xl">
-                <p className="text-xl font-black text-emerald-600">{atsScore}%</p>
-                <p className="text-[9px] font-black uppercase text-slate-400">ATS</p>
-              </div>
-
-              <div className="rounded-2xl border border-blue-100 bg-white/70 p-2 text-center shadow-sm backdrop-blur-xl">
-                <p className="text-xl font-black text-blue-600">2</p>
-                <p className="text-[9px] font-black uppercase text-slate-400">Docs</p>
-              </div>
-
-              <div className="rounded-2xl border border-purple-100 bg-white/70 p-2 text-center shadow-sm backdrop-blur-xl">
-                <p className="text-xl font-black text-purple-600">
-                  {keywordsCount || 8}
-                </p>
-                <p className="text-[9px] font-black uppercase text-slate-400">Keys</p>
-              </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-blue-600">
+                Full result ready
+              </p>
+              <h4 className="truncate text-[15px] font-black text-slate-950">
+                Unlock CV package
+              </h4>
+              <p className="truncate text-xs font-semibold text-slate-500">
+                PDF, DOCX, edit, rephrase and full text.
+              </p>
             </div>
 
             <button
               type="button"
               onClick={onUnlock}
-              className="group/btn relative mt-4 w-full overflow-hidden rounded-[21px] bg-slate-950 py-3.5 text-sm font-black text-white shadow-[0_18px_45px_rgba(15,23,42,0.32)] transition hover:scale-[1.025] hover:bg-blue-700 active:scale-95"
+              className="group/btn relative shrink-0 overflow-hidden rounded-2xl bg-slate-950 px-4 py-3 text-xs font-black text-white shadow-[0_14px_35px_rgba(15,23,42,0.28)] transition hover:scale-[1.05] hover:bg-blue-700 active:scale-95"
             >
-              <span className="relative z-10">Unlock Full Result →</span>
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition duration-700 group-hover/btn:translate-x-full" />
+              <span className="relative z-10">Unlock →</span>
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition duration-700 group-hover/btn:translate-x-full" />
             </button>
+          </div>
+
+          <div className="relative mt-3 grid grid-cols-3 gap-2">
+            <div className="rounded-2xl border border-emerald-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
+              <p className="text-lg font-black text-emerald-600">{atsScore}%</p>
+              <p className="text-[9px] font-black uppercase text-slate-400">ATS</p>
+            </div>
+
+            <div className="rounded-2xl border border-blue-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
+              <p className="text-lg font-black text-blue-600">2</p>
+              <p className="text-[9px] font-black uppercase text-slate-400">Docs</p>
+            </div>
+
+            <div className="rounded-2xl border border-purple-100 bg-white/65 px-3 py-2 text-center backdrop-blur-xl">
+              <p className="text-lg font-black text-purple-600">
+                {keywordsCount || 8}
+              </p>
+              <p className="text-[9px] font-black uppercase text-slate-400">Keys</p>
+            </div>
           </div>
         </div>
       </div>
