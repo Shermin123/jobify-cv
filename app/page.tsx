@@ -747,7 +747,9 @@ const getRiskMessage = () => {
 </button>
 </div>
 
-    
+    <div className="mt-10">
+  <HiredAtBox />
+</div> 
     
     <div className="mt-8 flex justify-center">
   <div className="relative w-full max-w-[760px] overflow-hidden rounded-[32px] border border-slate-200 bg-white/85 p-1 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur-xl">
@@ -776,9 +778,7 @@ const getRiskMessage = () => {
 
 
 
-<div className="mt-10">
-  <HiredAtBox />
-</div>
+
 
 
 {/* AD BELOW LOGOS — FILLS LEFT-SIDE EMPTY SPACE */}
