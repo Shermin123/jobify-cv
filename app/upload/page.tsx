@@ -17,7 +17,7 @@ export default function UploadPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const resultRef = useRef<HTMLElement | null>(null);
+  const resultRef = useRef<HTMLDivElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [text, setText] = useState("");
@@ -131,18 +131,33 @@ if (savedGenerated && savedCv && savedCover) {
   setShowUnlock(true);
 }
 
-  const setupCompleted = getStored("jobify_setup_completed");
-const setupDismissed = getStored("jobify_setup_dismissed");
-const forceSetup = sessionStorage.getItem("jobify_force_setup");
-
+  const forceSetup = sessionStorage.getItem("jobify_force_setup");
+const setupIsComplete = [
+  savedFullName,
+  savedCountry,
+  savedRole,
+  savedExperienceLevel,
+  savedJobType,
+  savedEducationLevel,
+  savedIndustry,
+  savedUrgency,
+  savedMainStrength,
+  savedCvGoal,
+  savedCertificates,
+  savedPortfolio,
+  savedWorkAvailability,
+  savedToneStyle,
+  savedCoverLetterNeed,
+].every((answer) => Boolean(answer?.trim()));
 if (forceSetup === "true") {
   sessionStorage.removeItem("jobify_force_setup");
   setSetupStep(0);
   setShowSetupPopup(true);
-} else if (!setupCompleted && !setupDismissed) {
+} else if (!setupIsComplete) {
   setSetupStep(0);
   setShowSetupPopup(true);
 }
+
 
   }, []);
   useEffect(() => {
@@ -1357,8 +1372,8 @@ const previousSetupStep = () => {
   }
   if (showSetupPopup) {
   return (
-    <main className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 px-3 py-4 text-slate-950">
-  <div className="flex min-h-[calc(100dvh-40px)] items-start justify-center pt-2 sm:items-center">
+    <main className="nike-popup-bg fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-hidden px-3 py-4 text-slate-950">
+  <div className="relative z-10 flex min-h-[calc(100dvh-40px)] items-start justify-center pt-2 sm:items-center">
   <div className="relative w-full max-w-[520px] overflow-hidden rounded-[34px] border border-white/20 bg-white shadow-[0_40px_120px_rgba(0,0,0,0.45)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
   <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -1406,16 +1421,8 @@ const previousSetupStep = () => {
           {/* QUESTION BOX */}
           <div
   key={setupStep}
-  className="athletic-question-card mt-4 min-h-0 flex-1 overflow-hidden rounded-[24px] border border-white/80 p-4 shadow-[0_24px_65px_rgba(15,23,42,0.14)] animate-questionIn"
+  className="mt-4 min-h-0 flex-1 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
 >
-  <span className="athletic-question-grid" />
-  <span className="athletic-question-ribbon" />
-  <span className="athletic-question-orb athletic-question-orb-one" />
-  <span className="athletic-question-orb athletic-question-orb-two" />
-  <span className="athletic-question-streak athletic-question-streak-one" />
-  <span className="athletic-question-streak athletic-question-streak-two" />
-
-  <div className="relative z-10 h-full">
             {setupStep === 0 && (
   <div>
     <h3 className="text-lg font-black text-slate-950">
@@ -1722,10 +1729,7 @@ const previousSetupStep = () => {
     ]}
   />
 )}
-
-</div> {/* closes relative z-10 content */}
-
-</div> {/* closes athletic-question-card */}
+</div>
 
           {/* BUTTONS */}
           <div className="mt-5 flex gap-3">
@@ -1733,7 +1737,7 @@ const previousSetupStep = () => {
               type="button"
               onClick={() => {
                if (setupStep === 0) {
-  setStored("jobify_setup_dismissed", "true");
+  
   setShowSetupPopup(false);
   return;
 }
@@ -1758,8 +1762,7 @@ const previousSetupStep = () => {
       </div>
     </div>
 
-      <style jsx global>{`
-
+      <style jsx>{`
         @keyframes popupIn {
           0% {
             opacity: 0;
@@ -1821,264 +1824,99 @@ const previousSetupStep = () => {
         .animate-dotPulse {
           animation: dotPulse 2s ease-in-out infinite;
         }
-          .athletic-question-card {
-  position: relative;
+          .nike-popup-bg {
   isolation: isolate;
   background:
-    radial-gradient(
-      circle at 12% 8%,
-      rgba(255, 255, 255, 1),
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 88% 78%,
-      rgba(37, 99, 235, 0.13),
-      transparent 42%
-    ),
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f8fafc 48%,
-      #eef2ff 100%
-    );
+    radial-gradient(circle at 12% 18%, rgba(37, 99, 235, 0.38), transparent 30%),
+    radial-gradient(circle at 88% 78%, rgba(99, 102, 241, 0.34), transparent 34%),
+    linear-gradient(135deg, #020617 0%, #0f172a 45%, #172554 100%);
+  background-size: 145% 145%;
+  animation: nikeBackgroundShift 7s ease-in-out infinite;
 }
 
-.athletic-question-card::before {
+.nike-popup-bg::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -50%;
   z-index: 0;
   pointer-events: none;
   background:
     repeating-linear-gradient(
       118deg,
       transparent 0,
-      transparent 27px,
-      rgba(15, 23, 42, 0.035) 27px,
-      rgba(15, 23, 42, 0.035) 29px
-    );
-  background-size: 180% 180%;
-  animation: athleticPatternMove 12s linear infinite;
-}
-
-.athletic-question-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.18;
-  background-image:
-    linear-gradient(
-      rgba(37, 99, 235, 0.12) 1px,
-      transparent 1px
+      transparent 55px,
+      rgba(255, 255, 255, 0.035) 57px,
+      transparent 61px
     ),
     linear-gradient(
-      90deg,
-      rgba(37, 99, 235, 0.12) 1px,
-      transparent 1px
+      115deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.04) 44%,
+      rgba(96, 165, 250, 0.22) 50%,
+      rgba(255, 255, 255, 0.08) 55%,
+      transparent 62%
     );
-  background-size: 34px 34px;
-  animation: athleticGridMove 16s linear infinite;
+  animation: nikeBackgroundSweep 4.8s ease-in-out infinite;
 }
 
-.athletic-question-ribbon {
-  position: absolute;
-  right: -22%;
-  bottom: -84px;
-  z-index: 1;
-  height: 145px;
-  width: 105%;
-  pointer-events: none;
-  border-radius: 9999px;
-  background:
-    linear-gradient(
-      90deg,
-      #020617 0%,
-      #111827 42%,
-      #1d4ed8 72%,
-      #bef264 100%
-    );
-  box-shadow:
-    0 -16px 42px rgba(15, 23, 42, 0.18),
-    0 0 44px rgba(37, 99, 235, 0.18);
-  transform: rotate(-10deg) translate3d(0, 0, 0);
-  transform-origin: center;
-  will-change: transform;
-  animation: athleticRibbonFloat 4.8s
-    cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
-}
-
-.athletic-question-ribbon::after {
+.nike-popup-bg::after {
   content: "";
   position: absolute;
-  inset: 8px 12%;
-  border-radius: inherit;
-  border-top: 1px solid rgba(255, 255, 255, 0.32);
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.12),
-      transparent
-    );
-}
-
-.athletic-question-orb {
-  position: absolute;
+  right: -150px;
+  bottom: -170px;
   z-index: 0;
+  height: 480px;
+  width: 480px;
   pointer-events: none;
   border-radius: 9999px;
-  filter: blur(26px);
-  will-change: transform, opacity;
-}
-
-.athletic-question-orb-one {
-  left: -70px;
-  top: -75px;
-  height: 180px;
-  width: 180px;
-  background: rgba(37, 99, 235, 0.18);
-  animation: athleticOrbOne 5.2s ease-in-out infinite;
-}
-
-.athletic-question-orb-two {
-  right: -55px;
-  top: 20%;
-  height: 150px;
-  width: 150px;
-  background: rgba(190, 242, 100, 0.18);
-  animation: athleticOrbTwo 5.8s ease-in-out infinite;
-}
-
-.athletic-question-streak {
-  position: absolute;
-  z-index: 2;
-  pointer-events: none;
-  height: 3px;
-  border-radius: 9999px;
-  opacity: 0;
   background:
-    linear-gradient(
-      90deg,
-      transparent,
-      #2563eb,
-      #bef264,
-      transparent
+    radial-gradient(
+      circle,
+      rgba(59, 130, 246, 0.48),
+      rgba(79, 70, 229, 0.22) 42%,
+      transparent 70%
     );
-  box-shadow: 0 0 18px rgba(37, 99, 235, 0.42);
-  will-change: transform, opacity;
+  filter: blur(20px);
+  animation: nikeBackgroundGlow 4s ease-in-out infinite;
 }
 
-.athletic-question-streak-one {
-  left: -160px;
-  top: 28%;
-  width: 150px;
-  animation: athleticSpeedLine 3.4s ease-in-out infinite;
-}
-
-.athletic-question-streak-two {
-  left: -220px;
-  top: 68%;
-  width: 210px;
-  animation: athleticSpeedLine 4.1s ease-in-out infinite 0.8s;
-}
-
-@keyframes athleticPatternMove {
-  from {
-    background-position: 0% 0%;
-  }
-
-  to {
-    background-position: 180% 180%;
-  }
-}
-
-@keyframes athleticGridMove {
-  from {
-    background-position: 0 0;
-  }
-
-  to {
-    background-position: 68px 34px;
-  }
-}
-
-@keyframes athleticRibbonFloat {
-  from {
-    transform: rotate(-10deg) translate3d(-8px, 8px, 0);
-  }
-
-  to {
-    transform: rotate(-8deg) translate3d(16px, -7px, 0);
-  }
-}
-
-@keyframes athleticOrbOne {
+@keyframes nikeBackgroundShift {
   0%,
   100% {
-    opacity: 0.5;
-    transform: translate3d(0, 0, 0) scale(1);
+    background-position: 0% 20%;
   }
 
   50% {
-    opacity: 0.9;
-    transform: translate3d(32px, 18px, 0) scale(1.18);
+    background-position: 100% 80%;
   }
 }
 
-@keyframes athleticOrbTwo {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  50% {
-    opacity: 0.85;
-    transform: translate3d(-28px, 22px, 0) scale(1.15);
-  }
-}
-
-@keyframes athleticSpeedLine {
+@keyframes nikeBackgroundSweep {
   0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) skewX(-28deg);
+    transform: translateX(-40%) translateY(8%) rotate(-5deg);
+    opacity: 0.15;
   }
 
-  18% {
-    opacity: 0.85;
-  }
-
-  68% {
-    opacity: 0.65;
+  45% {
+    opacity: 1;
   }
 
   100% {
-    opacity: 0;
-    transform: translate3d(760px, -34px, 0) skewX(-28deg);
+    transform: translateX(40%) translateY(-8%) rotate(-5deg);
+    opacity: 0.15;
   }
 }
 
-@media (max-width: 640px) {
-  .athletic-question-ribbon {
-    right: -34%;
-    bottom: -92px;
-    width: 135%;
+@keyframes nikeBackgroundGlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.88);
+    opacity: 0.45;
   }
 
-  .athletic-question-streak-one,
-  .athletic-question-streak-two {
-    animation-duration: 4.5s;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .athletic-question-card::before,
-  .athletic-question-grid,
-  .athletic-question-ribbon,
-  .athletic-question-orb,
-  .athletic-question-streak {
-    animation: none !important;
+  50% {
+    transform: translate3d(-70px, -45px, 0) scale(1.2);
+    opacity: 1;
   }
 }
       `}</style>
@@ -2302,7 +2140,7 @@ const previousSetupStep = () => {
         </span>
       </div>
 
-      <div className="relative z-[10000] mt-5 h-[390px] overflow-visible rounded-3xl border border-blue-100 bg-slate-50/90 p-4 shadow-inner md:h-[420px]">
+      <div className="relative mt-5 h-[390px] overflow-hidden rounded-3xl border border-blue-100 bg-slate-50/90 p-4 shadow-inner md:h-[420px]">
         {typing && (
           <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-blue-100/40 to-transparent animate-shimmer" />
         )}
@@ -2397,7 +2235,7 @@ const previousSetupStep = () => {
         </span>
       </div>
 
-      <div className="relative z-[10000] mt-5 h-[390px] overflow-visible rounded-3xl border border-purple-100 bg-slate-50/90 p-4 shadow-inner md:h-[420px]">
+      <div className="relative mt-5 h-[390px] overflow-hidden rounded-3xl border border-purple-100 bg-slate-50/90 p-4 shadow-inner md:h-[420px]">
         {typing && (
           <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-100/40 to-transparent animate-shimmer" />
         )}
@@ -5348,337 +5186,687 @@ Company requirements"
     font-size: 12px;
   }
 }
-  /* LUXURY COMMAND DOCK */
-
-@keyframes jobifyDockBorder {
-  to {
-    transform: rotate(360deg);
-  }
+  /* POLISHED ELITE LOCKED OVERLAY */
+.elite-overlay {
+  pointer-events: auto;
 }
 
-@keyframes jobifyDockAmbient {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: scale(0.92) translateY(5px);
+.elite-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.42)),
+    radial-gradient(circle at 50% 95%, rgba(37, 99, 235, 0.12), transparent 42%);
+  backdrop-filter: blur(1.4px);
+}
+
+.elite-ambient-layer {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.elite-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(38px);
+  will-change: transform, opacity;
+}
+
+.elite-blob-blue {
+  left: -90px;
+  bottom: -85px;
+  height: 270px;
+  width: 270px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.38), transparent 65%),
+    radial-gradient(circle, rgba(6, 182, 212, 0.22), transparent 72%);
+  animation: eliteBlobMove 5.4s ease-in-out infinite;
+}
+
+.elite-blob-purple {
+  right: -105px;
+  bottom: -90px;
+  height: 295px;
+  width: 295px;
+  background:
+    radial-gradient(circle, rgba(124, 58, 237, 0.34), transparent 64%),
+    radial-gradient(circle, rgba(236, 72, 153, 0.2), transparent 72%);
+  animation: eliteBlobMove 6.2s ease-in-out infinite reverse;
+}
+
+@keyframes eliteBlobMove {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   50% {
     opacity: 0.9;
-    transform: scale(1.08) translateY(-4px);
+    transform: translate3d(26px, -20px, 0) scale(1.15);
   }
 }
 
-@keyframes jobifyDockSweep {
-  0% {
-    opacity: 0;
-    transform: translateX(-170%) skewX(-18deg);
-  }
-
-  18% {
-    opacity: 0.8;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(420%) skewX(-18deg);
-  }
+.elite-spotlight {
+  position: absolute;
+  left: 50%;
+  bottom: -245px;
+  height: 430px;
+  width: 680px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.24), transparent 68%);
+  filter: blur(18px);
+  transform: translateX(-50%);
 }
 
-@keyframes jobifyDockPulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.45);
+.elite-grid-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.16) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at 50% 75%, black, transparent 70%);
+}
+
+.elite-top-pill,
+.elite-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.78);
+  padding: 7px 12px;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgb(71, 85, 105);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 30px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(24px);
+}
+
+.elite-score-pill {
+  color: rgb(5, 150, 105);
+  letter-spacing: 0.04em;
+}
+
+.elite-score-pill span {
+  font-weight: 1000;
+}
+
+.elite-live-dot {
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: rgb(34, 197, 94);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.9);
+  animation: eliteLivePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes eliteLivePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.75;
   }
 
   50% {
-    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+    transform: scale(1.35);
+    opacity: 1;
   }
 }
 
-@keyframes jobifyDockEnter {
+.elite-dock {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  overflow: visible;
+  border: 0;
+  border-radius: 32px;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.66)),
+    radial-gradient(circle at 15% 0%, rgba(37, 99, 235, 0.15), transparent 38%),
+    radial-gradient(circle at 92% 20%, rgba(168, 85, 247, 0.15), transparent 42%);
+  box-shadow:
+    0 26px 74px rgba(15, 23, 42, 0.26),
+    0 12px 34px rgba(37, 99, 235, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(30px);
+  transform: translate3d(0, 0, 0);
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
+  animation: eliteDockIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 210ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 210ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes eliteDockIn {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.96);
+    transform: translate3d(0, 18px, 0) scale(0.965);
     filter: blur(10px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
     filter: blur(0);
   }
 }
 
-.premium-dock-overlay {
-  isolation: isolate;
-  pointer-events: auto;
+.elite-overlay:hover .elite-dock {
+  transform: translate3d(0, -8px, 0) scale(1.02);
+  box-shadow:
+    0 38px 100px rgba(15, 23, 42, 0.34),
+    0 0 56px rgba(37, 99, 235, 0.28),
+    0 0 82px rgba(168, 85, 247, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-.premium-dock-ambient {
-  animation: jobifyDockAmbient 4s ease-in-out infinite;
-}
-
-.premium-dock-shell {
-  position: relative;
-  overflow: hidden;
-  border-radius: 27px;
+.elite-border {
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  border-radius: 33px;
   padding: 1px;
-  animation: jobifyDockEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow:
-    0 30px 90px rgba(2, 6, 23, 0.5),
-    0 12px 30px rgba(2, 6, 23, 0.3);
-  transition:
-    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.4s ease;
-}
-
-.premium-dock-shell::before {
-  content: "";
-  position: absolute;
-  left: -45%;
-  top: -190%;
-  width: 190%;
-  aspect-ratio: 1;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg 65deg,
-    rgba(56, 189, 248, 0.95) 95deg,
-    rgba(99, 102, 241, 0.95) 145deg,
-    rgba(168, 85, 247, 0.95) 195deg,
-    rgba(236, 72, 153, 0.8) 230deg,
-    transparent 270deg 360deg
-  );
-  animation: jobifyDockBorder 7s linear infinite;
-}
-
-.premium-dock-overlay:hover .premium-dock-shell {
-  transform: translateY(-5px) scale(1.012);
-  box-shadow:
-    0 38px 110px rgba(2, 6, 23, 0.58),
-    0 0 60px rgba(59, 130, 246, 0.2);
-}
-
-.premium-dock-surface {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  border-radius: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  padding: 13px;
-  background:
-    radial-gradient(
-      circle at 10% -20%,
-      rgba(56, 189, 248, 0.22),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 100% 120%,
-      rgba(168, 85, 247, 0.24),
-      transparent 44%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(15, 23, 42, 0.97),
-      rgba(15, 23, 42, 0.88) 52%,
-      rgba(30, 41, 59, 0.96)
-    );
-  backdrop-filter: blur(28px) saturate(145%);
-  -webkit-backdrop-filter: blur(28px) saturate(145%);
-}
-
-.premium-dock-surface::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(
-      rgba(255, 255, 255, 0.025) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.025) 1px,
-      transparent 1px
-    );
-  background-size: 26px 26px;
-  mask-image: linear-gradient(to bottom, black, transparent);
-}
-
-.premium-dock-shine {
-  position: absolute;
-  top: -35%;
-  bottom: -35%;
-  left: -35%;
-  width: 24%;
-  pointer-events: none;
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(255, 255, 255, 0.22),
-    transparent
+    rgba(37, 99, 235, 0.9),
+    rgba(6, 182, 212, 0.72),
+    rgba(168, 85, 247, 0.9),
+    rgba(236, 72, 153, 0.58),
+    rgba(37, 99, 235, 0.9)
   );
-  filter: blur(3px);
-  animation: jobifyDockSweep 5.5s ease-in-out infinite;
+  background-size: 260% 100%;
+  opacity: 0.78;
+  animation: eliteBorderFlow 3.4s linear infinite;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
 }
 
-.premium-dock-emblem {
+@keyframes eliteBorderFlow {
+  to {
+    background-position: 260% 50%;
+  }
+}
+
+.elite-shine {
+  position: absolute;
+  top: -45%;
+  bottom: -45%;
+  left: -140px;
+  z-index: 1;
+  width: 90px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.82), transparent);
+  filter: blur(1px);
+  opacity: 0;
+  transform: rotate(15deg);
+}
+
+.elite-overlay:hover .elite-shine {
+  animation: eliteShineSweep 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes eliteShineSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(0) rotate(15deg);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(650px) rotate(15deg);
+  }
+}
+
+.elite-noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 32px;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55) 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 42%, rgba(255, 255, 255, 0.42) 0 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.2;
+}
+
+.elite-icon-wrap {
+  position: relative;
+  display: flex;
+  height: 56px;
+  width: 56px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.elite-icon-ring {
+  position: absolute;
+  inset: 2px;
+  border-radius: 22px;
+  border: 1px solid rgba(37, 99, 235, 0.26);
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.elite-overlay:hover .elite-icon-ring {
+  opacity: 1;
+  transform: scale(1.24);
+}
+
+.elite-icon-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.36), transparent 66%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.28), transparent 74%);
+  filter: blur(12px);
+  opacity: 0.82;
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+.elite-overlay:hover .elite-icon-glow {
+  opacity: 1;
+  transform: scale(1.18);
+}
+
+.elite-icon {
   position: relative;
   display: flex;
   height: 48px;
   width: 48px;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: 17px;
+  border-radius: 19px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.32), transparent 35%),
+    linear-gradient(135deg, #2563eb, #7c3aed);
   color: white;
-  font-size: 20px;
-  background: linear-gradient(
-    145deg,
-    #38bdf8,
-    #4f46e5 55%,
-    #a855f7
-  );
+  font-size: 21px;
+  font-weight: 950;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 14px 36px rgba(79, 70, 229, 0.4);
-}
-
-.premium-dock-emblem-ring {
-  position: absolute;
-  inset: -5px;
-  border-radius: 21px;
-  border: 1px solid rgba(125, 211, 252, 0.25);
-}
-
-.premium-dock-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 9px;
-  line-height: 1;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.premium-dock-status > span {
-  height: 6px;
-  width: 6px;
-  border-radius: 9999px;
-  background: #34d399;
-  animation: jobifyDockPulse 2s ease-in-out infinite;
-}
-
-.premium-dock-button {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 8px;
-  border-radius: 15px;
-  padding: 12px 14px;
-  color: #0f172a;
-  background: linear-gradient(180deg, #ffffff, #e2e8f0);
-  font-size: 12px;
-  font-weight: 900;
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 10px 25px rgba(0, 0, 0, 0.32);
+    0 17px 36px rgba(37, 99, 235, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48);
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms ease;
 }
 
-.premium-dock-button:hover {
-  transform: translateY(-2px);
+.elite-overlay:hover .elite-icon {
+  transform: translateY(-2px) rotate(-7deg) scale(1.07);
   box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 15px 32px rgba(0, 0, 0, 0.4);
+    0 22px 44px rgba(37, 99, 235, 0.42),
+    0 0 30px rgba(124, 58, 237, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
-.premium-dock-button:active {
-  transform: scale(0.97);
+.elite-eyebrow {
+  display: block;
+  font-size: 10px;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgb(37, 99, 235);
 }
 
-.premium-dock-chip {
+.elite-cta {
   position: relative;
-  z-index: 2;
-  display: flex;
-  min-width: 0;
+  display: inline-flex;
+  min-width: 94px;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  border-radius: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: rgba(255, 255, 255, 0.055);
-  padding: 7px 6px;
-  backdrop-filter: blur(10px);
-}
-
-.premium-dock-chip strong {
+  gap: 7px;
   overflow: hidden;
+  border-radius: 21px;
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.18), transparent 36%),
+    linear-gradient(135deg, #020617, #172554 45%, #2563eb);
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 1000;
   color: white;
-  font-size: 10px;
-  font-weight: 900;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  box-shadow:
+    0 17px 38px rgba(15, 23, 42, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms ease;
 }
 
-.premium-dock-chip span {
-  overflow: hidden;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-overflow: ellipsis;
+.elite-overlay:hover .elite-cta {
+  transform: translate3d(0, -2px, 0) scale(1.045);
+  box-shadow:
+    0 23px 52px rgba(37, 99, 235, 0.36),
+    0 0 38px rgba(37, 99, 235, 0.26);
+}
+
+.elite-arrow {
+  display: inline-block;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.elite-overlay:hover .elite-arrow {
+  transform: translateX(3px);
+}
+
+.elite-stat {
+  display: block;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  background: rgba(255, 255, 255, 0.64);
+  padding: 10px 8px;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 10px 24px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.elite-overlay:hover .elite-stat {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 13px 28px rgba(15, 23, 42, 0.1);
+}
+
+.elite-stat strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 1000;
+}
+
+.elite-stat small {
+  margin-top: 4px;
+  display: block;
+  font-size: 9px;
+  font-weight: 950;
   text-transform: uppercase;
-  white-space: nowrap;
+  letter-spacing: 0.08em;
+  color: rgb(100, 116, 139);
 }
 
-@media (max-width: 430px) {
-  .premium-dock-surface {
-    padding: 10px;
+.elite-stat-green strong {
+  color: rgb(5, 150, 105);
+}
+
+.elite-stat-blue strong {
+  color: rgb(37, 99, 235);
+}
+
+.elite-stat-purple strong {
+  color: rgb(124, 58, 237);
+}
+
+.elite-bottom-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -64px;
+  z-index: -1;
+  height: 110px;
+  width: 78%;
+  pointer-events: none;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle, rgba(37, 99, 235, 0.34), transparent 64%),
+    radial-gradient(circle, rgba(168, 85, 247, 0.22), transparent 72%);
+  filter: blur(24px);
+  opacity: 0;
+  transform: translateX(-50%) translateY(0) scale(0.92);
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.elite-overlay:hover .elite-bottom-glow {
+  opacity: 1;
+  transform: translateX(-50%) translateY(16px) scale(1.1);
+}
+
+.elite-particles {
+  pointer-events: none;
+  position: absolute;
+  inset: -80px;
+  z-index: 2;
+  overflow: visible;
+}
+
+.elite-particle {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  height: var(--h);
+  width: var(--w);
+  border-radius: var(--br);
+  opacity: 0;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  transform: translate3d(0, 0, 0) scale(0.4) rotate(0deg);
+  will-change: transform, opacity;
+}
+
+.elite-overlay:hover .elite-particle {
+  animation: eliteParticleFly var(--dur) cubic-bezier(0.16, 0.84, 0.24, 1) var(--delay) infinite both;
+}
+
+@keyframes eliteParticleFly {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.35) rotate(0deg);
   }
 
-  .premium-dock-emblem {
-    height: 42px;
-    width: 42px;
+  12% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 0.92;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--x), var(--y), 0) scale(var(--s)) rotate(var(--r));
+  }
+}
+
+.elite-particle:nth-child(1) {
+  --l: 12%; --t: 74%; --x: -58px; --y: -88px; --s: 1; --r: 140deg; --dur: 960ms; --delay: 0ms;
+  --h: 6px; --w: 6px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #60a5fa);
+  --shadow: 0 0 16px rgba(96, 165, 250, 0.85);
+}
+
+.elite-particle:nth-child(2) {
+  --l: 23%; --t: 80%; --x: -30px; --y: -120px; --s: 0.9; --r: 210deg; --dur: 1120ms; --delay: 70ms;
+  --h: 4px; --w: 18px; --br: 9999px;
+  --bg: linear-gradient(90deg, #38bdf8, #a855f7);
+  --shadow: 0 0 16px rgba(56, 189, 248, 0.75);
+}
+
+.elite-particle:nth-child(3) {
+  --l: 35%; --t: 75%; --x: -8px; --y: -100px; --s: 1; --r: 260deg; --dur: 1020ms; --delay: 140ms;
+  --h: 7px; --w: 7px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #a855f7);
+  --shadow: 0 0 18px rgba(168, 85, 247, 0.82);
+}
+
+.elite-particle:nth-child(4) {
+  --l: 48%; --t: 80%; --x: 24px; --y: -132px; --s: 0.95; --r: 310deg; --dur: 1180ms; --delay: 40ms;
+  --h: 5px; --w: 20px; --br: 9999px;
+  --bg: linear-gradient(90deg, #2563eb, #ec4899);
+  --shadow: 0 0 18px rgba(236, 72, 153, 0.72);
+}
+
+.elite-particle:nth-child(5) {
+  --l: 61%; --t: 73%; --x: 54px; --y: -96px; --s: 1.05; --r: 380deg; --dur: 1040ms; --delay: 120ms;
+  --h: 6px; --w: 6px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #22c55e);
+  --shadow: 0 0 16px rgba(34, 197, 94, 0.78);
+}
+
+.elite-particle:nth-child(6) {
+  --l: 76%; --t: 79%; --x: 78px; --y: -124px; --s: 0.92; --r: 460deg; --dur: 1220ms; --delay: 180ms;
+  --h: 4px; --w: 18px; --br: 9999px;
+  --bg: linear-gradient(90deg, #06b6d4, #7c3aed);
+  --shadow: 0 0 16px rgba(124, 58, 237, 0.72);
+}
+
+.elite-particle:nth-child(7) {
+  --l: 88%; --t: 70%; --x: 94px; --y: -82px; --s: 0.9; --r: 520deg; --dur: 960ms; --delay: 240ms;
+  --h: 6px; --w: 6px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #f59e0b);
+  --shadow: 0 0 16px rgba(245, 158, 11, 0.78);
+}
+
+.elite-particle:nth-child(8) {
+  --l: 18%; --t: 45%; --x: -70px; --y: -30px; --s: 0.85; --r: 220deg; --dur: 1120ms; --delay: 300ms;
+  --h: 5px; --w: 5px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #38bdf8);
+  --shadow: 0 0 14px rgba(56, 189, 248, 0.75);
+}
+
+.elite-particle:nth-child(9) {
+  --l: 82%; --t: 45%; --x: 70px; --y: -34px; --s: 0.85; --r: 360deg; --dur: 1100ms; --delay: 360ms;
+  --h: 5px; --w: 5px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #a855f7);
+  --shadow: 0 0 14px rgba(168, 85, 247, 0.75);
+}
+
+.elite-particle:nth-child(10) {
+  --l: 50%; --t: 62%; --x: 0px; --y: -150px; --s: 1; --r: 480deg; --dur: 1260ms; --delay: 210ms;
+  --h: 4px; --w: 22px; --br: 9999px;
+  --bg: linear-gradient(90deg, #fff, #2563eb);
+  --shadow: 0 0 18px rgba(37, 99, 235, 0.76);
+}
+
+.elite-particle:nth-child(11) {
+  --l: 8%; --t: 90%; --x: -42px; --y: -68px; --s: 0.82; --r: 190deg; --dur: 1020ms; --delay: 420ms;
+  --h: 5px; --w: 5px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #2563eb);
+  --shadow: 0 0 14px rgba(37, 99, 235, 0.75);
+}
+
+.elite-particle:nth-child(12) {
+  --l: 92%; --t: 90%; --x: 42px; --y: -68px; --s: 0.82; --r: 420deg; --dur: 1020ms; --delay: 500ms;
+  --h: 5px; --w: 5px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #ec4899);
+  --shadow: 0 0 14px rgba(236, 72, 153, 0.75);
+}
+
+.elite-particle:nth-child(13) {
+  --l: 38%; --t: 88%; --x: -26px; --y: -82px; --s: 0.88; --r: 300deg; --dur: 1080ms; --delay: 560ms;
+  --h: 3px; --w: 16px; --br: 9999px;
+  --bg: linear-gradient(90deg, #22c55e, #06b6d4);
+  --shadow: 0 0 14px rgba(6, 182, 212, 0.65);
+}
+
+.elite-particle:nth-child(14) {
+  --l: 64%; --t: 88%; --x: 28px; --y: -82px; --s: 0.88; --r: 340deg; --dur: 1080ms; --delay: 620ms;
+  --h: 3px; --w: 16px; --br: 9999px;
+  --bg: linear-gradient(90deg, #a855f7, #f472b6);
+  --shadow: 0 0 14px rgba(244, 114, 182, 0.65);
+}
+
+.elite-particle:nth-child(15) {
+  --l: 30%; --t: 34%; --x: -38px; --y: -42px; --s: 0.78; --r: 260deg; --dur: 1240ms; --delay: 690ms;
+  --h: 4px; --w: 4px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #60a5fa);
+  --shadow: 0 0 14px rgba(96, 165, 250, 0.72);
+}
+
+.elite-particle:nth-child(16) {
+  --l: 70%; --t: 34%; --x: 38px; --y: -42px; --s: 0.78; --r: 420deg; --dur: 1240ms; --delay: 760ms;
+  --h: 4px; --w: 4px; --br: 9999px;
+  --bg: radial-gradient(circle, #fff, #c084fc);
+  --shadow: 0 0 14px rgba(192, 132, 252, 0.72);
+}
+
+@media (max-width: 640px) {
+  .elite-dock {
+    padding: 12px;
+    border-radius: 27px;
+  }
+
+  .elite-border,
+  .elite-noise {
+    border-radius: 28px;
+  }
+
+  .elite-icon-wrap {
+    height: 48px;
+    width: 48px;
+  }
+
+  .elite-icon {
+    height: 40px;
+    width: 40px;
     border-radius: 15px;
+    font-size: 18px;
   }
 
-  .premium-dock-button {
-    padding: 11px 12px;
+  .elite-cta {
+    min-width: 78px;
+    padding: 12px 13px;
+    font-size: 12px;
   }
 
-  .premium-dock-button span:first-child {
-    display: none;
-  }
-
-  .premium-dock-chip {
-    display: block;
-    text-align: center;
-  }
-
-  .premium-dock-chip span {
-    display: block;
-    margin-top: 3px;
+  .elite-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.14em;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .premium-dock-shell,
-  .premium-dock-shell::before,
-  .premium-dock-shine,
-  .premium-dock-ambient,
-  .premium-dock-status > span {
+  .elite-blob,
+  .elite-border,
+  .elite-live-dot,
+  .elite-particle {
     animation: none !important;
   }
+
+  .elite-overlay:hover .elite-dock,
+  .elite-overlay:hover .elite-icon,
+  .elite-overlay:hover .elite-cta,
+  .elite-overlay:hover .elite-stat {
+    transform: none;
+  }
 }
-  
 
 `}</style>
     </main>
@@ -5833,79 +6021,82 @@ function PremiumLockedOverlay({
   onUnlock: () => void;
 }) {
   return (
-    <div className="premium-dock-overlay absolute inset-0 z-30 overflow-hidden">
-      {/* Soft preview covering */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/10 via-slate-950/20 to-slate-950/70 backdrop-blur-[2px]" />
+    <div className="elite-overlay absolute inset-0 z-[999999] overflow-hidden">
+      <div className="elite-backdrop" />
 
-      {/* Ambient background glow */}
-      <div className="premium-dock-ambient pointer-events-none absolute bottom-[-130px] left-1/2 h-[300px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-500/30 via-indigo-500/25 to-purple-500/30 blur-[70px]" />
+      <div className="elite-ambient-layer">
+        <div className="elite-blob elite-blob-blue" />
+        <div className="elite-blob elite-blob-purple" />
+        <div className="elite-spotlight" />
+        <div className="elite-grid-glow" />
+      </div>
 
-      {/* Top status */}
-      <div className="absolute inset-x-4 top-4 z-20 flex items-center justify-between">
-        <div className="rounded-full border border-white/20 bg-slate-950/70 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-xl">
-          Private preview
+      <div className="absolute inset-x-4 top-4 z-40 flex items-center justify-between">
+        <div className="elite-top-pill">
+          <span className="elite-live-dot" />
+          Preview locked
         </div>
 
-        <div className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1.5 text-[10px] font-black text-emerald-200 backdrop-blur-xl">
-          {atsScore}% ATS
+        <div className="elite-score-pill">
+          <span>{atsScore}%</span> ATS
         </div>
       </div>
 
-      {/* Bottom premium dock */}
-      <div className="absolute inset-x-3 bottom-3 z-30">
-        <button
-          type="button"
-          onClick={onUnlock}
-          aria-label="Unlock complete CV package"
-          className="premium-dock-shell w-full text-left"
-        >
-          <span className="premium-dock-surface block">
-            <span className="premium-dock-shine" />
+      <div className="absolute inset-x-4 bottom-4 z-50">
+        <button type="button" onClick={onUnlock} className="elite-dock">
+          <span className="elite-border" />
+          <span className="elite-shine" />
+          <span className="elite-noise" />
 
-            <span className="relative z-10 flex items-center gap-3">
-              <span className="premium-dock-emblem">
-                <span className="premium-dock-emblem-ring" />
-                ✦
+          <span className="elite-particles">
+            {Array.from({ length: 16 }).map((_, index) => (
+              <span key={index} className="elite-particle" />
+            ))}
+          </span>
+
+          <span className="relative z-10 flex items-center gap-4">
+            <span className="elite-icon-wrap">
+              <span className="elite-icon-ring" />
+              <span className="elite-icon-glow" />
+              <span className="elite-icon">✦</span>
+            </span>
+
+            <span className="min-w-0 flex-1 text-left">
+              <span className="elite-eyebrow">Your AI documents are ready</span>
+
+              <span className="mt-0.5 block truncate text-[16px] font-black tracking-[-0.04em] text-slate-950 md:text-[18px]">
+                Unlock complete CV package
               </span>
 
-              <span className="min-w-0 flex-1">
-                <span className="premium-dock-status">
-                  <span />
-                  Documents ready
-                </span>
-
-                <strong className="mt-1 block truncate text-[15px] font-black tracking-[-0.03em] text-white md:text-[17px]">
-                  Unlock your complete application
-                </strong>
-
-                <span className="mt-1 block truncate text-[10px] font-semibold text-white/45 md:text-xs">
-                  Download, edit, copy and rephrase everything.
-                </span>
-              </span>
-
-              <span className="premium-dock-button">
-                <span>Unlock</span>
-                <span>→</span>
+              <span className="mt-1 block truncate text-xs font-bold text-slate-500 md:text-sm">
+                Full CV, cover letter, PDF, DOCX, edit and rephrase.
               </span>
             </span>
 
-            <span className="relative z-10 mt-3 grid grid-cols-3 gap-2">
-              <span className="premium-dock-chip">
-                <strong>{atsScore}%</strong>
-                <span>ATS score</span>
-              </span>
-
-              <span className="premium-dock-chip">
-                <strong>2</strong>
-                <span>Documents</span>
-              </span>
-
-              <span className="premium-dock-chip">
-                <strong>{keywordsCount || 8}</strong>
-                <span>Keywords</span>
-              </span>
+            <span className="elite-cta">
+              Unlock
+              <span className="elite-arrow">→</span>
             </span>
           </span>
+
+          <span className="relative z-10 mt-4 grid grid-cols-3 gap-2">
+            <span className="elite-stat elite-stat-green">
+              <strong>{atsScore}%</strong>
+              <small>ATS score</small>
+            </span>
+
+            <span className="elite-stat elite-stat-blue">
+              <strong>2</strong>
+              <small>Documents</small>
+            </span>
+
+            <span className="elite-stat elite-stat-purple">
+              <strong>{keywordsCount || 8}</strong>
+              <small>Keywords</small>
+            </span>
+          </span>
+
+          <span className="elite-bottom-glow" />
         </button>
       </div>
     </div>
