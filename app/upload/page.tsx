@@ -11,6 +11,7 @@ import { saveAs } from "file-saver";
 import EmojiBackground from "@/app/components/EmojiBackground";
 import HiredAtBox from "@/app/components/HiredAtBox";
 import mammoth from "mammoth";
+import { createPortal } from "react-dom";
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -3713,6 +3714,162 @@ Company requirements"
 .celebration-piece-27 { --x: -10px; --y: 1160px; --s: 0.8; --r: 980deg; animation-duration: 5.8s; animation-delay: 1.6s; }
 .celebration-piece-28 { --x: 10px; --y: 1180px; --s: 0.82; --r: 1000deg; animation-duration: 5.9s; animation-delay: 1.68s; }
 
+.premium-overlay-root:hover .framer-unlock-bar {
+  transform: translateY(-6px) scale(1.018);
+  box-shadow:
+    0 30px 95px rgba(15, 23, 42, 0.3),
+    0 0 55px rgba(59, 130, 246, 0.35),
+    0 0 90px rgba(168, 85, 247, 0.22);
+}
+
+.premium-celebration-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  overflow: hidden;
+}
+
+.premium-shockwave {
+  position: fixed;
+  left: var(--premium-celebrate-x, 50vw);
+  top: var(--premium-celebrate-y, 50vh);
+  height: 18px;
+  width: 18px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(59, 130, 246, 0.7);
+  box-shadow:
+    0 0 30px rgba(59, 130, 246, 0.45),
+    0 0 60px rgba(168, 85, 247, 0.35);
+  animation: premiumShockwave 2.4s ease-out infinite;
+}
+
+.premium-shockwave-2 {
+  animation-delay: 0.35s;
+  border-color: rgba(168, 85, 247, 0.65);
+}
+
+.premium-shockwave-3 {
+  animation-delay: 0.7s;
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+@keyframes premiumShockwave {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(14);
+  }
+}
+
+.premium-confetti {
+  pointer-events: none;
+  position: fixed;
+  left: var(--premium-celebrate-x, 50vw);
+  top: var(--premium-celebrate-y, 50vh);
+  z-index: 2147483647;
+  height: 10px;
+  width: 10px;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  animation: premiumConfettiFly var(--d) cubic-bezier(0.18, 0.88, 0.28, 1) var(--delay) infinite both;
+}
+
+@keyframes premiumConfettiFly {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.25) rotate(0deg);
+  }
+
+  8% {
+    opacity: 1;
+    transform: translate3d(calc(var(--x) * 0.16), -90px, 0) scale(1.15) rotate(var(--r1));
+  }
+
+  28% {
+    opacity: 1;
+    transform: translate3d(calc(var(--x) * 0.85), calc(var(--y) * 0.24), 0) scale(var(--s)) rotate(var(--r2));
+  }
+
+  72% {
+    opacity: 0.95;
+    transform: translate3d(calc(var(--x) * 1.08), calc(var(--y) * 0.72), 0) scale(calc(var(--s) * 0.92)) rotate(var(--r3));
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--x), var(--y), 0) scale(0.55) rotate(var(--r3));
+  }
+}
+
+.premium-confetti-shape-0 {
+  border-radius: 9999px;
+}
+
+.premium-confetti-shape-1 {
+  height: 6px;
+  width: 16px;
+  border-radius: 9999px;
+}
+
+.premium-confetti-shape-2 {
+  height: 12px;
+  width: 6px;
+  border-radius: 4px;
+}
+
+.premium-confetti-shape-3 {
+  height: 9px;
+  width: 9px;
+  border-radius: 3px;
+}
+
+.premium-confetti-shape-4 {
+  height: 8px;
+  width: 14px;
+  border-radius: 45% 55% 50% 50%;
+}
+
+.premium-confetti-color-0 {
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.75);
+}
+
+.premium-confetti-color-1 {
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.75);
+}
+
+.premium-confetti-color-2 {
+  background: linear-gradient(135deg, #22c55e, #14b8a6);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.7);
+}
+
+.premium-confetti-color-3 {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.75);
+}
+
+.premium-confetti-color-4 {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  box-shadow: 0 0 18px rgba(14, 165, 233, 0.75);
+}
+
+.premium-confetti-color-5 {
+  background: linear-gradient(135deg, #a855f7, #f472b6);
+  box-shadow: 0 0 18px rgba(236, 72, 153, 0.75);
+}
+  
 `}</style>
     </main>
   );
@@ -3865,24 +4022,92 @@ function PremiumLockedOverlay({
   keywordsCount: number;
   onUnlock: () => void;
 }) {
+  const [mounted, setMounted] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const moveCelebration = (event: { clientX: number; clientY: number }) => {
+    document.documentElement.style.setProperty(
+      "--premium-celebrate-x",
+      `${event.clientX}px`
+    );
+    document.documentElement.style.setProperty(
+      "--premium-celebrate-y",
+      `${event.clientY}px`
+    );
+  };
+
+  const pieces = Array.from({ length: 72 }, (_, index) => {
+    const angle = ((index * 137.5) % 360) * (Math.PI / 180);
+    const distance = 180 + (index % 9) * 34;
+    const fall = 520 + (index % 10) * 54;
+
+    return {
+      x: `${Math.cos(angle) * distance}px`,
+      y: `${Math.sin(angle) * 120 + fall}px`,
+      r1: `${120 + ((index * 43) % 260)}deg`,
+      r2: `${320 + ((index * 59) % 520)}deg`,
+      r3: `${680 + ((index * 71) % 900)}deg`,
+      s: `${0.72 + (index % 7) * 0.08}`,
+      d: `${3.4 + (index % 8) * 0.18}s`,
+      delay: `${(index % 18) * 0.045}s`,
+    };
+  });
+
+  const celebrationLayer =
+    mounted && celebrating
+      ? createPortal(
+          <div className="premium-celebration-layer" aria-hidden="true">
+            <span className="premium-shockwave premium-shockwave-1" />
+            <span className="premium-shockwave premium-shockwave-2" />
+            <span className="premium-shockwave premium-shockwave-3" />
+
+            {pieces.map((piece, index) => (
+              <span
+                key={index}
+                className={`premium-confetti premium-confetti-color-${
+                  index % 6
+                } premium-confetti-shape-${index % 5}`}
+                style={
+                  {
+                    "--x": piece.x,
+                    "--y": piece.y,
+                    "--r1": piece.r1,
+                    "--r2": piece.r2,
+                    "--r3": piece.r3,
+                    "--s": piece.s,
+                    "--d": piece.d,
+                    "--delay": piece.delay,
+                  } as any
+                }
+              />
+            ))}
+          </div>,
+          document.body
+        )
+      : null;
+
   return (
-    <div className="celebration-zone absolute inset-0 z-[99999] overflow-visible">
+    <div
+      className="premium-overlay-root absolute inset-0 z-[99999] overflow-visible"
+      onPointerEnter={(event) => {
+        moveCelebration(event);
+        setCelebrating(true);
+      }}
+      onPointerMove={moveCelebration}
+      onPointerLeave={() => setCelebrating(false)}
+    >
+      {celebrationLayer}
+
       <div className="pointer-events-none absolute inset-0 z-10 bg-white/10 backdrop-blur-[1px]" />
 
       <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
         <div className="absolute -left-24 top-16 h-52 w-52 rounded-full bg-blue-400/20 blur-3xl animate-framerOrbOne" />
         <div className="absolute -right-24 bottom-10 h-52 w-52 rounded-full bg-purple-400/20 blur-3xl animate-framerOrbTwo" />
         <div className="absolute inset-y-0 -left-1/2 w-1/2 rotate-12 bg-gradient-to-r from-transparent via-white/55 to-transparent animate-framerSweep" />
-      </div>
-
-      {/* ADVANCED CELEBRATION PARTICLES */}
-      <div className="pointer-events-none absolute inset-0 z-[999999] overflow-visible">
-        {Array.from({ length: 28 }).map((_, index) => (
-          <span
-            key={index}
-            className={`celebration-piece celebration-piece-${index + 1}`}
-          />
-        ))}
       </div>
 
       <div className="absolute inset-x-4 top-4 z-30 flex items-center justify-between">
@@ -3896,7 +4121,7 @@ function PremiumLockedOverlay({
       </div>
 
       <div className="absolute inset-x-4 bottom-4 z-40">
-        <div className="framer-unlock-bar group relative overflow-visible rounded-[28px] border border-white/70 bg-white/75 p-3 shadow-[0_22px_70px_rgba(15,23,42,0.22)] backdrop-blur-2xl animate-framerBarIn">
+        <div className="framer-unlock-bar group relative overflow-visible rounded-[28px] border border-white/70 bg-white/75 p-3 shadow-[0_22px_70px_rgba(15,23,42,0.22)] backdrop-blur-2xl transition-all duration-500 ease-out animate-framerBarIn">
           <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-white/95 via-white/55 to-white/25" />
           <div className="pointer-events-none absolute inset-x-5 top-0 h-16 rounded-full bg-white/80 blur-2xl" />
 
