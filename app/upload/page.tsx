@@ -1349,10 +1349,7 @@ const previousSetupStep = () => {
   }
   if (showSetupPopup) {
   return (
-    <main
-  className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 px-3 py-5 text-slate-950"
-  style={{ WebkitOverflowScrolling: "touch" }}
->
+    <main className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 px-3 py-4 text-slate-950">
   <div className="flex min-h-[calc(100dvh-40px)] items-start justify-center pt-2 sm:items-center">
   <div className="relative w-full max-w-[520px] overflow-hidden rounded-[34px] border border-white/20 bg-white shadow-[0_40px_120px_rgba(0,0,0,0.45)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
@@ -1362,10 +1359,7 @@ const previousSetupStep = () => {
     <div className="absolute right-[-30px] top-[65px] h-28 w-[120%] rotate-[-14deg] bg-blue-50/80" />
   </div>
 
-  <div
-  className="relative max-h-[calc(100dvh-42px)] overflow-y-auto p-5 overscroll-contain sm:p-6"
-  style={{ WebkitOverflowScrolling: "touch" }}
->
+  <div className="relative flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden p-4 sm:p-5">
           {/* TOP ROW */}
           <div className="flex items-center justify-between">
             <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">
@@ -1404,7 +1398,7 @@ const previousSetupStep = () => {
           {/* QUESTION BOX */}
           <div
   key={setupStep}
-  className="mt-4 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
+  className="mt-4 min-h-0 flex-1 rounded-[22px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] animate-questionIn"
 >
             {setupStep === 0 && (
   <div>
@@ -3105,16 +3099,19 @@ function QuestionButtons({
   options: string[];
 }) {
   return (
-    <div>
-      <h3 className="text-xl font-black leading-tight text-slate-950">
+    <div className="flex h-full min-h-0 flex-col">
+      <h3 className="text-lg font-black leading-tight text-slate-950">
         {title}
       </h3>
 
-      <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">
+      <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
         Select one answer
       </p>
 
-      <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+      <div
+        className="mt-3 grid max-h-[260px] grid-cols-1 gap-2 overflow-y-auto pr-1 sm:grid-cols-2"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         {options.map((option) => {
           const selected = value === option;
 
@@ -3125,8 +3122,8 @@ function QuestionButtons({
               onClick={() => setValue(option)}
               className={
                 selected
-                  ? "group rounded-2xl border border-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_16px_34px_rgba(37,99,235,0.28)] transition active:scale-95"
-                  : "group rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
+                  ? "rounded-2xl border border-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] transition active:scale-95"
+                  : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
               }
             >
               <span className="mr-2">{selected ? "✅" : "○"}</span>
@@ -3165,19 +3162,15 @@ function MultiSelectQuestionButtons({
     setValue(updated.join(", "));
   };
 
-  const clearAll = () => {
-    setValue("");
-  };
-
   return (
-    <div>
+    <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-xl font-black leading-tight text-slate-950">
+          <h3 className="text-lg font-black leading-tight text-slate-950">
             {title}
           </h3>
 
-          <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-blue-600">
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-blue-600">
             Select all that apply
           </p>
         </div>
@@ -3185,7 +3178,7 @@ function MultiSelectQuestionButtons({
         {selectedValues.length > 0 && (
           <button
             type="button"
-            onClick={clearAll}
+            onClick={() => setValue("")}
             className="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-black text-slate-500 shadow-sm active:scale-95"
           >
             Clear
@@ -3194,7 +3187,7 @@ function MultiSelectQuestionButtons({
       </div>
 
       {selectedValues.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex max-h-[56px] flex-wrap gap-2 overflow-y-auto pr-1">
           {selectedValues.map((item) => (
             <span
               key={item}
@@ -3206,7 +3199,10 @@ function MultiSelectQuestionButtons({
         </div>
       )}
 
-      <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+      <div
+        className="mt-3 grid max-h-[230px] grid-cols-1 gap-2 overflow-y-auto pr-1 sm:grid-cols-2"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         {options.map((option) => {
           const selected = selectedValues.includes(option);
 
@@ -3217,8 +3213,8 @@ function MultiSelectQuestionButtons({
               onClick={() => toggleOption(option)}
               className={
                 selected
-                  ? "rounded-2xl border border-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 text-left text-sm font-black text-white shadow-[0_16px_34px_rgba(37,99,235,0.28)] transition active:scale-95"
-                  : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
+                  ? "rounded-2xl border border-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2.5 text-left text-sm font-black text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] transition active:scale-95"
+                  : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
               }
             >
               <span className="mr-2">{selected ? "✅" : "⬜"}</span>
