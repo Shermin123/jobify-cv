@@ -268,7 +268,7 @@ export default function Navbar() {
               </Link>
             )}
             <Link
-              href="/editor"
+              href="/upload"
               className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 px-5 py-3 text-sm font-black text-white shadow-[0_10px_24px_rgba(79,70,229,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(79,70,229,0.3)]"
             >
               <span className="transition duration-300 group-hover:rotate-180">
@@ -282,7 +282,7 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-2 lg:hidden">
             <Link
-              href="/editor"
+              href="/upload"
               className="rounded-lg bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 px-4 py-2.5 text-xs font-black text-white shadow-[0_8px_18px_rgba(79,70,229,0.22)]"
             >
               Create CV
@@ -412,7 +412,7 @@ export default function Navbar() {
             </Link>
           )}
           <Link
-            href="/editor"
+            href="/upload"
             className="rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 py-3 text-center text-sm font-black text-white shadow-[0_8px_20px_rgba(79,70,229,0.22)]"
           >
             Create CV

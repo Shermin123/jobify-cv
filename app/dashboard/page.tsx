@@ -24,14 +24,15 @@ export default function Dashboard() {
   const [appsLoading, setAppsLoading] = useState(false);
 
   useEffect(() => {
-    if (status !== "authenticated") return;
+  if (status !== "authenticated") return;
 
-    const redirectAfterLogin = sessionStorage.getItem("redirect_after_login");
+  const redirectAfterLogin = sessionStorage.getItem("redirect_after_login");
 
-    if (redirectAfterLogin === "/upload") {
-      sessionStorage.removeItem("redirect_after_login");
-    }
-  }, [status]);
+  if (redirectAfterLogin) {
+    sessionStorage.removeItem("redirect_after_login");
+    router.replace(redirectAfterLogin);
+  }
+}, [status, router]);
 
   const handleManageSubscription = async () => {
     if (!session?.user?.email) {

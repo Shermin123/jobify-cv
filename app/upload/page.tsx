@@ -2356,9 +2356,24 @@ const previousSetupStep = () => {
           <div className="relative p-4 md:p-7 space-y-5 md:space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
-                  ✨ AI CV Builder
-                </div>
+                <div className="flex flex-wrap items-center gap-2">
+  <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+    ✨ AI CV Builder
+  </div>
+
+  <button
+    type="button"
+    onClick={() => {
+      sessionStorage.setItem("jobify_editor_title", "Untitled CV");
+      sessionStorage.setItem("jobify_editor_content", "");
+      sessionStorage.setItem("jobify_editor_type", "cv");
+      router.push("/editor");
+    }}
+    className="inline-flex items-center gap-1.5 rounded-full border border-orange-300 bg-gradient-to-r from-orange-500 to-red-500 px-3 py-1 text-xs font-black text-white shadow-md transition hover:-translate-y-0.5 hover:from-orange-600 hover:to-red-600 hover:shadow-lg"
+  >
+    ＋ Create from scratch
+  </button>
+</div>
 
                 <h2 className="mt-3 text-xl md:text-2xl font-black text-slate-900">
                   Create your tailored application
