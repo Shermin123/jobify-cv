@@ -24,6 +24,12 @@ export default function Navbar() {
   const isLoggedIn = Boolean(session);
   const links: NavItem[] = isLoggedIn
     ? [
+        
+{
+  name: "Home",
+  href: "/",
+},
+
         {
           name: "Dashboard",
           href: "/dashboard",
