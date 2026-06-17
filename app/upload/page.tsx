@@ -1343,10 +1343,10 @@ const saveSetupAndContinue = () => {
   setShowSetupPopup(false);
 
   setTimeout(() => {
-    document
-      .getElementById("ai-setup-summary")
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, 150);
+  document
+    .getElementById("ai-setup-summary")
+    ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}, 150);
 };
 
 const nextSetupStep = () => {
@@ -2033,7 +2033,10 @@ const previousSetupStep = () => {
         
         {/* RESULTS */}
         {generated && (
-          <section ref={resultRef} className="relative z-[9999] space-y-5 overflow-visible">
+          <section
+  ref={resultRef}
+  className="relative space-y-5"
+>
             <div className="rounded-3xl bg-slate-950 text-white p-4 md:p-6 shadow-2xl overflow-hidden relative">
               <div className="absolute right-6 top-5 text-6xl opacity-10">
                 {typing ? "✍️" : isUnlocked ? "✅" : "🔒"}
@@ -2116,9 +2119,9 @@ const previousSetupStep = () => {
             </div>
 
             {/* DOCUMENT PREVIEW CARDS */}
-<div className="relative z-[10000] grid gap-6 overflow-visible lg:grid-cols-2">
+<div className="relative grid gap-6 lg:grid-cols-2">
   {/* CV CARD */}
-  <div className="group relative z-[10000] overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:-translate-y-2 hover:shadow-blue-200/60">
+  <div className="group relative overflow-hidden rounded-[2rem] border border-blue-100 bg-white/90 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:-translate-y-1 hover:shadow-blue-200/60">
     <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-gradientMove" />
     <div className="absolute -right-24 -top-24 h-52 w-52 rounded-full bg-blue-200 opacity-40 blur-3xl transition group-hover:opacity-70" />
 
@@ -2211,7 +2214,7 @@ const previousSetupStep = () => {
   </div>
 
   {/* COVER LETTER CARD */}
-  <div className="group relative z-[10000] overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:-translate-y-2 hover:shadow-purple-200/60">
+  <div className="group relative overflow-hidden rounded-[2rem] border border-purple-100 bg-white/90 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:-translate-y-1 hover:shadow-purple-200/60">
     <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-[length:200%_100%] animate-gradientMove" />
     <div className="absolute -right-24 -top-24 h-52 w-52 rounded-full bg-purple-200 opacity-40 blur-3xl transition group-hover:opacity-70" />
 
@@ -2347,13 +2350,13 @@ const previousSetupStep = () => {
         )}
        
         {/* INPUT FORM */}
-        <div className="relative z-0 overflow-hidden rounded-[32px] border border-slate-200 bg-white/90 backdrop-blur-xl shadow-2xl">
-          <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500" />
+<div className="relative mt-16 isolate overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-2xl">
+  <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-500" />
 
-          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-blue-100 blur-3xl opacity-70" />
-          <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-purple-100 blur-3xl opacity-70" />
+  <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-blue-100 opacity-70 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-purple-100 opacity-70 blur-3xl" />
 
-          <div className="relative p-4 md:p-7 space-y-5 md:space-y-6">
+  <div className="relative z-10 space-y-5 p-6 md:space-y-6 md:p-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -5926,7 +5929,15 @@ function QuestionButtons({
                   : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
               }
             >
-              <span className="mr-2">{selected ? "✅" : "○"}</span>
+              <span
+  className={
+    selected
+      ? "mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[12px] font-black text-white"
+      : "mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-300"
+  }
+>
+  {selected ? "✓" : ""}
+</span>
               {option}
             </button>
           );
@@ -6017,7 +6028,15 @@ function MultiSelectQuestionButtons({
                   : "rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-bold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 active:scale-95"
               }
             >
-              <span className="mr-2">{selected ? "✅" : "⬜"}</span>
+              <span
+  className={
+    selected
+      ? "mr-2 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-black text-white"
+      : "mr-2 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300"
+  }
+>
+  {selected ? "✓" : ""}
+</span>
               {option}
             </button>
           );
