@@ -1363,14 +1363,17 @@ const previousSetupStep = () => {
     setSetupStep((prev) => prev - 1);
   }
 };
-  if (status === "loading") {
-    return (
-      <div className="h-screen flex items-center justify-center text-gray-500">
-        Loading...
-      </div>
-    );
-  }
-  if (showSetupPopup) {
+ 
+if (status === "loading" && !loading && !rephrasing) {
+  return (
+    <div className="h-screen flex items-center justify-center text-gray-500">
+      Loading...
+    </div>
+  );
+}
+
+
+if (showSetupPopup && !loading && !rephrasing) {
   return (
     <main className="nike-popup-bg fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-hidden px-3 py-4 text-slate-950">
   <div className="relative z-10 flex min-h-[calc(100dvh-40px)] items-start justify-center pt-2 sm:items-center">
