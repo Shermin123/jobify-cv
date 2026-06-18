@@ -750,23 +750,12 @@ setCoverLetter("");
 setKeywords([]);
 setDisplayCv("");
 setDisplayCoverLetter("");
+await new Promise<void>((resolve) => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => resolve());
+  });
+});
 
-    const fakeCvTyping = `Reading your CV...
-Finding your strongest achievements...
-Checking your AI setup answers...
-Improving your professional summary...
-Adding ATS keywords...
-Rewriting your CV for recruiters...
-Preparing your tailored CV preview...`;
-
-    const fakeCoverTyping = `Reading the job description...
-Matching your experience to the role...
-Using your country, industry and job type...
-Writing a personalised opening...
-Improving professional tone...
-Preparing your cover letter preview...`;
-
-    
 
     try {
       const res = await fetch("/api/generate-cv", {
@@ -2621,6 +2610,7 @@ Company requirements"
 )}
 
 <button
+  type="button"
   onClick={generateAll}
               disabled={
                 loading ||
