@@ -741,6 +741,11 @@ useEffect(() => {
     }
 
     setLoading(true);
+    window.scrollTo({
+  top: 0,
+  left: 0,
+  behavior: "auto",
+});
 setGenerated(false);
 setTyping(false);
 setShowUnlock(false);
@@ -1920,7 +1925,17 @@ if (showSetupPopup && !loading && !rephrasing) {
     
 
   {(loading || rephrasing) && (
-  <div className="fixed left-0 top-0 z-[999999999] flex h-[100dvh] w-[100vw] items-center justify-center overflow-hidden bg-white/95 px-4 backdrop-blur-xl">
+  <div
+  className="fixed inset-0 flex items-center justify-center overflow-hidden bg-white px-4"
+  style={{
+    zIndex: 2147483647,
+    position: "fixed",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  }}
+>
     <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
         {loading ? "👨‍🍳" : "✨"}
