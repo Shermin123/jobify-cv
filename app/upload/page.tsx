@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
@@ -741,11 +742,7 @@ useEffect(() => {
     }
 
     setLoading(true);
-    window.scrollTo({
-  top: 0,
-  left: 0,
-  behavior: "auto",
-});
+    
 setGenerated(false);
 setTyping(false);
 setShowUnlock(false);
@@ -1924,49 +1921,47 @@ if (showSetupPopup && !loading && !rephrasing) {
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
     
 
-  {(loading || rephrasing) && (
-  <div
-  className="fixed inset-0 flex items-center justify-center overflow-hidden bg-white px-4"
-  style={{
-    zIndex: 2147483647,
-    position: "fixed",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  }}
->
-    <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
-      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
-        {loading ? "👨‍🍳" : "✨"}
+  {typeof document !== "undefined" &&
+  (loading || rephrasing) &&
+  createPortal(
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-white px-4"
+      style={{
+        zIndex: 2147483647,
+      }}
+    >
+      <div className="w-full max-w-[310px] rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-2xl animate-cookIn">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-gradient-to-br from-blue-600 to-indigo-600 text-4xl shadow-xl animate-cookPot">
+          {loading ? "👨‍🍳" : "✨"}
+        </div>
+
+        <h3 className="mt-5 text-2xl font-black text-slate-950">
+          {loading
+            ? "Cooking your CV"
+            : rephrasing === "cv"
+              ? "Polishing your CV"
+              : "Polishing your letter"}
+        </h3>
+
+        <p className="mt-2 text-sm leading-6 text-slate-500">
+          {loading
+            ? "Adding ATS keywords, stronger wording, and recruiter-friendly structure."
+            : "Making it smoother, sharper, and more professional."}
+        </p>
+
+        <div className="mt-6 flex justify-center gap-2">
+          <span className="h-3 w-3 rounded-full bg-blue-600 animate-cookDotOne" />
+          <span className="h-3 w-3 rounded-full bg-indigo-600 animate-cookDotTwo" />
+          <span className="h-3 w-3 rounded-full bg-purple-600 animate-cookDotThree" />
+        </div>
+
+        <div className="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 animate-cookBar" />
+        </div>
       </div>
-
-      <h3 className="mt-5 text-2xl font-black text-slate-950">
-        {loading
-          ? "Cooking your CV"
-          : rephrasing === "cv"
-          ? "Polishing your CV"
-          : "Polishing your letter"}
-      </h3>
-
-      <p className="mt-2 text-sm leading-6 text-slate-500">
-        {loading
-          ? "Adding ATS keywords, stronger wording, and recruiter-friendly structure."
-          : "Making it smoother, sharper, and more professional."}
-      </p>
-
-      <div className="mt-6 flex justify-center gap-2">
-        <span className="h-3 w-3 rounded-full bg-blue-600 animate-cookDotOne" />
-        <span className="h-3 w-3 rounded-full bg-indigo-600 animate-cookDotTwo" />
-        <span className="h-3 w-3 rounded-full bg-purple-600 animate-cookDotThree" />
-      </div>
-
-      <div className="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full w-1/2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 animate-cookBar" />
-      </div>
-    </div>
-  </div>
-)}
+    </div>,
+    document.body
+  )}
 
 {/* BACKGROUND */}
 <EmojiBackground />
