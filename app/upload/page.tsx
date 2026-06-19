@@ -673,18 +673,18 @@ if (type === "cv") {
 };
 
   const highlightKeywords = (
-    content: string,
-    highlightColor: "blue" | "purple"
-  ) => {
-    if (!content) return null;
-
-    if (!keywords.length) {
-      return content;
-    }
+  content: string,
+  highlightColor: "blue" | "purple"
+) => {
+  return content;
+};
 
     const escapedKeywords = keywords
-      .filter(Boolean)
-      .map((keyword) => keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  .map((keyword) => keyword.trim())
+  .filter((keyword) => keyword.length >= 3)
+  .map((keyword) =>
+    keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  );
 
     if (!escapedKeywords.length) {
       return content;
