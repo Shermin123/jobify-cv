@@ -725,6 +725,96 @@ useEffect(() => {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 };
+    const renderFormattedPreview = (
+  content: string,
+  type: "cv" | "cover"
+) => {
+  const cleanedContent = cleanAiText(content);
+  const isCoverLetter = type === "cover";
+
+  const isHeading = (line: string) => {
+    const cleanLine = line.trim();
+
+    return (
+      cleanLine.length > 2 &&
+      cleanLine.length < 40 &&
+      cleanLine === cleanLine.toUpperCase() &&
+      !cleanLine.includes("|") &&
+      !cleanLine.startsWith("-")
+    );
+  };
+
+  return cleanedContent.split("\n").map((rawLine, index) => {
+    const line = rawLine.trimEnd();
+
+    if (!line.trim()) {
+      return <div key={index} className="h-4" />;
+    }
+
+    const isFirstCvLine = index === 0 && !isCoverLetter;
+    const heading = isHeading(line);
+    const bullet = line.trim().startsWith("-");
+
+    if (isFirstCvLine) {
+      return (
+        <h1
+          key={index}
+          className="mb-5 text-2xl font-black text-slate-950 sm:text-3xl"
+        >
+          {highlightKeywords(line.trim(), "blue")}
+        </h1>
+      );
+    }
+
+    if (heading) {
+      return (
+        <h2
+          key={index}
+          className="mb-2 mt-6 border-b border-blue-100 pb-2 text-sm font-black uppercase tracking-wider text-blue-600"
+        >
+          {highlightKeywords(
+            line.trim(),
+            type === "cv" ? "blue" : "purple"
+          )}
+        </h2>
+      );
+    }
+
+    if (bullet) {
+      return (
+        <div
+          key={index}
+          className="mb-2 flex items-start gap-3 text-sm leading-6 text-slate-700 sm:text-[15px]"
+        >
+          <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
+
+          <p>
+            {highlightKeywords(
+              line.replace(/^-+\s*/, ""),
+              type === "cv" ? "blue" : "purple"
+            )}
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <p
+        key={index}
+        className={
+          isCoverLetter
+            ? "mb-5 text-sm leading-7 text-slate-700 sm:text-[15px]"
+            : "mb-2 text-sm leading-6 text-slate-700 sm:text-[15px]"
+        }
+      >
+        {highlightKeywords(
+          line,
+          type === "cv" ? "blue" : "purple"
+        )}
+      </p>
+    );
+  });
+};
 
   const generateAll = async () => {
     const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
@@ -2043,9 +2133,12 @@ if (showSetupPopup && !loading && !rephrasing) {
               ))}
             </div>
 
-            <div className="relative z-10 whitespace-pre-wrap break-words text-sm leading-6 text-slate-800 sm:text-[15px] sm:leading-7">
-              {previewDocument === "cv" ? cv : coverLetter}
-            </div>
+            <div className="relative z-10 break-words">
+  {renderFormattedPreview(
+    previewDocument === "cv" ? cv : coverLetter,
+    previewDocument
+  )}
+</div>
           </div>
         </div>
 
