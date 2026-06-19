@@ -126,7 +126,7 @@ const savedAts = sessionStorage.getItem("jobify_generated_ats");
 if (savedGenerated && savedCv && savedCover) {
   setCv(savedCv);
   setCoverLetter(savedCover);
-  setDisplayCv(savedCv.substring(0, 900));
+  setDisplayCv(savedCv.substring(0, 1800));
   setDisplayCoverLetter(savedCover.substring(0, 800));
   setKeywords(savedKeywords ? JSON.parse(savedKeywords) : []);
   setAtsScore(savedAts ? Number(savedAts) : 97);
@@ -263,7 +263,7 @@ useEffect(() => {
   };
   
   const typeDocuments = (finalCv: string, finalCoverLetter: string) => {
-  const cvPreview = finalCv.substring(0, 900);
+  const cvPreview = finalCv.substring(0, 1800);
   const coverPreview = finalCoverLetter.substring(0, 800);
 
   typeText(cvPreview, coverPreview, 16, () => {
@@ -336,7 +336,7 @@ useEffect(() => {
 
     if (type === "cv") {
       setCv(data.rephrased);
-      setDisplayCv(data.rephrased.substring(0, 900));
+      setDisplayCv(data.rephrased.substring(0, 1800));
     } else {
       setCoverLetter(data.rephrased);
       setDisplayCoverLetter(data.rephrased.substring(0, 800));
