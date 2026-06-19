@@ -90,7 +90,7 @@ function getBrowserRegionFallback() {
 
 export default function PricingPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [upgrade, setUpgrade] = useState<string | null>(null);
   const [country, setCountry] = useState("UK");
@@ -142,26 +142,31 @@ export default function PricingPage() {
     detectRegion();
   }, []);
   useEffect(() => {
-  if (detectingRegion) return;
+// Wait until both the region and login status are fully loaded
+if (detectingRegion || status === "loading") return;
 
-  const params = new URLSearchParams(window.location.search);
-  const shouldStartTrial = params.get("start") === "trial";
+const params = new URLSearchParams(window.location.search);
+const shouldStartTrial = params.get("start") === "trial";
 
-  if (!shouldStartTrial) return;
+// Normal pricing-page visits should do nothing
+if (!shouldStartTrial) return;
 
-  if (!session) {
-    router.push(
-      `/login?callbackUrl=${encodeURIComponent(
+// User must log in before entering Stripe checkout
+if (!session) {
+router.replace(
+`/login?callbackUrl=${encodeURIComponent(
         "/pricing?start=trial"
       )}`
-    );
-    return;
-  }
+);
+return;
+}
 
-  router.replace(
-    `/checkout?plan=trial&country=${normalizePricingRegion(country)}`
-  );
-}, [detectingRegion, session, router, country]);
+// Logged-in user goes directly to the 7-day trial checkout
+router.replace(
+`/checkout?plan=trial&country=${normalizePricingRegion(country)}`
+);
+}, [detectingRegion, status, session, router, country]);
+
 
   const pricingByCountry: Record<
     string,

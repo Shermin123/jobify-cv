@@ -959,6 +959,24 @@ sessionStorage.setItem("jobify_generated_done", "true");
 
   alert("Full access is active.");
 };
+    const handleFreeTrialDownload = () => {
+  if (!session) {
+    sessionStorage.setItem(
+      "redirect_after_login",
+      "/pricing?start=trial"
+    );
+
+    router.push(
+      `/login?callbackUrl=${encodeURIComponent(
+        "/pricing?start=trial"
+      )}`
+    );
+
+    return;
+  }
+
+  router.push("/pricing?start=trial");
+};
   const countrySuggestions = [
   "Afghanistan",
   "Albania",
@@ -2422,15 +2440,20 @@ if (showSetupPopup && !loading && !rephrasing) {
           </button>
 
           <button
-            onClick={() =>
-              isUnlocked
-                ? downloadDOCX("Optimised CV", cv, "jobify-optimised-cv.docx")
-                : handleUnlockClick()
-            }
-            className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
-          >
-            {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
-          </button>
+  type="button"
+  onClick={() =>
+    isUnlocked
+      ? downloadDOCX(
+          "Optimised CV",
+          cv,
+          "jobify-optimised-cv.docx"
+        )
+      : handleFreeTrialDownload()
+  }
+  className="w-full rounded-2xl border border-blue-200 bg-white py-3 font-black text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-50"
+>
+  {isUnlocked ? "Download DOCX" : "Download for Free"}
+</button>
 
           <button
             onClick={() =>
@@ -2529,19 +2552,20 @@ if (showSetupPopup && !loading && !rephrasing) {
           </button>
 
           <button
-            onClick={() =>
-              isUnlocked
-                ? downloadDOCX(
-                    "Cover Letter",
-                    coverLetter,
-                    "jobify-cover-letter.docx"
-                  )
-                : handleUnlockClick()
-            }
-            className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
-          >
-            {isUnlocked ? "Download DOCX" : "Unlock DOCX"}
-          </button>
+  type="button"
+  onClick={() =>
+    isUnlocked
+      ? downloadDOCX(
+          "Cover Letter",
+          coverLetter,
+          "jobify-cover-letter.docx"
+        )
+      : handleFreeTrialDownload()
+  }
+  className="w-full rounded-2xl border border-purple-200 bg-white py-3 font-black text-purple-700 shadow-sm transition hover:bg-purple-50"
+>
+  {isUnlocked ? "Download DOCX" : "Download for Free"}
+</button>
 
           <button
             onClick={() =>
