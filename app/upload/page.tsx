@@ -334,10 +334,13 @@ useEffect(() => {
       throw new Error(data?.error || "Rephrase failed");
     }
 
-    if (type === "cv") {
-      setCv(data.rephrased);
-      setDisplayCv(data.rephrased.substring(0, 1800));
-    } else {
+  
+if (type === "cv") {
+  const cleanedCv = normalizeCvLayout(data.rephrased);
+
+  setCv(cleanedCv);
+  setDisplayCv(cleanedCv.substring(0, 1800));
+} else {
       setCoverLetter(data.rephrased);
       setDisplayCoverLetter(data.rephrased.substring(0, 800));
     }
@@ -725,6 +728,96 @@ useEffect(() => {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 };
+const normalizeCvLayout = (value: string) => {
+  const cleaned = cleanAiText(value);
+  const lines = cleaned.split("\n");
+
+  const result: string[] = [];
+
+  let insideSkills = false;
+  let currentCategory = "";
+  let currentSkills: string[] = [];
+
+  const flushSkills = () => {
+    if (!currentCategory) return;
+
+    if (currentSkills.length > 0) {
+      result.push(`${currentCategory}: ${currentSkills.join(", ")}`);
+    } else {
+      result.push(currentCategory);
+    }
+
+    currentCategory = "";
+    currentSkills = [];
+  };
+
+  const isSectionHeading = (line: string) => {
+    const trimmed = line.trim();
+
+    return (
+      trimmed.length > 2 &&
+      trimmed.length < 50 &&
+      trimmed === trimmed.toUpperCase() &&
+      !trimmed.startsWith("-")
+    );
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (line === "CORE SKILLS") {
+      flushSkills();
+      insideSkills = true;
+      result.push("CORE SKILLS");
+      continue;
+    }
+
+    if (
+      insideSkills &&
+      isSectionHeading(line) &&
+      line !== "CORE SKILLS"
+    ) {
+      flushSkills();
+      insideSkills = false;
+      result.push("");
+      result.push(line);
+      continue;
+    }
+
+    if (insideSkills) {
+      if (!line) continue;
+
+      if (line.startsWith("-")) {
+        const skill = line.replace(/^-+\s*/, "").trim();
+
+        if (skill) {
+          currentSkills.push(skill);
+        }
+
+        continue;
+      }
+
+      if (line.includes(":")) {
+        flushSkills();
+        result.push(line);
+        continue;
+      }
+
+      flushSkills();
+      currentCategory = line;
+      continue;
+    }
+
+    result.push(rawLine.trimEnd());
+  }
+
+  flushSkills();
+
+  return result
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+};
     const renderFormattedPreview = (
   content: string,
   type: "cv" | "cover"
@@ -909,7 +1002,7 @@ const rawCoverLetter =
   data.coverLetter ||
   "Your personalised cover letter has been generated successfully.";
 
-const finalCv = cleanAiText(rawCv);
+const finalCv = normalizeCvLayout(rawCv);
 const finalCoverLetter = cleanAiText(rawCoverLetter);
 
       const finalKeywords = data.keywords || [];
