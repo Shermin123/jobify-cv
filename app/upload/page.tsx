@@ -377,7 +377,11 @@ if (type === "cv") {
 };
 
 
-  const downloadPDF = (title: string, content: string, fileName: string) => {
+  const downloadPDF = (
+  title: string,
+  content: string,
+  fileName: string
+) => {
   if (!content) {
     alert(`${title || "Document"} is empty`);
     return;
@@ -400,19 +404,6 @@ if (type === "cv") {
 
   let y = isCoverLetter ? 22 : 16;
 
-  const keywordList = keywords
-    .filter(Boolean)
-    .map((k) => k.trim())
-    .filter(Boolean);
-
-  const escapeRegex = (value: string) =>
-    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-  const keywordRegex =
-    keywordList.length > 0
-      ? new RegExp(`(${keywordList.map(escapeRegex).join("|")})`, "gi")
-      : null;
-
   const cleanContent = cleanAiText(content);
 
   const addPageIfNeeded = () => {
@@ -424,6 +415,7 @@ if (type === "cv") {
 
   const isHeading = (line: string) => {
     const clean = line.trim();
+
     return (
       clean.length > 2 &&
       clean.length < 40 &&
@@ -440,37 +432,31 @@ if (type === "cv") {
     lineHeight: number,
     baseBold = false
   ) => {
-    const wrapped = doc.splitTextToSize(line, maxWidth - (xStart - margin));
+    const availableWidth =
+      maxWidth - (xStart - margin);
 
-    wrapped.forEach((wrappedLine: string) => {
+    const wrappedLines = doc.splitTextToSize(
+      line,
+      availableWidth
+    );
+
+    wrappedLines.forEach((wrappedLine: string) => {
       addPageIfNeeded();
 
-      if (!keywordRegex) {
-        doc.setFont("helvetica", baseBold ? "bold" : "normal");
-        doc.setFontSize(fontSize);
-        doc.setTextColor(baseBold ? 15 : 55, baseBold ? 23 : 65, baseBold ? 42 : 81);
-        doc.text(wrappedLine, xStart, y);
-        y += lineHeight;
-        return;
-      }
+      doc.setFont(
+        "helvetica",
+        baseBold ? "bold" : "normal"
+      );
 
-      const parts = wrappedLine.split(keywordRegex).filter(Boolean);
-      let x = xStart;
+      doc.setFontSize(fontSize);
 
-      parts.forEach((part) => {
-        const isKeyword = keywordList.some(
-          (keyword) => keyword.toLowerCase() === part.toLowerCase()
-        );
+      doc.setTextColor(
+        baseBold ? 15 : 55,
+        baseBold ? 23 : 65,
+        baseBold ? 42 : 81
+      );
 
-        doc.setFont("helvetica", isKeyword || baseBold ? "bold" : "normal");
-        doc.setFontSize(fontSize);
-        doc.setTextColor(isKeyword || baseBold ? 0 : 55, isKeyword || baseBold ? 0 : 65, isKeyword || baseBold ? 0 : 81);
-
-        const width = doc.getTextWidth(part);
-        doc.text(part, x, y);
-        x += width;
-      });
-
+      doc.text(wrappedLine, xStart, y);
       y += lineHeight;
     });
   };
@@ -487,7 +473,9 @@ if (type === "cv") {
 
     addPageIfNeeded();
 
-    const firstLine = index === 0 && !isCoverLetter;
+    const firstLine =
+      index === 0 && !isCoverLetter;
+
     const heading = isHeading(line);
     const bullet = line.trim().startsWith("-");
 
@@ -502,23 +490,34 @@ if (type === "cv") {
 
     if (heading) {
       y += 2;
+
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10.5);
       doc.setTextColor(37, 99, 235);
       doc.text(line.trim(), margin, y);
+
       y += 5.5;
       return;
     }
 
     if (bullet) {
-      const bulletText = line.replace(/^-+\s*/, "");
+      const bulletText = line.replace(
+        /^-+\s*/,
+        ""
+      );
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9.4);
       doc.setTextColor(55, 65, 81);
       doc.text("•", margin, y);
 
-      drawNormalLine(bulletText, margin + 5, 9.4, 5.2);
+      drawNormalLine(
+        bulletText,
+        margin + 5,
+        9.4,
+        5.2
+      );
+
       return;
     }
 
@@ -532,6 +531,8 @@ if (type === "cv") {
 
   doc.save(fileName);
 };
+
+  
   const downloadDOCX = async (
   title: string,
   content: string,
@@ -544,10 +545,7 @@ if (type === "cv") {
 
   const isCoverLetter = fileName.toLowerCase().includes("cover");
 
-  const keywordList = keywords
-    .filter(Boolean)
-    .map((k) => k.trim())
-    .filter(Boolean);
+  const keywordList: string[] = [];
 
   const escapeRegex = (value: string) =>
     value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -674,43 +672,12 @@ if (type === "cv") {
 
   const highlightKeywords = (
   content: string,
-  highlightColor: "blue" | "purple"
+  _highlightColor: "blue" | "purple"
 ) => {
   return content;
 };
 
-    const escapedKeywords = keywords
-  .map((keyword) => keyword.trim())
-  .filter((keyword) => keyword.length >= 3)
-  .map((keyword) =>
-    keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-  );
-
-    if (!escapedKeywords.length) {
-      return content;
-    }
-
-    const regex = new RegExp(`(${escapedKeywords.join("|")})`, "gi");
-
-    return content.split(regex).map((part, index) => {
-      const isKeyword = keywords.some(
-        (keyword) => keyword.toLowerCase() === part.toLowerCase()
-      );
-
-      if (!isKeyword) {
-        return <span key={index}>{part}</span>;
-      }
-
-      return (
-        <strong
-          key={index}
-          className="font-black text-black"
-        >
-          {part}
-        </strong>
-      );
-    });
-  };
+    
   const cleanAiText = (value: string) => {
   return String(value || "")
     .replace(/^Optimised CV\s*/gi, "")
@@ -986,6 +953,10 @@ await new Promise<void>((resolve) => {
   workAvailability,
   toneStyle,
   coverLetterNeed,
+  weaknessFix,
+  cvLength,
+  qualityInstructions:
+    "Create a clean detailed ATS CV. Use compact skill category lines, do not create separate skill bullets, avoid unnamed certificates, and never introduce unsupported facts.",
 }),
       });
 
@@ -2426,10 +2397,7 @@ if (showSetupPopup && !loading && !rephrasing) {
                   </div>
 
                   <div className="bg-white/10 rounded-2xl p-3 text-center">
-                    <p className="text-xs text-white/50">Words</p>
-                    <h3 className="text-2xl font-black text-blue-300">
-                      {keywords.length || 8}
-                    </h3>
+                    <p className="text-xs text-white/50">Keywords</p>
                   </div>
                 </div>
               </div>
