@@ -71,6 +71,9 @@ const [generated, setGenerated] = useState(false);
   const [typing, setTyping] = useState(false);
   const [showUnlock, setShowUnlock] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [previewDocument, setPreviewDocument] = useState<
+  "cv" | "cover" | null
+>(null);
 
   useEffect(() => {
   
@@ -204,6 +207,24 @@ useEffect(() => {
     document.body.style.overflow = originalBodyOverflow;
   };
 }, [loading, rephrasing]);
+  useEffect(() => {
+  if (!previewDocument) return;
+
+  const originalHtmlOverflow =
+    document.documentElement.style.overflow;
+  const originalBodyOverflow =
+    document.body.style.overflow;
+
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+
+  return () => {
+    document.documentElement.style.overflow =
+      originalHtmlOverflow;
+    document.body.style.overflow =
+      originalBodyOverflow;
+  };
+}, [previewDocument]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -1960,6 +1981,105 @@ if (showSetupPopup && !loading && !rephrasing) {
         </div>
       </div>
     </div>,
+        document.body
+  )}
+
+{typeof document !== "undefined" &&
+  previewDocument &&
+  createPortal(
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-slate-950/75 p-3 backdrop-blur-sm"
+      style={{ zIndex: 2147483647 }}
+      onClick={() => setPreviewDocument(null)}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="flex max-h-[94dvh] w-full max-w-5xl flex-col overflow-hidden rounded-[28px] border border-white/20 bg-white shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-6">
+          <div>
+  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-blue-600">
+    Watermarked document preview
+  </p>
+
+  <h2 className="mt-1 text-lg font-black text-slate-950">
+    {previewDocument === "cv"
+      ? "Your CV Preview"
+      : "Your Cover Letter Preview"}
+  </h2>
+
+  <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-black text-emerald-700">
+    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[11px] text-white">
+      ✓
+    </span>
+
+    {previewDocument === "cv"
+      ? "ATS-ready CV verified by Jobify"
+      : "ATS-ready cover letter verified by Jobify"}
+  </div>
+</div>
+
+          <button
+            type="button"
+            onClick={() => setPreviewDocument(null)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xl font-black text-slate-700"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto bg-slate-100 p-3 sm:p-6">
+          <div className="relative mx-auto min-h-[900px] max-w-[820px] overflow-hidden bg-white px-6 py-10 shadow-2xl sm:px-12 sm:py-14">
+            <div className="pointer-events-none absolute inset-0 z-20 grid select-none grid-cols-2 content-start gap-x-8 gap-y-24 overflow-hidden px-4 py-12 opacity-[0.08] sm:grid-cols-3">
+              {Array.from({ length: 30 }).map((_, index) => (
+                <span
+                  key={index}
+                  className="-rotate-[28deg] whitespace-nowrap text-center text-lg font-black text-slate-950 sm:text-xl"
+                >
+                  Jobifycv.co
+                </span>
+              ))}
+            </div>
+
+            <div className="relative z-10 whitespace-pre-wrap break-words text-sm leading-6 text-slate-800 sm:text-[15px] sm:leading-7">
+              {previewDocument === "cv" ? cv : coverLetter}
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-slate-200 bg-white p-4">
+  <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 sm:flex-row">
+    <div>
+      <div className="flex items-center justify-center gap-2 text-sm font-black text-emerald-700 sm:justify-start">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs text-white">
+          ✓
+        </span>
+        Designed to pass standard ATS checks
+      </div>
+
+      <p className="mt-1 text-center text-xs font-bold text-slate-500 sm:text-left">
+        Subscribe to remove the watermark and unlock PDF, DOCX, editing and rephrasing.
+      </p>
+    </div>
+
+    {!isUnlocked && (
+      <button
+        type="button"
+        onClick={() => {
+          setPreviewDocument(null);
+          handleUnlockClick();
+        }}
+        className="w-full rounded-2xl bg-slate-950 px-6 py-3 text-sm font-black text-white shadow-lg transition hover:bg-blue-700 sm:w-auto"
+      >
+        Unlock Document →
+      </button>
+    )}
+  </div>
+</div>
+      </div>
+    </div>,
     document.body
   )}
 
@@ -2173,6 +2293,14 @@ if (showSetupPopup && !loading && !rephrasing) {
       {showUnlock && (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <button
+  type="button"
+  onClick={() => setPreviewDocument("cv")}
+  disabled={!cv || typing}
+  className="w-full rounded-2xl border-2 border-blue-500 bg-blue-600 py-3 font-black text-white shadow-lg transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-2"
+>
+  👁 Open CV Preview
+</button>
+          <button
             onClick={() =>
               isUnlocked
                 ? downloadPDF("Optimised CV", cv, "jobify-optimised-cv.pdf")
@@ -2267,6 +2395,14 @@ if (showSetupPopup && !loading && !rephrasing) {
 
       {showUnlock && (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+  type="button"
+  onClick={() => setPreviewDocument("cover")}
+  disabled={!coverLetter || typing}
+  className="w-full rounded-2xl border-2 border-purple-500 bg-purple-600 py-3 font-black text-white shadow-lg transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-2"
+>
+  👁 Open Cover Letter Preview
+</button>
           <button
             onClick={() =>
               isUnlocked
@@ -6071,7 +6207,7 @@ function PremiumLockedOverlay({
       <div className="absolute inset-x-4 top-4 z-40 flex items-center justify-between">
         <div className="elite-top-pill">
           <span className="elite-live-dot" />
-          Preview locked
+          Preview available
         </div>
 
         <div className="elite-score-pill">
