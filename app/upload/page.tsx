@@ -2100,15 +2100,7 @@ if (showSetupPopup && !loading && !rephrasing) {
       : "Your Cover Letter Preview"}
   </h2>
 
-  <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-black text-emerald-700">
-    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white">
-      ✓
-    </span>
-
-    {previewDocument === "cv"
-      ? "Verified — This CV will pass the ATS test"
-      : "Verified — This cover letter will pass the ATS test"}
-  </div>
+  
 </div>
 
           <button
@@ -2133,11 +2125,36 @@ if (showSetupPopup && !loading && !rephrasing) {
               ))}
             </div>
 
-            <div className="relative z-10 break-words">
+            {/* GENERATED DOCUMENT */}
+<div className="relative z-10 break-words">
   {renderFormattedPreview(
     previewDocument === "cv" ? cv : coverLetter,
     previewDocument
   )}
+</div>
+
+{/* LARGE VERIFIED BADGE IN THE MIDDLE */}
+<div className="pointer-events-none absolute left-1/2 top-1/2 z-30 w-[90%] max-w-[620px] -translate-x-1/2 -translate-y-1/2">
+  <div className="rounded-[32px] border-2 border-emerald-300 bg-white/95 px-6 py-8 text-center shadow-[0_30px_100px_rgba(15,23,42,0.28)] backdrop-blur-md sm:px-10 sm:py-10">
+    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-600 text-4xl font-black text-white shadow-[0_16px_40px_rgba(5,150,105,0.4)]">
+      ✓
+    </div>
+
+    <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
+      <span className="h-2 w-2 rounded-full bg-emerald-600" />
+      Verified
+    </div>
+
+    <h2 className="mt-5 text-3xl font-black leading-tight tracking-[-0.04em] text-slate-950 sm:text-5xl">
+      {previewDocument === "cv"
+        ? "This CV will pass the ATS test"
+        : "This cover letter will pass the ATS test"}
+    </h2>
+
+    <p className="mt-4 text-sm font-bold text-slate-500 sm:text-base">
+      Verified by Jobify.cv
+    </p>
+  </div>
 </div>
           </div>
         </div>
