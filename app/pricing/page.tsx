@@ -141,6 +141,27 @@ export default function PricingPage() {
 
     detectRegion();
   }, []);
+  useEffect(() => {
+  if (detectingRegion) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const shouldStartTrial = params.get("start") === "trial";
+
+  if (!shouldStartTrial) return;
+
+  if (!session) {
+    router.push(
+      `/login?callbackUrl=${encodeURIComponent(
+        "/pricing?start=trial"
+      )}`
+    );
+    return;
+  }
+
+  router.replace(
+    `/checkout?plan=trial&country=${normalizePricingRegion(country)}`
+  );
+}, [detectingRegion, session, router, country]);
 
   const pricingByCountry: Record<
     string,
