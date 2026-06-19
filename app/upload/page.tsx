@@ -1025,12 +1025,17 @@ const rawCoverLetter =
 const finalCv = normalizeCvLayout(rawCv);
 const finalCoverLetter = cleanAiText(rawCoverLetter);
 
-      const finalKeywords: string[] = Array.isArray(data.keywords)
-  ? data.keywords.map(String).map((item) => item.trim()).filter(Boolean)
-  : String(data.keywords || "")
+      const rawKeywords: unknown = data.keywords;
+
+const finalKeywords: string[] = Array.isArray(rawKeywords)
+  ? rawKeywords
+      .map((item: unknown) => String(item).trim())
+      .filter((item: string) => item.length > 0)
+  : String(rawKeywords ?? "")
       .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
+      .map((item: string) => item.trim())
+      .filter((item: string) => item.length > 0);
+      
       const finalAtsScore = data.atsScore || 97;
 
       setCv(finalCv);
