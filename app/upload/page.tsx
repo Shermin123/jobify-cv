@@ -711,17 +711,18 @@ if (type === "cv") {
     }
 
     return (
-      <mark
-        key={`${part}-${index}`}
-        className={
-          highlightColor === "blue"
-            ? "rounded bg-blue-100 px-1 font-black text-blue-800"
-            : "rounded bg-purple-100 px-1 font-black text-purple-800"
-        }
-      >
-        {part}
-      </mark>
-    );
+  <mark
+    key={`${part}-${index}`}
+    title="ATS keyword"
+    className={
+      highlightColor === "blue"
+        ? "mx-0.5 rounded-md border border-yellow-500 bg-yellow-300 px-1.5 py-0.5 font-black text-slate-950 shadow-sm"
+        : "mx-0.5 rounded-md border border-pink-500 bg-pink-200 px-1.5 py-0.5 font-black text-purple-950 shadow-sm"
+    }
+  >
+    {part}
+  </mark>
+);
   });
 };
 
@@ -1024,7 +1025,12 @@ const rawCoverLetter =
 const finalCv = normalizeCvLayout(rawCv);
 const finalCoverLetter = cleanAiText(rawCoverLetter);
 
-      const finalKeywords = data.keywords || [];
+      const finalKeywords: string[] = Array.isArray(data.keywords)
+  ? data.keywords.map(String).map((item) => item.trim()).filter(Boolean)
+  : String(data.keywords || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
       const finalAtsScore = data.atsScore || 97;
 
       setCv(finalCv);
