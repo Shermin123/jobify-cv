@@ -674,7 +674,7 @@ if (type === "cv") {
 
   const highlightKeywords = (
   content: string,
-  highlightColor: "blue" | "purple"
+  _highlightColor: "blue" | "purple"
 ) => {
   if (!content || keywords.length === 0) {
     return content;
@@ -686,10 +686,10 @@ if (type === "cv") {
   const cleanedKeywords = Array.from(
     new Set(
       keywords
-        .map((keyword) => String(keyword).trim())
-        .filter((keyword) => keyword.length > 1)
+        .map((keyword: string) => String(keyword).trim())
+        .filter((keyword: string) => keyword.length > 1)
     )
-  ).sort((a, b) => b.length - a.length);
+  ).sort((a: string, b: string) => b.length - a.length);
 
   if (cleanedKeywords.length === 0) {
     return content;
@@ -700,9 +700,9 @@ if (type === "cv") {
     "gi"
   );
 
-  return content.split(regex).map((part, index) => {
+  return content.split(regex).map((part: string, index: number) => {
     const isKeyword = cleanedKeywords.some(
-      (keyword) =>
+      (keyword: string) =>
         keyword.toLowerCase() === part.toLowerCase()
     );
 
@@ -711,18 +711,13 @@ if (type === "cv") {
     }
 
     return (
-  <mark
-    key={`${part}-${index}`}
-    title="ATS keyword"
-    className={
-      highlightColor === "blue"
-        ? "mx-0.5 rounded-md border border-yellow-500 bg-yellow-300 px-1.5 py-0.5 font-black text-slate-950 shadow-sm"
-        : "mx-0.5 rounded-md border border-pink-500 bg-pink-200 px-1.5 py-0.5 font-black text-purple-950 shadow-sm"
-    }
-  >
-    {part}
-  </mark>
-);
+      <strong
+        key={`${part}-${index}`}
+        className="font-bold text-black"
+      >
+        {part}
+      </strong>
+    );
   });
 };
 
@@ -1035,7 +1030,7 @@ const finalKeywords: string[] = Array.isArray(rawKeywords)
       .split(",")
       .map((item: string) => item.trim())
       .filter((item: string) => item.length > 0);
-      
+
       const finalAtsScore = data.atsScore || 97;
 
       setCv(finalCv);
