@@ -545,7 +545,9 @@ if (type === "cv") {
 
   const isCoverLetter = fileName.toLowerCase().includes("cover");
 
-  const keywordList: string[] = [];
+  const keywordList = keywords
+  .map((keyword) => String(keyword).trim())
+  .filter(Boolean);
 
   const escapeRegex = (value: string) =>
     value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -672,9 +674,55 @@ if (type === "cv") {
 
   const highlightKeywords = (
   content: string,
-  _highlightColor: "blue" | "purple"
+  highlightColor: "blue" | "purple"
 ) => {
-  return content;
+  if (!content || keywords.length === 0) {
+    return content;
+  }
+
+  const escapeRegex = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const cleanedKeywords = Array.from(
+    new Set(
+      keywords
+        .map((keyword) => String(keyword).trim())
+        .filter((keyword) => keyword.length > 1)
+    )
+  ).sort((a, b) => b.length - a.length);
+
+  if (cleanedKeywords.length === 0) {
+    return content;
+  }
+
+  const regex = new RegExp(
+    `(${cleanedKeywords.map(escapeRegex).join("|")})`,
+    "gi"
+  );
+
+  return content.split(regex).map((part, index) => {
+    const isKeyword = cleanedKeywords.some(
+      (keyword) =>
+        keyword.toLowerCase() === part.toLowerCase()
+    );
+
+    if (!isKeyword) {
+      return part;
+    }
+
+    return (
+      <mark
+        key={`${part}-${index}`}
+        className={
+          highlightColor === "blue"
+            ? "rounded bg-blue-100 px-1 font-black text-blue-800"
+            : "rounded bg-purple-100 px-1 font-black text-purple-800"
+        }
+      >
+        {part}
+      </mark>
+    );
+  });
 };
 
     
@@ -2397,8 +2445,11 @@ if (showSetupPopup && !loading && !rephrasing) {
                   </div>
 
                   <div className="bg-white/10 rounded-2xl p-3 text-center">
-                    <p className="text-xs text-white/50">Keywords</p>
-                  </div>
+  <p className="text-xs text-white/50">Keywords</p>
+  <h3 className="text-2xl font-black text-blue-300">
+    {keywords.length || 0}
+  </h3>
+</div>
                 </div>
               </div>
             </div>
