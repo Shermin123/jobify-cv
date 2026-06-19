@@ -2001,7 +2001,7 @@ if (showSetupPopup && !loading && !rephrasing) {
         <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-6">
           <div>
   <p className="text-[10px] font-black uppercase tracking-[0.18em] text-blue-600">
-    Watermarked document preview
+    Watermarked Preview
   </p>
 
   <h2 className="mt-1 text-lg font-black text-slate-950">
@@ -2011,13 +2011,13 @@ if (showSetupPopup && !loading && !rephrasing) {
   </h2>
 
   <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-black text-emerald-700">
-    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[11px] text-white">
+    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white">
       ✓
     </span>
 
     {previewDocument === "cv"
-      ? "ATS-ready CV verified by Jobify"
-      : "ATS-ready cover letter verified by Jobify"}
+      ? "Verified — This CV will pass the ATS test"
+      : "Verified — This cover letter will pass the ATS test"}
   </div>
 </div>
 
