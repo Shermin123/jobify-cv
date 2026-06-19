@@ -24,7 +24,14 @@ type GenerateCvRequest = {
   qualityInstructions?: string;
 };
 
-const cleanAiText = (value: string) => {
+type GeneratedPackage = {
+  optimizedCV?: unknown;
+  coverLetter?: unknown;
+  keywords?: unknown;
+  atsScore?: unknown;
+};
+
+const cleanAiText = (value: unknown) => {
   return String(value || "")
     .replace(/^Optimised CV\s*/gi, "")
     .replace(/^Optimized CV\s*/gi, "")
@@ -49,16 +56,16 @@ const cleanAiText = (value: string) => {
     .trim();
 };
 
-const cleanKeyword = (value: string) => {
+const cleanKeyword = (value: unknown) => {
   return cleanAiText(value)
     .replace(/^-+/, "")
     .replace(/,+$/, "")
     .trim();
 };
 
-const parseJsonSafely = (content: string) => {
+const parseJsonSafely = (content: string): GeneratedPackage => {
   try {
-    return JSON.parse(content);
+    return JSON.parse(content) as GeneratedPackage;
   } catch {
     const cleaned = content
       .replace(/```json/gi, "")
@@ -66,7 +73,7 @@ const parseJsonSafely = (content: string) => {
       .trim();
 
     try {
-      return JSON.parse(cleaned);
+      return JSON.parse(cleaned) as GeneratedPackage;
     } catch {
       const firstBrace = cleaned.indexOf("{");
       const lastBrace = cleaned.lastIndexOf("}");
@@ -75,7 +82,9 @@ const parseJsonSafely = (content: string) => {
         throw new Error("AI returned invalid JSON");
       }
 
-      return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1));
+      return JSON.parse(
+        cleaned.slice(firstBrace, lastBrace + 1)
+      ) as GeneratedPackage;
     }
   }
 };
@@ -87,14 +96,40 @@ const clampAtsScore = (score: unknown) => {
       : Number(String(score || "").trim());
 
   if (!Number.isFinite(parsedScore)) {
-    return 94;
+    return 88;
   }
 
   return Math.max(70, Math.min(98, Math.round(parsedScore)));
 };
 
+const countWords = (value: string) => {
+  return value.split(/\s+/).filter(Boolean).length;
+};
+
+const hasMeaningfulCertificateDetails = (value?: string) => {
+  const cleaned = String(value || "").trim().toLowerCase();
+
+  if (!cleaned) return false;
+
+  const vagueAnswers = [
+    "yes",
+    "no",
+    "currently studying",
+    "planning to get one",
+    "only online certificates",
+    "professional certificate",
+    "certificates available",
+    "certificate available",
+    "not specified",
+  ];
+
+  return !vagueAnswers.includes(cleaned);
+};
+
 export async function POST(req: Request) {
   try {
+    const body = (await req.json()) as GenerateCvRequest;
+
     const {
       cvText,
       fullName,
@@ -117,7 +152,7 @@ export async function POST(req: Request) {
       weaknessFix,
       cvLength,
       qualityInstructions,
-    }: GenerateCvRequest = await req.json();
+    } = body;
 
     const originalCv = String(cvText || "").trim();
 
@@ -132,9 +167,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const originalWordCount = originalCv
-      .split(/\s+/)
-      .filter(Boolean).length;
+    const originalWordCount = countWords(originalCv);
 
     if (originalWordCount < 80) {
       return NextResponse.json(
@@ -160,86 +193,114 @@ export async function POST(req: Request) {
     }
 
     const requestedLength =
-      cvLength?.trim() || "Detailed 1 to 2 page CV";
+      cvLength?.trim() || "Detailed one-to-two-page CV";
+
+    const certificateInstruction = hasMeaningfulCertificateDetails(
+      certificates
+    )
+      ? `The candidate supplied these certificate details: ${certificates}`
+      : "No exact certification names were supplied. Omit the CERTIFICATIONS section entirely.";
 
     const prompt = `
-You are an elite ATS CV writer, senior recruiter, hiring manager, and professional cover letter writer.
+You are a senior UK recruiter, ATS CV writer, hiring manager, software recruitment specialist and professional cover letter writer.
 
 Return ONLY one valid JSON object.
 
 Do not return markdown.
-Do not return backticks.
+Do not return code fences.
 Do not return comments.
 Do not return explanations outside the JSON.
 
-Required JSON format:
+Use exactly this JSON structure:
+
 {
   "optimizedCV": "complete CV as one plain-text string",
   "coverLetter": "complete cover letter as one plain-text string",
   "keywords": ["keyword one", "keyword two"],
-  "atsScore": 94
+  "atsScore": 88
 }
 
 MAIN OBJECTIVE
 
-Rewrite the candidate's original CV into a detailed, polished, honest and ATS-friendly CV tailored to the target role.
+Rewrite the candidate's original CV into a complete, detailed, honest and ATS-friendly CV tailored specifically to the target role.
 
-The new CV must explain the candidate's genuine experience properly. It must not simply shorten, summarise or lightly reword the original CV.
+The output must look like a professionally written real CV.
 
-The rewritten CV should normally contain approximately 700 to 1100 words when the original information supports that length.
+It must not look like:
 
-For candidates with limited experience, produce the most complete CV possible using education, genuine projects, internships, freelance work, coursework, volunteering and transferable skills.
+- a short AI summary
+- a condensed biography
+- a generic skills list
+- an unfinished CV
+- a collection of vague statements
 
-Never add fictional information merely to reach a word count.
+The rewritten CV must properly explain the candidate's genuine:
 
-The CV must be meaningfully more detailed than the original while remaining readable and suitable for approximately one to two pages.
+- employment
+- internships
+- freelance experience
+- academic work
+- technical projects
+- education
+- skills
+- responsibilities
+- practical contributions
 
-CANDIDATE INFORMATION
+The CV should normally contain approximately 650 to 1000 words when the candidate has enough genuine information.
+
+If the candidate has limited professional experience, use genuine education, projects, coursework, internships, freelance work and transferable skills to create a complete entry-level CV.
+
+Never invent information merely to reach a word count.
+
+CANDIDATE DETAILS
 
 Full name:
-${fullName || "Use the candidate name found in the original CV"}
+${fullName || "Use the candidate name from the original CV"}
 
 Email:
-${userEmail || "Use the email found in the original CV if available"}
+${userEmail || "Use the email from the original CV when available"}
 
 Target role:
-${jobRole || "Not specified"}
+${jobRole || "Use the strongest genuine career direction shown in the CV"}
 
 Target country:
-${country || "Not specified"}
+${country || "United Kingdom"}
 
 Experience level:
-${experienceLevel || "Not specified"}
+${experienceLevel || "Determine accurately from the original CV"}
 
 Preferred job type:
 ${jobType || "Not specified"}
 
 Education level:
-${educationLevel || "Not specified"}
+${educationLevel || "Use the education shown in the original CV"}
 
 Target industry:
-${industry || "Not specified"}
+${industry || "Use only the target role and genuine candidate background"}
 
 Application urgency:
 ${urgency || "Not specified"}
 
 Main strengths:
-${mainStrength || "Not specified"}
+${mainStrength || "Identify genuine strengths from the original CV"}
 
 CV improvement goal:
-${cvGoal || "Not specified"}
+${
+  cvGoal ||
+  "Improve experience descriptions, project explanations, structure, keywords and professional wording"
+}
 
-Certificates:
-${certificates || "Not specified"}
+Certificate instructions:
+${certificateInstruction}
 
 Projects or portfolio:
-${portfolio || "Not specified"}
+${portfolio || "Use genuine projects from the original CV"}
 
 Work availability:
-${workAvailability || "Not specified"}
+${workAvailability || "Only include when genuinely supplied"}
 
-Preferred style:
-${toneStyle || "Professional, modern and ATS-focused"}
+Preferred tone:
+${toneStyle || "Professional, modern, natural and ATS-focused"}
 
 Cover letter preference:
 ${coverLetterNeed || "Create a tailored professional cover letter"}
@@ -247,7 +308,7 @@ ${coverLetterNeed || "Create a tailored professional cover letter"}
 Weaknesses to improve:
 ${
   weaknessFix ||
-  "Improve weak descriptions, missing role keywords, limited explanations, poor structure and generic wording."
+  "Improve weak explanations, generic wording, poor structure, limited work bullets, missing ATS keywords and short project descriptions."
 }
 
 Requested CV length:
@@ -256,7 +317,7 @@ ${requestedLength}
 Additional frontend quality instructions:
 ${
   qualityInstructions ||
-  "Create a detailed premium CV with a targeted summary, grouped skills, complete work-experience bullets, stronger project explanations and natural ATS keywords."
+  "Create a detailed recruiter-ready CV with a specific summary, correctly grouped skills, four to six meaningful bullets per genuine role, properly explained projects, accurate education details, no unnamed certificates and no unrelated sectors."
 }
 
 STRICT HONESTY RULES
@@ -264,154 +325,307 @@ STRICT HONESTY RULES
 - Do not invent employers.
 - Do not invent job titles.
 - Do not invent employment dates.
-- Do not invent qualifications.
+- Do not invent locations.
+- Do not invent degrees.
 - Do not invent universities or schools.
 - Do not invent certificates.
-- Do not invent software, tools or technologies.
+- Do not invent programming languages.
+- Do not invent frameworks.
+- Do not invent databases.
+- Do not invent cloud platforms.
+- Do not invent software tools.
 - Do not invent projects.
-- Do not invent responsibilities that would be unrealistic for the role.
-- Do not invent percentages, money values, customer numbers or performance statistics.
-- Do not claim that the candidate graduated when education is ongoing.
-- Do not claim seniority, management or leadership unless supported by the original CV.
-- Do not change genuine dates or locations.
-- Do not remove useful genuine information.
-- Preserve all important contact information present in the original CV.
-- Preserve genuine achievements and numbers already supplied.
-- You may strengthen wording, organisation, explanation and relevance.
-- You may explain reasonable transferable skills demonstrated by genuine duties.
-- When specific results are unknown, explain the contribution honestly without fabricating metrics.
+- Do not invent project features.
+- Do not invent responsibilities that are unrealistic for the role.
+- Do not invent percentages.
+- Do not invent revenue.
+- Do not invent customer numbers.
+- Do not invent user numbers.
+- Do not invent savings.
+- Do not invent performance improvements.
+- Do not invent awards.
+- Do not invent achievements.
+- Do not claim that a qualification is complete when it is ongoing.
+- Do not call an ongoing student a graduate.
+- Do not claim management or leadership unless the original CV supports it.
+- Do not change genuine dates.
+- Do not change genuine organisations.
+- Do not remove important genuine information.
+- Preserve useful contact information from the original CV.
+- Preserve genuine achievements and statistics already supplied.
+- Improve wording, structure, explanation and relevance using truthful information only.
+- When specific outcomes are unknown, explain the practical contribution without inventing a metric.
+- When information is uncertain, omit it instead of guessing.
 
-CRITICAL CV DETAIL RULES
+TARGET ROLE CONTROL
 
-The CV must not feel small, empty, unfinished or under-explained.
+The target role must control the direction of the CV.
+
+Do not insert an unrelated industry into the professional summary, skills or closing statement.
+
+For a software engineering role:
+
+- Focus on software development.
+- Focus on mobile or web application development.
+- Focus on backend integration.
+- Focus on REST APIs.
+- Focus on debugging.
+- Focus on testing.
+- Focus on Git.
+- Focus on collaboration.
+- Focus on genuine programming languages and frameworks.
+- Use AI knowledge as a supporting technical strength when relevant.
+- Do not mention warehouse, logistics, healthcare, education, retail or hospitality unless the target job or job description genuinely requires it.
+
+For an AI, machine learning or data role:
+
+- Focus on Python.
+- Focus on data preparation.
+- Focus on model development.
+- Focus on model evaluation.
+- Focus on natural language processing.
+- Focus on genuine cloud or AI tools.
+- Focus on genuine academic and technical projects.
+
+For retail, hospitality, care, warehouse or customer-service roles:
+
+- Focus on communication.
+- Focus on reliability.
+- Focus on teamwork.
+- Focus on customer service.
+- Focus on organisation.
+- Focus on accuracy.
+- Focus on safety.
+- Focus on flexibility.
+- Focus on genuine transferable experience.
+
+For career changers:
+
+- Connect genuine past responsibilities to the target role.
+- Highlight genuine transferable skills.
+- Do not present unrelated work as direct specialist experience.
 
 PROFESSIONAL SUMMARY
 
-- Write a targeted professional summary of approximately 80 to 130 words.
-- Use approximately four to six clear lines.
-- Mention the target role or professional direction.
-- Mention the candidate's genuine experience level.
-- Include their strongest relevant technical or professional capabilities.
-- Mention relevant industries, projects or education.
-- Explain the value the candidate could bring.
-- Avoid generic phrases that could describe anyone.
-- Do not use first-person pronouns.
-- Do not use vague claims such as "hardworking individual" without evidence.
+Write a specific professional summary of approximately 90 to 140 words.
 
-WORK EXPERIENCE
+Use four to six clear sentences.
 
-For every genuine job, internship, placement or freelance role:
+The summary must:
 
-- Keep the correct job title, organisation, location and dates when provided.
-- Add four to six detailed bullet points when enough information is available.
-- Use at least three bullet points even when the original description is limited.
-- Each bullet should normally contain approximately 18 to 35 words.
-- Explain what the candidate did.
-- Explain how they performed the responsibility.
-- Mention relevant tools, systems, methods or skills only when genuinely supported.
-- Explain the practical purpose, contribution or honest result.
-- Tailor the wording towards the target role.
-- Include customer service, teamwork, communication, accuracy, operations, technical delivery or problem-solving where genuinely relevant.
-- Avoid bullets containing only a few vague words.
-- Avoid repeating the same action verb.
-- Do not write multiple bullets that communicate the same responsibility.
-- Do not invent measurable results.
+- accurately state the candidate's current academic or professional position
+- identify the target role or career direction
+- mention genuine practical experience
+- mention the strongest relevant technical or professional skills
+- mention important genuine projects or education
+- explain the practical value the candidate could bring
+- remain truthful
+- sound natural
+- avoid unrelated sectors
+- avoid first-person pronouns
 
-Use natural action verbs such as:
+Do not use generic phrases such as:
 
-Developed
-Built
-Created
-Improved
-Supported
-Managed
-Maintained
-Tested
-Analysed
-Delivered
-Coordinated
-Resolved
-Assisted
-Collaborated
-Processed
-Monitored
-Implemented
-Prepared
-Organised
-Communicated
+- hardworking individual
+- results-driven professional
+- proven track record
+- highly motivated self-starter
+- dynamic professional
+- passionate individual
 
-PROJECTS
+unless the original CV provides clear evidence and the wording is genuinely useful.
 
-For every genuine project:
+SKILLS CATEGORISATION
 
-- Include the project name.
-- Explain the problem or purpose.
-- Explain the candidate's responsibilities.
-- Mention the genuine technology stack, tools or methods.
-- Explain important features or processes.
-- Explain the outcome, learning or practical value.
-- Write approximately three to five strong bullet points per important project where information supports it.
-- Make student, software, AI, data and academic projects useful to recruiters.
-- Do not merely list project names and technologies.
-- Do not invent project results or users.
-
-EDUCATION
-
-- Preserve the correct qualification, institution, location and dates.
-- Clearly indicate when a qualification is ongoing, expected or currently being studied.
-- Include a dissertation, thesis, final project, modules or grade only when supplied.
-- For students and freshers, give education and relevant projects sufficient detail.
-- Do not call an ongoing student a graduate.
-
-SKILLS
-
-- Group skills into relevant categories.
-- Include only skills genuinely present in the original CV, setup or job description when reasonably supported.
-- Do not create a long unstructured keyword list.
-- Use category labels suitable for the candidate.
+Group skills into correct and relevant categories.
 
 Possible categories include:
 
 Programming Languages
-Frameworks and Development
-AI, Data and Machine Learning
+Mobile and Web Development
+Backend Development
+Frameworks and Libraries
+AI and Machine Learning
 Cloud and DevOps
 Databases
-Tools and Platforms
+Development Tools
+Testing and Quality
 Customer Service and Retail
 Administration and Operations
 Professional Skills
 Languages
 
-Only include categories that are relevant.
+Important classification rules:
+
+- Node.js is not a programming language.
+- Firebase is not a programming language.
+- Docker is not a programming language.
+- REST APIs are not a programming language.
+- Git is not a programming language.
+- Agile is not a programming language.
+- Machine learning is not a programming language.
+- Large language models are not programming languages.
+- Prompt engineering is not a programming language.
+
+Only create categories containing genuine relevant skills.
+
+Do not repeat the same skill in multiple categories.
+
+Do not add common industry tools merely because they appear in the job description unless the candidate genuinely has them.
+
+WORK EXPERIENCE
+
+For every genuine job, internship, freelance role or placement:
+
+- Preserve the correct job title.
+- Preserve the correct company.
+- Preserve the correct location when provided.
+- Preserve the correct dates.
+- Write four to six meaningful bullet points when the original information supports them.
+- Write at least three bullets when information is limited.
+- Each bullet should normally contain approximately 18 to 35 words.
+- Begin each bullet with a natural action verb.
+- Explain what the candidate did.
+- Explain how the candidate performed the work.
+- Mention genuine skills, tools, systems or methods.
+- Explain the practical purpose or contribution.
+- Tailor the language towards the target role.
+- Avoid vague one-line statements.
+- Avoid repeating responsibilities.
+- Avoid repeating the same action verb.
+- Do not invent measurable outcomes.
+
+Use action verbs such as:
+
+Supported
+Developed
+Built
+Created
+Integrated
+Tested
+Debugged
+Improved
+Maintained
+Collaborated
+Analysed
+Prepared
+Implemented
+Coordinated
+Resolved
+Documented
+Assisted
+Delivered
+Processed
+Monitored
+Organised
+Communicated
+
+A strong bullet should follow this structure:
+
+Action + responsibility + genuine skill, tool or process + practical purpose or honest contribution.
+
+PROJECTS
+
+For every genuine project:
+
+- Preserve the genuine project name.
+- Explain the problem or purpose.
+- Explain the candidate's contribution.
+- Mention only genuine technologies and methods.
+- Explain important features, development work, research work or technical processes.
+- Explain the practical outcome, learning or value.
+- Write three to five bullet points for each important project when supported.
+- Make academic projects relevant to recruiters.
+- Do not merely list the project name and technologies.
+- Do not invent deployment.
+- Do not invent users.
+- Do not invent results.
+- Do not invent performance statistics.
+- Do not claim a production system was built when it was only research.
+
+For software projects, explain:
+
+- what was built
+- why it was built
+- the genuine technologies used
+- frontend or backend responsibilities
+- important features
+- API or database work
+- testing or debugging
+- accessibility or usability work
+- practical project value
+
+For AI projects, explain:
+
+- the problem being addressed
+- dataset preparation
+- data cleaning
+- feature engineering
+- algorithm or model development
+- training
+- evaluation
+- ethical considerations
+- practical learning or value
+
+For research projects:
+
+- use researched, investigated, evaluated, examined or proposed when appropriate
+- do not state that a working prototype was developed unless the original CV confirms it
+- do not invent user testing unless the original CV confirms it
+
+EDUCATION
+
+- Preserve the qualification name.
+- Preserve the institution name.
+- Preserve the location when provided.
+- Preserve genuine dates.
+- Clearly identify ongoing education.
+- Use "candidate", "student" or "currently pursuing" when appropriate.
+- Do not use an expected date that has already passed unless the original CV still confirms that status.
+- If completion status is unclear, keep the supplied date without claiming graduation.
+- Include relevant modules only when genuinely supplied.
+- Include dissertations, theses and final projects only when genuinely supplied.
+- Include grades only when genuinely supplied.
+- Do not invent modules.
+- Do not invent dissertation topics.
+- Do not invent grades.
 
 CERTIFICATIONS
 
-- Include only named certifications clearly supplied.
-- Do not convert a general statement such as "has certificates" into invented certificate names.
-- Omit this section when no genuine certification details are available.
+- Include a CERTIFICATIONS section only when exact certification names are supplied.
+- If the candidate only selected "Yes", do not create a certifications section.
+- If the input says "certificates available", do not create a certifications section.
+- If certificate details are unspecified, omit the section.
+- Never write "Certificates available".
+- Never write "Details not specified".
+- Never invent certificate names.
 
 ADDITIONAL INFORMATION
 
-Include only useful genuine information such as:
+Only include genuine useful information such as:
 
-- Languages
-- Work availability
-- Right to work
-- Driving licence
-- Portfolio
-- GitHub
+- languages
+- work availability
+- right to work
+- driving licence
 - LinkedIn
-- Volunteering
-- Professional memberships
+- GitHub
+- portfolio
+- volunteering
+- professional memberships
 
-Do not insert placeholders such as "Add LinkedIn here".
+Do not include generic interests.
+
+Do not include unsupported claims.
+
+Do not include placeholders.
 
 CV STRUCTURE
 
-Use the following structure when information is available:
+Use this structure only when information is available:
 
 FULL NAME
+
 Location | Phone | Email | LinkedIn | GitHub | Portfolio
 
 PROFESSIONAL SUMMARY
@@ -430,83 +644,54 @@ ADDITIONAL INFORMATION
 
 Do not include empty sections.
 
-FORMATTING RULES
+CV FORMATTING
 
 - Start directly with the candidate's name.
+- Do not write "CV".
+- Do not write "Resume".
 - Do not write "Optimised CV".
 - Do not write "Optimized CV".
-- Do not write "Resume".
 - Do not write "Curriculum Vitae".
 - Use uppercase section headings.
-- Use plain text only.
-- Use simple hyphen bullets.
-- Do not use markdown symbols.
+- Use plain text.
+- Use simple hyphen bullet points.
+- Do not use markdown.
 - Do not use asterisks.
-- Do not use bold markers.
 - Do not use tables.
 - Do not use columns.
 - Do not use emojis.
 - Leave one blank line between sections.
 - Keep contact details on one clean line where possible.
-- Keep formatting consistent.
-- Make the document ATS-readable.
-- Do not include instructions or commentary inside the CV.
+- Use consistent punctuation.
+- Do not include commentary or writing instructions.
+- Keep the document ATS-readable.
 
 LANGUAGE STYLE
 
-- Use clear British English when the target country is the United Kingdom.
+- Use British English when the target country is the United Kingdom.
 - Use natural professional language.
-- Keep wording confident but honest.
-- Do not make the candidate sound robotic.
+- Keep the wording confident but honest.
+- Use clear sentences.
+- Avoid robotic wording.
 - Avoid exaggerated corporate language.
+- Avoid unnecessary buzzwords.
 - Avoid repeatedly using the same adjective.
-- Avoid unnecessarily complicated vocabulary.
+- Avoid unnecessarily complex vocabulary.
 - Avoid words such as spearheaded, architected and cutting-edge.
-- Use concise but properly explained sentences.
-- Prioritise clarity and relevance over buzzwords.
+- Prioritise clarity and relevance.
 
-SPECIAL CANDIDATE ADAPTATION
+COVER LETTER
 
-When the candidate is a student or fresher:
-
-- Focus on education, projects, coursework, internships, freelance work and transferable skills.
-- Explain projects in enough detail to demonstrate capability.
-- Do not exaggerate the amount of professional experience.
-- Use "candidate", "student" or "currently pursuing" where appropriate.
-
-When the candidate has professional experience:
-
-- Focus on responsibilities, tools, delivery, collaboration, outcomes and business value.
-- Give every relevant role sufficient explanation.
-- Place the most relevant and recent experience first.
-
-When the candidate is changing careers:
-
-- Connect genuine past responsibilities to the target role.
-- Highlight relevant transferable skills.
-- Do not falsely present unrelated experience as direct industry experience.
-
-When the target is retail, hospitality, care, warehouse or customer service:
-
-- Emphasise reliability, communication, service, teamwork, safety, accuracy, organisation, flexibility and problem-solving where supported.
-
-When the target is software, AI, data or technology:
-
-- Explain genuine projects, programming languages, frameworks, APIs, databases, testing, cloud tools and development processes.
-- Do not add technologies not found in the candidate's information.
-
-COVER LETTER REQUIREMENTS
-
-Create a professional tailored cover letter between approximately 280 and 420 words.
+Create a tailored professional cover letter of approximately 280 to 420 words.
 
 Start exactly with:
 
 Dear Hiring Manager,
 
-Write five clear paragraphs:
+Write five natural paragraphs.
 
 Paragraph 1:
-State the target position and provide a confident, specific introduction.
+State the target position and provide a clear, confident introduction.
 
 Paragraph 2:
 Explain the candidate's most relevant genuine experience.
@@ -515,66 +700,73 @@ Paragraph 3:
 Explain relevant technical, professional or transferable skills.
 
 Paragraph 4:
-Explain the candidate's motivation, suitability and value to the employer.
+Explain motivation, suitability and the value the candidate could bring.
 
 Paragraph 5:
-Provide a confident closing and mention availability when genuinely provided.
+Provide a confident closing and mention genuine availability when supplied.
 
-End with:
+End exactly with:
 
 Yours sincerely,
 ${fullName || "Candidate Name"}
 
 COVER LETTER RULES
 
-- Do not add a cover letter title.
-- Do not use markdown.
+- Do not add a cover-letter title.
 - Do not use bullet points.
-- Do not use fake employer details.
+- Do not use markdown.
+- Do not invent the employer name.
 - Do not invent the hiring manager's name.
 - Do not invent company values.
+- Do not invent company projects.
 - Do not repeat the CV word for word.
-- Avoid generic filler.
-- Match the target role, country, industry and experience level.
-- Sound natural and personalised.
+- Do not use generic filler.
+- Match the target role.
+- Match the target country.
+- Match the genuine experience level.
+- Sound natural, confident and honest.
 - Do not include placeholders except "Dear Hiring Manager".
-- Do not make unsupported claims.
 
-KEYWORD REQUIREMENTS
+KEYWORDS
 
 Return between 12 and 20 high-value ATS keywords.
 
-Keywords must:
+Each keyword must:
 
-- Be relevant to the target role.
-- Come from the original CV, candidate setup or job description.
-- Include genuine tools, responsibilities, skills or industry terms.
-- Be individual clean strings.
-- Contain no bullets.
-- Contain no explanations.
-- Contain no duplicates.
-- Avoid meaningless words such as motivated or passionate unless important to the role.
+- be relevant to the target role
+- be supported by the original CV, candidate setup or genuine job-description alignment
+- represent a real technology, skill, method, responsibility or industry term
+- be a clean individual string
+- contain no bullet
+- contain no explanation
+- contain no duplicate
 
-ATS SCORE REQUIREMENTS
+Do not return generic personality words unless directly relevant.
+
+ATS SCORE
 
 Return a realistic integer between 70 and 98.
 
-Consider:
+Assess:
 
 - CV completeness
 - ATS formatting
-- Role relevance
-- Keyword coverage
-- Skills relevance
-- Work-experience detail
-- Project detail
-- Education clarity
-- Achievement evidence
-- Job-description alignment
+- target-role relevance
+- genuine keyword coverage
+- skill relevance
+- work-experience quality
+- project detail
+- education clarity
+- achievement evidence
+- job-description alignment
 
-Do not always return 97 or 98.
+Do not automatically return 97 or 98.
 
-A CV with limited information should receive a lower score than a detailed, strongly matched CV.
+A candidate with limited information should receive a lower score than a candidate with complete, strongly matched evidence.
+
+ORIGINAL CV WORD COUNT
+
+${originalWordCount}
 
 ORIGINAL CV
 
@@ -585,24 +777,34 @@ TARGET JOB DESCRIPTION
 ${
   jobDescription?.trim()
     ? jobDescription.trim()
-    : `No full job description was provided. Optimise the CV using the target role "${
-        jobRole || "not specified"
-      }", the candidate setup, target country and genuine information in the original CV.`
+    : `No full job description was provided. Tailor the CV to the target role "${
+        jobRole ||
+        "the strongest genuine role based on the candidate's background"
+      }" using only genuine information from the original CV and candidate setup.`
 }
 
-FINAL CHECK BEFORE RESPONDING
+FINAL VALIDATION
 
-Before returning the JSON:
+Before returning the JSON, confirm:
 
-- Confirm the optimized CV is detailed rather than abbreviated.
-- Confirm every genuine work role has sufficient bullet points.
-- Confirm important projects are explained.
-- Confirm no fake facts were introduced.
-- Confirm no useful original information was accidentally removed.
-- Confirm the CV begins with the candidate's name.
-- Confirm the cover letter begins with "Dear Hiring Manager,".
-- Confirm there is no markdown.
-- Confirm the response is valid JSON.
+- The CV starts with the candidate's name.
+- The CV is detailed rather than abbreviated.
+- The professional summary is specific to the target role.
+- No unrelated sector was inserted.
+- Skills are correctly categorised.
+- Node.js is not listed as a programming language.
+- Firebase is not listed as a programming language.
+- Docker is not listed as a programming language.
+- Every genuine work role has meaningful bullet points.
+- Important projects are properly explained.
+- Research is not falsely described as a completed working product.
+- Ongoing education is described accurately.
+- Unnamed certificates are omitted.
+- No fake facts were introduced.
+- No important original information was removed.
+- The cover letter starts with "Dear Hiring Manager,".
+- The response contains no markdown.
+- The response is valid JSON.
 `;
 
     const res = await fetch(
@@ -615,7 +817,7 @@ Before returning the JSON:
         },
         body: JSON.stringify({
           model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-          temperature: 0.15,
+          temperature: 0.1,
           max_completion_tokens: 5000,
           response_format: {
             type: "json_object",
@@ -624,7 +826,7 @@ Before returning the JSON:
             {
               role: "system",
               content:
-                "You are an expert ATS CV and cover letter writer. Return only valid JSON. Produce a complete and properly explained CV rather than a short summary. Preserve truthful information and never invent companies, dates, qualifications, technologies, statistics or achievements.",
+                "You are a senior UK recruiter and ATS CV writer. Return only valid JSON. Produce a complete, detailed and accurately targeted CV. Correctly categorise skills, fully explain genuine employment and projects, omit unnamed certificates, avoid unrelated sectors and never invent facts.",
             },
             {
               role: "user",
@@ -657,13 +859,8 @@ Before returning the JSON:
 
     const parsed = parseJsonSafely(content);
 
-    const optimizedCV = cleanAiText(
-      parsed.optimizedCV || ""
-    );
-
-    const coverLetter = cleanAiText(
-      parsed.coverLetter || ""
-    );
+    const optimizedCV = cleanAiText(parsed.optimizedCV);
+    const coverLetter = cleanAiText(parsed.coverLetter);
 
     if (!optimizedCV || !coverLetter) {
       return NextResponse.json(
@@ -677,48 +874,59 @@ Before returning the JSON:
       );
     }
 
-    const optimizedCvWordCount = optimizedCV
-      .split(/\s+/)
-      .filter(Boolean).length;
+    const optimizedCvWordCount = countWords(optimizedCV);
+    const coverLetterWordCount = countWords(coverLetter);
 
-    if (optimizedCvWordCount < 300) {
+    if (optimizedCvWordCount < 350) {
       console.warn(
         `Generated CV may be too short: ${optimizedCvWordCount} words`
       );
     }
 
-    const keywords = Array.isArray(parsed.keywords)
+    if (coverLetterWordCount < 220) {
+      console.warn(
+        `Generated cover letter may be too short: ${coverLetterWordCount} words`
+      );
+    }
+
+    const rawKeywords = Array.isArray(parsed.keywords)
       ? parsed.keywords
-          .map((keyword: unknown) =>
-            cleanKeyword(String(keyword || ""))
-          )
-          .filter(Boolean)
-          .filter(
-            (
-              keyword: string,
-              index: number,
-              allKeywords: string[]
-            ) =>
-              allKeywords.findIndex(
-                (item) =>
-                  item.toLowerCase() ===
-                  keyword.toLowerCase()
-              ) === index
-          )
-          .slice(0, 20)
       : [];
+
+    const keywords = rawKeywords
+      .map((keyword) => cleanKeyword(keyword))
+      .filter(Boolean)
+      .filter(
+        (
+          keyword: string,
+          index: number,
+          allKeywords: string[]
+        ) =>
+          allKeywords.findIndex(
+            (item) =>
+              item.toLowerCase() === keyword.toLowerCase()
+          ) === index
+      )
+      .slice(0, 20);
 
     return NextResponse.json({
       optimizedCV,
       coverLetter,
       keywords,
       atsScore: clampAtsScore(parsed.atsScore),
+      metadata: {
+        originalCvWordCount: originalWordCount,
+        optimizedCvWordCount,
+        coverLetterWordCount,
+      },
     });
-  } catch (err: unknown) {
+  } catch (error: unknown) {
     const message =
-      err instanceof Error ? err.message : "Server error";
+      error instanceof Error
+        ? error.message
+        : "Unexpected server error";
 
-    console.error("Generate CV API error:", err);
+    console.error("Generate CV API error:", error);
 
     return NextResponse.json(
       {
