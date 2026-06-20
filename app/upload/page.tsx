@@ -425,42 +425,86 @@ if (type === "cv") {
     );
   };
 
-  const drawNormalLine = (
-    line: string,
-    xStart: number,
-    fontSize: number,
-    lineHeight: number,
-    baseBold = false
-  ) => {
-    const availableWidth =
-      maxWidth - (xStart - margin);
+const drawNormalLine = (
+  line: string,
+  xStart: number,
+  fontSize: number,
+  lineHeight: number,
+  baseBold = false
+) => {
+  const availableWidth = maxWidth - (xStart - margin);
 
-    const wrappedLines = doc.splitTextToSize(
-      line,
-      availableWidth
+  const keywordList = keywords
+    .map((keyword) => String(keyword).trim())
+    .filter((keyword) => keyword.length > 1)
+    .sort((a, b) => b.length - a.length);
+
+  const escapeRegex = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const keywordRegex =
+    keywordList.length > 0
+      ? new RegExp(
+          `(${keywordList.map(escapeRegex).join("|")})`,
+          "gi"
+        )
+      : null;
+
+  const parts = keywordRegex
+    ? line.split(keywordRegex).filter(Boolean)
+    : [line];
+
+  let currentX = xStart;
+
+  const moveToNextLine = () => {
+    y += lineHeight;
+    currentX = xStart;
+    addPageIfNeeded();
+  };
+
+  parts.forEach((part) => {
+    const isKeyword = keywordList.some(
+      (keyword) =>
+        keyword.toLowerCase() === part.toLowerCase()
     );
 
-    wrappedLines.forEach((wrappedLine: string) => {
-      addPageIfNeeded();
+    const words = part.split(/(\s+)/).filter(Boolean);
+
+    words.forEach((word) => {
+      const shouldBeBold = baseBold || isKeyword;
 
       doc.setFont(
         "helvetica",
-        baseBold ? "bold" : "normal"
+        shouldBeBold ? "bold" : "normal"
       );
 
       doc.setFontSize(fontSize);
 
       doc.setTextColor(
-        baseBold ? 15 : 55,
-        baseBold ? 23 : 65,
-        baseBold ? 42 : 81
+        shouldBeBold ? 0 : 55,
+        shouldBeBold ? 0 : 65,
+        shouldBeBold ? 0 : 81
       );
 
-      doc.text(wrappedLine, xStart, y);
-      y += lineHeight;
-    });
-  };
+      const wordWidth = doc.getTextWidth(word);
 
+      if (
+        currentX + wordWidth >
+          xStart + availableWidth &&
+        word.trim()
+      ) {
+        moveToNextLine();
+      }
+
+      doc.text(word, currentX, y);
+      currentX += wordWidth;
+    });
+  });
+
+  y += lineHeight;
+};
+
+  
   const lines = cleanContent.split("\n");
 
   lines.forEach((rawLine, index) => {
@@ -473,9 +517,7 @@ if (type === "cv") {
 
     addPageIfNeeded();
 
-    const firstLine =
-      index === 0 && !isCoverLetter;
-
+    const firstLine = index === 0 && !isCoverLetter;
     const heading = isHeading(line);
     const bullet = line.trim().startsWith("-");
 
@@ -501,10 +543,7 @@ if (type === "cv") {
     }
 
     if (bullet) {
-      const bulletText = line.replace(
-        /^-+\s*/,
-        ""
-      );
+      const bulletText = line.replace(/^-+\s*/, "");
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9.4);
@@ -531,7 +570,6 @@ if (type === "cv") {
 
   doc.save(fileName);
 };
-
   
   const downloadDOCX = async (
   title: string,
