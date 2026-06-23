@@ -1651,8 +1651,9 @@ if (status === "loading" && !loading && !rephrasing) {
 
 if (showSetupPopup && !loading && !rephrasing) {
   return (
-    <main className="nike-popup-bg fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-hidden px-3 py-4 text-slate-950">
-  <div className="relative z-10 flex min-h-[calc(100dvh-40px)] items-start justify-center pt-2 sm:items-center">
+  
+<main className="nike-popup-bg fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto overscroll-contain px-3 py-3 text-slate-950">
+  <div className="relative z-10 flex min-h-full items-start justify-center py-2">
   <div className="relative w-full max-w-[520px] overflow-hidden rounded-[34px] border border-white/20 bg-white shadow-[0_40px_120px_rgba(0,0,0,0.45)] animate-popupIn">
   {/* TOP LIGHT SHAPE */}
   <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -1661,7 +1662,7 @@ if (showSetupPopup && !loading && !rephrasing) {
     <div className="absolute right-[-30px] top-[65px] h-28 w-[120%] rotate-[-14deg] bg-blue-50/80" />
   </div>
 
-  <div className="relative flex max-h-[calc(100dvh-32px)] flex-col overflow-hidden p-4 sm:p-5">
+  <div className="relative flex flex-col p-4 sm:p-5">
           {/* TOP ROW */}
           <div className="flex items-center justify-between">
             <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">
