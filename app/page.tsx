@@ -807,7 +807,7 @@ const getRiskMessage = () => {
       </h3>
 
       <p className="mx-auto mt-2 max-w-xs text-sm font-semibold leading-6 text-slate-500">
-        This area will display a responsive advertisement after AdSense approval.
+        This area will display a responsive advertisement.
       </p>
     </div>
   </div>
@@ -1321,7 +1321,7 @@ const getRiskMessage = () => {
         </h3>
 
         <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
-          This area is reserved for responsive advertising after the site is approved.
+          This area is reserved for responsive advertising.
         </p>
 
         <div className="mx-auto mt-5 w-fit rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-wider text-slate-400 shadow-sm">
