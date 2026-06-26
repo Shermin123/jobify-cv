@@ -600,6 +600,43 @@ const [appliedJobs, setAppliedJobs] = useState<Job[]>([]);
 
   loadAutoApplyAccess();
 }, [session?.user?.email]);
+  useEffect(() => {
+  const loadApplications = async () => {
+    if (!session?.user?.email) {
+      setAppliedJobs([]);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/applications");
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error(data?.error || "Could not load applications");
+        return;
+      }
+
+      const mappedJobs: Job[] = (data.applications || [])
+        .filter((application: any) => application.status === "applied")
+        .map((application: any) => ({
+          id: application.id,
+          title: application.job_title,
+          company: application.company,
+          location: application.location || "",
+          salary: application.salary || "",
+          type: application.job_type || "",
+          description: "",
+          source: "Jobify",
+        }));
+
+      setAppliedJobs(mappedJobs);
+    } catch (error) {
+      console.error("Could not load saved applications:", error);
+    }
+  };
+
+  loadApplications();
+}, [session?.user?.email]);
 
   const nextJob = () => {
     setMessage("Ready");
@@ -802,7 +839,7 @@ setAppliedJobs((prev) => {
 
   if (alreadyExists) return prev;
 
-  return [jobSnapshot, ...prev].slice(0, 10);
+  return [jobSnapshot, ...prev];
 });
 
 playApplySound();
@@ -1323,7 +1360,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       </h2>
 
       <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
-        Jobs you applied to in this session.
+        All jobs you have applied to.
       </p>
     </div>
 
