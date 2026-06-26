@@ -876,7 +876,7 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
       {applyNotice && (
-  <div className="fixed inset-x-3 top-20 z-[999] mx-auto max-w-md animate-jobifyApplyToast rounded-[28px] border border-emerald-200 bg-white/95 p-4 shadow-[0_24px_80px_rgba(16,185,129,0.35)] backdrop-blur-2xl">
+  <div className="fixed inset-x-3 top-28 z-[999] mx-auto max-w-md animate-jobifyApplyToast rounded-[28px] border border-emerald-200 bg-white/95 p-4 shadow-[0_24px_80px_rgba(16,185,129,0.35)] backdrop-blur-2xl sm:top-32">
     <div className="flex items-start gap-4">
       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 p-2 ring-1 ring-emerald-100">
         <img
