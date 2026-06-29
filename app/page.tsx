@@ -752,67 +752,27 @@ const getRiskMessage = () => {
   <HiredAtBox />
 </div> 
     
-    <div className="mt-8 flex justify-center">
-  <div className="relative w-full max-w-[760px] overflow-hidden rounded-[32px] border border-slate-200 bg-white/85 p-1 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur-xl">
-    <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-blue-200/40 blur-3xl" />
-    <div className="absolute -right-20 -bottom-20 h-40 w-40 rounded-full bg-indigo-200/40 blur-3xl" />
+   <div className="mt-8 flex justify-center">
+  <AdsterraBanner
+  adKey="022bf6f0ac84fc8271661fdf0220eab4"
+  width={300}
+  height={250}
+/>
+</div>
 
-    <div className="relative flex h-[220px] flex-col items-center justify-center rounded-[28px] border border-dashed border-slate-300 bg-gradient-to-br from-slate-50 via-white to-blue-50 text-center">
-      <p className="text-[11px] font-black uppercase tracking-[0.28em] text-slate-400">
-        Advertisement
-      </p>
-
-      <h3 className="mt-3 text-xl font-black text-slate-900">
-        Premium Ad Space
-      </h3>
-
-      <p className="mt-2 max-w-sm text-sm font-semibold leading-6 text-slate-500">
-        A clean display area for sponsored content.
-      </p>
-
-      <div className="mt-5 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-400 shadow-sm">
-        728 × 220
-      </div>
-        </div>
-  </div>
+{/* SECOND AD — 160x600 */}
+<div className="mt-6 flex justify-center">
+  <AdsterraBanner
+    adKey="eec685f16c82ad26f1b5a4a527a44e84"
+    width={160}
+    height={600}
+  />
 </div>
 
 
 
 
 
-
-{/* AD BELOW LOGOS — FILLS LEFT-SIDE EMPTY SPACE */}
-<div className="mt-6 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl">
-  <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3">
-    <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
-      Advertisement
-    </p>
-
-    <span className="rounded-full bg-slate-100 px-3 py-1 text-[9px] font-bold text-slate-400">
-      Ad space
-    </span>
-  </div>
-
-  <div className="relative flex min-h-[500px] items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 px-6 py-10 text-center">
-    <div className="pointer-events-none absolute -left-24 -top-24 h-56 w-56 rounded-full bg-blue-200/30 blur-3xl" />
-    <div className="pointer-events-none absolute -bottom-24 -right-24 h-56 w-56 rounded-full bg-indigo-200/30 blur-3xl" />
-
-    <div className="relative z-10">
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-2xl shadow-sm">
-        📢
-      </div>
-
-      <h3 className="mt-4 text-xl font-black text-slate-900">
-        Advertisement space
-      </h3>
-
-      <p className="mx-auto mt-2 max-w-xs text-sm font-semibold leading-6 text-slate-500">
-        This area will display a responsive advertisement.
-      </p>
-    </div>
-  </div>
-</div>
   </div>
 
         
@@ -1291,11 +1251,13 @@ const getRiskMessage = () => {
 </section>
 
 
-{/* NEW AD PLACEHOLDER GOES HERE */}
-<section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-  <div className="flex justify-center">
-    <AdsterraBanner />
-  </div>
+{/* THIRD AD — 728x90 DESKTOP ONLY */}
+<section className="relative z-10 mx-auto hidden max-w-6xl px-4 pb-10 md:block sm:px-6">
+  <AdsterraBanner
+    adKey="74224594b53fcafd766a8a943e60511d"
+    width={728}
+    height={90}
+  />
 </section>
 
 

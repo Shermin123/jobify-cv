@@ -2,15 +2,23 @@
 
 import { useEffect, useRef } from "react";
 
-export default function AdsterraBanner() {
+type AdsterraBannerProps = {
+  adKey: string;
+  width: number;
+  height: number;
+};
+
+export default function AdsterraBanner({
+  adKey,
+  width,
+  height,
+}: AdsterraBannerProps) {
   const adContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = adContainerRef.current;
 
-    if (!container || container.dataset.loaded === "true") {
-      return;
-    }
+    if (!container || container.dataset.loaded === "true") return;
 
     container.dataset.loaded = "true";
 
@@ -18,18 +26,17 @@ export default function AdsterraBanner() {
     configScript.type = "text/javascript";
     configScript.text = `
       atOptions = {
-        'key': '022bf6f0ac84fc8271661fdf0220eab4',
+        'key': '${adKey}',
         'format': 'iframe',
-        'height': 250,
-        'width': 300,
+        'height': ${height},
+        'width': ${width},
         'params': {}
       };
     `;
 
     const adScript = document.createElement("script");
     adScript.type = "text/javascript";
-    adScript.src =
-      "https://www.highperformanceformat.com/022bf6f0ac84fc8271661fdf0220eab4/invoke.js";
+    adScript.src = `https://www.highperformanceformat.com/${adKey}/invoke.js`;
     adScript.async = true;
 
     container.appendChild(configScript);
@@ -39,13 +46,17 @@ export default function AdsterraBanner() {
       container.innerHTML = "";
       container.dataset.loaded = "false";
     };
-  }, []);
+  }, [adKey, width, height]);
 
   return (
-    <div className="my-8 flex w-full justify-center">
+    <div className="flex w-full justify-center">
       <div
         ref={adContainerRef}
-        className="h-[250px] w-[300px] overflow-hidden"
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+        }}
+        className="overflow-hidden"
         aria-label="Advertisement"
       />
     </div>
