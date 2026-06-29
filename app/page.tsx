@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
+import AdsterraBanner from "./components/AdsterraBanner";
 
 type CvIssue = {
   title: string;
@@ -1292,43 +1293,8 @@ const getRiskMessage = () => {
 
 {/* NEW AD PLACEHOLDER GOES HERE */}
 <section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-  <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)]">
-    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 sm:px-6">
-      <p className="text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
-        Advertisement
-      </p>
-
-      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[9px] font-bold text-slate-400">
-        Ad space
-      </span>
-    </div>
-
-    <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 px-5 py-10 text-center sm:min-h-[320px]">
-      <div className="pointer-events-none absolute -left-20 -top-20 h-48 w-48 rounded-full bg-blue-200/35 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-indigo-200/35 blur-3xl" />
-
-      <div className="relative z-10">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-2xl shadow-sm">
-          📢
-        </div>
-
-        <p className="mt-4 text-[10px] font-black uppercase tracking-[0.24em] text-blue-600">
-          Sponsored placement
-        </p>
-
-        <h3 className="mt-2 text-xl font-black text-slate-900 sm:text-2xl">
-          Advertisement space
-        </h3>
-
-        <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-slate-500">
-          This area is reserved for responsive advertising.
-        </p>
-
-        <div className="mx-auto mt-5 w-fit rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-wider text-slate-400 shadow-sm">
-          Responsive display unit
-        </div>
-      </div>
-    </div>
+  <div className="flex justify-center">
+    <AdsterraBanner />
   </div>
 </section>
 
