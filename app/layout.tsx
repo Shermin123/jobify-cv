@@ -1,5 +1,7 @@
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import AuthProvider from "./providers/AuthProvider";
 import Navbar from "./components/Navbar";
@@ -54,14 +56,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
-        <script
+        {/* Google AdSense */}
+        <Script
+          id="google-adsense"
           async
+          strategy="afterInteractive"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
           crossOrigin="anonymous"
-        ></script>
+        />
       </head>
 
-      <body className="min-h-full flex flex-col bg-black text-white">
+      <body className="flex min-h-full flex-col bg-black text-white">
         <AuthProvider>
           <Navbar />
 
@@ -71,6 +76,21 @@ export default function RootLayout({
         </AuthProvider>
 
         <Analytics />
+
+        {/* Infolinks account configuration */}
+        <Script id="infolinks-config" strategy="afterInteractive">
+          {`
+            var infolinks_pid = 3446288;
+            var infolinks_wsid = 0;
+          `}
+        </Script>
+
+        {/* Infolinks main script */}
+        <Script
+          id="infolinks-main"
+          strategy="afterInteractive"
+          src="https://resources.infolinks.com/js/infolinks_main.js"
+        />
       </body>
     </html>
   );
