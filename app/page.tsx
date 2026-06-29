@@ -747,6 +747,14 @@ const getRiskMessage = () => {
   </span>
 </button>
 </div>
+{/* AD ABOVE HIRED BOX */}
+<div className="mt-8 hidden justify-center md:flex">
+  <AdsterraBanner
+    adKey="74224594b53fcafd766a8a943e60511d"
+    width={728}
+    height={90}
+  />
+</div>
 
     <div className="mt-10">
   <HiredAtBox />
