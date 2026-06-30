@@ -40,15 +40,15 @@ export default function UploadPage() {
 
   const resultRef = useRef<HTMLDivElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const monetagLoadedRef = useRef(false);
-  const monetagBottomAdRef = useRef<HTMLDivElement | null>(null);
+  
+  
 
   const [text, setText] = useState("");
   const [jobRole, setJobRole] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [country, setCountry] = useState("");
   const [showSetupPopup, setShowSetupPopup] = useState(false);
-  const [showBottomAd, setShowBottomAd] = useState(true);
+  
 const [setupStep, setSetupStep] = useState(0);
 const [showCountrySuggestions, setShowCountrySuggestions] = useState(false);
 const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
@@ -248,52 +248,8 @@ useEffect(() => {
       originalBodyOverflow;
   };
 }, [previewDocument]);
-useEffect(() => {
-  if (monetagLoadedRef.current) return;
-  if (showSetupPopup || loading || rephrasing) return;
 
-  monetagLoadedRef.current = true;
 
-  const script = document.createElement("script");
-  script.dataset.zone = "11219025";
-  script.src = "https://nap5k.com/tag.min.js";
-  script.async = true;
-
-  document.body.appendChild(script);
-
-  return () => {
-    script.remove();
-    monetagLoadedRef.current = false;
-  };
-}, [showSetupPopup, loading, rephrasing]);
-useEffect(() => {
-  if (
-    !showBottomAd ||
-    showSetupPopup ||
-    loading ||
-    rephrasing ||
-    !monetagBottomAdRef.current
-  ) {
-    return;
-  }
-
-  const host = monetagBottomAdRef.current;
-
-  if (host.querySelector('script[data-zone="11219025"]')) {
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.dataset.zone = "11219025";
-  script.src = "https://nap5k.com/tag.min.js";
-  script.async = true;
-
-  host.appendChild(script);
-
-  return () => {
-    host.innerHTML = "";
-  };
-}, [showBottomAd, showSetupPopup, loading, rephrasing]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -2275,61 +2231,7 @@ if (showSetupPopup && !loading && !rephrasing) {
 
 return (
   <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
-    {typeof document !== "undefined" &&
-  showBottomAd &&
-  !showSetupPopup &&
-  !loading &&
-  !rephrasing &&
-  createPortal(
-    <div
-      className="animate-adSlideUp"
-      style={{
-        position: "fixed",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: "100vw",
-        zIndex: 2147483647,
-        background: "#ffffff",
-        borderTop: "1px solid #e2e8f0",
-        boxShadow: "0 -12px 40px rgba(15,23,42,0.22)",
-        padding: "10px 48px 10px 10px",
-      }}
-    >
-      <button
-        type="button"
-        onClick={() => setShowBottomAd(false)}
-        style={{
-          position: "absolute",
-          right: "10px",
-          top: "10px",
-          width: "30px",
-          height: "30px",
-          borderRadius: "9999px",
-          border: "none",
-          background: "#f1f5f9",
-          fontWeight: 900,
-          cursor: "pointer",
-        }}
-      >
-        ×
-      </button>
-
-      <p className="mb-2 text-center text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
-        Advertisement
-      </p>
-
-      <div
-        ref={monetagBottomAdRef}
-        style={{
-          width: "100%",
-          minHeight: "90px",
-          overflow: "hidden",
-        }}
-      />
-    </div>,
-    document.body
-  )}
+    
       
     
 
