@@ -160,7 +160,7 @@ export default function SignupPage() {
         </div>
 
         <div className="mx-auto w-full max-w-md">
-          <div className="rounded-[2rem] border bg-white p-6 shadow-2xl sm:p-8 animate-cardIn">
+          <div className="rounded-[1.5rem] border bg-white p-4 shadow-xl sm:rounded-[2rem] sm:p-8 sm:shadow-2xl animate-cardIn">
             <div className="mb-6 text-center">
               <p className="text-sm font-black uppercase tracking-widest text-blue-600">
                 Get started

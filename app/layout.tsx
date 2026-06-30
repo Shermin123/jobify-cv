@@ -125,16 +125,16 @@ export default function RootLayout({
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
 
-        {/* HilltopAds Banner / In-page Zone */}
-        <Script id="hilltopads-banner-zone" strategy="afterInteractive">
+        {/* HilltopAds MultiTag Banner */}
+        <Script id="hilltopads-multitag-banner" strategy="afterInteractive">
           {`
-            (function(qfwzm){
+            (function(vlie){
               var d = document,
                   s = d.createElement('script'),
                   l = d.scripts[d.scripts.length - 1];
 
-              s.settings = qfwzm || {};
-              s.src = "//prizefamily.com/buXlV.sPdmGyl/0/Y/Wjcg/Ve/mV9/ujZ/UnlIk_PaT/cAxwOwDVE/yPN/zScQtONLzfEJ4HMPToIO4jMfQb";
+              s.settings = vlie || {};
+              s.src = "//prizefamily.com/b.XLVcsQdTGhlq0SY/WFch/Vedm/9zuzZXU/lIkdPYTYcRx/OpDuEsy-NBzncYtoNvzPE/4zMwT/IQ4_M/QM";
               s.async = true;
               s.referrerPolicy = 'no-referrer-when-downgrade';
 
