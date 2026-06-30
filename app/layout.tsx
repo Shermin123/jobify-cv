@@ -91,15 +91,15 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Monetag In-Page Push — zone 11219025 */}
+        {/* Monetag Vignette Banner — zone 11219245 */}
         <Script
-          id="monetag-zone-11219025"
+          id="monetag-vignette-11219245"
           strategy="afterInteractive"
         >
           {`
             (function(s) {
-              s.dataset.zone = "11219025";
-              s.src = "https://nap5k.com/tag.min.js";
+              s.dataset.zone = "11219245";
+              s.src = "https://n6wxm.com/vignette.min.js";
               s.async = true;
             })(
               [document.documentElement, document.body]
