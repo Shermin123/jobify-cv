@@ -2226,6 +2226,32 @@ if (showSetupPopup && !loading && !rephrasing) {
 }
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+      {showBottomAd && !showSetupPopup && !loading && !rephrasing && (
+  <div className="fixed inset-x-0 bottom-0 z-[999999] animate-adSlideUp px-3 pb-3">
+    <div className="relative mx-auto max-w-[430px] rounded-t-[28px] border border-slate-200 bg-white p-4 text-center shadow-[0_-25px_80px_rgba(15,23,42,0.35)]">
+      <button
+        type="button"
+        onClick={() => setShowBottomAd(false)}
+        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-base font-black text-slate-600"
+      >
+        ×
+      </button>
+
+      <p className="mb-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
+        Advertisement
+      </p>
+
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-7648291083196313"
+        data-ad-slot="7090386055"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
+  </div>
+)}
       {showBottomAd && (
   <div className="fixed inset-x-0 bottom-0 z-[99999] animate-slideUp px-3 pb-3">
     <div className="relative mx-auto max-w-[420px] rounded-t-[24px] border border-slate-200 bg-white p-3 text-center shadow-[0_-20px_60px_rgba(15,23,42,0.25)]">
@@ -6377,6 +6403,20 @@ Company requirements"
 
 .animate-slideUp {
   animation: slideUp 0.45s ease-out;
+}
+  @keyframes adSlideUp {
+  from {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-adSlideUp {
+  animation: adSlideUp 0.45s ease-out;
 }
 
 `}</style>
