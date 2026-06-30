@@ -13,6 +13,26 @@ import EmojiBackground from "@/app/components/EmojiBackground";
 import HiredAtBox from "@/app/components/HiredAtBox";
 import mammoth from "mammoth";
 
+function CleanAdBox({ label = "Advertisement" }: { label?: string }) {
+  return (
+    <div className="relative z-10 mx-auto my-6 max-w-6xl px-4">
+      <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white/90 p-4 text-center shadow-sm backdrop-blur-xl">
+        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">
+          {label}
+        </p>
+
+        <ins
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client="ca-pub-7648291083196313"
+          data-ad-slot="7090386055"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -26,6 +46,7 @@ export default function UploadPage() {
   const [jobDescription, setJobDescription] = useState("");
   const [country, setCountry] = useState("");
   const [showSetupPopup, setShowSetupPopup] = useState(false);
+  const [showBottomAd, setShowBottomAd] = useState(true);
 const [setupStep, setSetupStep] = useState(0);
 const [showCountrySuggestions, setShowCountrySuggestions] = useState(false);
 const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
@@ -2205,6 +2226,32 @@ if (showSetupPopup && !loading && !rephrasing) {
 }
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+      {showBottomAd && (
+  <div className="fixed inset-x-0 bottom-0 z-[99999] animate-slideUp px-3 pb-3">
+    <div className="relative mx-auto max-w-[420px] rounded-t-[24px] border border-slate-200 bg-white p-3 text-center shadow-[0_-20px_60px_rgba(15,23,42,0.25)]">
+      <button
+        type="button"
+        onClick={() => setShowBottomAd(false)}
+        className="absolute right-3 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-sm font-black text-slate-600"
+      >
+        ×
+      </button>
+
+      <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">
+        Advertisement
+      </p>
+
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-7648291083196313"
+        data-ad-slot="7090386055"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
+  </div>
+)}
     
 
   {typeof document !== "undefined" &&
@@ -2434,11 +2481,13 @@ if (showSetupPopup && !loading && !rephrasing) {
 
   </div>
 </section>
+<CleanAdBox label="Sponsored" />
       
 
       <section className="max-w-6xl mx-auto px-4 pb-10 space-y-6">
         
         {/* RESULTS */}
+        {generated && <CleanAdBox label="Sponsored tools" />}
         {generated && (
           <section
   ref={resultRef}
@@ -6314,6 +6363,20 @@ Company requirements"
   .elite-overlay:hover .elite-stat {
     transform: none;
   }
+}
+    @keyframes slideUp {
+  from {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.45s ease-out;
 }
 
 `}</style>
