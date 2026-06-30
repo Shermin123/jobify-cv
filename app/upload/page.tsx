@@ -2269,54 +2269,45 @@ return (
         left: 0,
         right: 0,
         bottom: 0,
+        width: "100vw",
         zIndex: 2147483647,
-        padding: "0 12px 12px",
-        pointerEvents: "none",
+        background: "#ffffff",
+        borderTop: "1px solid #e2e8f0",
+        boxShadow: "0 -12px 40px rgba(15,23,42,0.22)",
+        padding: "10px 48px 10px 10px",
       }}
     >
-      <div
+      <button
+        type="button"
+        onClick={() => setShowBottomAd(false)}
         style={{
-          position: "relative",
-          width: "100%",
-          maxWidth: "430px",
-          margin: "0 auto",
-          padding: "16px",
-          background: "white",
-          border: "1px solid #e2e8f0",
-          borderRadius: "28px 28px 0 0",
-          boxShadow: "0 -25px 80px rgba(15,23,42,0.35)",
-          textAlign: "center",
-          pointerEvents: "auto",
+          position: "absolute",
+          right: "10px",
+          top: "10px",
+          width: "30px",
+          height: "30px",
+          borderRadius: "9999px",
+          border: "none",
+          background: "#f1f5f9",
+          fontWeight: 900,
+          cursor: "pointer",
         }}
       >
-        <button
-          type="button"
-          onClick={() => setShowBottomAd(false)}
-          style={{
-            position: "absolute",
-            right: "12px",
-            top: "12px",
-            width: "32px",
-            height: "32px",
-            borderRadius: "9999px",
-            border: "none",
-            background: "#f1f5f9",
-            fontWeight: 900,
-            cursor: "pointer",
-          }}
-        >
-          ×
-        </button>
+        ×
+      </button>
 
-        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
-          Advertisement
-        </p>
+      <p className="mb-2 text-center text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
+        Advertisement
+      </p>
 
-        <div
-          ref={monetagBottomAdRef}
-          className="min-h-[90px] w-full overflow-hidden rounded-xl bg-slate-50"
-        />
-      </div>
+      <div
+        ref={monetagBottomAdRef}
+        style={{
+          width: "100%",
+          minHeight: "90px",
+          overflow: "hidden",
+        }}
+      />
     </div>,
     document.body
   )}
