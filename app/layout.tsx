@@ -49,50 +49,59 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
         {/* Google AdSense */}
-        <script
+        <Script
+          id="google-adsense"
+          strategy="beforeInteractive"
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
           crossOrigin="anonymous"
         />
 
-        {/* Google Analytics GA4 */}
-        <script
-          async
+        {/* Google Analytics */}
+        <Script
+          id="google-analytics-loader"
+          strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-ZZLSC9QDXR"
         />
 
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-ZZLSC9QDXR');
-            `,
-          }}
-        />
+        <Script id="google-analytics-config" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
 
-        {/* Monetag */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(s){
-                s.dataset.zone='11218400';
-                s.src='https://nap5k.com/tag.min.js';
-              })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-            `,
-          }}
-        />
+            function gtag() {
+              window.dataLayer.push(arguments);
+            }
+
+            gtag("js", new Date());
+            gtag("config", "G-ZZLSC9QDXR");
+          `}
+        </Script>
       </head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
+        {/* Monetag In-Page Push — zone 11219025 */}
+        <Script id="monetag-zone-11219025" strategy="afterInteractive">
+          {`
+            (function(s) {
+              s.dataset.zone = "11219025";
+              s.src = "https://nap5k.com/tag.min.js";
+              s.async = true;
+            })(
+              [document.documentElement, document.body]
+                .filter(Boolean)
+                .pop()
+                .appendChild(document.createElement("script"))
+            );
+          `}
+        </Script>
+
         {/* BidVertiser verification */}
         <div
           dangerouslySetInnerHTML={{
@@ -128,18 +137,19 @@ export default function RootLayout({
         {/* HilltopAds MultiTag Banner */}
         <Script id="hilltopads-multitag-banner" strategy="afterInteractive">
           {`
-            (function(vlie){
-              var d = document,
-                  s = d.createElement('script'),
-                  l = d.scripts[d.scripts.length - 1];
+            (function(vlie) {
+              var d = document;
+              var s = d.createElement("script");
+              var l = d.scripts[d.scripts.length - 1];
 
               s.settings = vlie || {};
-              s.src = "//prizefamily.com/b.XLVcsQdTGhlq0SY/WFch/Vedm/9zuzZXU/lIkdPYTYcRx/OpDuEsy-NBzncYtoNvzPE/4zMwT/IQ4_M/QM";
+              s.src =
+                "//prizefamily.com/b.XLVcsQdTGhlq0SY/WFch/Vedm/9zuzZXU/lIkdPYTYcRx/OpDuEsy-NBzncYtoNvzPE/4zMwT/IQ4_M/QM";
               s.async = true;
-              s.referrerPolicy = 'no-referrer-when-downgrade';
+              s.referrerPolicy = "no-referrer-when-downgrade";
 
               l.parentNode.insertBefore(s, l);
-            })({})
+            })({});
           `}
         </Script>
       </body>
