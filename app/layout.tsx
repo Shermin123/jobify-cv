@@ -93,6 +93,9 @@ export default function RootLayout({
       </head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
+        {/* BidVertiser verification */}
+        {/* Bidvertiser2105376 */}
+
         <AuthProvider>
           <Navbar />
 
