@@ -93,6 +93,11 @@ export default function RootLayout({
       </head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
+        <div
+  dangerouslySetInnerHTML={{
+    __html: "<!-- Bidvertiser2105376 -->",
+  }}
+/>
         {/* BidVertiser verification */}
         {/* Bidvertiser2105376 */}
 
