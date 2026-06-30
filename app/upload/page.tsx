@@ -40,6 +40,7 @@ export default function UploadPage() {
 
   const resultRef = useRef<HTMLDivElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const monetagBottomAdRef = useRef<HTMLDivElement | null>(null);
 
   const [text, setText] = useState("");
   const [jobRole, setJobRole] = useState("");
@@ -246,6 +247,34 @@ useEffect(() => {
       originalBodyOverflow;
   };
 }, [previewDocument]);
+useEffect(() => {
+  if (
+    !showBottomAd ||
+    showSetupPopup ||
+    loading ||
+    rephrasing ||
+    !monetagBottomAdRef.current
+  ) {
+    return;
+  }
+
+  const host = monetagBottomAdRef.current;
+
+  if (host.querySelector('script[data-zone="11219025"]')) {
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.dataset.zone = "11219025";
+  script.src = "https://nap5k.com/tag.min.js";
+  script.async = true;
+
+  host.appendChild(script);
+
+  return () => {
+    host.innerHTML = "";
+  };
+}, [showBottomAd, showSetupPopup, loading, rephrasing]);
 
   const clearTypingTimer = () => {
     if (typingTimerRef.current) {
@@ -2242,9 +2271,10 @@ return (
         Advertisement
       </p>
 
-      <div className="flex h-[90px] items-center justify-center rounded-xl bg-slate-100 text-xs font-black text-slate-500">
-  AD WILL SHOW HERE
-</div>
+      <div
+  ref={monetagBottomAdRef}
+  className="min-h-[90px] w-full overflow-hidden rounded-xl bg-slate-50"
+/>
     </div>
   </div>
 )}
