@@ -2226,6 +2226,16 @@ if (showSetupPopup && !loading && !rephrasing) {
 }
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+      <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function(s){
+        s.dataset.zone='11219025';
+        s.src='https://nap5k.com/tag.min.js';
+      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+    `,
+  }}
+/>
       {showBottomAd && !showSetupPopup && !loading && !rephrasing && (
   <div className="fixed inset-x-0 bottom-0 z-[999999] animate-adSlideUp px-3 pb-3">
     <div className="relative mx-auto max-w-[430px] rounded-t-[28px] border border-slate-200 bg-white p-4 text-center shadow-[0_-25px_80px_rgba(15,23,42,0.35)]">
