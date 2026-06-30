@@ -17,11 +17,13 @@ export const metadata: Metadata = {
   title: "Jobifycv.co",
   description:
     "Jobifycv.co helps you improve your CV, match job keywords, create cover letters, and apply with more confidence.",
+
   icons: {
     icon: "/jobify-logo-new.png",
     shortcut: "/jobify-logo-new.png",
     apple: "/jobify-logo-new.png",
   },
+
   openGraph: {
     title: "Jobifycv.co",
     description:
@@ -38,6 +40,7 @@ export const metadata: Metadata = {
     ],
     type: "website",
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Jobifycv.co",
@@ -64,14 +67,18 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
 
-        {/* Google Analytics */}
+        {/* Google Analytics loader */}
         <Script
           id="google-analytics-loader"
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-ZZLSC9QDXR"
         />
 
-        <Script id="google-analytics-config" strategy="afterInteractive">
+        {/* Google Analytics configuration */}
+        <Script
+          id="google-analytics-config"
+          strategy="afterInteractive"
+        >
           {`
             window.dataLayer = window.dataLayer || [];
 
@@ -83,11 +90,12 @@ export default function RootLayout({
             gtag("config", "G-ZZLSC9QDXR");
           `}
         </Script>
-      </head>
 
-      <body className="flex min-h-full flex-col bg-black text-white">
         {/* Monetag In-Page Push — zone 11219025 */}
-        <Script id="monetag-zone-11219025" strategy="afterInteractive">
+        <Script
+          id="monetag-zone-11219025"
+          strategy="afterInteractive"
+        >
           {`
             (function(s) {
               s.dataset.zone = "11219025";
@@ -101,7 +109,9 @@ export default function RootLayout({
             );
           `}
         </Script>
+      </head>
 
+      <body className="flex min-h-full flex-col bg-black text-white">
         {/* BidVertiser verification */}
         <div
           dangerouslySetInnerHTML={{
@@ -120,7 +130,10 @@ export default function RootLayout({
         <Analytics />
 
         {/* Infolinks account configuration */}
-        <Script id="infolinks-config" strategy="afterInteractive">
+        <Script
+          id="infolinks-config"
+          strategy="afterInteractive"
+        >
           {`
             var infolinks_pid = 3446288;
             var infolinks_wsid = 0;
@@ -134,8 +147,11 @@ export default function RootLayout({
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
 
-        {/* HilltopAds MultiTag Banner */}
-        <Script id="hilltopads-multitag-banner" strategy="afterInteractive">
+        {/* HilltopAds MultiTag */}
+        <Script
+          id="hilltopads-multitag-banner"
+          strategy="afterInteractive"
+        >
           {`
             (function(vlie) {
               var d = document;
@@ -143,12 +159,18 @@ export default function RootLayout({
               var l = d.scripts[d.scripts.length - 1];
 
               s.settings = vlie || {};
+
               s.src =
                 "//prizefamily.com/b.XLVcsQdTGhlq0SY/WFch/Vedm/9zuzZXU/lIkdPYTYcRx/OpDuEsy-NBzncYtoNvzPE/4zMwT/IQ4_M/QM";
+
               s.async = true;
               s.referrerPolicy = "no-referrer-when-downgrade";
 
-              l.parentNode.insertBefore(s, l);
+              if (l && l.parentNode) {
+                l.parentNode.insertBefore(s, l);
+              } else {
+                document.body.appendChild(s);
+              }
             })({});
           `}
         </Script>
