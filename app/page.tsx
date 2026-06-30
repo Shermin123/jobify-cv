@@ -1152,16 +1152,6 @@ const getRiskMessage = () => {
 </div>
 
 </section>
-{/* LARGE AD ABOVE TRUSTED COMPANIES */}
-<section className="relative z-10 mx-auto hidden max-w-6xl px-4 pb-8 md:block sm:px-6">
-  <div className="flex min-h-[220px] items-center justify-center rounded-[28px] border border-slate-200 bg-white shadow-xl">
-    <AdsterraBanner
-      adKey="74224594b53fcafd766a8a943e60511d"
-      width={728}
-      height={90}
-    />
-  </div>
-</section>
  
 <section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
   <div className="rounded-[28px] border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur-xl md:p-8">
