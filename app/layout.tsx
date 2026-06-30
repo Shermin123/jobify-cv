@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -56,23 +55,25 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
-  <script
-    async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
-    crossOrigin="anonymous"
-  ></script>
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
+          crossOrigin="anonymous"
+        />
 
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `
-        (function(s){
-          s.dataset.zone='11218400';
-          s.src='https://nap5k.com/tag.min.js';
-        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-      `,
-    }}
-  />
-</head>
+        {/* Monetag */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(s){
+                s.dataset.zone='11218400';
+                s.src='https://nap5k.com/tag.min.js';
+              })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+            `,
+          }}
+        />
+      </head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
         <AuthProvider>
@@ -99,6 +100,24 @@ export default function RootLayout({
           strategy="afterInteractive"
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
+
+        {/* HilltopAds Popunder */}
+        <Script id="hilltopads-popunder" strategy="afterInteractive">
+          {`
+            (function(ngiaq){
+              var d = document,
+                  s = d.createElement('script'),
+                  l = d.scripts[d.scripts.length - 1];
+
+              s.settings = ngiaq || {};
+              s.src = "//butterygrandmother.com/cWD/9.6/b/2/5dlKS/WKQL9tNRzWEG4yMNTqA/3SMhyb0/3WMrTDgSxzMWDPc-3p";
+              s.async = true;
+              s.referrerPolicy = 'no-referrer-when-downgrade';
+
+              l.parentNode.insertBefore(s, l);
+            })({})
+          `}
+        </Script>
       </body>
     </html>
   );
