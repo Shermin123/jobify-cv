@@ -2220,8 +2220,7 @@ if (showSetupPopup && !loading && !rephrasing) {
     opacity: 1;
   }
 }
-      `}</style>
-      
+            `}</style>
     </main>
   );
 }
@@ -2243,16 +2242,9 @@ return (
         Advertisement
       </p>
 
-      <script
-  dangerouslySetInnerHTML={{
-    __html: `
-      (function(s){
-        s.dataset.zone='11219025';
-        s.src='https://nap5k.com/tag.min.js';
-      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-    `,
-  }}
-/>
+      <div className="flex h-[90px] items-center justify-center rounded-xl bg-slate-100 text-xs font-black text-slate-500">
+  AD WILL SHOW HERE
+</div>
     </div>
   </div>
 )}
@@ -6392,6 +6384,14 @@ Company requirements"
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+.animate-adSlideUp {
+  animation: adSlideUp 0.45s ease-out;
+}
+  @keyframes adSlideUp {
+  from { transform: translateY(120%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .animate-adSlideUp {
