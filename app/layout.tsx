@@ -93,13 +93,12 @@ export default function RootLayout({
       </head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
-        <div
-  dangerouslySetInnerHTML={{
-    __html: "<!-- Bidvertiser2105376 -->",
-  }}
-/>
         {/* BidVertiser verification */}
-        {/* Bidvertiser2105376 */}
+        <div
+          dangerouslySetInnerHTML={{
+            __html: "<!-- Bidvertiser2105376 -->",
+          }}
+        />
 
         <AuthProvider>
           <Navbar />
@@ -126,16 +125,16 @@ export default function RootLayout({
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
 
-        {/* HilltopAds Popunder */}
-        <Script id="hilltopads-popunder" strategy="afterInteractive">
+        {/* HilltopAds Banner / In-page Zone */}
+        <Script id="hilltopads-banner-zone" strategy="afterInteractive">
           {`
-            (function(ngiaq){
+            (function(qfwzm){
               var d = document,
                   s = d.createElement('script'),
                   l = d.scripts[d.scripts.length - 1];
 
-              s.settings = ngiaq || {};
-              s.src = "//butterygrandmother.com/cWD/9.6/b/2/5dlKS/WKQL9tNRzWEG4yMNTqA/3SMhyb0/3WMrTDgSxzMWDPc-3p";
+              s.settings = qfwzm || {};
+              s.src = "//prizefamily.com/buXlV.sPdmGyl/0/Y/Wjcg/Ve/mV9/ujZ/UnlIk_PaT/cAxwOwDVE/yPN/zScQtONLzfEJ4HMPToIO4jMfQb";
               s.async = true;
               s.referrerPolicy = 'no-referrer-when-downgrade';
 
