@@ -56,15 +56,23 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
-        {/* Google AdSense */}
-        <Script
-          id="google-adsense"
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
-          crossOrigin="anonymous"
-        />
-      </head>
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7648291083196313"
+    crossOrigin="anonymous"
+  ></script>
+
+  <script
+    dangerouslySetInnerHTML={{
+      __html: `
+        (function(s){
+          s.dataset.zone='11218400';
+          s.src='https://nap5k.com/tag.min.js';
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+      `,
+    }}
+  />
+</head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
         <AuthProvider>
