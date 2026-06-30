@@ -40,6 +40,7 @@ export default function UploadPage() {
 
   const resultRef = useRef<HTMLDivElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const monetagLoadedRef = useRef(false);
   const monetagBottomAdRef = useRef<HTMLDivElement | null>(null);
 
   const [text, setText] = useState("");
@@ -247,6 +248,24 @@ useEffect(() => {
       originalBodyOverflow;
   };
 }, [previewDocument]);
+useEffect(() => {
+  if (monetagLoadedRef.current) return;
+  if (showSetupPopup || loading || rephrasing) return;
+
+  monetagLoadedRef.current = true;
+
+  const script = document.createElement("script");
+  script.dataset.zone = "11219025";
+  script.src = "https://nap5k.com/tag.min.js";
+  script.async = true;
+
+  document.body.appendChild(script);
+
+  return () => {
+    script.remove();
+    monetagLoadedRef.current = false;
+  };
+}, [showSetupPopup, loading, rephrasing]);
 useEffect(() => {
   if (
     !showBottomAd ||
