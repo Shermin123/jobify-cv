@@ -62,6 +62,23 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
 
+        {/* Google Analytics GA4 */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-ZZLSC9QDXR"
+        />
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-ZZLSC9QDXR');
+            `,
+          }}
+        />
+
         {/* Monetag */}
         <script
           dangerouslySetInnerHTML={{
