@@ -2256,28 +2256,70 @@ if (showSetupPopup && !loading && !rephrasing) {
 
 return (
   <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
-    {showBottomAd && !showSetupPopup && !loading && !rephrasing && (
-  <div className="fixed inset-x-0 bottom-0 z-[999999] animate-adSlideUp px-3 pb-3">
-    <div className="relative mx-auto max-w-[430px] rounded-t-[28px] border border-slate-200 bg-white p-4 text-center shadow-[0_-25px_80px_rgba(15,23,42,0.35)]">
-      <button
-        type="button"
-        onClick={() => setShowBottomAd(false)}
-        className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-base font-black text-slate-600"
-      >
-        ×
-      </button>
-
-      <p className="mb-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
-        Advertisement
-      </p>
-
+    {typeof document !== "undefined" &&
+  showBottomAd &&
+  !showSetupPopup &&
+  !loading &&
+  !rephrasing &&
+  createPortal(
+    <div
+      className="animate-adSlideUp"
+      style={{
+        position: "fixed",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 2147483647,
+        padding: "0 12px 12px",
+        pointerEvents: "none",
+      }}
+    >
       <div
-  ref={monetagBottomAdRef}
-  className="min-h-[90px] w-full overflow-hidden rounded-xl bg-slate-50"
-/>
-    </div>
-  </div>
-)}
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "430px",
+          margin: "0 auto",
+          padding: "16px",
+          background: "white",
+          border: "1px solid #e2e8f0",
+          borderRadius: "28px 28px 0 0",
+          boxShadow: "0 -25px 80px rgba(15,23,42,0.35)",
+          textAlign: "center",
+          pointerEvents: "auto",
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setShowBottomAd(false)}
+          style={{
+            position: "absolute",
+            right: "12px",
+            top: "12px",
+            width: "32px",
+            height: "32px",
+            borderRadius: "9999px",
+            border: "none",
+            background: "#f1f5f9",
+            fontWeight: 900,
+            cursor: "pointer",
+          }}
+        >
+          ×
+        </button>
+
+        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400">
+          Advertisement
+        </p>
+
+        <div
+          ref={monetagBottomAdRef}
+          className="min-h-[90px] w-full overflow-hidden rounded-xl bg-slate-50"
+        />
+      </div>
+    </div>,
+    document.body
+  )}
       
     
 
