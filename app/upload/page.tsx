@@ -2243,14 +2243,16 @@ return (
         Advertisement
       </p>
 
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client="ca-pub-7648291083196313"
-        data-ad-slot="7090386055"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
+      <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function(s){
+        s.dataset.zone='11219025';
+        s.src='https://nap5k.com/tag.min.js';
+      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+    `,
+  }}
+/>
     </div>
   </div>
 )}
