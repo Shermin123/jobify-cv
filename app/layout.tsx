@@ -126,33 +126,7 @@ export default function RootLayout({
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
 
-        {/* Existing HilltopAds MultiTag */}
-        <Script
-          id="hilltopads-multitag-banner"
-          strategy="afterInteractive"
-        >
-          {`
-            (function(vlie) {
-              var d = document;
-              var s = d.createElement("script");
-              var l = d.scripts[d.scripts.length - 1];
-
-              s.settings = vlie || {};
-
-              s.src =
-                "//prizefamily.com/b.XLVcsQdTGhlq0SY/WFch/Vedm/9zuzZXU/lIkdPYTYcRx/OpDuEsy-NBzncYtoNvzPE/4zMwT/IQ4_M/QM";
-
-              s.async = true;
-              s.referrerPolicy = "no-referrer-when-downgrade";
-
-              if (l && l.parentNode) {
-                l.parentNode.insertBefore(s, l);
-              } else {
-                document.body.appendChild(s);
-              }
-            })({});
-          `}
-        </Script>
+        
 
         {/* New fixed bottom HilltopAds banner */}
         <HilltopBottomBanner />
