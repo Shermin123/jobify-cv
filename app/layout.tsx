@@ -5,7 +5,7 @@ import "./globals.css";
 import AuthProvider from "./providers/AuthProvider";
 import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
-import HilltopBottomBanner from "./components/HilltopBottomBanner";
+
 import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
@@ -93,7 +93,7 @@ export default function RootLayout({
         </Script>
       </head>
 
-      <body className="flex min-h-full flex-col bg-black pb-[100px] text-white">
+      <body className="flex min-h-full flex-col bg-black text-white">
         {/* BidVertiser verification */}
         <div
           dangerouslySetInnerHTML={{
@@ -128,8 +128,7 @@ export default function RootLayout({
 
         
 
-        {/* New fixed bottom HilltopAds banner */}
-        <HilltopBottomBanner />
+        
       </body>
     </html>
   );
