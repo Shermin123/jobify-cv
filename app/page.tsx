@@ -888,9 +888,33 @@ const getRiskMessage = () => {
     <p className="mt-5 text-center text-[10px] font-semibold text-slate-400">
       Company names and logos are trademarks of their respective owners.
     </p>
-  </div>
+    </div>
 </section>
 
+{/* ================= TWO ADS ABOVE CV SCORE ================= */}
+<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
+  <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+    Advertisement
+  </p>
+
+  <div className="grid w-full items-start gap-6 md:grid-cols-2">
+    {/* First ad */}
+    <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-sm">
+      <AdsterraBanner
+        adKey="022bf6f0ac84fc8271661fdf0220eab4"
+        width={300}
+        height={250}
+      />
+    </div>
+
+    {/* Second ad */}
+    <div className="flex min-h-[250px] w-full items-start justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-sm">
+      <div className="w-full max-w-[520px]">
+        <AdsterraNativeBanner />
+      </div>
+    </div>
+  </div>
+</section>
 
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
