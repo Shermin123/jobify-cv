@@ -666,222 +666,226 @@ const getRiskMessage = () => {
   </div>
 </div>
 
-      {/* ================= HERO ================= */}
-      <section className="relative z-10 px-4 sm:px-6 pt-4 md:pt-6 pb-6 md:pb-8">
+      {/* ================= PROFESSIONAL HERO ================= */}
+<section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50">
+  <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
+  <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-violet-200/40 blur-3xl" />
 
-        <div className="mx-auto max-w-6xl">
+  <div className="relative mx-auto grid min-h-[620px] max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-20">
+    {/* LEFT SIDE */}
+    <div className="text-center lg:text-left">
+      <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black text-blue-700 shadow-sm">
+        <span className="h-2 w-2 rounded-full bg-blue-600" />
+        AI-powered CV improvement
+      </div>
 
-  {/* LEFT HERO */}
-  <div className="mx-auto max-w-xl text-center">
-    
-    
-    <div className="mt-2 flex w-full max-w-xl flex-col gap-2 mx-auto lg:mx-0">
+      <h1 className="mt-6 text-4xl font-black leading-[1.05] tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-6xl">
+        Build a CV that gets
+        <span className="mt-2 block bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+          more interviews.
+        </span>
+      </h1>
 
+      <p className="mx-auto mt-6 max-w-xl text-base font-medium leading-7 text-slate-600 sm:text-lg lg:mx-0">
+        Improve your CV wording, identify missing ATS keywords and create a
+        stronger application tailored to your target role.
+      </p>
 
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
+        <button
+          type="button"
+          onClick={() => {
+            sessionStorage.setItem("jobify_force_setup", "true");
+            router.push("/upload");
+          }}
+          className="rounded-2xl bg-slate-950 px-7 py-4 text-base font-black text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-slate-800"
+        >
+          Build My CV →
+        </button>
 
-<div className="group relative origin-center transition-all duration-500 ease-out hover:scale-[1.015] hover:drop-shadow-[0_18px_35px_rgba(37,99,235,0.12)]">
-  <h1 className="text-4xl font-black leading-tight tracking-[-0.05em] text-slate-950 sm:text-5xl">
-    Build a CV that gets you
-    <span className="mt-1 block bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent transition-all duration-500 group-hover:scale-[1.04] group-hover:tracking-[-0.03em]">
-      more INTERVIEWS.
-    </span>
-  </h1>
-  
+        <button
+          type="button"
+          onClick={() =>
+            document
+              .getElementById("cv-score")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="rounded-2xl border border-slate-300 bg-white px-7 py-4 text-base font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50"
+        >
+          Check CV Score
+        </button>
+      </div>
 
-  <p className="mx-auto mt-4 max-w-lg text-sm font-semibold leading-6 text-slate-600 transition-all duration-500 group-hover:text-slate-700 sm:text-base lg:mx-0">
-    Create a focused, ATS-ready CV with stronger wording, relevant keywords and
-    achievements recruiters notice.
-  </p>
+      <button
+        type="button"
+        onClick={() => router.push("/jobs")}
+        className="mt-3 text-sm font-black text-blue-700 transition hover:text-blue-900"
+      >
+        Explore AI Auto Apply →
+      </button>
 
-  
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-500 lg:justify-start">
+        <span className="flex items-center gap-2">
+          <span className="text-emerald-500">✓</span>
+          Free CV score
+        </span>
 
-  
-</div>
+        <span className="flex items-center gap-2">
+          <span className="text-emerald-500">✓</span>
+          ATS keyword check
+        </span>
 
+        <span className="flex items-center gap-2">
+          <span className="text-emerald-500">✓</span>
+          No card required
+        </span>
+      </div>
+    </div>
 
+    {/* RIGHT SIDE */}
+    <div className="relative mx-auto w-full max-w-[560px]">
+      <div className="absolute -inset-5 rounded-[40px] bg-gradient-to-r from-blue-200/50 to-violet-200/50 blur-2xl" />
 
-  <button
-    type="button"
-    onClick={() => {
-      sessionStorage.setItem("jobify_force_setup", "true");
-      router.push("/upload");
-    }}
-    className="w-full rounded-2xl bg-black px-6 py-4 text-base font-black text-white shadow-lg transition hover:scale-[1.02] hover:bg-gray-900"
-  >
-    🚀 Build My CV
-  </button>
+      <div className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white p-5 shadow-[0_30px_80px_rgba(15,23,42,0.16)] sm:p-7">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-5">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
+              Example CV scan
+            </p>
 
-  <button
-    type="button"
-    onClick={() =>
-      document.getElementById("cv-score")?.scrollIntoView({ behavior: "smooth" })
-    }
-    className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 text-base font-black text-white shadow-lg transition hover:scale-[1.02]"
-  >
-    📊 Check CV Score For Free
-  </button>
+            <h2 className="mt-1 text-xl font-black text-slate-950">
+              CV performance report
+            </h2>
+          </div>
 
-  <button
-  type="button"
-  onClick={() => router.push("/jobs")}
-  style={{
-    background: "#ffffff",
-    color: "#111827",
-    border: "2px solid #111827",
-  }}
-  className="w-full rounded-2xl px-6 py-4 text-base font-black shadow-lg transition hover:scale-[1.02]"
->
-  <span style={{ color: "#111827", opacity: 1 }}>
-    🤖 AI Auto Apply
-  </span>
-</button>
-</div>
-{/* AD ABOVE HIRED BOX */}
-<div className="mt-8 hidden justify-center md:flex">
-  <AdsterraBanner
-    adKey="74224594b53fcafd766a8a943e60511d"
-    width={728}
-    height={90}
-  />
-</div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-lg font-black text-emerald-600">
+            82
+          </div>
+        </div>
 
-    <div className="mt-10">
-  <HiredAtBox />
-</div> 
-    
+        <div className="mt-6 space-y-5">
+          {[
+            {
+              label: "ATS keyword match",
+              value: 86,
+            },
+            {
+              label: "Recruiter readability",
+              value: 78,
+            },
+            {
+              label: "Target role relevance",
+              value: 72,
+            },
+          ].map((item) => (
+            <div key={item.label}>
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-black text-slate-700">
+                  {item.label}
+                </span>
 
-{/* SECOND AD — 160x600 */}
-{/* LEFT-SIDE ADS */}
-<div className="mt-6 flex flex-col items-center gap-6">
-  {/* 300x250 ad */}
-  <div className="flex w-full justify-center">
-    <AdsterraBanner
-      adKey="022bf6f0ac84fc8271661fdf0220eab4"
-      width={300}
-      height={250}
-    />
-  </div>
-
-  {/* Native banner directly underneath */}
-  <div className="w-full max-w-[520px] overflow-hidden">
-    <AdsterraNativeBanner />
-  </div>
-</div>
-
-
-
-
-
-  </div>
-
-        
-        
-
-{/* CLOSE HERO GRID */}
-</div>
-
-</section>
- 
-<section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-  <div className="rounded-[28px] border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur-xl md:p-8">
-    <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-600">
-      Trusted by job seekers
-    </p>
-
-    <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-slate-950 md:text-3xl">
-      Our users apply to top companies
-    </h2>
-
-    <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {[
-        {
-          name: "Google",
-          domain: "google.com",
-        },
-        {
-          name: "Amazon",
-          domain: "amazon.com",
-        },
-        {
-          name: "Microsoft",
-          domain: "microsoft.com",
-        },
-        {
-          name: "Meta",
-          domain: "meta.com",
-        },
-        {
-          name: "Netflix",
-          domain: "netflix.com",
-        },
-        {
-          name: "Apple",
-          domain: "apple.com",
-        },
-        {
-          name: "IBM",
-          domain: "ibm.com",
-        },
-        {
-          name: "Deloitte",
-          domain: "deloitte.com",
-        },
-      ].map((company) => {
-        const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
-        const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
-
-        return (
-          <div
-            key={company.name}
-            className="group flex min-h-[100px] items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
-          >
-            <div className="flex flex-col items-center justify-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
-                <img
-                  src={googleLogo}
-                  alt={`${company.name} logo`}
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  className="h-9 w-9 object-contain transition-transform duration-300 group-hover:scale-110"
-                  data-fallback-used="false"
-                  onError={(event) => {
-                    const image = event.currentTarget;
-
-                    if (image.dataset.fallbackUsed === "false") {
-                      image.dataset.fallbackUsed = "true";
-                      image.src = duckDuckGoLogo;
-                      return;
-                    }
-
-                    image.style.display = "none";
-
-                    const fallback =
-                      image.nextElementSibling as HTMLElement | null;
-
-                    if (fallback) {
-                      fallback.style.display = "flex";
-                    }
-                  }}
-                />
-
-                <span
-                  className="hidden h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-sm font-black text-white"
-                  aria-hidden="true"
-                >
-                  {company.name.charAt(0)}
+                <span className="font-black text-slate-950">
+                  {item.value}%
                 </span>
               </div>
 
-              <span className="text-xs font-black text-slate-700">
-                {company.name}
-              </span>
+              <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-blue-600 to-violet-600"
+                  style={{ width: `${item.value}%` }}
+                />
+              </div>
             </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-emerald-600">
+              Strong point
+            </p>
+
+            <p className="mt-1 text-sm font-black text-slate-900">
+              Clear work experience
+            </p>
           </div>
-        );
-      })}
+
+          <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-orange-600">
+              Needs improvement
+            </p>
+
+            <p className="mt-1 text-sm font-black text-slate-900">
+              More measurable results
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() =>
+            document
+              .getElementById("cv-score")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 py-4 text-sm font-black text-white shadow-lg transition hover:scale-[1.01]"
+        >
+          Check My CV For Free →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ================= HIRED / TRUST BOX ================= */}
+<section className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6">
+  <HiredAtBox />
+</section>
+
+{/* ================= COMPANY LOGOS ================= */}
+<section className="relative z-10 mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+  <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+    <div className="text-center">
+      <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-600">
+        Built for real job applications
+      </p>
+
+      <h2 className="mt-2 text-xl font-black tracking-[-0.03em] text-slate-950 sm:text-2xl">
+        Tailor your CV for leading employers
+      </h2>
     </div>
 
-    <p className="mt-5 text-[10px] font-semibold text-slate-400">
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+      {[
+        { name: "Google", domain: "google.com" },
+        { name: "Amazon", domain: "amazon.com" },
+        { name: "Microsoft", domain: "microsoft.com" },
+        { name: "Meta", domain: "meta.com" },
+        { name: "Netflix", domain: "netflix.com" },
+        { name: "Apple", domain: "apple.com" },
+        { name: "IBM", domain: "ibm.com" },
+        { name: "Deloitte", domain: "deloitte.com" },
+      ].map((company) => (
+        <div
+          key={company.name}
+          className="flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-4 transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+        >
+          <img
+            src={`https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`}
+            alt={`${company.name} logo`}
+            className="h-8 w-8 object-contain"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+          />
+
+          <span className="text-xs font-black text-slate-700">
+            {company.name}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <p className="mt-5 text-center text-[10px] font-semibold text-slate-400">
       Company names and logos are trademarks of their respective owners.
     </p>
   </div>
