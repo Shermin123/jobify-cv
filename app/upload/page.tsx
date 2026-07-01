@@ -2244,7 +2244,11 @@ return (
       src="https://n6wxm.com/vignette.min.js"
     />
     
-      
+      {/* Monetag second In-Page Push — Good tag */}
+<MonetagAd
+  zone="11218400"
+  src="https://nap5k.com/tag.min.js"
+/>
     
 
   {typeof document !== "undefined" &&
