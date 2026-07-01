@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Script from "next/script";
 import { checkSubscription } from "@/lib/checkSubscription";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -911,7 +912,16 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
     : "translate-x-0 translate-y-0 rotate-0 opacity-100 scale-100 blur-0";
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
+  <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
+
+    {/* Monetag Push Notifications — zone 11218397 */}
+    <Script
+      id="monetag-push-11218397"
+      src="https://5gvci.com/act/files/tag.min.js?z=11218397"
+      strategy="afterInteractive"
+      data-cfasync="false"
+    />
+
       {applyNotice && (
   <div className="fixed inset-x-3 top-28 z-[999] mx-auto max-w-md animate-jobifyApplyToast rounded-[28px] border border-emerald-200 bg-white/95 p-4 shadow-[0_24px_80px_rgba(16,185,129,0.35)] backdrop-blur-2xl sm:top-32">
     <div className="flex items-start gap-4">
