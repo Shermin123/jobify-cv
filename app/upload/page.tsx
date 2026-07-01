@@ -14,26 +14,7 @@ import EmojiBackground from "@/app/components/EmojiBackground";
 import HiredAtBox from "@/app/components/HiredAtBox";
 import mammoth from "mammoth";
 
-function CleanAdBox({ label = "Advertisement" }: { label?: string }) {
-  return (
-    <div className="relative z-10 mx-auto my-6 max-w-6xl px-4">
-      <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white/90 p-4 text-center shadow-sm backdrop-blur-xl">
-        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">
-          {label}
-        </p>
 
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client="ca-pub-7648291083196313"
-          data-ad-slot="7090386055"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
-    </div>
-  );
-}
 
 export default function UploadPage() {
   const { data: session, status } = useSession();
@@ -2478,13 +2459,13 @@ return (
 
   </div>
 </section>
-<CleanAdBox label="Sponsored" />
+
       
 
       <section className="max-w-6xl mx-auto px-4 pb-10 space-y-6">
         
         {/* RESULTS */}
-        {generated && <CleanAdBox label="Sponsored tools" />}
+        
         {generated && (
           <section
   ref={resultRef}
