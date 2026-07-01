@@ -837,11 +837,6 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-{/* ================= HIRED / TRUST BOX ================= */}
-<section className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6">
-  <HiredAtBox />
-</section>
-
 {/* ================= COMPANY LOGOS ================= */}
 <section className="relative z-10 mx-auto max-w-6xl px-4 pb-12 sm:px-6">
   <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
