@@ -22,6 +22,7 @@ export default function UploadPage() {
 
   const resultRef = useRef<HTMLDivElement | null>(null);
   const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const setupHilltopAdRef = useRef<HTMLDivElement | null>(null);
   
   
 
@@ -196,6 +197,30 @@ useEffect(() => {
 
   return () => {
     document.body.style.overflow = originalOverflow;
+  };
+}, [showSetupPopup]);
+  useEffect(() => {
+  if (!showSetupPopup) return;
+
+  const container = setupHilltopAdRef.current;
+
+  if (!container || container.dataset.loaded === "true") return;
+
+  container.dataset.loaded = "true";
+
+  const script = document.createElement("script");
+
+  script.src =
+    "https://prizefamily.com/bIX/VFsTd.GMlH0FY/W/cK/Vegmk9PuBZuURl/kuP/TqckxHOtDWMo3FMBDMEFtxN_zyEl4TMxzJcNwcN/QY";
+
+  script.async = true;
+  script.referrerPolicy = "no-referrer-when-downgrade";
+
+  container.appendChild(script);
+
+  return () => {
+    container.innerHTML = "";
+    delete container.dataset.loaded;
   };
 }, [showSetupPopup]);
     useEffect(() => {
@@ -2017,6 +2042,13 @@ if (showSetupPopup && !loading && !rephrasing) {
   />
 )}
 </div>
+    {/* HilltopAds inside question popup */}
+<div className="mt-4 flex min-h-[100px] w-full items-center justify-center overflow-hidden rounded-2xl bg-white/60">
+  <div
+    ref={setupHilltopAdRef}
+    className="flex w-full items-center justify-center text-center"
+  />
+</div>
 
           {/* BUTTONS */}
           <div className="mt-5 flex gap-3">
@@ -2213,6 +2245,7 @@ if (showSetupPopup && !loading && !rephrasing) {
 
 return (
   <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+    
     {/* Monetag side notification ad */}
     <MonetagAd
       zone="11219025"
