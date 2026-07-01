@@ -751,15 +751,21 @@ const getRiskMessage = () => {
     
 
 {/* SECOND AD — 160x600 */}
-<div className="mt-6 flex justify-center">
-  <AdsterraBanner
-    adKey="022bf6f0ac84fc8271661fdf0220eab4"
-    width={300}
-    height={250}
-  />
-</div>
-<div className="mt-6 w-full">
-  <AdsterraNativeBanner />
+{/* LEFT-SIDE ADS */}
+<div className="mt-6 flex flex-col items-center gap-6">
+  {/* 300x250 ad */}
+  <div className="flex w-full justify-center">
+    <AdsterraBanner
+      adKey="022bf6f0ac84fc8271661fdf0220eab4"
+      width={300}
+      height={250}
+    />
+  </div>
+
+  {/* Native banner directly underneath */}
+  <div className="w-full max-w-[520px] overflow-hidden">
+    <AdsterraNativeBanner />
+  </div>
 </div>
 
 
