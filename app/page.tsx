@@ -744,84 +744,118 @@ const getRiskMessage = () => {
 
 {/* ================= COMPANY LOGOS ================= */}
 <section className="relative z-10 mx-auto max-w-7xl px-4 pb-8 sm:px-6">
-  <div className="rounded-[24px] border border-slate-200 bg-white/95 px-5 py-6 shadow-xl backdrop-blur-xl">
-    
-    {/* TITLE ON TOP */}
-    <div className="text-center">
-      <p className="text-[10px] font-black uppercase tracking-[0.24em] text-blue-600 sm:text-xs">
-        Our users got hired at these top companies.
-      </p>
+  <div className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-white px-5 py-6 shadow-[0_20px_60px_rgba(15,23,42,0.10)] sm:px-7">
+    {/* Decorative background */}
+    <div className="pointer-events-none absolute -left-20 -top-20 h-52 w-52 rounded-full bg-blue-100/70 blur-3xl" />
+    <div className="pointer-events-none absolute -bottom-24 -right-20 h-52 w-52 rounded-full bg-violet-100/70 blur-3xl" />
 
-  
-    </div>
+    <div className="relative">
+      {/* Heading */}
+      <div className="text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5">
+          <span className="h-2 w-2 rounded-full bg-blue-600" />
 
-    {/* ALL COMPANIES IN ONE ROW */}
-    <div className="mt-6 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      {[
-        { name: "Google", domain: "google.com" },
-        { name: "Amazon", domain: "amazon.com" },
-        { name: "Microsoft", domain: "microsoft.com" },
-        { name: "Meta", domain: "meta.com" },
-        { name: "Netflix", domain: "netflix.com" },
-        { name: "Apple", domain: "apple.com" },
-        { name: "IBM", domain: "ibm.com" },
-        { name: "Deloitte", domain: "deloitte.com" },
-      ].map((company) => {
-        const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
-        const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-700 sm:text-xs">
+            Trusted career platform
+          </p>
+        </div>
 
-        return (
-          <div
-            key={company.name}
-            className="group flex min-h-[82px] min-w-[120px] flex-1 flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-white hover:shadow-md"
-          >
-            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white">
-              <img
-                src={googleLogo}
-                alt={`${company.name} logo`}
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
-                data-fallback-used="false"
-                onError={(event) => {
-                  const image = event.currentTarget;
+        <h2 className="mt-3 text-xl font-black tracking-[-0.03em] text-slate-950 sm:text-2xl">
+          Our users apply to leading companies
+        </h2>
 
-                  if (image.dataset.fallbackUsed === "false") {
-                    image.dataset.fallbackUsed = "true";
-                    image.src = duckDuckGoLogo;
-                    return;
-                  }
+        <p className="mx-auto mt-2 max-w-xl text-xs font-medium leading-5 text-slate-500 sm:text-sm">
+          Build tailored applications for roles across technology, finance,
+          consulting and more.
+        </p>
+      </div>
 
-                  image.style.display = "none";
+      {/* Companies */}
+      <div className="mt-6 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {[
+          { name: "Google", domain: "google.com" },
+          { name: "Amazon", domain: "amazon.com" },
+          { name: "Microsoft", domain: "microsoft.com" },
+          { name: "Meta", domain: "meta.com" },
+          { name: "Netflix", domain: "netflix.com" },
+          { name: "Apple", domain: "apple.com" },
+          { name: "IBM", domain: "ibm.com" },
+          { name: "Deloitte", domain: "deloitte.com" },
+        ].map((company) => {
+          const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
+          const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
 
-                  const fallback =
-                    image.nextElementSibling as HTMLElement | null;
+          return (
+            <div
+              key={company.name}
+              className="group flex min-h-[92px] min-w-[125px] flex-1 flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/80 px-3 py-4 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-white hover:shadow-lg"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm transition duration-300 group-hover:scale-105">
+                <img
+                  src={googleLogo}
+                  alt={`${company.name} logo`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="h-8 w-8 object-contain"
+                  data-fallback-used="false"
+                  onError={(event) => {
+                    const image = event.currentTarget;
 
-                  if (fallback) {
-                    fallback.style.display = "flex";
-                  }
-                }}
-              />
+                    if (image.dataset.fallbackUsed === "false") {
+                      image.dataset.fallbackUsed = "true";
+                      image.src = duckDuckGoLogo;
+                      return;
+                    }
 
-              <span
-                className="hidden h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-black text-white"
-                aria-hidden="true"
-              >
-                {company.name.charAt(0)}
+                    image.style.display = "none";
+
+                    const fallback =
+                      image.nextElementSibling as HTMLElement | null;
+
+                    if (fallback) {
+                      fallback.style.display = "flex";
+                    }
+                  }}
+                />
+
+                <span
+                  className="hidden h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-black text-white"
+                  aria-hidden="true"
+                >
+                  {company.name.charAt(0)}
+                </span>
+              </div>
+
+              <span className="mt-2 text-[11px] font-black text-slate-700 sm:text-xs">
+                {company.name}
               </span>
             </div>
+          );
+        })}
+      </div>
 
-            <span className="text-[11px] font-black text-slate-700 sm:text-xs">
-              {company.name}
-            </span>
-          </div>
-        );
-      })}
+      {/* Footer */}
+      <div className="mt-4 flex flex-col items-center justify-center gap-2 border-t border-slate-100 pt-4 text-center sm:flex-row sm:gap-5">
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
+          <span className="text-emerald-500">✓</span>
+          ATS-ready applications
+        </span>
+
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
+          <span className="text-emerald-500">✓</span>
+          Role-specific CVs
+        </span>
+
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
+          <span className="text-emerald-500">✓</span>
+          AI keyword matching
+        </span>
+      </div>
+
+      <p className="mt-3 text-center text-[9px] font-semibold text-slate-400">
+        Company names and logos are trademarks of their respective owners.
+      </p>
     </div>
-
-    <p className="mt-4 text-center text-[9px] font-semibold text-slate-400">
-      Company names and logos are trademarks of their respective owners.
-    </p>
   </div>
 </section>
 
