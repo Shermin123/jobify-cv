@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import AdsterraBanner from "./components/AdsterraBanner";
+import MonetagAd from "./components/MonetagAd";
 
 type CvIssue = {
   title: string;
@@ -62,19 +63,7 @@ useEffect(() => {
 
   checkAccess();
 }, [session?.user?.email]);
-useEffect(() => {
-  if (!showScoreAd) return;
 
-  const timer = setTimeout(() => {
-    try {
-      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-    } catch (error) {
-      console.error("AdSense error:", error);
-    }
-  }, 500);
-
-  return () => clearTimeout(timer);
-}, [showScoreAd]);
   // ================= CV SCORE ENGINE =================
   const calculateScore = () => {
   const raw = cvText.trim();
@@ -437,6 +426,12 @@ const getRiskMessage = () => {
 
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+      {showScoreAd && (
+  <MonetagAd
+    zone="11222749"
+    src="https://n6wxm.com/vignette.min.js"
+  />
+)}
       {showScoreAd &&
   typeof document !== "undefined" &&
   createPortal(
@@ -447,14 +442,7 @@ const getRiskMessage = () => {
             Advertisement
           </p>
 
-          <div className="mx-auto mt-3 flex h-[250px] w-[300px] items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-            <ins
-              className="adsbygoogle"
-              style={{ display: "inline-block", width: "300px", height: "250px" }}
-              data-ad-client="ca-pub-7648291083196313"
-              data-ad-slot="7090386055"
-            />
-          </div>
+          
 
           <div className="mt-3 rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-4 text-center shadow-sm">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">
