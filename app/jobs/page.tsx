@@ -921,6 +921,13 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       strategy="afterInteractive"
       data-cfasync="false"
     />
+    {/* Monetag Vignette — zone 11222780 */}
+<Script
+  id="monetag-vignette-11222780"
+  src="https://n6wxm.com/vignette.min.js"
+  strategy="afterInteractive"
+  data-zone="11222780"
+/>
 
       {applyNotice && (
   <div className="fixed inset-x-3 top-28 z-[999] mx-auto max-w-md animate-jobifyApplyToast rounded-[28px] border border-emerald-200 bg-white/95 p-4 shadow-[0_24px_80px_rgba(16,185,129,0.35)] backdrop-blur-2xl sm:top-32">
