@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import AdsterraBanner from "./components/AdsterraBanner";
 import MonetagAd from "./components/MonetagAd";
+import ExternalScriptAd from "./components/ExternalScriptAd";
 
 
 type CvIssue = {
@@ -815,35 +816,37 @@ const getRiskMessage = () => {
 </section>
 
 {/* ================= ADS ABOVE CV SCORE ================= */}
-<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-8 sm:px-6">
-  <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+<section className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6">
+  <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
     Advertisement
   </p>
 
-  <div className="flex flex-col items-center gap-5">
-    {/* 728x90 desktop banner */}
-    <div className="hidden w-full justify-center overflow-hidden md:flex">
-      <AdsterraBanner
-        adKey="74224594b53fcafd766a8a943e60511d"
-        width={728}
-        height={90}
-      />
-    </div>
+  {/* Adsterra wide banner */}
+  <div className="mb-6 hidden w-full justify-center overflow-hidden md:flex">
+    <AdsterraBanner
+      adKey="74224594b53fcafd766a8a943e60511d"
+      width={728}
+      height={90}
+    />
+  </div>
 
-    {/* Two 300x250 ads */}
-    <div className="grid w-full max-w-[630px] grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
+  <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
+    {/* Existing Adsterra 300x250 */}
+    <div className="flex min-h-[250px] w-full items-center justify-center">
       <AdsterraBanner
         adKey="022bf6f0ac84fc8271661fdf0220eab4"
         width={300}
         height={250}
       />
-
-      <AdsterraBanner
-        adKey='eec685f16c82ad26f1b5a4a527a44e84'
-        width={300}
-        height={250}
-      />
     </div>
+
+    {/* New external ad 1 */}
+    <ExternalScriptAd src="//prizefamily.com/b.XkVvsSdSGGl/0rYTWvcK/te/m/9DuqZ/UxlBkeP/TScFxlOyD/UH4/M/jKUVtEN-zREx4WN-T/gDyJOCQe" />
+
+    {/* New external ad 2 */}
+    <ExternalScriptAd src="//prizefamily.com/bvX/V.sqdVGrlq0zYjWXco/ieumf9bu/ZkUal/k/PsTAcoxyOkDfMQ3QNujAUhtMNUzYEx4/MDz_cR2AOnQN" />
+
+    {/* Add the next two different codes here */}
   </div>
 </section>
 
@@ -859,8 +862,8 @@ const getRiskMessage = () => {
 
     <AdsterraBanner
       adKey="eec685f16c82ad26f1b5a4a527a44e84"
-      width={160}
-      height={600}
+      width={300}
+      height={250}
     />
   </div>
 
