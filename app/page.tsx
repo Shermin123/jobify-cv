@@ -729,36 +729,7 @@ const getRiskMessage = () => {
         </button>
       </div>
 
-      {/* AD ABOVE HIRED BOX */}
-      <div className="mt-8 hidden justify-center md:flex">
-        <AdsterraBanner
-          adKey="74224594b53fcafd766a8a943e60511d"
-          width={728}
-          height={90}
-        />
-      </div>
-
-      <div className="mt-10">
-        <HiredAtBox />
-      </div>
-
-      {/* LEFT-SIDE ADS */}
-      <div className="mt-6 flex flex-col items-center gap-6">
-
-        {/* 300x250 ad */}
-        <div className="flex w-full justify-center">
-          <AdsterraBanner
-            adKey="022bf6f0ac84fc8271661fdf0220eab4"
-            width={300}
-            height={250}
-          />
-        </div>
-
-        {/* Native banner directly underneath */}
-        <div className="w-full max-w-[520px] overflow-hidden">
-          <AdsterraNativeBanner />
-        </div>
-      </div>
+  
     </div>
 
     {/* CLOSE HERO GRID */}
@@ -870,6 +841,33 @@ const getRiskMessage = () => {
   </div>
 </section>
 
+{/* ================= ADS ABOVE CV SCORE ================= */}
+<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
+  <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+    Advertisement
+  </p>
+
+  <div className="grid items-start gap-6 md:grid-cols-2">
+    {/* 300x250 ad */}
+    <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+      <AdsterraBanner
+        adKey="022bf6f0ac84fc8271661fdf0220eab4"
+        width={300}
+        height={250}
+      />
+    </div>
+
+    {/* Native ad */}
+    <div className="flex min-h-[250px] w-full items-start justify-center overflow-hidden">
+      <div className="w-full max-w-[520px]">
+        <AdsterraNativeBanner />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ================= CV SCORE SECTION ================= */}
+<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6"></section>
 
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
