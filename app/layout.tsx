@@ -90,25 +90,6 @@ export default function RootLayout({
             gtag("config", "G-ZZLSC9QDXR");
           `}
         </Script>
-
-        {/* Monetag Vignette Banner — zone 11219245 */}
-        <Script
-          id="monetag-vignette-11219245"
-          strategy="afterInteractive"
-        >
-          {`
-            (function(s) {
-              s.dataset.zone = "11219245";
-              s.src = "https://n6wxm.com/vignette.min.js";
-              s.async = true;
-            })(
-              [document.documentElement, document.body]
-                .filter(Boolean)
-                .pop()
-                .appendChild(document.createElement("script"))
-            );
-          `}
-        </Script>
       </head>
 
       <body className="flex min-h-full flex-col bg-black text-white">
