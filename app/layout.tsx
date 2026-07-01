@@ -5,6 +5,7 @@ import "./globals.css";
 import AuthProvider from "./providers/AuthProvider";
 import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
+import HilltopBottomBanner from "./components/HilltopBottomBanner";
 import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
@@ -14,9 +15,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Jobifycv.co",
+  title: "jobifycv.co",
   description:
-    "Jobifycv.co helps you improve your CV, match job keywords, create cover letters, and apply with more confidence.",
+    "jobifycv.co helps you improve your CV, match job keywords, create cover letters, and apply with more confidence.",
 
   icons: {
     icon: "/jobify-logo-new.png",
@@ -25,17 +26,17 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Jobifycv.co",
+    title: "jobifycv.co",
     description:
       "AI CV Builder that helps you improve your CV, create cover letters, and apply with confidence.",
     url: "https://jobifycv.co",
-    siteName: "Jobifycv.co",
+    siteName: "jobifycv.co",
     images: [
       {
         url: "https://jobifycv.co/jobify-logo-new.png",
         width: 512,
         height: 512,
-        alt: "Jobifycv.co logo",
+        alt: "jobifycv.co logo",
       },
     ],
     type: "website",
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Jobifycv.co",
+    title: "jobifycv.co",
     description:
       "AI CV Builder that helps you improve your CV, create cover letters, and apply with confidence.",
     images: ["https://jobifycv.co/jobify-logo-new.png"],
@@ -92,7 +93,7 @@ export default function RootLayout({
         </Script>
       </head>
 
-      <body className="flex min-h-full flex-col bg-black text-white">
+      <body className="flex min-h-full flex-col bg-black pb-[100px] text-white">
         {/* BidVertiser verification */}
         <div
           dangerouslySetInnerHTML={{
@@ -111,10 +112,7 @@ export default function RootLayout({
         <Analytics />
 
         {/* Infolinks account configuration */}
-        <Script
-          id="infolinks-config"
-          strategy="afterInteractive"
-        >
+        <Script id="infolinks-config" strategy="afterInteractive">
           {`
             var infolinks_pid = 3446288;
             var infolinks_wsid = 0;
@@ -128,7 +126,7 @@ export default function RootLayout({
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
 
-        {/* HilltopAds MultiTag */}
+        {/* Existing HilltopAds MultiTag */}
         <Script
           id="hilltopads-multitag-banner"
           strategy="afterInteractive"
@@ -155,6 +153,9 @@ export default function RootLayout({
             })({});
           `}
         </Script>
+
+        {/* New fixed bottom HilltopAds banner */}
+        <HilltopBottomBanner />
       </body>
     </html>
   );
