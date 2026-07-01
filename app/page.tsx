@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import AdsterraBanner from "./components/AdsterraBanner";
 import MonetagAd from "./components/MonetagAd";
+import AdsterraNativeBanner from "./components/AdsterraNativeBanner";
 
 type CvIssue = {
   title: string;
@@ -756,6 +757,9 @@ const getRiskMessage = () => {
     width={300}
     height={250}
   />
+</div>
+<div className="mt-6 w-full">
+  <AdsterraNativeBanner />
 </div>
 
 
