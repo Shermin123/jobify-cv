@@ -742,67 +742,46 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-<section className="relative z-10 mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-  <div className="rounded-[28px] border border-slate-200 bg-white/90 p-6 text-center shadow-xl backdrop-blur-xl md:p-8">
-    <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-600">
-      Trusted by job seekers
-    </p>
+{/* ================= COMPACT COMPANY LOGOS ================= */}
+<section className="relative z-10 mx-auto max-w-7xl px-4 pb-6 sm:px-6">
+  <div className="rounded-2xl border border-slate-200 bg-white/95 px-4 py-4 shadow-lg backdrop-blur-xl">
+    <div className="flex items-center justify-between gap-4">
+      <div className="shrink-0 text-left">
+        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">
+          Trusted by job seekers
+        </p>
 
-    <h2 className="mt-2 text-2xl font-black tracking-[-0.04em] text-slate-950 md:text-3xl">
-      Our users apply to top companies
-    </h2>
+        <h2 className="mt-1 text-sm font-black text-slate-950 sm:text-base">
+          Our users apply to top companies
+        </h2>
+      </div>
 
-    <div className="mt-7 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      {[
-        {
-          name: "Google",
-          domain: "google.com",
-        },
-        {
-          name: "Amazon",
-          domain: "amazon.com",
-        },
-        {
-          name: "Microsoft",
-          domain: "microsoft.com",
-        },
-        {
-          name: "Meta",
-          domain: "meta.com",
-        },
-        {
-          name: "Netflix",
-          domain: "netflix.com",
-        },
-        {
-          name: "Apple",
-          domain: "apple.com",
-        },
-        {
-          name: "IBM",
-          domain: "ibm.com",
-        },
-        {
-          name: "Deloitte",
-          domain: "deloitte.com",
-        },
-      ].map((company) => {
-        const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
-        const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
+      <div className="grid flex-1 grid-cols-4 gap-2 md:grid-cols-8">
+        {[
+          { name: "Google", domain: "google.com" },
+          { name: "Amazon", domain: "amazon.com" },
+          { name: "Microsoft", domain: "microsoft.com" },
+          { name: "Meta", domain: "meta.com" },
+          { name: "Netflix", domain: "netflix.com" },
+          { name: "Apple", domain: "apple.com" },
+          { name: "IBM", domain: "ibm.com" },
+          { name: "Deloitte", domain: "deloitte.com" },
+        ].map((company) => {
+          const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
+          const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
 
-        return (
-          <div
-            key={company.name}
-            className="group flex min-h-[95px] min-w-[125px] flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white px-3 py-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
-          >
-            <div className="flex flex-col items-center justify-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
+          return (
+            <div
+              key={company.name}
+              className="group flex min-h-[64px] min-w-0 flex-col items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2 py-2 transition hover:-translate-y-0.5 hover:border-blue-200 hover:bg-white hover:shadow-md"
+            >
+              <div className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg bg-white">
                 <img
                   src={googleLogo}
                   alt={`${company.name} logo`}
                   loading="lazy"
                   referrerPolicy="no-referrer"
-                  className="h-9 w-9 object-contain transition-transform duration-300 group-hover:scale-110"
+                  className="h-6 w-6 object-contain"
                   data-fallback-used="false"
                   onError={(event) => {
                     const image = event.currentTarget;
@@ -825,25 +804,21 @@ const getRiskMessage = () => {
                 />
 
                 <span
-                  className="hidden h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-sm font-black text-white"
+                  className="hidden h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-blue-600 to-indigo-600 text-[10px] font-black text-white"
                   aria-hidden="true"
                 >
                   {company.name.charAt(0)}
                 </span>
               </div>
 
-              <span className="text-xs font-black text-slate-700">
+              <span className="max-w-full truncate text-[9px] font-black text-slate-700 sm:text-[10px]">
                 {company.name}
               </span>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
-
-    <p className="mt-5 text-[10px] font-semibold text-slate-400">
-      Company names and logos are trademarks of their respective owners.
-    </p>
   </div>
 </section>
 
