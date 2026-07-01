@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import MonetagAd from "@/app/components/MonetagAd";
 import jsPDF from "jspdf";
 import { supabase } from "@/lib/supabase";
 import { checkSubscription } from "@/lib/checkSubscription";
@@ -2231,6 +2232,17 @@ if (showSetupPopup && !loading && !rephrasing) {
 
 return (
   <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
+    {/* Monetag side notification ad */}
+    <MonetagAd
+      zone="11219025"
+      src="https://nap5k.com/tag.min.js"
+    />
+
+    {/* Monetag centre vignette ad */}
+    <MonetagAd
+      zone="11219245"
+      src="https://n6wxm.com/vignette.min.js"
+    />
     
       
     
