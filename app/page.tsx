@@ -839,7 +839,7 @@ const getRiskMessage = () => {
       />
 
       <AdsterraBanner
-        adKey="PASTE_NEW_300X250_KEY_HERE"
+        adKey='eec685f16c82ad26f1b5a4a527a44e84'
         width={300}
         height={250}
       />
