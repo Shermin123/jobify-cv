@@ -752,7 +752,7 @@ const getRiskMessage = () => {
       Our users apply to top companies
     </h2>
 
-    <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="mt-7 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {[
         {
           name: "Google",
@@ -793,7 +793,7 @@ const getRiskMessage = () => {
         return (
           <div
             key={company.name}
-            className="group flex min-h-[100px] items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+            className="group flex min-h-[95px] min-w-[125px] flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white px-3 py-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
           >
             <div className="flex flex-col items-center justify-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
@@ -872,8 +872,7 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-{/* ================= CV SCORE SECTION ================= */}
-<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6"></section>
+
 
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
