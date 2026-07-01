@@ -620,50 +620,50 @@ const getRiskMessage = () => {
 </div>
 
       {/* ================= TRUSTED AI PARTNERS ================= */}
-<div className="border-b bg-white py-4">
-  <div className="mx-auto max-w-6xl px-4">
-    <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+<div className="border-b bg-white py-3">
+  <div className="mx-auto w-full max-w-6xl px-3 sm:px-4">
+    <div className="grid grid-cols-4 gap-2 sm:gap-3">
       
-      <div className="flex min-w-[210px] flex-1 items-center justify-center gap-2 rounded-2xl border bg-white px-4 py-3 shadow-sm">
+      <div className="flex min-w-0 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-3 shadow-sm sm:gap-2 sm:px-4">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
-          className="h-6 w-6"
+          className="h-5 w-5 shrink-0 sm:h-6 sm:w-6"
           alt="OpenAI"
         />
-        <span className="whitespace-nowrap text-sm font-medium text-gray-700">
+        <span className="truncate text-[10px] font-semibold text-gray-700 sm:text-sm">
           OpenAI
         </span>
       </div>
 
-      <div className="flex min-w-[210px] flex-1 items-center justify-center gap-2 rounded-2xl border bg-white px-4 py-3 shadow-sm">
+      <div className="flex min-w-0 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-3 shadow-sm sm:gap-2 sm:px-4">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-          className="h-6"
+          className="h-4 shrink-0 sm:h-5"
           alt="Microsoft"
         />
-        <span className="whitespace-nowrap text-sm font-medium text-gray-700">
+        <span className="truncate text-[10px] font-semibold text-gray-700 sm:text-sm">
           Microsoft
         </span>
       </div>
 
-      <div className="flex min-w-[210px] flex-1 items-center justify-center gap-2 rounded-2xl border bg-white px-4 py-3 shadow-sm">
+      <div className="flex min-w-0 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-3 shadow-sm sm:gap-2 sm:px-4">
         <img
           src="https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg"
-          className="h-6 w-6"
+          className="h-5 w-5 shrink-0 sm:h-6 sm:w-6"
           alt="Google Cloud"
         />
-        <span className="whitespace-nowrap text-sm font-medium text-gray-700">
+        <span className="truncate text-[10px] font-semibold text-gray-700 sm:text-sm">
           Google Cloud
         </span>
       </div>
 
-      <div className="flex min-w-[210px] flex-1 items-center justify-center gap-2 rounded-2xl border bg-white px-4 py-3 shadow-sm">
+      <div className="flex min-w-0 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-2 py-3 shadow-sm sm:gap-2 sm:px-4">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
-          className="h-6"
+          className="h-4 shrink-0 sm:h-5"
           alt="AWS"
         />
-        <span className="whitespace-nowrap text-sm font-medium text-gray-700">
+        <span className="truncate text-[10px] font-semibold text-gray-700 sm:text-sm">
           AWS
         </span>
       </div>
