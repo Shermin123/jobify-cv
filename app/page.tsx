@@ -666,172 +666,349 @@ const getRiskMessage = () => {
   </div>
 </div>
 
-      {/* ================= PROFESSIONAL HERO ================= */}
-<section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50">
-  <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
-  <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-violet-200/40 blur-3xl" />
+      {/* ================= PREMIUM 3-TOOL HERO ================= */}
+<section className="relative overflow-hidden bg-slate-950 text-white">
+  {/* Background */}
+  <div
+    className="pointer-events-none absolute inset-0 opacity-[0.16]"
+    style={{
+      backgroundImage:
+        "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+      backgroundSize: "48px 48px",
+    }}
+  />
 
-  <div className="relative mx-auto grid min-h-[620px] max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-20">
-    {/* LEFT SIDE */}
-    <div className="text-center lg:text-left">
-      <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black text-blue-700 shadow-sm">
-        <span className="h-2 w-2 rounded-full bg-blue-600" />
-        AI-powered CV improvement
+  <div className="pointer-events-none absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-600/25 blur-[130px]" />
+  <div className="pointer-events-none absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-violet-600/25 blur-[130px]" />
+
+  <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div className="grid items-center gap-14 lg:grid-cols-[0.92fr_1.08fr]">
+
+      {/* LEFT CONTENT */}
+      <div className="text-center lg:text-left">
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-blue-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-blue-300 backdrop-blur-xl">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-blue-400" />
+          AI career workspace
+        </div>
+
+        <h1 className="mt-7 text-4xl font-black leading-[1.02] tracking-[-0.055em] sm:text-5xl lg:text-[68px]">
+          Everything you need to
+          <span className="mt-2 block bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent">
+            build, score and apply.
+          </span>
+        </h1>
+
+        <p className="mx-auto mt-6 max-w-2xl text-base font-medium leading-7 text-slate-300 sm:text-lg lg:mx-0">
+          Create a tailored CV, identify the issues reducing your ATS score and
+          find relevant jobs from one AI-powered workspace.
+        </p>
+
+        {/* CTAs */}
+        <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
+          <button
+            type="button"
+            onClick={() => {
+              sessionStorage.setItem("jobify_force_setup", "true");
+              router.push("/upload");
+            }}
+            className="group rounded-2xl bg-white px-7 py-4 text-base font-black text-slate-950 shadow-[0_18px_50px_rgba(255,255,255,0.14)] transition hover:-translate-y-1 hover:bg-blue-50"
+          >
+            Start Building My CV
+            <span className="ml-2 inline-block transition group-hover:translate-x-1">
+              →
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              document
+                .getElementById("cv-score")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="rounded-2xl border border-white/15 bg-white/5 px-7 py-4 text-base font-black text-white backdrop-blur-xl transition hover:-translate-y-1 hover:border-blue-400/40 hover:bg-white/10"
+          >
+            Check My CV Score
+          </button>
+        </div>
+
+        {/* Trust line */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-400 lg:justify-start">
+          <span className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400/15 text-xs text-emerald-300">
+              ✓
+            </span>
+            Free CV score
+          </span>
+
+          <span className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400/15 text-xs text-emerald-300">
+              ✓
+            </span>
+            ATS keyword analysis
+          </span>
+
+          <span className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400/15 text-xs text-emerald-300">
+              ✓
+            </span>
+            No card required
+          </span>
+        </div>
       </div>
 
-      <h1 className="mt-6 text-4xl font-black leading-[1.05] tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-6xl">
-        Build a CV that gets
-        <span className="mt-2 block bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-          more interviews.
-        </span>
-      </h1>
+      {/* RIGHT PRODUCT WORKSPACE */}
+      <div className="relative mx-auto w-full max-w-[660px]">
+        <div className="absolute -inset-6 rounded-[42px] bg-gradient-to-br from-blue-600/25 via-indigo-500/10 to-violet-500/25 blur-3xl" />
 
-      <p className="mx-auto mt-6 max-w-xl text-base font-medium leading-7 text-slate-600 sm:text-lg lg:mx-0">
-        Improve your CV wording, identify missing ATS keywords and create a
-        stronger application tailored to your target role.
-      </p>
+        <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.07] p-3 shadow-[0_35px_100px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:p-5">
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-        <button
-          type="button"
-          onClick={() => {
-            sessionStorage.setItem("jobify_force_setup", "true");
-            router.push("/upload");
-          }}
-          className="rounded-2xl bg-slate-950 px-7 py-4 text-base font-black text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-slate-800"
-        >
-          Build My CV →
-        </button>
+          {/* Workspace header */}
+          <div className="flex items-center justify-between rounded-[22px] border border-white/10 bg-slate-900/80 px-4 py-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 font-black text-white shadow-lg">
+                J
+              </div>
 
-        <button
-          type="button"
-          onClick={() =>
-            document
-              .getElementById("cv-score")
-              ?.scrollIntoView({ behavior: "smooth" })
-          }
-          className="rounded-2xl border border-slate-300 bg-white px-7 py-4 text-base font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50"
-        >
-          Check CV Score
-        </button>
-      </div>
+              <div>
+                <p className="text-sm font-black text-white">
+                  jobifycv.co Workspace
+                </p>
+                <p className="text-xs font-medium text-slate-400">
+                  Your AI career toolkit
+                </p>
+              </div>
+            </div>
 
-      <button
-        type="button"
-        onClick={() => router.push("/jobs")}
-        className="mt-3 text-sm font-black text-blue-700 transition hover:text-blue-900"
-      >
-        Explore AI Auto Apply →
-      </button>
+            <div className="flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-300">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+              Live
+            </div>
+          </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-500 lg:justify-start">
-        <span className="flex items-center gap-2">
-          <span className="text-emerald-500">✓</span>
-          Free CV score
-        </span>
+          {/* Three tools */}
+          <div className="mt-3 grid gap-3">
 
-        <span className="flex items-center gap-2">
-          <span className="text-emerald-500">✓</span>
-          ATS keyword check
-        </span>
+            {/* TOOL 1 */}
+            <button
+              type="button"
+              onClick={() => {
+                sessionStorage.setItem("jobify_force_setup", "true");
+                router.push("/upload");
+              }}
+              className="group relative overflow-hidden rounded-[22px] border border-blue-400/20 bg-gradient-to-r from-blue-500/15 to-indigo-500/10 p-5 text-left transition hover:-translate-y-0.5 hover:border-blue-400/45 hover:bg-blue-500/20"
+            >
+              <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-blue-500/15 blur-3xl" />
 
-        <span className="flex items-center gap-2">
-          <span className="text-emerald-500">✓</span>
-          No card required
-        </span>
+              <div className="relative flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-white shadow-[0_12px_30px_rgba(59,130,246,0.35)]">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M6 3h9l3 3v15H6z" />
+                    <path d="M14 3v4h4" />
+                    <path d="M9 12h6M9 16h6" />
+                  </svg>
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-blue-300">
+                        Tool 01
+                      </p>
+
+                      <h3 className="mt-1 text-lg font-black text-white">
+                        AI CV Builder
+                      </h3>
+                    </div>
+
+                    <span className="text-xl text-blue-300 transition group-hover:translate-x-1">
+                      →
+                    </span>
+                  </div>
+
+                  <p className="mt-2 text-sm font-medium leading-5 text-slate-300">
+                    Rewrite your CV around the exact job role, skills and ATS
+                    keywords recruiters are looking for.
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-white/8 px-3 py-1 text-[10px] font-bold text-slate-300">
+                      Tailored CV
+                    </span>
+
+                    <span className="rounded-full bg-white/8 px-3 py-1 text-[10px] font-bold text-slate-300">
+                      Cover letter
+                    </span>
+
+                    <span className="rounded-full bg-white/8 px-3 py-1 text-[10px] font-bold text-slate-300">
+                      Missing keywords
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </button>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+
+              {/* TOOL 2 */}
+              <button
+                type="button"
+                onClick={() =>
+                  document
+                    .getElementById("cv-score")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+                className="group rounded-[22px] border border-white/10 bg-slate-900/70 p-5 text-left transition hover:-translate-y-0.5 hover:border-violet-400/40 hover:bg-slate-900"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-500/20 text-violet-300">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-6 w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M4 19V9M10 19V5M16 19v-7M22 19V3" />
+                    </svg>
+                  </div>
+
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-violet-400/30 bg-violet-400/10 text-lg font-black text-violet-300">
+                    82
+                  </div>
+                </div>
+
+                <p className="mt-4 text-[10px] font-black uppercase tracking-[0.18em] text-violet-300">
+                  Tool 02
+                </p>
+
+                <h3 className="mt-1 text-lg font-black text-white">
+                  CV Score
+                </h3>
+
+                <p className="mt-2 text-sm font-medium leading-5 text-slate-400">
+                  Analyse ATS match, readability, achievements and role
+                  relevance.
+                </p>
+
+                <div className="mt-4 space-y-2">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full w-[86%] rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-400" />
+                  </div>
+
+                  <div className="flex justify-between text-[10px] font-bold text-slate-500">
+                    <span>ATS strength</span>
+                    <span>86%</span>
+                  </div>
+                </div>
+              </button>
+
+              {/* TOOL 3 */}
+              <button
+                type="button"
+                onClick={() => router.push("/jobs")}
+                className="group rounded-[22px] border border-white/10 bg-slate-900/70 p-5 text-left transition hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-slate-900"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-300">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-6 w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M4 7h16v12H4z" />
+                      <path d="M9 7V4h6v3" />
+                      <path d="M4 12h16" />
+                    </svg>
+                  </div>
+
+                  <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-300">
+                    New matches
+                  </span>
+                </div>
+
+                <p className="mt-4 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-300">
+                  Tool 03
+                </p>
+
+                <h3 className="mt-1 text-lg font-black text-white">
+                  AI Auto Apply
+                </h3>
+
+                <p className="mt-2 text-sm font-medium leading-5 text-slate-400">
+                  Find relevant jobs and prepare stronger, tailored applications
+                  faster.
+                </p>
+
+                <div className="mt-4 flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.04] px-3 py-2">
+                  <div>
+                    <p className="text-xs font-black text-white">
+                      Matching roles
+                    </p>
+
+                    <p className="text-[10px] text-slate-500">
+                      Based on your profile
+                    </p>
+                  </div>
+
+                  <p className="text-xl font-black text-emerald-300">
+                    24
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    {/* RIGHT SIDE */}
-    <div className="relative mx-auto w-full max-w-[560px]">
-      <div className="absolute -inset-5 rounded-[40px] bg-gradient-to-r from-blue-200/50 to-violet-200/50 blur-2xl" />
+    {/* Bottom tool summary */}
+    <div className="mt-16 border-t border-white/10 pt-8">
+      <div className="grid gap-4 md:grid-cols-3">
+        {[
+          {
+            number: "01",
+            title: "Build",
+            text: "Create a tailored ATS-ready CV and cover letter.",
+          },
+          {
+            number: "02",
+            title: "Score",
+            text: "Understand exactly what is weakening your application.",
+          },
+          {
+            number: "03",
+            title: "Apply",
+            text: "Discover relevant opportunities and apply with confidence.",
+          },
+        ].map((tool) => (
+          <div
+            key={tool.number}
+            className="flex items-start gap-4 rounded-2xl border border-white/8 bg-white/[0.03] p-5"
+          >
+            <span className="text-sm font-black text-blue-400">
+              {tool.number}
+            </span>
 
-      <div className="relative overflow-hidden rounded-[30px] border border-white/80 bg-white p-5 shadow-[0_30px_80px_rgba(15,23,42,0.16)] sm:p-7">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-5">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
-              Example CV scan
-            </p>
+            <div>
+              <h3 className="text-base font-black text-white">
+                {tool.title}
+              </h3>
 
-            <h2 className="mt-1 text-xl font-black text-slate-950">
-              CV performance report
-            </h2>
-          </div>
-
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-lg font-black text-emerald-600">
-            82
-          </div>
-        </div>
-
-        <div className="mt-6 space-y-5">
-          {[
-            {
-              label: "ATS keyword match",
-              value: 86,
-            },
-            {
-              label: "Recruiter readability",
-              value: 78,
-            },
-            {
-              label: "Target role relevance",
-              value: 72,
-            },
-          ].map((item) => (
-            <div key={item.label}>
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-black text-slate-700">
-                  {item.label}
-                </span>
-
-                <span className="font-black text-slate-950">
-                  {item.value}%
-                </span>
-              </div>
-
-              <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-blue-600 to-violet-600"
-                  style={{ width: `${item.value}%` }}
-                />
-              </div>
+              <p className="mt-1 text-sm leading-5 text-slate-400">
+                {tool.text}
+              </p>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-emerald-600">
-              Strong point
-            </p>
-
-            <p className="mt-1 text-sm font-black text-slate-900">
-              Clear work experience
-            </p>
           </div>
-
-          <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-orange-600">
-              Needs improvement
-            </p>
-
-            <p className="mt-1 text-sm font-black text-slate-900">
-              More measurable results
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={() =>
-            document
-              .getElementById("cv-score")
-              ?.scrollIntoView({ behavior: "smooth" })
-          }
-          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 py-4 text-sm font-black text-white shadow-lg transition hover:scale-[1.01]"
-        >
-          Check My CV For Free →
-        </button>
+        ))}
       </div>
     </div>
   </div>
