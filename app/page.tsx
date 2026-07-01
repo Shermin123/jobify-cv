@@ -821,7 +821,7 @@ const getRiskMessage = () => {
   </p>
 
   <div className="flex flex-col items-center gap-5">
-    {/* Desktop 728x90 */}
+    {/* 728x90 desktop banner */}
     <div className="hidden w-full justify-center overflow-hidden md:flex">
       <AdsterraBanner
         adKey="74224594b53fcafd766a8a943e60511d"
@@ -830,10 +830,16 @@ const getRiskMessage = () => {
       />
     </div>
 
-    {/* Mobile and desktop 300x250 */}
-    <div className="flex w-full justify-center overflow-hidden">
+    {/* Two 300x250 ads */}
+    <div className="grid w-full max-w-[630px] grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
       <AdsterraBanner
         adKey="022bf6f0ac84fc8271661fdf0220eab4"
+        width={300}
+        height={250}
+      />
+
+      <AdsterraBanner
+        adKey="PASTE_NEW_300X250_KEY_HERE"
         width={300}
         height={250}
       />
