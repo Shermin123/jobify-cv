@@ -1,5 +1,5 @@
 "use client";
-import HiredAtBox from "./components/HiredAtBox";
+
 import AtsCvTransform from "./components/AtsCvTransform";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import AdsterraBanner from "./components/AdsterraBanner";
 import MonetagAd from "./components/MonetagAd";
-import AdsterraNativeBanner from "./components/AdsterraNativeBanner";
+
 
 type CvIssue = {
   title: string;
@@ -746,7 +746,7 @@ const getRiskMessage = () => {
 <section className="relative z-10 mx-auto max-w-7xl px-4 pb-8 sm:px-6">
   <div className="rounded-[24px] border border-blue-100 bg-white px-4 py-5 shadow-[0_14px_40px_rgba(37,99,235,0.08)] sm:px-6">
     <p className="text-center text-sm font-black text-slate-700 sm:text-base">
-      Our users apply to top companies
+      Our users got hired by top companies
     </p>
 
     <div className="mt-5 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -814,14 +814,14 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-{/* ================= TWO ADS ABOVE CV SCORE ================= */}
-<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
-  <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+{/* ================= ADS ABOVE CV SCORE ================= */}
+<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-8 sm:px-6">
+  <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
     Advertisement
   </p>
 
-  <div className="flex flex-col items-center gap-6">
-    {/* 728x90 banner */}
+  <div className="flex flex-col items-center gap-5">
+    {/* Desktop 728x90 */}
     <div className="hidden w-full justify-center overflow-hidden md:flex">
       <AdsterraBanner
         adKey="74224594b53fcafd766a8a943e60511d"
@@ -830,7 +830,7 @@ const getRiskMessage = () => {
       />
     </div>
 
-    {/* 300x250 banner */}
+    {/* Mobile and desktop 300x250 */}
     <div className="flex w-full justify-center overflow-hidden">
       <AdsterraBanner
         adKey="022bf6f0ac84fc8271661fdf0220eab4"
@@ -845,6 +845,19 @@ const getRiskMessage = () => {
 
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
+  {/* 160x600 desktop side ad */}
+  <div className="absolute left-[-185px] top-0 hidden 2xl:block">
+    <p className="mb-2 text-center text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
+      Advertisement
+    </p>
+
+    <AdsterraBanner
+      adKey="eec685f16c82ad26f1b5a4a527a44e84"
+      width={160}
+      height={600}
+    />
+  </div>
+
   <div className="w-full min-w-0">
   {/* ================= CV SCORE ================= */}
   <div
