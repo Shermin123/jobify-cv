@@ -8,9 +8,7 @@ export default function HilltopBottomBanner() {
   useEffect(() => {
     const container = containerRef.current;
 
-    if (!container || container.dataset.loaded === "true") {
-      return;
-    }
+    if (!container || container.dataset.loaded === "true") return;
 
     container.dataset.loaded = "true";
 
@@ -33,13 +31,11 @@ export default function HilltopBottomBanner() {
   }, []);
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[2147483000] flex justify-center px-2 pb-2">
-      <div className="flex min-h-[50px] w-full max-w-[728px] items-center justify-center overflow-hidden rounded-xl bg-white shadow-[0_-8px_35px_rgba(0,0,0,0.25)]">
-        <div
-          ref={containerRef}
-          className="flex w-full items-center justify-center"
-        />
-      </div>
+    <div className="mt-auto flex w-full justify-center bg-white px-2 py-3">
+      <div
+        ref={containerRef}
+        className="flex min-h-[50px] w-full max-w-[728px] items-center justify-center overflow-hidden"
+      />
     </div>
   );
 }
