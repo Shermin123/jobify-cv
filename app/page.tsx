@@ -749,12 +749,10 @@ const getRiskMessage = () => {
     {/* TITLE ON TOP */}
     <div className="text-center">
       <p className="text-[10px] font-black uppercase tracking-[0.24em] text-blue-600 sm:text-xs">
-        Trusted by job seekers
+        Our users got hired at these top companies.
       </p>
 
-      <h2 className="mt-2 text-xl font-black tracking-[-0.03em] text-slate-950 sm:text-2xl">
-        Our users apply to top companies
-      </h2>
+  
     </div>
 
     {/* ALL COMPANIES IN ONE ROW */}
