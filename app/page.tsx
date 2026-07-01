@@ -666,254 +666,258 @@ const getRiskMessage = () => {
   </div>
 </div>
 
-      {/* ================= PROFESSIONAL HERO ================= */}
-<section className="relative overflow-hidden border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50">
-  <div className="pointer-events-none absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-200/40 blur-[120px]" />
-  <div className="pointer-events-none absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[120px]" />
+      {/* ================= CLEAN CENTRED HERO ================= */}
+<section className="relative overflow-hidden bg-gradient-to-b from-blue-50/80 via-white to-white">
+  <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[750px] -translate-x-1/2 rounded-full bg-blue-200/30 blur-[120px]" />
 
-  <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-    <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-      
-      {/* LEFT SIDE */}
-      <div className="text-center lg:text-left">
-        <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black text-blue-700 shadow-sm">
-          <span className="h-2 w-2 rounded-full bg-blue-600" />
-          AI-powered CV improvement
-        </div>
+  <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-14 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
+    <div className="mx-auto max-w-3xl text-center">
+      <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black text-blue-700 shadow-sm">
+        <span className="h-2 w-2 rounded-full bg-blue-600" />
+        AI-powered career workspace
+      </div>
 
-        <h1 className="mt-6 text-4xl font-black leading-[1.05] tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-6xl">
-          Build a CV that gets
-          <span className="mt-2 block bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            more interviews.
+      <h1 className="mt-6 text-4xl font-black leading-[1.05] tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-6xl">
+        Build a CV that gets you
+        <span className="mt-2 block bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+          more interviews.
+        </span>
+      </h1>
+
+      <p className="mx-auto mt-5 max-w-2xl text-base font-semibold leading-7 text-slate-600 sm:text-lg">
+        Create a focused, ATS-ready CV with stronger wording, relevant keywords
+        and achievements recruiters notice.
+      </p>
+
+      {/* MAIN TOOLS */}
+      <div className="mx-auto mt-8 flex w-full max-w-[600px] flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            sessionStorage.setItem("jobify_force_setup", "true");
+            router.push("/upload");
+          }}
+          className="group flex w-full items-center justify-between rounded-2xl bg-slate-950 px-5 py-4 text-left text-white shadow-[0_15px_40px_rgba(15,23,42,0.18)] transition hover:-translate-y-0.5 hover:bg-slate-800"
+        >
+          <span className="flex items-center gap-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M6 3h9l3 3v15H6z" />
+                <path d="M14 3v4h4" />
+                <path d="M9 12h6M9 16h6" />
+              </svg>
+            </span>
+
+            <span>
+              <span className="block text-base font-black">
+                Build My CV
+              </span>
+
+              <span className="mt-0.5 block text-xs font-medium text-white/60">
+                Create a tailored ATS-ready CV
+              </span>
+            </span>
           </span>
-        </h1>
 
-        <p className="mx-auto mt-6 max-w-xl text-base font-medium leading-7 text-slate-600 sm:text-lg lg:mx-0">
-          Improve your CV wording, identify missing ATS keywords and create a
-          stronger application tailored to your target role.
-        </p>
+          <span className="text-xl transition group-hover:translate-x-1">
+            →
+          </span>
+        </button>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-          <button
-            type="button"
-            onClick={() => {
-              sessionStorage.setItem("jobify_force_setup", "true");
-              router.push("/upload");
-            }}
-            className="rounded-2xl bg-slate-950 px-7 py-4 text-base font-black text-white shadow-xl transition hover:-translate-y-0.5 hover:bg-slate-800"
-          >
-            Build My CV →
-          </button>
+        <button
+          type="button"
+          onClick={() =>
+            document
+              .getElementById("cv-score")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="group flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-4 text-left text-white shadow-[0_15px_40px_rgba(79,70,229,0.22)] transition hover:-translate-y-0.5"
+        >
+          <span className="flex items-center gap-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M4 19V9M10 19V5M16 19v-7M22 19V3" />
+              </svg>
+            </span>
 
-          <button
-            type="button"
-            onClick={() =>
-              document
-                .getElementById("cv-score")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="rounded-2xl border border-slate-300 bg-white px-7 py-4 text-base font-black text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:bg-blue-50"
-          >
-            Check CV Score
-          </button>
-        </div>
+            <span>
+              <span className="block text-base font-black">
+                Check CV Score For Free
+              </span>
+
+              <span className="mt-0.5 block text-xs font-medium text-white/70">
+                Find ATS issues and missing keywords
+              </span>
+            </span>
+          </span>
+
+          <span className="text-xl transition group-hover:translate-x-1">
+            →
+          </span>
+        </button>
 
         <button
           type="button"
           onClick={() => router.push("/jobs")}
-          className="mt-4 text-sm font-black text-blue-700 transition hover:text-blue-900"
+          className="group flex w-full items-center justify-between rounded-2xl border border-slate-300 bg-white px-5 py-4 text-left text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
         >
-          Explore AI Auto Apply →
+          <span className="flex items-center gap-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M4 7h16v12H4z" />
+                <path d="M9 7V4h6v3" />
+                <path d="M4 12h16" />
+              </svg>
+            </span>
+
+            <span>
+              <span className="block text-base font-black">
+                AI Auto Apply
+              </span>
+
+              <span className="mt-0.5 block text-xs font-medium text-slate-500">
+                Find matching jobs and apply faster
+              </span>
+            </span>
+          </span>
+
+          <span className="text-xl text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600">
+            →
+          </span>
         </button>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-500 lg:justify-start">
-          <span className="flex items-center gap-2">
-            <span className="text-emerald-500">✓</span>
-            Free CV score
-          </span>
-
-          <span className="flex items-center gap-2">
-            <span className="text-emerald-500">✓</span>
-            ATS keyword check
-          </span>
-
-          <span className="flex items-center gap-2">
-            <span className="text-emerald-500">✓</span>
-            No card required
-          </span>
-        </div>
       </div>
 
-      {/* RIGHT SIDE */}
-      <div className="relative mx-auto w-full max-w-[560px]">
-        <div className="absolute -inset-6 rounded-[42px] bg-gradient-to-br from-blue-200/60 to-violet-200/60 blur-3xl" />
+      {/* TRUST POINTS */}
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-500">
+        <span className="flex items-center gap-2">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[11px] text-emerald-600">
+            ✓
+          </span>
+          Free CV score
+        </span>
 
-        <div className="relative overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_30px_90px_rgba(15,23,42,0.16)] sm:p-7">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-5">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-blue-600">
-                Example CV scan
-              </p>
+        <span className="flex items-center gap-2">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[11px] text-emerald-600">
+            ✓
+          </span>
+          ATS keyword check
+        </span>
 
-              <h2 className="mt-1 text-xl font-black text-slate-950">
-                CV performance report
-              </h2>
-            </div>
+        <span className="flex items-center gap-2">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[11px] text-emerald-600">
+            ✓
+          </span>
+          No card required
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-lg font-black text-emerald-600">
-              82
-            </div>
-          </div>
+{/* ================= COMPANY LOGOS ================= */}
+<section className="relative z-10 mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+  <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_15px_45px_rgba(15,23,42,0.08)] sm:p-7">
+    <div className="text-center">
+      <p className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-600">
+        Trusted by job seekers
+      </p>
 
-          <div className="mt-6 space-y-5">
-            {[
-              { label: "ATS keyword match", value: 86 },
-              { label: "Recruiter readability", value: 78 },
-              { label: "Target role relevance", value: 72 },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-black text-slate-700">
-                    {item.label}
-                  </span>
+      <h2 className="mt-2 text-xl font-black tracking-[-0.03em] text-slate-950 sm:text-2xl">
+        Tailor your CV for leading employers
+      </h2>
 
-                  <span className="font-black text-slate-950">
-                    {item.value}%
-                  </span>
-                </div>
+      <p className="mx-auto mt-2 max-w-xl text-sm font-medium text-slate-500">
+        Create role-specific applications for companies across technology,
+        finance, consulting and more.
+      </p>
+    </div>
 
-                <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-blue-600 to-violet-600"
-                    style={{ width: `${item.value}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+      {[
+        { name: "Google", domain: "google.com" },
+        { name: "Amazon", domain: "amazon.com" },
+        { name: "Microsoft", domain: "microsoft.com" },
+        { name: "Meta", domain: "meta.com" },
+        { name: "Netflix", domain: "netflix.com" },
+        { name: "Apple", domain: "apple.com" },
+        { name: "IBM", domain: "ibm.com" },
+        { name: "Deloitte", domain: "deloitte.com" },
+      ].map((company) => {
+        const googleLogo = `https://www.google.com/s2/favicons?domain=${company.domain}&sz=128`;
+        const duckDuckGoLogo = `https://icons.duckduckgo.com/ip3/${company.domain}.ico`;
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
-              <p className="text-xs font-black uppercase tracking-wide text-emerald-600">
-                Strong point
-              </p>
-
-              <p className="mt-1 text-sm font-black text-slate-900">
-                Clear work experience
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
-              <p className="text-xs font-black uppercase tracking-wide text-orange-600">
-                Needs improvement
-              </p>
-
-              <p className="mt-1 text-sm font-black text-slate-900">
-                More measurable results
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              document
-                .getElementById("cv-score")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="mt-6 w-full rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 py-4 text-sm font-black text-white shadow-lg transition hover:scale-[1.01]"
+        return (
+          <div
+            key={company.name}
+            className="group flex min-h-[86px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-3 py-4 transition duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-white hover:shadow-md"
           >
-            Check My CV For Free →
-          </button>
-        </div>
-      </div>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-white">
+                <img
+                  src={googleLogo}
+                  alt={`${company.name} logo`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="h-7 w-7 object-contain transition-transform duration-300 group-hover:scale-110"
+                  data-fallback-used="false"
+                  onError={(event) => {
+                    const image = event.currentTarget;
+
+                    if (image.dataset.fallbackUsed === "false") {
+                      image.dataset.fallbackUsed = "true";
+                      image.src = duckDuckGoLogo;
+                      return;
+                    }
+
+                    image.style.display = "none";
+
+                    const fallback =
+                      image.nextElementSibling as HTMLElement | null;
+
+                    if (fallback) {
+                      fallback.style.display = "flex";
+                    }
+                  }}
+                />
+
+                <span
+                  className="hidden h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-black text-white"
+                  aria-hidden="true"
+                >
+                  {company.name.charAt(0)}
+                </span>
+              </div>
+
+              <span className="text-xs font-black text-slate-700">
+                {company.name}
+              </span>
+            </div>
+          </div>
+        );
+      })}
     </div>
 
-    {/* THREE MAIN TOOLS */}
-    <div className="mt-14 grid gap-4 border-t border-slate-200 pt-8 md:grid-cols-3">
-      
-      {/* TOOL 1 */}
-      <button
-        type="button"
-        onClick={() => {
-          sessionStorage.setItem("jobify_force_setup", "true");
-          router.push("/upload");
-        }}
-        className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg"
-      >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-md">
-          1
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <h3 className="font-black text-slate-950">
-            AI CV Builder
-          </h3>
-
-          <p className="mt-1 text-xs leading-5 text-slate-500">
-            Create a tailored ATS-ready CV and cover letter.
-          </p>
-        </div>
-
-        <span className="text-lg text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600">
-          →
-        </span>
-      </button>
-
-      {/* TOOL 2 */}
-      <button
-        type="button"
-        onClick={() =>
-          document
-            .getElementById("cv-score")
-            ?.scrollIntoView({ behavior: "smooth" })
-        }
-        className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg"
-      >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-lg font-black text-white shadow-md">
-          2
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <h3 className="font-black text-slate-950">
-            CV Score
-          </h3>
-
-          <p className="mt-1 text-xs leading-5 text-slate-500">
-            Find ATS issues, weak points and missing keywords.
-          </p>
-        </div>
-
-        <span className="text-lg text-slate-400 transition group-hover:translate-x-1 group-hover:text-indigo-600">
-          →
-        </span>
-      </button>
-
-      {/* TOOL 3 */}
-      <button
-        type="button"
-        onClick={() => router.push("/jobs")}
-        className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-violet-300 hover:shadow-lg"
-      >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-violet-600 text-lg font-black text-white shadow-md">
-          3
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <h3 className="font-black text-slate-950">
-            AI Auto Apply
-          </h3>
-
-          <p className="mt-1 text-xs leading-5 text-slate-500">
-            Find matching jobs and prepare applications faster.
-          </p>
-        </div>
-
-        <span className="text-lg text-slate-400 transition group-hover:translate-x-1 group-hover:text-violet-600">
-          →
-        </span>
-      </button>
-    </div>
+    <p className="mt-5 text-center text-[10px] font-semibold text-slate-400">
+      Company names and logos are trademarks of their respective owners.
+    </p>
   </div>
 </section>
 
