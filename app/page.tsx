@@ -2120,6 +2120,16 @@ const getRiskMessage = () => {
           }
         }
       `}</style>
+      {/* Adsterra Native Banner — bottom of homepage */}
+<section className="relative z-10 w-full bg-white px-4 py-8">
+  <div className="mx-auto w-full max-w-6xl">
+    <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
+      Advertisement
+    </p>
+
+    <AdsterraNativeBanner />
+  </div>
+</section>
 
     </main>
   );
