@@ -831,6 +831,14 @@ const getRiskMessage = () => {
         height={90}
       />
     </div>
+        {/* 468x60 banner */}
+    <div className="mt-4 hidden w-full justify-center overflow-hidden sm:flex">
+      <AdsterraBanner
+        adKey="6e79ab2ea24cd9a13c10839989bcb925"
+        width={468}
+        height={60}
+      />
+    </div>
 
     {/* Mobile 320x50 banner */}
     <div className="flex w-full justify-center overflow-hidden md:hidden">
