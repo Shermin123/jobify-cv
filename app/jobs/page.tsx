@@ -5,6 +5,7 @@ import Script from "next/script";
 import { checkSubscription } from "@/lib/checkSubscription";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import AdsterraBanner from "../components/AdsterraBanner";
 
 type Job = {
   id: number;
@@ -1078,7 +1079,14 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       {message} · Job {currentJob ? currentIndex + 1 : 0} of {jobs.length}
     </p>
   </div>
-
+      {/* Adsterra 468x60 banner */}
+<div className="mt-4 hidden w-full justify-center overflow-hidden sm:flex">
+  <AdsterraBanner
+    adKey="6e79ab2ea24cd9a13c10839989bcb925"
+    width={468}
+    height={60}
+  />
+</div>
   {/* SEARCH FORM */}
   {setupOpen && (
     <section className="mt-4 rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)]">
