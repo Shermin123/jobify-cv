@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { checkSubscription } from "@/lib/checkSubscription";
 import AdsterraBanner from "./components/AdsterraBanner";
 import MonetagAd from "./components/MonetagAd";
-import ExternalScriptAd from "./components/ExternalScriptAd";
+
 import AdsterraNativeBanner from "./components/AdsterraNativeBanner";
 
 
@@ -816,14 +816,14 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-{/* ================= ALL ADS ABOVE CV SCORE ================= */}
-<section className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6">
-  <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+{/* ================= CLEAN ADS ABOVE CV SCORE ================= */}
+<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-8 sm:px-6">
+  <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
     Advertisement
   </p>
 
-  <div className="flex flex-col items-center gap-6">
-    {/* 728x90 desktop banner */}
+  <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white/80 p-3 shadow-sm sm:p-5">
+    {/* Desktop 728x90 banner */}
     <div className="hidden w-full justify-center overflow-hidden md:flex">
       <AdsterraBanner
         adKey="74224594b53fcafd766a8a943e60511d"
@@ -832,55 +832,50 @@ const getRiskMessage = () => {
       />
     </div>
 
-    {/* Square and external ads */}
-    <div className="grid w-full grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
-      {/* Adsterra ad 1 */}
-      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
-        <AdsterraBanner
-          adKey="022bf6f0ac84fc8271661fdf0220eab4"
-          width={300}
-          height={250}
-        />
+    {/* Mobile 320x50 banner */}
+    <div className="flex w-full justify-center overflow-hidden md:hidden">
+      <AdsterraBanner
+        adKey="2fe89f9f7a1b636a1e92b052003fb51d"
+        width={320}
+        height={50}
+      />
+    </div>
+
+    {/* Main ad layout */}
+    <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_180px]">
+      {/* Left column */}
+      <div className="min-w-0 space-y-5">
+        {/* 300x250 banner */}
+        <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
+          <AdsterraBanner
+            adKey="022bf6f0ac84fc8271661fdf0220eab4"
+            width={300}
+            height={250}
+          />
+        </div>
+
+        {/* Native banner */}
+        <div className="w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
+          <AdsterraNativeBanner />
+        </div>
       </div>
 
-      {/* Adsterra ad 2 */}
-      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+      {/* Right column: 160x600 banner */}
+      <div className="flex w-full justify-center overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
         <AdsterraBanner
           adKey="eec685f16c82ad26f1b5a4a527a44e84"
-          width={300}
-          height={250}
+          width={160}
+          height={600}
         />
       </div>
-
-      {/* New 300x250 banner 1 */}
-<div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
-  <AdsterraBanner
-    adKey="PASTE_NEW_300X250_KEY_1"
-    width={300}
-    height={250}
-  />
-</div>
-
-{/* New 300x250 banner 2 */}
-<div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
-  <AdsterraBanner
-    adKey="PASTE_NEW_300X250_KEY_2"
-    width={300}
-    height={250}
-  />
-</div>
     </div>
-      {/* Adsterra 320x50 mobile banner */}
-<div className="flex w-full justify-center overflow-hidden">
-  <AdsterraBanner
-    adKey="2fe89f9f7a1b636a1e92b052003fb51d"
-    width={320}
-    height={50}
-  />
-</div>
-    {/* Native banner */}
-    <div className="w-full overflow-hidden rounded-2xl">
-      <AdsterraNativeBanner />
+
+    {/* Monetag zone */}
+    <div className="mt-5 w-full overflow-hidden">
+      <MonetagAd
+        zone="11227096"
+        src="https://nap5k.com/tag.min.js"
+      />
     </div>
   </div>
 </section>
