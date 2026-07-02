@@ -843,19 +843,14 @@ const getRiskMessage = () => {
         />
       </div>
 
-      {/* Adsterra 160x600 banner */}
-<div className="flex w-full justify-center overflow-hidden">
-  <AdsterraBanner
-    adKey="eec685f16c82ad26f1b5a4a527a44e84"
-    width={160}
-    height={600}
-  />
-</div>
-
-{/* Native banner */}
-<div className="w-full overflow-hidden rounded-2xl">
-  <AdsterraNativeBanner />
-</div>
+      {/* Adsterra ad 2 */}
+      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+        <AdsterraBanner
+          adKey="eec685f16c82ad26f1b5a4a527a44e84"
+          width={300}
+          height={250}
+        />
+      </div>
 
       {/* New 300x250 banner 1 */}
 <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
@@ -875,13 +870,6 @@ const getRiskMessage = () => {
   />
 </div>
     </div>
-    {/* Monetag zone 11227096 */}
-<div className="w-full overflow-hidden">
-  <MonetagAd
-    zone="11227096"
-    src="https://nap5k.com/tag.min.js"
-  />
-</div>
 
     {/* Native banner */}
     <div className="w-full overflow-hidden rounded-2xl">
