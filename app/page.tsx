@@ -875,6 +875,13 @@ const getRiskMessage = () => {
   />
 </div>
     </div>
+    {/* Monetag zone 11227096 */}
+<div className="w-full overflow-hidden">
+  <MonetagAd
+    zone="11227096"
+    src="https://nap5k.com/tag.min.js"
+  />
+</div>
 
     {/* Native banner */}
     <div className="w-full overflow-hidden rounded-2xl">
