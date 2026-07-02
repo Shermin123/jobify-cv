@@ -821,35 +821,48 @@ const getRiskMessage = () => {
     Advertisement
   </p>
 
-  {/* Adsterra wide banner */}
-  <div className="mb-6 hidden w-full justify-center overflow-hidden md:flex">
-    <AdsterraBanner
-      adKey="74224594b53fcafd766a8a943e60511d"
-      width={728}
-      height={90}
-    />
-  </div>
-
-  <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
-    {/* Existing Adsterra 300x250 */}
-    <div className="flex min-h-[250px] w-full items-center justify-center">
+  <div className="flex flex-col items-center gap-6">
+    {/* 728x90 banner */}
+    <div className="hidden w-full justify-center overflow-hidden md:flex">
       <AdsterraBanner
-        adKey="022bf6f0ac84fc8271661fdf0220eab4"
-        width={300}
-        height={250}
+        adKey="74224594b53fcafd766a8a943e60511d"
+        width={728}
+        height={90}
       />
     </div>
 
-    {/* New external ad 1 */}
-    <ExternalScriptAd src="//prizefamily.com/b.XkVvsSdSGGl/0rYTWvcK/te/m/9DuqZ/UxlBkeP/TScFxlOyD/UH4/M/jKUVtEN-zREx4WN-T/gDyJOCQe" />
+    {/* Ads directly above CV checker */}
+    <div className="grid w-full grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
+      {/* Adsterra 300x250 */}
+      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+        <AdsterraBanner
+          adKey="022bf6f0ac84fc8271661fdf0220eab4"
+          width={300}
+          height={250}
+        />
+      </div>
 
-    {/* New external ad 2 */}
-    <ExternalScriptAd src="//prizefamily.com/bvX/V.sqdVGrlq0zYjWXco/ieumf9bu/ZkUal/k/PsTAcoxyOkDfMQ3QNujAUhtMNUzYEx4/MDz_cR2AOnQN" />
+      {/* Adsterra 300x250 */}
+      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+        <AdsterraBanner
+          adKey="eec685f16c82ad26f1b5a4a527a44e84"
+          width={300}
+          height={250}
+        />
+      </div>
 
-    {/* Add the next two different codes here */}
+      {/* New external ad 1 */}
+      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+        <ExternalScriptAd src="//prizefamily.com/b.XkVvsSdSGGl/0rYTWvcK/te/m/9DuqZ/UxlBkeP/TScFxlOyD/UH4/M/jKUVtEN-zREx4WN-T/gDyJOCQe" />
+      </div>
+
+      {/* New external ad 2 */}
+      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+        <ExternalScriptAd src="//prizefamily.com/bvX/V.sqdVGrlq0zYjWXco/ieumf9bu/ZkUal/k/PsTAcoxyOkDfMQ3QNujAUhtMNUzYEx4/MDz_cR2AOnQN" />
+      </div>
+    </div>
   </div>
 </section>
-
 
 
 {/* ================= CV SCORE SECTION ================= */}
