@@ -5,7 +5,6 @@ import "./globals.css";
 import AuthProvider from "./providers/AuthProvider";
 import Navbar from "./components/Navbar";
 import PageTransition from "./components/PageTransition";
-
 import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
@@ -18,6 +17,9 @@ export const metadata: Metadata = {
   title: "jobifycv.co",
   description:
     "jobifycv.co helps you improve your CV, match job keywords, create cover letters, and apply with more confidence.",
+
+  // Allows ad networks to identify traffic coming from jobifycv.co
+  referrer: "no-referrer-when-downgrade",
 
   icons: {
     icon: "/jobify-logo-new.png",
@@ -76,10 +78,7 @@ export default function RootLayout({
         />
 
         {/* Google Analytics configuration */}
-        <Script
-          id="google-analytics-config"
-          strategy="afterInteractive"
-        >
+        <Script id="google-analytics-config" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
 
@@ -125,10 +124,6 @@ export default function RootLayout({
           strategy="afterInteractive"
           src="https://resources.infolinks.com/js/infolinks_main.js"
         />
-
-        
-
-        
       </body>
     </html>
   );
