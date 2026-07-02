@@ -537,7 +537,7 @@ function getSmartLocationSuggestions(value: string) {
 }
 
 export default function JobsPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [jobTitle, setJobTitle] = useState("");
@@ -549,6 +549,7 @@ export default function JobsPage() {
   const [message, setMessage] = useState("Ready");
   const [saving, setSaving] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscriptionChecked, setSubscriptionChecked] = useState(false);
 const [autoApplyCount, setAutoApplyCount] = useState(0);
   
   const [searching, setSearching] = useState(false);
@@ -583,25 +584,50 @@ const [appliedJobs, setAppliedJobs] = useState<Job[]>([]);
     return getSmartLocationSuggestions(location);
   }, [location]);
   useEffect(() => {
+  let active = true;
+
   const loadAutoApplyAccess = async () => {
+    if (status === "loading") return;
+
     if (!session?.user?.email) {
-      setIsSubscribed(false);
-      setAutoApplyCount(0);
+      if (active) {
+        setIsSubscribed(false);
+        setAutoApplyCount(0);
+        setSubscriptionChecked(true);
+      }
+
       return;
     }
 
-    const hasAccess = await checkSubscription(session.user.email);
-    setIsSubscribed(hasAccess);
+    try {
+      const hasAccess = await checkSubscription(session.user.email);
 
-    const today = new Date().toISOString().slice(0, 10);
-    const key = `jobify_auto_apply_${session.user.email}_${today}`;
-    const savedCount = Number(localStorage.getItem(key) || "0");
+      if (!active) return;
 
-    setAutoApplyCount(savedCount);
+      setIsSubscribed(hasAccess);
+
+      const today = new Date().toISOString().slice(0, 10);
+      const key = `jobify_auto_apply_${session.user.email}_${today}`;
+      const savedCount = Number(localStorage.getItem(key) || "0");
+
+      setAutoApplyCount(savedCount);
+      setSubscriptionChecked(true);
+    } catch (error) {
+      console.error("Subscription check failed:", error);
+
+      if (active) {
+        setIsSubscribed(false);
+        setSubscriptionChecked(false);
+      }
+    }
   };
 
   loadAutoApplyAccess();
-}, [session?.user?.email]);
+
+  return () => {
+    active = false;
+  };
+}, [session?.user?.email, status]);
   useEffect(() => {
   const loadApplications = async () => {
     if (!session?.user?.email) {
@@ -915,6 +941,8 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
   return (
   <main className="relative min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#191919]">
 
+    {subscriptionChecked && !isSubscribed && (
+  <>
     {/* Monetag Push Notifications — zone 11218397 */}
     <Script
       id="monetag-push-11218397"
@@ -922,13 +950,16 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       strategy="afterInteractive"
       data-cfasync="false"
     />
+
     {/* Monetag Vignette — zone 11222780 */}
-<Script
-  id="monetag-vignette-11222780"
-  src="https://n6wxm.com/vignette.min.js"
-  strategy="afterInteractive"
-  data-zone="11222780"
-/>
+    <Script
+      id="monetag-vignette-11222780"
+      src="https://n6wxm.com/vignette.min.js"
+      strategy="afterInteractive"
+      data-zone="11222780"
+    />
+  </>
+)}
 
       {applyNotice && (
   <div className="fixed inset-x-3 top-28 z-[999] mx-auto max-w-md animate-jobifyApplyToast rounded-[28px] border border-emerald-200 bg-white/95 p-4 shadow-[0_24px_80px_rgba(16,185,129,0.35)] backdrop-blur-2xl sm:top-32">
@@ -1079,14 +1110,15 @@ const requireLoginForFiles = (e: React.MouseEvent<HTMLInputElement>) => {
       {message} · Job {currentJob ? currentIndex + 1 : 0} of {jobs.length}
     </p>
   </div>
-      {/* Adsterra 468x60 banner */}
-<div className="mt-4 hidden w-full justify-center overflow-hidden sm:flex">
-  <AdsterraBanner
-    adKey="6e79ab2ea24cd9a13c10839989bcb925"
-    width={468}
-    height={60}
-  />
-</div>
+      {subscriptionChecked && !isSubscribed && (
+  <div className="mt-4 hidden w-full justify-center overflow-hidden sm:flex">
+    <AdsterraBanner
+      adKey="6e79ab2ea24cd9a13c10839989bcb925"
+      width={468}
+      height={60}
+    />
+  </div>
+)}
   {/* SEARCH FORM */}
   {setupOpen && (
     <section className="mt-4 rounded-[28px] border border-slate-200 bg-white/95 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.10)]">

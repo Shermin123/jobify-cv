@@ -77,6 +77,7 @@ const [generated, setGenerated] = useState(false);
   const [typing, setTyping] = useState(false);
   const [showUnlock, setShowUnlock] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [subscriptionChecked, setSubscriptionChecked] = useState(false);
   const [previewDocument, setPreviewDocument] = useState<
   "cv" | "cover" | null
 >(null);
@@ -172,21 +173,40 @@ if (forceSetup === "true") {
   }, []);
   useEffect(() => {
   let active = true;
+
   const checkAccessStatus = async () => {
+    if (status === "loading") return;
+
     if (!session?.user?.email) {
-      if (active) setIsUnlocked(false);
+      if (active) {
+        setIsUnlocked(false);
+        setSubscriptionChecked(true);
+      }
+
       return;
     }
-    const hasAccess = await checkSubscription(session.user.email);
-    if (active) {
-      setIsUnlocked(hasAccess);
+
+    try {
+      const hasAccess = await checkSubscription(session.user.email);
+
+      if (active) {
+        setIsUnlocked(hasAccess);
+        setSubscriptionChecked(true);
+      }
+    } catch {
+      if (active) {
+        setIsUnlocked(false);
+        setSubscriptionChecked(false);
+      }
     }
   };
+
   checkAccessStatus();
+
   return () => {
     active = false;
   };
-}, [session?.user?.email]);
+}, [session?.user?.email, status]);
 
 useEffect(() => {
   if (!showSetupPopup) return;
@@ -200,7 +220,7 @@ useEffect(() => {
   };
 }, [showSetupPopup]);
   useEffect(() => {
-  if (!showSetupPopup) return;
+  if (!subscriptionChecked || isUnlocked || !showSetupPopup) return;
 
   const container = setupHilltopAdRef.current;
 
@@ -222,7 +242,7 @@ useEffect(() => {
     container.innerHTML = "";
     delete container.dataset.loaded;
   };
-}, [showSetupPopup]);
+}, [showSetupPopup, subscriptionChecked, isUnlocked]);
     useEffect(() => {
   if (!loading && !rephrasing) return;
 
@@ -2042,13 +2062,14 @@ if (showSetupPopup && !loading && !rephrasing) {
   />
 )}
 </div>
-    {/* HilltopAds inside question popup */}
-<div className="mt-4 flex min-h-[100px] w-full items-center justify-center overflow-hidden rounded-2xl bg-white/60">
-  <div
-    ref={setupHilltopAdRef}
-    className="flex w-full items-center justify-center text-center"
-  />
-</div>
+    {subscriptionChecked && !isUnlocked && (
+  <div className="mt-4 flex min-h-[100px] w-full items-center justify-center overflow-hidden rounded-2xl bg-white/60">
+    <div
+      ref={setupHilltopAdRef}
+      className="flex w-full items-center justify-center text-center"
+    />
+  </div>
+)}
 
           {/* BUTTONS */}
           <div className="mt-5 flex gap-3">
@@ -2246,6 +2267,8 @@ if (showSetupPopup && !loading && !rephrasing) {
 return (
   <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
     
+    {subscriptionChecked && !isUnlocked && (
+  <>
     {/* Monetag side notification ad */}
     <MonetagAd
       zone="11219025"
@@ -2257,12 +2280,14 @@ return (
       zone="11219245"
       src="https://n6wxm.com/vignette.min.js"
     />
-    
-      {/* Monetag second In-Page Push — Good tag */}
-<MonetagAd
-  zone="11218400"
-  src="https://nap5k.com/tag.min.js"
-/>
+
+    {/* Monetag second In-Page Push */}
+    <MonetagAd
+      zone="11218400"
+      src="https://nap5k.com/tag.min.js"
+    />
+  </>
+)}
     
 
   {typeof document !== "undefined" &&
