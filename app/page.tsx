@@ -36,8 +36,9 @@ const [cvIssues, setCvIssues] = useState<CvIssue[]>([]);
 const [scoreAdSeconds, setScoreAdSeconds] = useState(6);
 
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 const [isUnlocked, setIsUnlocked] = useState(false);
+const [subscriptionChecked, setSubscriptionChecked] = useState(false);
 const getTodayKey = () => {
   const today = new Date().toISOString().split("T")[0];
 
@@ -57,15 +58,41 @@ const getTodayKey = () => {
   }
 }, [session?.user?.email]);
 useEffect(() => {
-  const checkAccess = async () => {
-    if (!session?.user?.email) return;
+  let cancelled = false;
 
-    const hasAccess = await checkSubscription(session.user.email);
-    setIsUnlocked(hasAccess);
+  const checkAccess = async () => {
+    if (status === "loading") return;
+
+    if (!session?.user?.email) {
+      if (!cancelled) {
+        setIsUnlocked(false);
+        setSubscriptionChecked(true);
+      }
+
+      return;
+    }
+
+    try {
+      const hasAccess = await checkSubscription(session.user.email);
+
+      if (!cancelled) {
+        setIsUnlocked(hasAccess);
+        setSubscriptionChecked(true);
+      }
+    } catch {
+      if (!cancelled) {
+        setIsUnlocked(false);
+        setSubscriptionChecked(true);
+      }
+    }
   };
 
   checkAccess();
-}, [session?.user?.email]);
+
+  return () => {
+    cancelled = true;
+  };
+}, [session?.user?.email, status]);
 
   // ================= CV SCORE ENGINE =================
   const calculateScore = () => {
@@ -359,7 +386,19 @@ useEffect(() => {
   return;
 }
 
-  setAnalyzing(true);
+if (isUnlocked) {
+  const result = calculateScore();
+
+  setAnalyzedScore(result.score);
+  setCvIssues(result.issues);
+  setShowScoreAd(false);
+  setShowScorePopup(true);
+  setAnalyzing(false);
+
+  return;
+}
+
+setAnalyzing(true);
 setShowScoreAd(true);
 setScoreAdSeconds(6);
 
@@ -429,13 +468,15 @@ const getRiskMessage = () => {
 
   return (
     <main className="relative min-h-screen text-gray-900 overflow-x-hidden">
-      {showScoreAd && (
+      {subscriptionChecked && !isUnlocked && showScoreAd && (
   <MonetagAd
     zone="11222749"
     src="https://n6wxm.com/vignette.min.js"
   />
 )}
-      {showScoreAd &&
+      {subscriptionChecked &&
+  !isUnlocked &&
+  showScoreAd &&
   typeof document !== "undefined" &&
   createPortal(
     <div className="fixed inset-0 z-[2147483647] flex h-[100svh] w-screen items-center justify-center bg-slate-950/90 px-3 py-4 backdrop-blur-xl">
@@ -817,6 +858,7 @@ const getRiskMessage = () => {
 </section>
 
 {/* ================= COMPACT AD SECTION ================= */}
+{subscriptionChecked && !isUnlocked && (
 <section className="relative z-10 mx-auto w-full max-w-5xl px-3 pb-5 sm:px-4">
   <p className="mb-2 text-center text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
     Advertisement
@@ -905,6 +947,7 @@ const getRiskMessage = () => {
     </div>
   </div>
 </section>
+)}
 
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
