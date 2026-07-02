@@ -816,82 +816,92 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-{/* ================= CLEAN ADS ABOVE CV SCORE ================= */}
-<section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-8 sm:px-6">
-  <p className="mb-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+{/* ================= COMPACT AD SECTION ================= */}
+<section className="relative z-10 mx-auto w-full max-w-5xl px-3 pb-5 sm:px-4">
+  <p className="mb-2 text-center text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
     Advertisement
   </p>
 
-  <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white/80 p-3 shadow-sm sm:p-5">
-    {/* Desktop 728x90 banner */}
-    <div className="hidden w-full justify-center overflow-hidden md:flex">
-      <AdsterraBanner
-        adKey="74224594b53fcafd766a8a943e60511d"
-        width={728}
-        height={90}
-      />
-    </div>
-        {/* 468x60 banner */}
-    <div className="mt-4 hidden w-full justify-center overflow-hidden sm:flex">
-      <AdsterraBanner
-        adKey="6e79ab2ea24cd9a13c10839989bcb925"
-        width={468}
-        height={60}
-      />
-    </div>
-
-    {/* Mobile 320x50 banner */}
-    <div className="flex w-full justify-center overflow-hidden md:hidden">
-      <AdsterraBanner
-        adKey="2fe89f9f7a1b636a1e92b052003fb51d"
-        width={320}
-        height={50}
-      />
-    </div>
-
-    {/* Main ad layout */}
-    <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_180px]">
-      {/* Left column */}
-      <div className="min-w-0 space-y-5">
-        {/* 300x250 banner */}
-        <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
-          <AdsterraBanner
-            adKey="022bf6f0ac84fc8271661fdf0220eab4"
-            width={300}
-            height={250}
-          />
-        </div>
-        {/* 160x300 banner */}
-<div className="flex min-h-[300px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
-  <AdsterraBanner
-    adKey="dbee075a724f1cdb470ed9d2aa69e7e8"
-    width={160}
-    height={300}
-  />
-</div>
-
-        {/* Native banner */}
-        <div className="w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
-          <AdsterraNativeBanner />
-        </div>
-      </div>
-
-      {/* Right column: 160x600 banner */}
-      <div className="flex w-full justify-center overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 p-2">
+  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+    {/* 728x90 banner */}
+    <div className="w-full overflow-x-auto">
+      <div className="mx-auto w-max">
         <AdsterraBanner
-          adKey="eec685f16c82ad26f1b5a4a527a44e84"
-          width={160}
-          height={600}
+          adKey="74224594b53fcafd766a8a943e60511d"
+          width={728}
+          height={90}
         />
       </div>
     </div>
 
-    {/* Monetag zone */}
-    <div className="mt-5 w-full overflow-hidden">
-      <MonetagAd
-        zone="11227096"
-        src="https://nap5k.com/tag.min.js"
-      />
+    <div className="mt-2 grid items-start gap-2 lg:grid-cols-[minmax(0,1fr)_168px]">
+      {/* Left compact area */}
+      <div className="min-w-0 space-y-2">
+        {/* 300x250 and 160x300 */}
+        <div className="flex flex-wrap items-start justify-center gap-2">
+          <div className="overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1">
+            <AdsterraBanner
+              adKey="022bf6f0ac84fc8271661fdf0220eab4"
+              width={300}
+              height={250}
+            />
+          </div>
+
+          <div className="overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1">
+            <AdsterraBanner
+              adKey="dbee075a724f1cdb470ed9d2aa69e7e8"
+              width={160}
+              height={300}
+            />
+          </div>
+        </div>
+
+        {/* 468x60 banner */}
+        <div className="w-full overflow-x-auto">
+          <div className="mx-auto w-max overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1">
+            <AdsterraBanner
+              adKey="6e79ab2ea24cd9a13c10839989bcb925"
+              width={468}
+              height={60}
+            />
+          </div>
+        </div>
+
+        {/* 320x50 banner */}
+        <div className="flex w-full justify-center">
+          <div className="overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1">
+            <AdsterraBanner
+              adKey="2fe89f9f7a1b636a1e92b052003fb51d"
+              width={320}
+              height={50}
+            />
+          </div>
+        </div>
+
+        {/* Native banner */}
+        <div className="overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1">
+          <AdsterraNativeBanner />
+        </div>
+
+        {/* Monetag zone */}
+        <div className="w-full overflow-hidden">
+          <MonetagAd
+            zone="11227096"
+            src="https://nap5k.com/tag.min.js"
+          />
+        </div>
+      </div>
+
+      {/* 160x600 banner */}
+      <div className="flex w-full justify-center">
+        <div className="overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-1">
+          <AdsterraBanner
+            adKey="eec685f16c82ad26f1b5a4a527a44e84"
+            width={160}
+            height={600}
+          />
+        </div>
+      </div>
     </div>
   </div>
 </section>
