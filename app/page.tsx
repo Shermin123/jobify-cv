@@ -9,6 +9,7 @@ import { checkSubscription } from "@/lib/checkSubscription";
 import AdsterraBanner from "./components/AdsterraBanner";
 import MonetagAd from "./components/MonetagAd";
 import ExternalScriptAd from "./components/ExternalScriptAd";
+import AdsterraNativeBanner from "./components/AdsterraNativeBanner";
 
 
 type CvIssue = {
@@ -815,14 +816,14 @@ const getRiskMessage = () => {
   </div>
 </section>
 
-{/* ================= ADS ABOVE CV SCORE ================= */}
+{/* ================= ALL ADS ABOVE CV SCORE ================= */}
 <section className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6">
   <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
     Advertisement
   </p>
 
   <div className="flex flex-col items-center gap-6">
-    {/* 728x90 banner */}
+    {/* 728x90 desktop banner */}
     <div className="hidden w-full justify-center overflow-hidden md:flex">
       <AdsterraBanner
         adKey="74224594b53fcafd766a8a943e60511d"
@@ -831,9 +832,9 @@ const getRiskMessage = () => {
       />
     </div>
 
-    {/* Ads directly above CV checker */}
+    {/* Square and external ads */}
     <div className="grid w-full grid-cols-1 justify-items-center gap-6 md:grid-cols-2">
-      {/* Adsterra 300x250 */}
+      {/* Adsterra ad 1 */}
       <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
         <AdsterraBanner
           adKey="022bf6f0ac84fc8271661fdf0220eab4"
@@ -842,7 +843,7 @@ const getRiskMessage = () => {
         />
       </div>
 
-      {/* Adsterra 300x250 */}
+      {/* Adsterra ad 2 */}
       <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
         <AdsterraBanner
           adKey="eec685f16c82ad26f1b5a4a527a44e84"
@@ -851,22 +852,28 @@ const getRiskMessage = () => {
         />
       </div>
 
-      {/* New external ad 1 */}
+      {/* External ad 1 */}
       <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
         <ExternalScriptAd src="//prizefamily.com/b.XkVvsSdSGGl/0rYTWvcK/te/m/9DuqZ/UxlBkeP/TScFxlOyD/UH4/M/jKUVtEN-zREx4WN-T/gDyJOCQe" />
       </div>
 
-      {/* New external ad 2 */}
+      {/* External ad 2 */}
       <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
         <ExternalScriptAd src="//prizefamily.com/bvX/V.sqdVGrlq0zYjWXco/ieumf9bu/ZkUal/k/PsTAcoxyOkDfMQ3QNujAUhtMNUzYEx4/MDz_cR2AOnQN" />
       </div>
     </div>
+
+    {/* Native banner */}
+    <div className="w-full overflow-hidden rounded-2xl">
+      <AdsterraNativeBanner />
+    </div>
   </div>
 </section>
 
-
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
+
+
   
 
   <div className="w-full min-w-0">
