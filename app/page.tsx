@@ -867,18 +867,7 @@ const getRiskMessage = () => {
 
 {/* ================= CV SCORE SECTION ================= */}
 <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6">
-  {/* 160x600 desktop side ad */}
-  <div className="absolute left-[-185px] top-0 hidden 2xl:block">
-    <p className="mb-2 text-center text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
-      Advertisement
-    </p>
-
-    <AdsterraBanner
-      adKey="eec685f16c82ad26f1b5a4a527a44e84"
-      width={300}
-      height={250}
-    />
-  </div>
+  
 
   <div className="w-full min-w-0">
   {/* ================= CV SCORE ================= */}
