@@ -852,15 +852,23 @@ const getRiskMessage = () => {
         />
       </div>
 
-      {/* External ad 1 */}
-      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
-        <ExternalScriptAd src="//prizefamily.com/b.XkVvsSdSGGl/0rYTWvcK/te/m/9DuqZ/UxlBkeP/TScFxlOyD/UH4/M/jKUVtEN-zREx4WN-T/gDyJOCQe" />
-      </div>
+      {/* New 300x250 banner 1 */}
+<div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+  <AdsterraBanner
+    adKey="PASTE_NEW_300X250_KEY_1"
+    width={300}
+    height={250}
+  />
+</div>
 
-      {/* External ad 2 */}
-      <div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
-        <ExternalScriptAd src="//prizefamily.com/bvX/V.sqdVGrlq0zYjWXco/ieumf9bu/ZkUal/k/PsTAcoxyOkDfMQ3QNujAUhtMNUzYEx4/MDz_cR2AOnQN" />
-      </div>
+{/* New 300x250 banner 2 */}
+<div className="flex min-h-[250px] w-full items-center justify-center overflow-hidden">
+  <AdsterraBanner
+    adKey="PASTE_NEW_300X250_KEY_2"
+    width={300}
+    height={250}
+  />
+</div>
     </div>
 
     {/* Native banner */}
